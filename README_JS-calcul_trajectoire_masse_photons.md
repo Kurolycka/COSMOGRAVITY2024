@@ -355,6 +355,54 @@ ATTENTION PROBLEME DE LOGIQUE : juste POURQUOI ???
 
 **Paramètres** : L, r
 
-**Rôle** : Cette fonction retourne la valeur que donne la fonction **potentiel_Schwarzschild_photon(L,r)**.
+**Rôle** : Cette fonction retourne la valeur que donne la fonction **potentiel_Schwarzschild_photon(L,r)** qui devrait être le potentiel gravitationnel dans le référentiel de la particule.
+
+## Fonction Vr_obs
+
+**Paramètres** : E,L,R
+
+**Rôle** : Cette fonction retourne le potentiel gravitationnel dans le référentiel de l'observateur en utilisant la fonction **potentiel_Schwarzschild_photon(L,r)**, la constante d'intégration E ainsi que r et le rayon de Schwarzschild rs.
+
+## fonction Vr
+
+ATTENTION PROBLEME DE LOGIQUE : juste POURQUOI ??? pareil que Vr_mob ???
+
+**Paramètres** : L, r
+
+**Rôle** : Cette fonction retourne la valeur que donne la fonction **potentiel_Schwarzschild_photon(L,r)** qui devrait être le potentiel gravitationnel.
+
+## fonction potentiel_Schwarzschild_photon
+
+**Paramètres** : L, r
+
+**Rôle** : Cette fonction retourne le potentiel gravitationnel en métrique de Schwarzschild pour le photon. Pour cela elle se sert du rayon de Schwarzschild rs.
+
+## fonction derivee_seconde_potentiel_Schwarzschild_photon
+
+**Paramètres** : L, r
+
+**Rôle** : Cette fonction retourne la dérivée seconde selon r du potentiel effectif en métrique de Schwarzschild pour le photon. Pour cela elle se sert du rayon de Schwarzschild rs.
+
+## fonction derivee_seconde_potentiel_Schwarzschild_photon
+
+**Paramètres** : E, L, r
+
+**Rôle** : Cette fonction retourne la dérivée seconde selon r du potentiel effectif en métrique de Schwarzschild pour le photon dans le référentiel de l'observateur. Pour cela elle se sert du rayon de Schwarzschild rs.
+
+## fonction rungekutta
+
+**Paramètre** : L, h, r, A
+
+**Rôle** : Cette fonction utilise la méthode de Runge-Kutta d'analyse numérique d'approximation d'équations différentielles. Cette méthode est utilisée ici pour résoudre l'équation différentielle associée au mouvement d'un photon dans le potentiel gravitationnel de Schwarzschild.
+
+## fonction rungekutta_obs
+
+**Paramètre** : L, h, r, A, E.
+
+**Rôle** : Cette fonction utilise la méthode de Runge-Kutta d'analyse numérique d'approximation d'équations différentielles. Cette méthode est utilisée ici pour résoudre l'équation différentielle associée au mouvement d'un photon dans le potentiel gravitationnel de Schwarzschild dans le référentiel de l'observateur.
+
+## fonction calcul_rmax 
+
+**Paramètres** : L, E, vr, r0, rmax1ou2
 
 
