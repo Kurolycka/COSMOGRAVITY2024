@@ -1063,7 +1063,7 @@ function animate(compteur,mobile,mobilefactor) {
   	}  //fin r0!=0
 }  // fin fonction animate
 
-// -------------------------------------{Vr_mob}--------------------------------------------
+// -------------------------------------{fonction Vr_mob}--------------------------------------------
 
 // Expression du potentiel divisé par c^2
 
@@ -1071,25 +1071,37 @@ function Vr_mob(L,r) {
 	return potentiel_Schwarzchild_photon(L,r);
 }
 
-// -------------------------------------{Vr_mob}--------------------------------------------
-
-//LE README S'ARRETE LA POUR LE MOMENT
+// -------------------------------------{fonction Vr_obs}--------------------------------------------
 
 function Vr_obs(E,L,r) {
 	return Math.pow(E,2)-( 1-potentiel_Schwarzchild_photon(L,r)/Math.pow(E,2) )*Math.pow(1-rs/r,2)  ;
 }
 
+// -------------------------------------{fonction Vr}--------------------------------------------
+
 function Vr(L,r) {
 	return potentiel_Schwarzchild_photon(L,r);
 }
+
+// -------------------------------------{fonction potentiel_Schwarzschild_photon}--------------------------------------------
 
 function potentiel_Schwarzchild_photon(L,r) {
 	return (1 - rs / r) * Math.pow(L / r, 2);
 }
 
+// -------------------------------------{fonction derivee_seconde_Schwarzschild_photon}--------------------------------------------
+
 function derivee_seconde_Schwarzchild_photon(L, r) {
 	return Math.pow(c, 2)/(2*Math.pow(r, 4)) * Math.pow(L, 2)*(2*r-3*rs);
-}																											  
+}				
+
+// -------------------------------------{fonction derivee_seconde_Schwarzschild_photon_obs}--------------------------------------------
+
+function derivee_seconde_Schwarzchild_photon_obs(E,L,r) {
+	return c*c*(r-rs)*(2*E*E*r*r*r*rs + 2*L*L*r*r - 7*L*L*r*rs + 5*L*L*rs*rs)/(2*Math.pow(r,6)*E*E); 
+}
+
+// -------------------------------------{fonction rungekutta}--------------------------------------------
  
 function rungekutta(L,h, r, A) {
 	k = [0, 0, 0, 0];
@@ -1102,9 +1114,7 @@ function rungekutta(L,h, r, A) {
 	return [r, A];
 }
 
-function derivee_seconde_Schwarzchild_photon_obs(E,L,r) {
-	return c*c*(r-rs)*(2*E*E*r*r*r*rs + 2*L*L*r*r - 7*L*L*r*rs + 5*L*L*rs*rs)/(2*Math.pow(r,6)*E*E); 
-}
+// -------------------------------------{fonction rungekutta_obs}--------------------------------------------
 			  
 function rungekutta_obs(E,L,h, r, A) {
 	k = [0, 0, 0, 0];
@@ -1117,7 +1127,8 @@ function rungekutta_obs(E,L,h, r, A) {
 	return [r, A];
 }
 
-
+// -------------------------------------{fonction calcul_rmax}--------------------------------------------
+//RENDUE ICI ICI ICI ICI ICI ICI ICI ICI ICI ICI 
 
 function calcul_rmax(L,E,vr,r0,rmax1ou2){
 	//eq3d(L,m,E); dans le cas avec particule massive
@@ -1164,6 +1175,7 @@ function calcul_rmax(L,E,vr,r0,rmax1ou2){
 	}
 }
 
+// -------------------------------------{fonction pausee}--------------------------------------------
 
 // Fonction bouton pause
 function pausee(compteur,mobile,mobilefactor) {
