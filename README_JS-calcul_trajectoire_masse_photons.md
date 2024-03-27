@@ -288,62 +288,62 @@ Cela va aider à générer les tableaux qui apparaissent sur la page web. Celui 
 📑 **Fonctionnement détaillé**:
 1. Je stocke dans la variable "texte" ce que me retourne la fonction **o_recupereJson()**.
 2. Je vérifie si la trajectoire est en pause ou bien si elle vient de démarrer et si une de ces conditions est vérifiée alors j'effectue différentes action : 
-🔹  La couleur du champ de saisie de r0 est modifiée en fonction des composantes de couleurs définies dans l'objet mobile (de la couleur qui est associée à ce mobile) et la couleur du texte est ajustée en noir ou blanc en fonction de la luminosité du champ de saisie.
-🔹 L'élément avec l'ID "tg2" est modifié pour afficher le style de table. (Affichage d'un élément HTML sous forme de tableau.) Et le contenu de l'élement avec l'ID "indic_caluls" est remplacé par le texte récupéré à partir de **texte.pages_trajectoire.calculs_encours**, ce qui semble être un indicateur visuel pour l'utilisateur indiquant que des calculs sont en cours.
-🔹 La fonction **estUnMobile()** est appellée.
-🔹 Certains éléments de saisie dans le document HTML sont désactivés pour éviter que l'utilisateur ne modifie les valeurs pendant la simulation. Les éléments affectés sont la masse de l'astre (M), le rayon physique de l'astre (r_phy) et le nombre de mobiles (nombredefusees). 
-🔹 Je récupère le nombre de mobiles que l'utilisateur a rentré et je stocke cette valeur convertie en nombre dans la variable blyo. 
-🔹 Je boucle et pour tous les mobiles je désactive les champs de saisie associés à r0, phi0 et teta pour ne pas que l'utilisateur ne modifie les valeurs pendant la simulation.
-🔹 Je désactive les boutons qui permettent  de passer d'observateur à photon et vice-versa. Ainsi l'utilisateur ne peut pas les changer en pleine simulation.
-🔹 Je définis la valeur de l'élément avec l'ID "trace_present" à "1" pour contrôler si il y a un tracé pendant la simulation ou non pour l'enregistrement.
-🔹 Je définis les propriétés "pause" et "début" de l'objet "mobile" à false. Cela indique ainsi que la simulation n'est ni en pause ni au début.
-🔹 J'initialise les valeurs des angles "phi" et "phi_obs" dans l'objet "mobile" avec la valeur phi0 de l'objet mobile.
-🔹 Je calcule le temps de chute libre ("temps_chute_libre") de la particule.
-🔹 J'ajoute la propriété "temps_chute_libre" à l'objet "mobile" et je l'initialise avec la valeur de ma variable temps_chute_libre que je viens de calculer.
-🔹 Je stocke dans la variable "A_init" la valeur de vr du mobile et dans la variable "r_init" la valeur de r0 du mobile.
-🔹 Je stocke dans la variable "nbredefusees" la même chose que dans la variable "blyo".
-🔹 Si le nombre de mobile est égale à 1 et que "ifUneFois2" (initialisée à true au début du programme) est égale à true alors on stocke dans la variable maximum la valeur de rmax associée à l'indice 1 de la liste r0o2. Et puis on stocke dans la variable "cle" la valeur 1 et dans la variable ifUneFois2 la valeur false.
-🔹 Si le nombre de mobile est plus grand ou égal à 2 et que "ifUneFois" (initialisée à true au début du programme) est égale à true (première fois que cette condition est rencontrée) alors on fait plusieurs choses. Tout d'abord on cherche le mobile ayant le rayon le plus élevé (rmax) parmi tous les mobiles et on stocke la valeur de rmax de ce mobile dans la variable "maximum" et le numéro de ce mobile dans la variable "cle". Ensuite je parcours à nouveau toutes les fusées et j'ajuste les facteurs de mise à l'échelle ("mobilefactor") pour qu'ils soient proportionnels au rayon du mobile le plus grand. Pour finir je mets la variable "ifUneFois" à false.
-🔹 On stocke dans la variable "A_part" la valeur de "A_init" et dans la variable "r_part" la valeur de "r_init".
-🔹 J'ajoute à l'objet "mobile" les propriétés "A_part" et "r_part" que j'initialise avec les variables aux noms correspondant.
-🔹 Je calcule la vitesse radiale vr du mobile observée que je stocke dans la variable "A_init_obs", je stocke ensuite également cette valeur dans la variable "A_part_obs" et j'ajoute à l'objet "mobile" une propriété "A_part_obs" que j'initialise avec A_part_obs.
-🔹 Je stocke dans la variable "vrobs" la valeur de la variable "A_init_obs".
-🔹 Je calcule la valeur de la vitesse tangentielle observée que je stocke dans la variable "vphiobs".
-🔹 Je stocke dans les variable "r_init_obs" et "r_part_obs" la valeur de la distance initiale du mobile au centre de l'astre r0 du mobile.Et puis j'ajoute à l'objet "mobile" la propriété "r_part_obs" que j'initialise avec r_part_obs.
-🔹 J'initialise le temps de la particule (temps_particule) et le temps de l'observateur (temps_observateur) à 0 et j'ajoute à l'objet "mobile" les propriétés "temps_particule" et "temps_observateur" que j'initialise avec mes nouvelles variables.
-🔹 J'appelle la fonction clavierEvenement().
-🔹 Je récupère dans la variable "element2" l'élément HTML avec l'ID "traject_type2".
-🔹 Je calcule la valeur de dτ que je stocke dans la variable "dtau" et puis j'ajoute à l'objet "mobile" la propriété "dtau" que j'initialise avec ma nouvelle variable.
-🔹 Je calcule la position initiale de la particule (x1part et y1part) en ajustant la taille de la trajectoire sur le canva et en normalisant la position par rapport à la taille maximale de la trajectoire.
-🔹 Je calcule la position initiale de l'observateur dans le référentiel propre (x1obs et y1obs) en ajustant la taille de la trajectoire sur le canva et en normalisant la position par rapport à la taille maximale de la trajectoire.
-🔹 Je récupère l'élément HTML avec l'ID "myCanvas" et je le stocke dans la variable canvas. Puis je vérifie si canvas est défini et si ce n'est pas le cas j'affiche un message d'erreur contenue dans **texte.pages_trajectoire.impossible_canvas**.
-🔹 Je récupère le contexte de rendu 2D du canvas et je le stocke dans la variable context. Si context n'est pas défini alors j'affiche un message d'erreur contenue dans **texte.pages_trajectoire.impossible_context**. 
-🔹 J'ajoute à l'objet "mobile" la propriété "canvas22" qui est initialisée avec un élément canvas avec l'ID "myCanvasBoule"+{numéro du Mobile}. 
-🔹 J'ajoute à l'objet "mobile" la propriété "context22" qui est initialisée avec le contexte de rendu 2D.
-🔹 J'appelle la fonction **majFondFixe()** et la fonction **majFondFixe44()** avec le paramètre mobile. 
-🔹 Je stocke dans la variable diametre_particule la valeur DIAMETRE_PART qui a été initialisée au début du programme. 
-🔹 Je modifie le style de l'élément HTML ayant l'ID "bloc_resultats" pour afficher ce bloc en tant que block. Donc l'élélement HTML avec cet ID sera rendu visible sur la page web.
-🔹 Je défini une fonction appellée **CentrerPopPotentiel()** qui ne prend pas de paramètres et qui affiche d'abord un élément HTML avec l'ID "bloc_resultats" en le rendant visible sur la page ensuite elle parcourt une série d'élements HTML ayant des IDs de la forme "grsvg_{numéro du mobile}" et pour chaque élément trouvé elle le supprime du DOM s'il existe et a un parent. Enfin, si la case à cocher ayant l'ID "toggle" est décochée alors la fonction **CentrerPopPotentiel()** est appellée. Cette fonction permet donc de nettoyer et de réinitialiser certaines parties de la page lorsque l'utilisateur décoche une cas à cocher.
-🔹 Je calcule la position de la particule sur le canvas avec les variables x1part et y1 part puis je stocke ces positions dans une propriété "positionspatio" de l'objet "mobile".
-🔹 Je calcule la position de l'observateur sur le canvas avec les variable x1obs et y1obs puis je stocke ces positions dans une propriété "position" de l'objet "mobile". 
-🔹 Je calcule la position centrale du canvas (la moitié de sa largeur et la moitié de sa hauteur) et je la stocke dans les variable "posX3" et "posY3".
-🔹 J'anime la simulation en appelant la fonction **animate()** à intervalles réguliers en en lui fournissant les arguments "compteur", "mobile" et "mobilefactor". 
-🔹 Je stocke dans les propriétés "Dtau1" et "Dtau2" du mobile les valeurs de Dtau à la puissante 8 (*1e8) (Dtau1) et de Dtau à la puissance -8 (/1e8) (Dtau2).
-🔹 J'associe un événement de clic à un bouton ayant l'ID "bouton_pause". Lorsque ce bouton est cliqué, la fonction **pausee()** est appellée prenant comme arguments "compteur", "mobile" et "mobilefactor".
-🔹 Je supprime un écouteur d'événements associé au bouton d'ID "plusvite" et un autre écouteur d'événement associé au bouton d'ID "moinsvite". 
-🔹 J'ajoute un nouvel écouteur d'évenement au bouton "plusvite" qui lorsqu'il est cliqué va faire que la vitesse de la simulation est augmentée à l'aide de la fonction **bouttons.vitesse(mobile,true)** et la variable "compteurVitesseAvantLancement" est également mise à jour pour refléter la nouvelle vitesse de la simulation.
-🔹 J'ajoute un nouvel écouteur d'événement au bouton "moinsvite" qui lorsqu'il est cliqué va faire que la vitesse de la simulation va baisser à l'aide de la fonction **bouttons.vitesse(mobile, false)** et la variable "compteurVitesseAvantLancement" est également mis à jour pour refléter la nouvelle vitesse de la simulation. 
-🔹 J'ajuste la vitesse de simulation en fonction du nombre de clics sur les boutons "plusvite" ou "moinsvite".
-🔹 Lorsque l'on clique sur le bouton d'ID "enregistrer2" alors une action est déclenchée. On récupère l'élément d'ID "traject_type2" et si cette valeur n'est pas "mobile" alors ça veut dire que l'observateur est sélectionné et dans de cas on dessine un cercle bleu sur le canvas à la position actuelle de l'observateur. Si la valeur est "mobile" alors cela veut dire que la particule est sélectionnée et dans de cas on dessine un cercle bleu sur le canvas à la position actuelle de la particule.
-🔹 Les écouteurs d'événements associés aux boutons d'ID "moinszoom" et "pluszoom" sont supprimés pour éviter les doublons, au cas où ils auraient déjà été ajoutés précédemment.
-🔹 Un nouvel écouteur d'événement est ajouté au bouton "moinzoom". Lorsque ce bouton est cliqué la fonction **bouttons.zoom(false, mobile, canvas, mobilefactor, compteur)** est appelée pour réduire le zoom. Puis les facteurs de zoom et les valeurs associées sont mis à jour et la fonction **majFondFixe44(mobile)** est appelée pour mettre à jour le fond fixe. Pour finir la fonction **rafraichir2(context, mobilefactor, rmaxjson, maximum, compteur)** est appelée pour rafraîchir le canvas et le texte affichant le niveau de zoom est mis à jour.
-🔹 Un écouteur d'évenement similaire est ajouté au bouton "pluszoom" mais cette fois pour augmenter le zoom.
-🔹 Un dernier écouteur d'événement est ajouter au bouton d'ID "initialiser" qui réinitialise les paramètres de la simulation lorsque le bouton est cliqué. Cela inclut la réinitialisation des facteurs de zoom, l'appel de la fonction **majFondFixe44(mobile)** pour mettre à jour le fond fixe, le rafraichissement du canvas et la réinitialisation du texte affichant le niveau de zoom.
-🔹 J'ajoute un écouteur d'événement au bouton d'ID "clear". Lorsque ce bouton est cliqué, la page est rechargée ce qui a pour effet d'effacer le contenu du canvas en entier puisque tout le script sera relancé.
-🔹 La fonction **creation_blocs(context, mobilefactor, rmaxjson, maximum, compteur)** est appelée et semble être responsable du tracé du rayon de Schwarzchild.
-🔹 On stocke dans une variable "element2" l'élément dont l'ID est "traject_type2".
-🔹 Je créé un intervalle d'exécution qui exécute la fonction anonyme toutes les 300 milisecondes, ceci va être utilisé pour des mises à jour en temps réel ou des animations. Ce bloc de code va être responsable de la mise à jour périodique du graphe du potentiel en fonction du type de trajectoire sélectionné (observateur ou spationaute).
-🔹 Voici ce que fais cette fonction anonyme : Elle commence par vider l'élément SVG identifié par "grsvg_" suivi du numéro de compteur. Cela permet de nettoyer le contenu SVG avant de dessiner de nouveaux éléments.Ensuite elle initialise deux tableaux de données vide "data1" et "data2". Puis elle vérifie si la valeur de l'élément "element2" n'est pas mobile et si c'est le cas elle calcule le pas de variation "dr" pour le tracé du graphe en fonction du rayon de la particule observée, calcule les valeur du potentiel gravitationnel pour différents pourcentages de rayon du rayon de la particule observée et les stocke dans "data1", calcule la valeur du potentiel gravitationnel au rayon de la particule observée et la stocke dans "data2", puis appelle la fonction **graphique_creation_pot(0, data1, data2, compteur, mobile)** pour créer le graphe du potentiel avec les données calculée et le stocke dans mobile.point. Si la valeur de "element2" est "mobile" alors le processus est similaire mais les calculs sont basés sur le rayon de la particule plutôt que sur celui de la particule observée.
+🔹  La couleur du champ de saisie de r0 est modifiée en fonction des composantes de couleurs définies dans l'objet mobile (de la couleur qui est associée à ce mobile) et la couleur du texte est ajustée en noir ou blanc en fonction de la luminosité du champ de saisie. <br>
+🔹 L'élément avec l'ID "tg2" est modifié pour afficher le style de table. (Affichage d'un élément HTML sous forme de tableau.) Et le contenu de l'élement avec l'ID "indic_caluls" est remplacé par le texte récupéré à partir de **texte.pages_trajectoire.calculs_encours**, ce qui semble être un indicateur visuel pour l'utilisateur indiquant que des calculs sont en cours. <br>
+🔹 La fonction **estUnMobile()** est appellée. <br>
+🔹 Certains éléments de saisie dans le document HTML sont désactivés pour éviter que l'utilisateur ne modifie les valeurs pendant la simulation. Les éléments affectés sont la masse de l'astre (M), le rayon physique de l'astre (r_phy) et le nombre de mobiles (nombredefusees). <br>
+🔹 Je récupère le nombre de mobiles que l'utilisateur a rentré et je stocke cette valeur convertie en nombre dans la variable blyo. <br>
+🔹 Je boucle et pour tous les mobiles je désactive les champs de saisie associés à r0, phi0 et teta pour ne pas que l'utilisateur ne modifie les valeurs pendant la simulation. <br>
+🔹 Je désactive les boutons qui permettent  de passer d'observateur à photon et vice-versa. Ainsi l'utilisateur ne peut pas les changer en pleine simulation. <br>
+🔹 Je définis la valeur de l'élément avec l'ID "trace_present" à "1" pour contrôler si il y a un tracé pendant la simulation ou non pour l'enregistrement. <br>
+🔹 Je définis les propriétés "pause" et "début" de l'objet "mobile" à false. Cela indique ainsi que la simulation n'est ni en pause ni au début. <br>
+🔹 J'initialise les valeurs des angles "phi" et "phi_obs" dans l'objet "mobile" avec la valeur phi0 de l'objet mobile. <br>
+🔹 Je calcule le temps de chute libre ("temps_chute_libre") de la particule. <br>
+🔹 J'ajoute la propriété "temps_chute_libre" à l'objet "mobile" et je l'initialise avec la valeur de ma variable temps_chute_libre que je viens de calculer. <br>
+🔹 Je stocke dans la variable "A_init" la valeur de vr du mobile et dans la variable "r_init" la valeur de r0 du mobile. <br>
+🔹 Je stocke dans la variable "nbredefusees" la même chose que dans la variable "blyo". <br>
+🔹 Si le nombre de mobile est égale à 1 et que "ifUneFois2" (initialisée à true au début du programme) est égale à true alors on stocke dans la variable maximum la valeur de rmax associée à l'indice 1 de la liste r0o2. Et puis on stocke dans la variable "cle" la valeur 1 et dans la variable ifUneFois2 la valeur false. <br>
+🔹 Si le nombre de mobile est plus grand ou égal à 2 et que "ifUneFois" (initialisée à true au début du programme) est égale à true (première fois que cette condition est rencontrée) alors on fait plusieurs choses. Tout d'abord on cherche le mobile ayant le rayon le plus élevé (rmax) parmi tous les mobiles et on stocke la valeur de rmax de ce mobile dans la variable "maximum" et le numéro de ce mobile dans la variable "cle". Ensuite je parcours à nouveau toutes les fusées et j'ajuste les facteurs de mise à l'échelle ("mobilefactor") pour qu'ils soient proportionnels au rayon du mobile le plus grand. Pour finir je mets la variable "ifUneFois" à false. <br>
+🔹 On stocke dans la variable "A_part" la valeur de "A_init" et dans la variable "r_part" la valeur de "r_init". <br>
+🔹 J'ajoute à l'objet "mobile" les propriétés "A_part" et "r_part" que j'initialise avec les variables aux noms correspondant. <br>
+🔹 Je calcule la vitesse radiale vr du mobile observée que je stocke dans la variable "A_init_obs", je stocke ensuite également cette valeur dans la variable "A_part_obs" et j'ajoute à l'objet "mobile" une propriété "A_part_obs" que j'initialise avec A_part_obs. <br>
+🔹 Je stocke dans la variable "vrobs" la valeur de la variable "A_init_obs". <br>
+🔹 Je calcule la valeur de la vitesse tangentielle observée que je stocke dans la variable "vphiobs". <br>
+🔹 Je stocke dans les variable "r_init_obs" et "r_part_obs" la valeur de la distance initiale du mobile au centre de l'astre r0 du mobile.Et puis j'ajoute à l'objet "mobile" la propriété "r_part_obs" que j'initialise avec r_part_obs. <br>
+🔹 J'initialise le temps de la particule (temps_particule) et le temps de l'observateur (temps_observateur) à 0 et j'ajoute à l'objet "mobile" les propriétés "temps_particule" et "temps_observateur" que j'initialise avec mes nouvelles variables. <br>
+🔹 J'appelle la fonction clavierEvenement(). <br>
+🔹 Je récupère dans la variable "element2" l'élément HTML avec l'ID "traject_type2". <br>
+🔹 Je calcule la valeur de dτ que je stocke dans la variable "dtau" et puis j'ajoute à l'objet "mobile" la propriété "dtau" que j'initialise avec ma nouvelle variable. <br>
+🔹 Je calcule la position initiale de la particule (x1part et y1part) en ajustant la taille de la trajectoire sur le canva et en normalisant la position par rapport à la taille maximale de la trajectoire. <br>
+🔹 Je calcule la position initiale de l'observateur dans le référentiel propre (x1obs et y1obs) en ajustant la taille de la trajectoire sur le canva et en normalisant la position par rapport à la taille maximale de la trajectoire. <br>
+🔹 Je récupère l'élément HTML avec l'ID "myCanvas" et je le stocke dans la variable canvas. Puis je vérifie si canvas est défini et si ce n'est pas le cas j'affiche un message d'erreur contenue dans **texte.pages_trajectoire.impossible_canvas**. <br>
+🔹 Je récupère le contexte de rendu 2D du canvas et je le stocke dans la variable context. Si context n'est pas défini alors j'affiche un message d'erreur contenue dans **texte.pages_trajectoire.impossible_context**.  <br>
+🔹 J'ajoute à l'objet "mobile" la propriété "canvas22" qui est initialisée avec un élément canvas avec l'ID "myCanvasBoule"+{numéro du Mobile}. <br>
+🔹 J'ajoute à l'objet "mobile" la propriété "context22" qui est initialisée avec le contexte de rendu 2D. <br>
+🔹 J'appelle la fonction **majFondFixe()** et la fonction **majFondFixe44()** avec le paramètre mobile. <br>
+🔹 Je stocke dans la variable diametre_particule la valeur DIAMETRE_PART qui a été initialisée au début du programme. <br>
+🔹 Je modifie le style de l'élément HTML ayant l'ID "bloc_resultats" pour afficher ce bloc en tant que block. Donc l'élélement HTML avec cet ID sera rendu visible sur la page web. <br>
+🔹 Je défini une fonction appellée **CentrerPopPotentiel()** qui ne prend pas de paramètres et qui affiche d'abord un élément HTML avec l'ID "bloc_resultats" en le rendant visible sur la page ensuite elle parcourt une série d'élements HTML ayant des IDs de la forme "grsvg_{numéro du mobile}" et pour chaque élément trouvé elle le supprime du DOM s'il existe et a un parent. Enfin, si la case à cocher ayant l'ID "toggle" est décochée alors la fonction **CentrerPopPotentiel()** est appellée. Cette fonction permet donc de nettoyer et de réinitialiser certaines parties de la page lorsque l'utilisateur décoche une cas à cocher. <br>
+🔹 Je calcule la position de la particule sur le canvas avec les variables x1part et y1 part puis je stocke ces positions dans une propriété "positionspatio" de l'objet "mobile". <br>
+🔹 Je calcule la position de l'observateur sur le canvas avec les variable x1obs et y1obs puis je stocke ces positions dans une propriété "position" de l'objet "mobile". <br>
+🔹 Je calcule la position centrale du canvas (la moitié de sa largeur et la moitié de sa hauteur) et je la stocke dans les variable "posX3" et "posY3". <br>
+🔹 J'anime la simulation en appelant la fonction **animate()** à intervalles réguliers en en lui fournissant les arguments "compteur", "mobile" et "mobilefactor". <br>
+🔹 Je stocke dans les propriétés "Dtau1" et "Dtau2" du mobile les valeurs de Dtau à la puissante 8 (*1e8) (Dtau1) et de Dtau à la puissance -8 (/1e8) (Dtau2).<br>
+🔹 J'associe un événement de clic à un bouton ayant l'ID "bouton_pause". Lorsque ce bouton est cliqué, la fonction **pausee()** est appellée prenant comme arguments "compteur", "mobile" et "mobilefactor". <br>
+🔹 Je supprime un écouteur d'événements associé au bouton d'ID "plusvite" et un autre écouteur d'événement associé au bouton d'ID "moinsvite". <br>
+🔹 J'ajoute un nouvel écouteur d'évenement au bouton "plusvite" qui lorsqu'il est cliqué va faire que la vitesse de la simulation est augmentée à l'aide de la fonction **bouttons.vitesse(mobile,true)** et la variable "compteurVitesseAvantLancement" est également mise à jour pour refléter la nouvelle vitesse de la simulation. <br>
+🔹 J'ajoute un nouvel écouteur d'événement au bouton "moinsvite" qui lorsqu'il est cliqué va faire que la vitesse de la simulation va baisser à l'aide de la fonction **bouttons.vitesse(mobile, false)** et la variable "compteurVitesseAvantLancement" est également mis à jour pour refléter la nouvelle vitesse de la simulation. <br>
+🔹 J'ajuste la vitesse de simulation en fonction du nombre de clics sur les boutons "plusvite" ou "moinsvite".<br>
+🔹 Lorsque l'on clique sur le bouton d'ID "enregistrer2" alors une action est déclenchée. On récupère l'élément d'ID "traject_type2" et si cette valeur n'est pas "mobile" alors ça veut dire que l'observateur est sélectionné et dans de cas on dessine un cercle bleu sur le canvas à la position actuelle de l'observateur. Si la valeur est "mobile" alors cela veut dire que la particule est sélectionnée et dans de cas on dessine un cercle bleu sur le canvas à la position actuelle de la particule. <br>
+🔹 Les écouteurs d'événements associés aux boutons d'ID "moinszoom" et "pluszoom" sont supprimés pour éviter les doublons, au cas où ils auraient déjà été ajoutés précédemment. <br>
+🔹 Un nouvel écouteur d'événement est ajouté au bouton "moinzoom". Lorsque ce bouton est cliqué la fonction **bouttons.zoom(false, mobile, canvas, mobilefactor, compteur)** est appelée pour réduire le zoom. Puis les facteurs de zoom et les valeurs associées sont mis à jour et la fonction **majFondFixe44(mobile)** est appelée pour mettre à jour le fond fixe. Pour finir la fonction **rafraichir2(context, mobilefactor, rmaxjson, maximum, compteur)** est appelée pour rafraîchir le canvas et le texte affichant le niveau de zoom est mis à jour. <br>
+🔹 Un écouteur d'évenement similaire est ajouté au bouton "pluszoom" mais cette fois pour augmenter le zoom. <br>
+🔹 Un dernier écouteur d'événement est ajouter au bouton d'ID "initialiser" qui réinitialise les paramètres de la simulation lorsque le bouton est cliqué. Cela inclut la réinitialisation des facteurs de zoom, l'appel de la fonction **majFondFixe44(mobile)** pour mettre à jour le fond fixe, le rafraichissement du canvas et la réinitialisation du texte affichant le niveau de zoom. <br>
+🔹 J'ajoute un écouteur d'événement au bouton d'ID "clear". Lorsque ce bouton est cliqué, la page est rechargée ce qui a pour effet d'effacer le contenu du canvas en entier puisque tout le script sera relancé. <br>
+🔹 La fonction **creation_blocs(context, mobilefactor, rmaxjson, maximum, compteur)** est appelée et semble être responsable du tracé du rayon de Schwarzchild. <br>
+🔹 On stocke dans une variable "element2" l'élément dont l'ID est "traject_type2". <br>
+🔹 Je créé un intervalle d'exécution qui exécute la fonction anonyme toutes les 300 milisecondes, ceci va être utilisé pour des mises à jour en temps réel ou des animations. Ce bloc de code va être responsable de la mise à jour périodique du graphe du potentiel en fonction du type de trajectoire sélectionné (observateur ou spationaute). <br>
+🔹 Voici ce que fais cette fonction anonyme : Elle commence par vider l'élément SVG identifié par "grsvg_" suivi du numéro de compteur. Cela permet de nettoyer le contenu SVG avant de dessiner de nouveaux éléments.Ensuite elle initialise deux tableaux de données vide "data1" et "data2". Puis elle vérifie si la valeur de l'élément "element2" n'est pas mobile et si c'est le cas elle calcule le pas de variation "dr" pour le tracé du graphe en fonction du rayon de la particule observée, calcule les valeur du potentiel gravitationnel pour différents pourcentages de rayon du rayon de la particule observée et les stocke dans "data1", calcule la valeur du potentiel gravitationnel au rayon de la particule observée et la stocke dans "data2", puis appelle la fonction **graphique_creation_pot(0, data1, data2, compteur, mobile)** pour créer le graphe du potentiel avec les données calculée et le stocke dans mobile.point. Si la valeur de "element2" est "mobile" alors le processus est similaire mais les calculs sont basés sur le rayon de la particule plutôt que sur celui de la particule observée. <br>
 3. Si la trajectoire n'est pas en pause ou vient de démarrer alors on créé un intervalle qui exécute la fonction **animate.bind(null, compteur, mobile, mobilefactor)** périodiquement et on stocke cet intervalle dans mobile.myInterval. 10/6 est l'intervalle de temps en miliseconde entre chaque appel de la fonction **animate()**.
 4. Un événement est ajouté au bouton d'ID "pause/resume" de sorte que lorsque ce bouton est cliqué la fonction **pausee(compteur, mobile, mobilefactor)** est appellée.
 5. Le bouton d'ID "start" est masqué une fois que l'animation est lancée.
@@ -370,20 +370,20 @@ Le **DOM** est une représentation hiérarchique sous forme d'arbdre de tous les
 5. J'appelle la fonction **choixTrajectoire(compteur, context, mobile, mobilefactor, rmaxjson, maximum)** pour probablement choisir le type de trajectoire à afficher en fonction de certains paramètres passés en arguments.
 6. Je récupère la valeur de l'élément HTML avce l'ID "boutton_ammorti" que je stocke dans la variable "isrebond".
 7. Je vérifie si r0 (la distance initiale du mobile au centre de l'astre) est différente de 0.0 ou non et si c'est le cas :
-🔹 Si la valeur de "element2" est "mobile" alors la fonction **rungekutta(mobile.L, mobile.dtau, mobile.r_part, mobile.A_part)**  qui semble utiliser la méthode de Runge-Kutta est appelée pour calculer les nouvelles positions et vitesses de la particule mobile puis stocke les résultats dans les propriétés "rpart" et "A_part" de l'objet "mobile". Je stocke ensuite dans la variable resultat ce que retourne la fonction **calculs.MSC_Ex_vitess(mobile.e, mobile.L, mobile.r_part, rs, true)**. Ensuite je stocke dans la variable "vtotal" le résultat resultat[0] (probablement la vitesse totale de la particule), dans "vp_2" le resultat[2] (probablement la vitesse tangentielle de la particule) et dans "vr_2" le resultat[1]xMath.sign(mobile.A_part) (probablement la vitesse radiale de la particule).
-🔹 Sinon j'effectue des calculs assez similaires pour le cas où l'"element2" n'est pas "mobile". Les noms de variables changeront par contre avec un "_obs" qui apparaît à la fin et on utilisera non pas **rungekutta()** mais **rungekutta_obs()**.
-🔹 Je vérifie si la valeur de l'élément "element2" n'est pas "mobile" et en fonction :
-🔹🔹🔹 Soit  Si "element2" n'est pas "mobile" et que le "r_part_obs" est supérieur ou égal à "rs" alors on trace la trajectoire de la particule. On dessine un petit rectangle représentatnt la particule sur le canvas et les coordonnées de la particule sont données par "mobile.position.posX2" et "mobile.position.posY2". Ensuite le code met à jour le contexte mobile["context22"] pour dessiner un cercle autour de la particule, pour la distinguer sur le deuxième canva.
-🔹🔹🔹 Ou bien si "element2" est "mobile" on est dans le référentiel de la particule et le même processus est réalisé mais cette fois les coordonnées de la particule sont "mobile.positionspation.posX1" et "mobile.positionspatio.posY1"
-🔹 Si on a "element2" qui n'est pas "mobile" et donc qu'on est dans le référentiel de l'observateur et que "r_part_obs" est plus petit ou égal à "r_phy"  alors si l'option de rebond est activé (isrebond=1) et que le "r_phy" > 0  alors on inverse le signe de "mobile.A_part_obs" .Si par contre le rebond est désactivé (isrebond=0), que r_phy est différent de 0 et que "mobile.r_part_obs" est plus petit ou égale à "r_phy" alors on met la variable "mobile.onestarrete" à 1, on appelle la fonction arret(mobile) et on met la variable "mobile.peuxonrelancer" à false.
-🔹 Si par contre on a "element2" qui est "mobile" et que donc on est dans le référentiel de la particule et que "mobile.r_part" est plus petit ou égal à "r_phy" ou bien que mobile.r_part==0 alors on a deux cas de figure. Soit l'option de rebond est activé et r_phy >  et dans ce cas on inverse le signe de mobile.A_part. Ou bien l'option rebond est désactivée et r_phy n'est pas nulle et mobile.r_part <= r_phy et dans ce cas on fait les mêmes choses que dans le deuxième cas du point 9.
-🔹  Ensuite on met à jour les positions de la particule dans son référentiel et dans le référentiel de l'observateur sur le canva en fonction de leur position radiale et angulaire.
-🔹  Si le choix de la trajectoire (element2.value) n'est pas"mobile" alors on utilise la fonction **Vr_obs(mobile.E,mobile.L,mobile.r_part_obs)** pour calculer le potentiel gravitationnel et le résultat est stocké dans la variable V. Ensuite, une nouvelle liste de données ("data2") est créée, contenant une seule entrée avec dans "date" la variable "mobile.r_part_obs" et dans "close" la variable "V". Et puis si la variable "mobile.point" est définie alors on appelle la fonction **update_graphique_2(mobile.point,data2,mobile)**.
-🔹  Si "element2" est égal à "mobile" alors on utilise la fonction **Vr_mob(mobile.L,mobile.r_part)** pour calculer le potentiel gravitationnel qui est stocké dans "V" et de la même manière on créé une liste de donnée "data2" sauf que cette fois dans "date" on met la variable "mobile.r_part". Et puis on on procède de la même manière que dans 12.
-🔹  Je vérifie si mobile.rpart est négatif ou pas et si c'est le cas je le remets à 0. Ceci est fait pour ne pas avoir de mauvaises surprises sur le dernier calcul avant la fin.
-🔹  Je défini ensuite une fonction **testvaleur(x)** qui vérifie si le paramètre x qui lui est donné est un nombre ou non et si c'est un nombre alors la fonction le retourne et si ce n'est pas le cas elle affiche un message d'erreur.
-🔹  Je vérifie si "element2" est égal à "mobile" (référentiel de l'observateur) ou pas (référentiel du photon). Et puis je vérifie quelques conditions supplémentaires comme par exemple si "mobile.r_part_obs" >= rs * 1.000001 ou si "mobile.r_part">0 et en fonction des conditions qui sont remplie ou non je mets à jours les valeurs HTML des éléments d'ID "to{compteur}", "r_par{compteur}", "tp{compteur}", "vp_sc_mas{compteur}", "vr_sc_mas{compteur}", "v_tot{compteur}", "ga{compteur}".
-🔹 Si on est dans le référentiel de la particule et que "mobile.r_part" > rs*1.00001 alors on rajouter à la valeur "mobile.temps_observateur" la valeur de "mobile.dtau". Et si on ne vérifie pas la condition "mobile.r_part" > rs*1.00001 alors "mobile.temps_observateur" prend la valeur 1/0. **GROS PROBLEME A CET ENDROIT**.Je mets ensuite à jour la valeur de l'élément HTML qui a pour ID "to{compteur}" peu importe si la condition est vérifiée ou non.
+🔹 Si la valeur de "element2" est "mobile" alors la fonction **rungekutta(mobile.L, mobile.dtau, mobile.r_part, mobile.A_part)**  qui semble utiliser la méthode de Runge-Kutta est appelée pour calculer les nouvelles positions et vitesses de la particule mobile puis stocke les résultats dans les propriétés "rpart" et "A_part" de l'objet "mobile". Je stocke ensuite dans la variable resultat ce que retourne la fonction **calculs.MSC_Ex_vitess(mobile.e, mobile.L, mobile.r_part, rs, true)**. Ensuite je stocke dans la variable "vtotal" le résultat resultat[0] (probablement la vitesse totale de la particule), dans "vp_2" le resultat[2] (probablement la vitesse tangentielle de la particule) et dans "vr_2" le resultat[1]xMath.sign(mobile.A_part) (probablement la vitesse radiale de la particule). <br>
+🔹 Sinon j'effectue des calculs assez similaires pour le cas où l'"element2" n'est pas "mobile". Les noms de variables changeront par contre avec un "_obs" qui apparaît à la fin et on utilisera non pas **rungekutta()** mais **rungekutta_obs()**. <br>
+🔹 Je vérifie si la valeur de l'élément "element2" n'est pas "mobile" et en fonction : <br>
+🔹🔹🔹 Soit  Si "element2" n'est pas "mobile" et que le "r_part_obs" est supérieur ou égal à "rs" alors on trace la trajectoire de la particule. On dessine un petit rectangle représentatnt la particule sur le canvas et les coordonnées de la particule sont données par "mobile.position.posX2" et "mobile.position.posY2". Ensuite le code met à jour le contexte mobile["context22"] pour dessiner un cercle autour de la particule, pour la distinguer sur le deuxième canva.<br>
+🔹🔹🔹 Ou bien si "element2" est "mobile" on est dans le référentiel de la particule et le même processus est réalisé mais cette fois les coordonnées de la particule sont "mobile.positionspation.posX1" et "mobile.positionspatio.posY1"<br>
+🔹 Si on a "element2" qui n'est pas "mobile" et donc qu'on est dans le référentiel de l'observateur et que "r_part_obs" est plus petit ou égal à "r_phy"  alors si l'option de rebond est activé (isrebond=1) et que le "r_phy" > 0  alors on inverse le signe de "mobile.A_part_obs" .Si par contre le rebond est désactivé (isrebond=0), que r_phy est différent de 0 et que "mobile.r_part_obs" est plus petit ou égale à "r_phy" alors on met la variable "mobile.onestarrete" à 1, on appelle la fonction arret(mobile) et on met la variable "mobile.peuxonrelancer" à false.<br>
+🔹 Si par contre on a "element2" qui est "mobile" et que donc on est dans le référentiel de la particule et que "mobile.r_part" est plus petit ou égal à "r_phy" ou bien que mobile.r_part==0 alors on a deux cas de figure. Soit l'option de rebond est activé et r_phy >  et dans ce cas on inverse le signe de mobile.A_part. Ou bien l'option rebond est désactivée et r_phy n'est pas nulle et mobile.r_part <= r_phy et dans ce cas on fait les mêmes choses que dans le deuxième cas du point 9.<br>
+🔹  Ensuite on met à jour les positions de la particule dans son référentiel et dans le référentiel de l'observateur sur le canva en fonction de leur position radiale et angulaire.<br>
+🔹  Si le choix de la trajectoire (element2.value) n'est pas"mobile" alors on utilise la fonction **Vr_obs(mobile.E,mobile.L,mobile.r_part_obs)** pour calculer le potentiel gravitationnel et le résultat est stocké dans la variable V. Ensuite, une nouvelle liste de données ("data2") est créée, contenant une seule entrée avec dans "date" la variable "mobile.r_part_obs" et dans "close" la variable "V". Et puis si la variable "mobile.point" est définie alors on appelle la fonction **update_graphique_2(mobile.point,data2,mobile)**.<br>
+🔹  Si "element2" est égal à "mobile" alors on utilise la fonction **Vr_mob(mobile.L,mobile.r_part)** pour calculer le potentiel gravitationnel qui est stocké dans "V" et de la même manière on créé une liste de donnée "data2" sauf que cette fois dans "date" on met la variable "mobile.r_part". Et puis on on procède de la même manière que dans 12.<br>
+🔹  Je vérifie si mobile.rpart est négatif ou pas et si c'est le cas je le remets à 0. Ceci est fait pour ne pas avoir de mauvaises surprises sur le dernier calcul avant la fin. <br>
+🔹  Je défini ensuite une fonction **testvaleur(x)** qui vérifie si le paramètre x qui lui est donné est un nombre ou non et si c'est un nombre alors la fonction le retourne et si ce n'est pas le cas elle affiche un message d'erreur. <br>
+🔹  Je vérifie si "element2" est égal à "mobile" (référentiel de l'observateur) ou pas (référentiel du photon). Et puis je vérifie quelques conditions supplémentaires comme par exemple si "mobile.r_part_obs" >= rs * 1.000001 ou si "mobile.r_part">0 et en fonction des conditions qui sont remplie ou non je mets à jours les valeurs HTML des éléments d'ID "to{compteur}", "r_par{compteur}", "tp{compteur}", "vp_sc_mas{compteur}", "vr_sc_mas{compteur}", "v_tot{compteur}", "ga{compteur}". <br>
+🔹 Si on est dans le référentiel de la particule et que "mobile.r_part" > rs*1.00001 alors on rajouter à la valeur "mobile.temps_observateur" la valeur de "mobile.dtau". Et si on ne vérifie pas la condition "mobile.r_part" > rs*1.00001 alors "mobile.temps_observateur" prend la valeur 1/0. **GROS PROBLEME A CET ENDROIT**.Je mets ensuite à jour la valeur de l'élément HTML qui a pour ID "to{compteur}" peu importe si la condition est vérifiée ou non. <br>
 
 📰 **Informations** : Cette fonction utilise les autres fonctions **estUnMobile()**, **choixTrajectoire()**, **rungekutta()**, **MSC_Ex_vitesse()** liée au fichier **calculs**, **rungekutta_obs()**, **arret()**, **Vr_obs()**, **update_graphique_2()**
 
@@ -448,8 +448,8 @@ Le **DOM** est une représentation hiérarchique sous forme d'arbdre de tous les
 📑 **Fonctionnement simplifié**: Il semble il y a voir plusieurs cas de figures : 
 1. Dans le cas où L<2*sqrt(3)*m on a rmax=r0.
 2. Dans le cas où L <= 4*m et L>2*sqrt(3)*m on à nouveau plusieurs cas de figure :
-🔹 Si Vr_mob(L,r0)<=Vr_mob(L,r1) et r0>r1 alors on a à nouveau deux autres cas de figure : si r3 > r0 alors rmax=r3 et si r3 < r0 on a rmax=r0.
-🔹 Sinon rmax=r0.
+🔹 Si Vr_mob(L,r0)<=Vr_mob(L,r1) et r0>r1 alors on a à nouveau deux autres cas de figure : si r3 > r0 alors rmax=r3 et si r3 < r0 on a rmax=r0. <br>
+🔹 Sinon rmax=r0.<br>
 3. Dans le cas où L > 4*m on a rmax=r0.
 
 📰 **Informations** : Cette fonction utilise la fonction **Vr_mob()**.
@@ -474,15 +474,15 @@ Le **DOM** est une représentation hiérarchique sous forme d'arbdre de tous les
 1. La fonction détecte lorsque l'utilisateur presse une touche du clavier.
 2. A chaque fois qu'une touche est pressée elle vérifie quelle touche à été pressée.
 3. Ensuite il y a plusieurs actions en fonction da la touche pressée :
-🔹 Pour "z" : déclenche un clic sur l'événement avec l'ID "r1".
-🔹 Pour "e" : déclenche un clic sur l'événement avec l'ID "rebondd".
-🔹 Pour "q" : déclenche un clic sur l'événement avec l'ID "start".
-🔹 Pour "s" : déclenche un clic sur l'événement avec l'ID "clear".
-🔹 Pour "d" : déclenche un clic sur l'événement avec l'ID "boutton_enregis".
-🔹 Pour "f" : déclenche un clic sur l'événement avec l'ID "boutton_recup".
-🔹 Pour "w" : déclenche un clic sur l'événement avec l'ID "moinsvite".
-🔹 Pour "x" : déclenche un clic sur l'événement avec l'ID "pau".
-🔹 Pour "c" : déclenche un clic sur l'événement avec l'ID "plusvi".
+🔹 Pour "z" : déclenche un clic sur l'événement avec l'ID "r1". <br>
+🔹 Pour "e" : déclenche un clic sur l'événement avec l'ID "rebondd".<br>
+🔹 Pour "q" : déclenche un clic sur l'événement avec l'ID "start".<br>
+🔹 Pour "s" : déclenche un clic sur l'événement avec l'ID "clear".<br>
+🔹 Pour "d" : déclenche un clic sur l'événement avec l'ID "boutton_enregis".<br>
+🔹 Pour "f" : déclenche un clic sur l'événement avec l'ID "boutton_recup".<br>
+🔹 Pour "w" : déclenche un clic sur l'événement avec l'ID "moinsvite".<br>
+🔹 Pour "x" : déclenche un clic sur l'événement avec l'ID "pau".<br>
+🔹 Pour "c" : déclenche un clic sur l'événement avec l'ID "plusvi".<br>
 
 ## #26 : fonction rafraichir2
 
@@ -515,9 +515,9 @@ Le **DOM** est une représentation hiérarchique sous forme d'arbdre de tous les
 
 📑 **Fonctionnement** :
 1. Elle commence par vérifier si une trajectoire a bien été tracée et si c'est le cas : 
-🔹 Elle copie le contenu du canvas principal 'canvas' sur un autre canvas 'canvas3'.
-🔹 Elle utilise la fonction **canvasToImage(canvas3, {name: 'Trajectoire_photon_Schwar', type: 'png'})** pour enregistrer le canvas3 sous forme d'image PNG avec un nom spécifié 'Trajectoire_photon_Schwar'.
-🔹 Elle appelle une fonction **majFondFixe3()** pour sûrement mettre à jour un élément.
+🔹 Elle copie le contenu du canvas principal 'canvas' sur un autre canvas 'canvas3'. <br>
+🔹 Elle utilise la fonction **canvasToImage(canvas3, {name: 'Trajectoire_photon_Schwar', type: 'png'})** pour enregistrer le canvas3 sous forme d'image PNG avec un nom spécifié 'Trajectoire_photon_Schwar'.<br>
+🔹 Elle appelle une fonction **majFondFixe3()** pour sûrement mettre à jour un élément.<br>
 2. Dans le cas contraire elle affiche une alerte avec un message récupéré à partir de **o_recupereJson()** qui est **texte.pages_trajectoire.message_enregistrer**.
 
 📰 **Informations** : Cette fonction utilise les autres fonctions : **canvasToImage()** qui vient de **canvas-to-image.js**, **majFondFixe3()** et **o_recupereJson()**.
@@ -562,11 +562,11 @@ Le **DOM** est une représentation hiérarchique sous forme d'arbdre de tous les
 
 📑 **Fonctionnement** :
 1. Si l'élément d'ID "element" a la valeur 'simple' alors : 
-🔹 La fonction **majFondFixe()** est appellée. 
-🔹 La fonction **creation_blocs(context, mobilefactor, rmaxjson, r0ou2, compteur)** est appelée.
-🔹 Le diamètre de la particule (diametre_particule) est doublé de sa valeur initiale (DIAMETRE_PART).
+🔹 La fonction **majFondFixe()** est appellée. <br>
+🔹 La fonction **creation_blocs(context, mobilefactor, rmaxjson, r0ou2, compteur)** est appelée. <br>
+🔹 Le diamètre de la particule (diametre_particule) est doublé de sa valeur initiale (DIAMETRE_PART).<br>
 2. Si l'élément d'ID "element" a la valeur 'complete' :
-🔹 Le diamètre de la particule (diametre_particule) garde sa valeur initiale (DIAMETRE_PART).
+🔹 Le diamètre de la particule (diametre_particule) garde sa valeur initiale (DIAMETRE_PART).<br>
 
 📰 **Informations** : Cette fonction utilise les autres fonctions : **majFondFixe()** et **creation_blocs()**.
 
@@ -629,11 +629,11 @@ Le **DOM** est une représentation hiérarchique sous forme d'arbdre de tous les
 💡 **Rôle** : Cette fonction sert à vérifier la validité des paramètres fournis avant de lancer la simulation.
 
 📑 **Fonctionnement** : Voici les différentes vérifications qui sont effectuées : 
-🔹 Si le rayon physique de l'astre est négatif ou que la distance initiale du projectile au centre de l'astre est négative alors une alerte s'affiche avec le texte **texte.pages_trajectoire.rayon_neg**.
-🔹 Si le rayon physique de l'astre est plus petit ou égal au rayon de Schwarzschild et qu'il est différent de 0 alors une alerte s'affiche avec le texte **texte.pages_trajectoire.rayonPhyInfHorz**.
-🔹 Si la distance initiale du projectile au centre de l'astre est plus petite ou égale au rayon de Scwharzschild alors une alerte s'affiche avec le texte **texte.pages_trajectoire.rayonHorzInfRayonSchw**.
-🔹 Si la distance initiale du projectile au centre de l'astre est plus petite au rayon physique de l'astre alors une alerte s'affiche avec le texte **texte.pages_trajectoire.lancerInterdit**.
-🔹 Si la vitesse radiale et la vitesse tangentielle sont nulles alors une alerte s'affiche avec le texte **texte.pages_trajectoire.vitesses_initiales_nulles**.
+🔹 Si le rayon physique de l'astre est négatif ou que la distance initiale du projectile au centre de l'astre est négative alors une alerte s'affiche avec le texte **texte.pages_trajectoire.rayon_neg**. <br>
+🔹 Si le rayon physique de l'astre est plus petit ou égal au rayon de Schwarzschild et qu'il est différent de 0 alors une alerte s'affiche avec le texte **texte.pages_trajectoire.rayonPhyInfHorz**.<br>
+🔹 Si la distance initiale du projectile au centre de l'astre est plus petite ou égale au rayon de Scwharzschild alors une alerte s'affiche avec le texte **texte.pages_trajectoire.rayonHorzInfRayonSchw**.<br>
+🔹 Si la distance initiale du projectile au centre de l'astre est plus petite au rayon physique de l'astre alors une alerte s'affiche avec le texte **texte.pages_trajectoire.lancerInterdit**.<br>
+🔹 Si la vitesse radiale et la vitesse tangentielle sont nulles alors une alerte s'affiche avec le texte **texte.pages_trajectoire.vitesses_initiales_nulles**.<br>
 
 📰 **Informations** : Cette fonction utilise une autre fonction **o_recupereJson()**.
 
