@@ -168,7 +168,6 @@ function genereHtml(){
 		divchampsr.appendChild(span);
 		if(countt==1){
 			var newlabel = document.createElement("Label");
-		//	newlabel.setAttribute("title","Distance initiale du projectile au centre de l'astre");
 			newlabel.setAttribute("id","ctreastre");
 			newlabel.setAttribute("title","");											 
 			newlabel.setAttribute("for","r01");
@@ -1128,7 +1127,6 @@ function rungekutta_obs(E,L,h, r, A) {
 }
 
 // -------------------------------------{fonction calcul_rmax}--------------------------------------------
-//RENDUE ICI ICI ICI ICI ICI ICI ICI ICI ICI ICI 
 
 function calcul_rmax(L,E,vr,r0,rmax1ou2){
 	//eq3d(L,m,E); dans le cas avec particule massive
@@ -1196,6 +1194,9 @@ function pausee(compteur,mobile,mobilefactor) {
 			mobile.myInterval = setInterval(animate.bind(null,compteur,mobile,mobilefactor), 10/6);
 		}}
 
+
+// -------------------------------------{fonction clavierEvenement}--------------------------------------------
+
 // permet de gérer les touches du clavier pour certaines actions
 function clavierEvenement(){
 	$(document).keyup(function(event) { // the event variable contains the key pressed
@@ -1232,10 +1233,14 @@ function clavierEvenement(){
 	});
 }
 
+// -------------------------------------{fonction rafraichir2}--------------------------------------------
+
 function rafraichir2(context,mobilefactor,rmaxjson,r0ou2,compteur) {
 	majFondFixe();
 	creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur);
 }
+
+// -------------------------------------{fonction rafraichir}--------------------------------------------
 
 function rafraichir() {
 	window.location.reload();
@@ -1243,6 +1248,8 @@ function rafraichir() {
 	// obligé de le préciser car sinon, c'est la dernière valeur qui est conservée et non la valeur par défaut
 	document.getElementById("boutton_ammorti").value="0";
 }
+
+// -------------------------------------{fonction enregistrer}--------------------------------------------
 
 function enregistrer(){
   // ces 2 fonctions sont issues des biblios saveSvgAsPng.js et canvas-to-image.js
@@ -1267,6 +1274,8 @@ function enregistrer(){
 	}
 }
 
+// -------------------------------------{fonction siTrajectoireSimple}--------------------------------------------
+
 function siTrajectoireSimple() {
 	if (element.value == 'simple') {
 		majFondFixe();
@@ -1276,15 +1285,21 @@ function siTrajectoireSimple() {
 	}
 }
 
+// -------------------------------------{fonction traceEstAbsent}--------------------------------------------
+
 function traceEstAbsent(){
 	document.getElementById('trace_present').value="0";
 }
+
+// -------------------------------------{fonction siTrajectoireComplete}--------------------------------------------
 
 function siTrajectoireComplete() {
 	if (element.value == 'complete') {
 		diametre_particule = DIAMETRE_PART;
 	}
 }
+
+// -------------------------------------{fonction choixTrajectoire}--------------------------------------------
 
 function choixTrajectoire(compteur,context,mobile,mobilefactor,rmaxjson,r0ou2) {
 	if (element.value == 'simple') {
@@ -1298,6 +1313,8 @@ function choixTrajectoire(compteur,context,mobile,mobilefactor,rmaxjson,r0ou2) {
 	}
 }
 
+// -------------------------------------{fonction estUnMobile}--------------------------------------------
+
 function estUnMobile(){
 	var x = window.matchMedia("(max-width: 960px)")
 	if(x.matches){
@@ -1308,11 +1325,14 @@ function estUnMobile(){
 	}
 }
 
+// -------------------------------------{fonction commandes}--------------------------------------------
+
 function commandes(){
 	var texte = o_recupereJson();
 	alert(texte.pages_trajectoire.commandes_horsSchwarMassif);
 }
 
+// -------------------------------------{fonction majFondFixe}--------------------------------------------
 
 function majFondFixe(){
 	context.clearRect(0, 0, canvas.width, canvas.height);
@@ -1350,19 +1370,25 @@ function majFondFixe(){
 	}
 }
 
+// -------------------------------------{fonction majFondFixe44}--------------------------------------------
 
 function majFondFixe44(mobile){
 	mobile["context22"].clearRect(0, 0, canvas.width, canvas.height);
 }
 
+// -------------------------------------{fonction majFondFixe22}--------------------------------------------
 
 function majFondFixe22(){
 	context22.clearRect(0, 0, canvas.width, canvas.height);
 	}
 
+// -------------------------------------{fonction majFondFixe3}--------------------------------------------
+
 function majFondFixe3(){
 	context3.clearRect(0, 0, canvas.width, canvas.height);
 }
+
+// -------------------------------------{fonction text_inte}--------------------------------------------
 
 // Empeche le lancer si on part de l'interieur de l'horizon et si le rayon est négatif
 function test_inte() {
@@ -1422,6 +1448,8 @@ function test_inte() {
   
 }
 
+// -------------------------------------{fonction creation_blocs}--------------------------------------------
+
 // crée les différentes couches visuelles
 function creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur){
 	r2bis=(80*r0ou2)/(factGlobalAvecClef);
@@ -1470,23 +1498,12 @@ function creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur){
 	}
 	context.fillStyle = 'white';
 
-/*
-// Ajout d'un fond blanc pour l'exportation
-context.font = "15pt bold";
-context.fillStyle = "black";
-context.fillText(texte.page_trajectoire_massive.titre2,5,40);
-context.font = "13pt bold";
-context.fillText(texte.pages_trajectoire.entrees,5,70);
-context.font = "11pt normal";*/
-
 	context.fillStyle = COULEUR_RS;
 	context.fillText(ech.toExponential(1)+" m",605,90);
 	context.stroke();
 	context.beginPath();      // Début du chemin
 	context.strokeStyle = COULEUR_RS;
 	context.setLineDash([]);
-	//context.moveTo(canvas.width / 2.0,canvas.height / 2.0);    // Tracé test1
-	//context.lineTo((canvas.width / 2.0)+280,canvas.height / 2.0);  // Tracé test2
 	context.moveTo(600,110);
 	context.lineTo(600+((r1bis*10**testnum(r2bis))*factGlobalAvecClef)/r0ou2,110);
 	context.moveTo(600,105);
@@ -1498,6 +1515,7 @@ context.font = "11pt normal";*/
 
 }
 
+// -------------------------------------{fonction canvasAvantLancement}--------------------------------------------
 
 function canvasAvantLancement(){
 	nbrFusee = document.getElementById("nombredefusees").value
@@ -1586,6 +1604,8 @@ function canvasAvantLancement(){
 
 }
 
+// -------------------------------------{fonction boutonAvantLancement}--------------------------------------------
+
 function boutonAvantLancement(){
 //Gestion de l'accélération/décélération de la simu
 document.getElementById("panneau_mobile").style.visibility='visible';
@@ -1604,6 +1624,8 @@ document.getElementById('moinsvite').addEventListener('click',foncPourVitAvantLa
 document.getElementById('moinsvite').myParam = false
 }
 
+// -------------------------------------{fonction foncPourZoomPlusAvantLancement}--------------------------------------------
+
 function foncPourZoomPlusAvantLancement(){
 	
 		factGlobalAvecClef = factGlobalAvecClef*1.2;
@@ -1613,6 +1635,8 @@ function foncPourZoomPlusAvantLancement(){
 	
 }
 
+// -------------------------------------{fonction foncPourZoomMoinsAvantLancement}--------------------------------------------
+
 function foncPourZoomMoinsAvantLancement(){
 	
 		factGlobalAvecClef = factGlobalAvecClef/1.2;
@@ -1620,6 +1644,8 @@ function foncPourZoomMoinsAvantLancement(){
 		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
 		canvasAvantLancement();
 }
+
+// -------------------------------------{fonction foncPourVitAvantLancement}--------------------------------------------
 
 function foncPourVitAvantLancement(accelerer){
 	if(accelerer.currentTarget.myParam){
@@ -1631,6 +1657,7 @@ function foncPourVitAvantLancement(accelerer){
 	document.getElementById('nsimtxt').innerHTML= "ns="+ compteurVitesseAvantLancement.toString();
 }
 
+// -------------------------------------{fonction MAJGraphePotentiel}--------------------------------------------
 
 function MAJGraphePotentiel(data1,data2,compteur,mobile){
 	data1 = []
