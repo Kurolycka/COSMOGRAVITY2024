@@ -712,7 +712,7 @@ Le **DOM** est une représentation hiérarchique sous forme d'arbdre de tous les
 3. Si l'utilisateur à cliqué sur le bouton pour ralentir alors la valeur de compteurVitesseAvantLancement est décrémentée de 1.
 4. La valeur affichée de ns est mise à jour pour refléter la nouvelle valeur de la vitesse.
 
-## #46i : fonction MAJGraphePotentiel
+## #46 : fonction MAJGraphePotentiel
 
 🔧 **Paramètres** : data1, data2, compteur, mobile
 
