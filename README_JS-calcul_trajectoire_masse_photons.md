@@ -287,7 +287,7 @@ Cela va aider à générer les tableaux qui apparaissent sur la page web. Celui 
 
 📑 **Fonctionnement détaillé**:
 1. Je stocke dans la variable "texte" ce que me retourne la fonction **o_recupereJson()**.
-2. Je vérifie si la trajectoire est en pause ou bien si elle vient de démarrer et si une de ces conditions est vérifiée alors j'effectue différentes action : 
+2. Je vérifie si la trajectoire est en pause ou bien si elle vient de démarrer et si une de ces conditions est vérifiée alors j'effectue différentes action : <br>
 🔹  La couleur du champ de saisie de r0 est modifiée en fonction des composantes de couleurs définies dans l'objet mobile (de la couleur qui est associée à ce mobile) et la couleur du texte est ajustée en noir ou blanc en fonction de la luminosité du champ de saisie. <br>
 🔹 L'élément avec l'ID "tg2" est modifié pour afficher le style de table. (Affichage d'un élément HTML sous forme de tableau.) Et le contenu de l'élement avec l'ID "indic_caluls" est remplacé par le texte récupéré à partir de **texte.pages_trajectoire.calculs_encours**, ce qui semble être un indicateur visuel pour l'utilisateur indiquant que des calculs sont en cours. <br>
 🔹 La fonction **estUnMobile()** est appellée. <br>
@@ -369,7 +369,7 @@ Le **DOM** est une représentation hiérarchique sous forme d'arbdre de tous les
 4. Je récupère l'élément HTML avec l'ID "traject_type" que je stocke dans la variable "element"
 5. J'appelle la fonction **choixTrajectoire(compteur, context, mobile, mobilefactor, rmaxjson, maximum)** pour probablement choisir le type de trajectoire à afficher en fonction de certains paramètres passés en arguments.
 6. Je récupère la valeur de l'élément HTML avce l'ID "boutton_ammorti" que je stocke dans la variable "isrebond".
-7. Je vérifie si r0 (la distance initiale du mobile au centre de l'astre) est différente de 0.0 ou non et si c'est le cas :
+7. Je vérifie si r0 (la distance initiale du mobile au centre de l'astre) est différente de 0.0 ou non et si c'est le cas :<br>
 🔹 Si la valeur de "element2" est "mobile" alors la fonction **rungekutta(mobile.L, mobile.dtau, mobile.r_part, mobile.A_part)**  qui semble utiliser la méthode de Runge-Kutta est appelée pour calculer les nouvelles positions et vitesses de la particule mobile puis stocke les résultats dans les propriétés "rpart" et "A_part" de l'objet "mobile". Je stocke ensuite dans la variable resultat ce que retourne la fonction **calculs.MSC_Ex_vitess(mobile.e, mobile.L, mobile.r_part, rs, true)**. Ensuite je stocke dans la variable "vtotal" le résultat resultat[0] (probablement la vitesse totale de la particule), dans "vp_2" le resultat[2] (probablement la vitesse tangentielle de la particule) et dans "vr_2" le resultat[1]xMath.sign(mobile.A_part) (probablement la vitesse radiale de la particule). <br>
 🔹 Sinon j'effectue des calculs assez similaires pour le cas où l'"element2" n'est pas "mobile". Les noms de variables changeront par contre avec un "_obs" qui apparaît à la fin et on utilisera non pas **rungekutta()** mais **rungekutta_obs()**. <br>
 🔹 Je vérifie si la valeur de l'élément "element2" n'est pas "mobile" et en fonction : <br>
@@ -447,7 +447,7 @@ Le **DOM** est une représentation hiérarchique sous forme d'arbdre de tous les
 
 📑 **Fonctionnement simplifié**: Il semble il y a voir plusieurs cas de figures : 
 1. Dans le cas où L<2*sqrt(3)*m on a rmax=r0.
-2. Dans le cas où L <= 4*m et L>2*sqrt(3)*m on à nouveau plusieurs cas de figure :
+2. Dans le cas où L <= 4*m et L>2*sqrt(3)*m on à nouveau plusieurs cas de figure :<br>
 🔹 Si Vr_mob(L,r0)<=Vr_mob(L,r1) et r0>r1 alors on a à nouveau deux autres cas de figure : si r3 > r0 alors rmax=r3 et si r3 < r0 on a rmax=r0. <br>
 🔹 Sinon rmax=r0.<br>
 3. Dans le cas où L > 4*m on a rmax=r0.
@@ -473,7 +473,7 @@ Le **DOM** est une représentation hiérarchique sous forme d'arbdre de tous les
 📑 **Fonctionnement** :
 1. La fonction détecte lorsque l'utilisateur presse une touche du clavier.
 2. A chaque fois qu'une touche est pressée elle vérifie quelle touche à été pressée.
-3. Ensuite il y a plusieurs actions en fonction da la touche pressée :
+3. Ensuite il y a plusieurs actions en fonction da la touche pressée :<br>
 🔹 Pour "z" : déclenche un clic sur l'événement avec l'ID "r1". <br>
 🔹 Pour "e" : déclenche un clic sur l'événement avec l'ID "rebondd".<br>
 🔹 Pour "q" : déclenche un clic sur l'événement avec l'ID "start".<br>
@@ -514,7 +514,7 @@ Le **DOM** est une représentation hiérarchique sous forme d'arbdre de tous les
 💡 **Rôle** : Cette fonction a pour rôle d'enregistrer une image de la trajectoire d'un photon dans la métrique de Scwharzschild. 
 
 📑 **Fonctionnement** :
-1. Elle commence par vérifier si une trajectoire a bien été tracée et si c'est le cas : 
+1. Elle commence par vérifier si une trajectoire a bien été tracée et si c'est le cas : <br>
 🔹 Elle copie le contenu du canvas principal 'canvas' sur un autre canvas 'canvas3'. <br>
 🔹 Elle utilise la fonction **canvasToImage(canvas3, {name: 'Trajectoire_photon_Schwar', type: 'png'})** pour enregistrer le canvas3 sous forme d'image PNG avec un nom spécifié 'Trajectoire_photon_Schwar'.<br>
 🔹 Elle appelle une fonction **majFondFixe3()** pour sûrement mettre à jour un élément.<br>
@@ -561,7 +561,7 @@ Le **DOM** est une représentation hiérarchique sous forme d'arbdre de tous les
 💡 **Rôle** : Cette fonction gère le choix entre deux type de trajectoires : soit une trajectoire "simple" soit une trajectoire complète ("complete").
 
 📑 **Fonctionnement** :
-1. Si l'élément d'ID "element" a la valeur 'simple' alors : 
+1. Si l'élément d'ID "element" a la valeur 'simple' alors : <br>
 🔹 La fonction **majFondFixe()** est appellée. <br>
 🔹 La fonction **creation_blocs(context, mobilefactor, rmaxjson, r0ou2, compteur)** est appelée. <br>
 🔹 Le diamètre de la particule (diametre_particule) est doublé de sa valeur initiale (DIAMETRE_PART).<br>
@@ -628,7 +628,7 @@ Le **DOM** est une représentation hiérarchique sous forme d'arbdre de tous les
 
 💡 **Rôle** : Cette fonction sert à vérifier la validité des paramètres fournis avant de lancer la simulation.
 
-📑 **Fonctionnement** : Voici les différentes vérifications qui sont effectuées : 
+📑 **Fonctionnement** : Voici les différentes vérifications qui sont effectuées : <br>
 🔹 Si le rayon physique de l'astre est négatif ou que la distance initiale du projectile au centre de l'astre est négative alors une alerte s'affiche avec le texte **texte.pages_trajectoire.rayon_neg**. <br>
 🔹 Si le rayon physique de l'astre est plus petit ou égal au rayon de Schwarzschild et qu'il est différent de 0 alors une alerte s'affiche avec le texte **texte.pages_trajectoire.rayonPhyInfHorz**.<br>
 🔹 Si la distance initiale du projectile au centre de l'astre est plus petite ou égale au rayon de Scwharzschild alors une alerte s'affiche avec le texte **texte.pages_trajectoire.rayonHorzInfRayonSchw**.<br>
