@@ -138,8 +138,8 @@ function Calc() {
 
 
 	//on fait appel a la methode de rungekutta pour calculer les points de la courbe
-	amin = Number(document.getElementById("ami").value);  if(amin>1) {amin=1;} 
-    amax = Number(document.getElementById("ama").value);  if(amax<1) {amax=1;}
+	amin = Number(document.getElementById("ami").value);  //if(amin>1) {amin=1;}
+    amax = Number(document.getElementById("ama").value);  //if(amax<1) {amax=1;}
 	ymoinsrunge = [1, 1];
 	ymoinsrungederiv = [1, 1];
 	k = [0, 0, 0, 0];
@@ -506,8 +506,8 @@ function graphique_creation_noir(boolBigRip,modele) { //S Ajout d'un booléen po
 	var img_jpg = d3.select('#jpg');
 	var img_svg = d3.select('#svg-1');
 
-	var Amin = Number(document.getElementById("ami").value);  if(Amin>1) {Amin=1;}
-    var Amax = Number(document.getElementById("ama").value);if(Amax<1) {Amax=1;}
+	var Amin = Number(document.getElementById("ami").value); //if(Amin>1) {Amin=1;}
+    var Amax = Number(document.getElementById("ama").value); //if(Amax<1) {Amax=1;}
 
 
 	Plotly.newPlot('graphique_sombre', tracer1, {
