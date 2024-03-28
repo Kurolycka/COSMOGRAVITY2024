@@ -840,7 +840,7 @@ function animate() {
 			document.getElementById("ga").innerHTML = fm.toExponential(3);
 			document.getElementById("tp").innerHTML = temps_particule.toExponential(3);
 			document.getElementById("to").innerHTML = 1/0; 
-			peuxonrelancer=false;
+			peuxonrelancer=true;
 			}	
 			
 	}
