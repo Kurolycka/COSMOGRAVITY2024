@@ -68,8 +68,14 @@
 		"temps_BF": "Temps depuis le Big Fall",
 		"dureeUnivers":"Durée de l'univers",
 		"simuavertissement":"Avertissement",
-		"avertissement":"La simulation Univers avec ses calculs annexes permet de choisir les valeurs d'une dizaine de paramètres (en comptant celles des constantes fondamentales). Le code actuel n'est évidemment pas robuste sur tout le domaine accessible de cet espace à 10 dimensions.   Nous espérons que les résultats sont exacts dans un voisinage 'prudent' du modèle standard, des valeurs usuelles des observables (z, thêta) et des constantes fondamentales. Nous pensons qu'ils le sont encore pour des univers très différents du nôtre mais il est évident que le risque d'échec de la simulation (temps de calcul excessif sur le processeur de l'utilisateur) ou, pire, de résultat inexact augmente lorsque l'on s'aventure très loin du modèle standard. L'option 'mono-fluides', avec son formalisme analytique, permet d'aller plus fiablement explorer les extrêmes. Près des 'séparatrices' entre types d'univers différents (avec ou sans Big Bang, avec ou sans Big Crunch), un avertissement automatique est normalement affiché."
-	},
+		"avertissement":"La simulation Univers avec ses calculs annexes permet de choisir les valeurs d'une dizaine de paramètres (en comptant celles des constantes fondamentales). Le code actuel n'est évidemment pas robuste sur tout le domaine accessible de cet espace à 10 dimensions.   Nous espérons que les résultats sont exacts dans un voisinage 'prudent' du modèle standard, des valeurs usuelles des observables (z, thêta) et des constantes fondamentales. Nous pensons qu'ils le sont encore pour des univers très différents du nôtre mais il est évident que le risque d'échec de la simulation (temps de calcul excessif sur le processeur de l'utilisateur) ou, pire, de résultat inexact augmente lorsque l'on s'aventure très loin du modèle standard. L'option 'mono-fluides', avec son formalisme analytique, permet d'aller plus fiablement explorer les extrêmes. Près des 'séparatrices' entre types d'univers différents (avec ou sans Big Bang, avec ou sans Big Crunch), un avertissement automatique est normalement affiché.",
+		"temperature_present":"Température à l'instant présent",
+		"H0_infobulle":"Taux d'expansion de l'univers à l'instant présent",
+		"omega_m0_infobulle":"Paramètre total de densité de matière à l'instant présent",
+		"omega_Λ0_infobulle":"Paramètre de densité de Λ à l'instant présent",
+		"omega_r0_infobulle":"Paramètre de densité de rayonnement à l'instant présent",
+		"omega_k0_infobulle":"Paramètre de densité de courbure à l'instant présent"
+		},
 
 	"page_univers":{
 		"titre": "&Eacute;volution de l'univers FL (ΛCDM)",
@@ -150,7 +156,12 @@
 		"univers_plat":"Univers Plat (Ω<sub>k0</sub> = 0)",
 		"matiereEsombreRFCNeu":"Matière, Energie Sombre, RFC et Neutrinos",
 		"matiereEsombreRFC":"Matière, Energie Sombre et RFC",
-		"matiereEsombre":"Matière et Energie Sombre"
+		"matiereEsombre":"Matière et Energie Sombre",
+		"omega_DE_0_infobulle":"Paramètre de densité de l'énergie sombre à l'instant présent",
+		"omega_0_infobulle":"Paramètre de l'équation d'état de l'énergie sombre",
+		"omega_1_infobulle":"Paramètre de l'équation d'état de l'énergie sombre"
+
+
 	},
 
 	"page_univers_monofluides":{
