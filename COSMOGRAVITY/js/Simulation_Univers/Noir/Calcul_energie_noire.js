@@ -620,19 +620,23 @@ function graphique_creation_noir(boolBigRip,modele) { //S Ajout d'un booléen po
 
 
 
-function enre() {
-	format = document.getElementById("format_enr");
-	png = document.getElementById("png");
-	jpg = document.getElementById("jpg");
-	svg = document.getElementById("svg-1");
+function enregistrer() {
+	var format = document.getElementById("format_enr");
+	var nomFichier = prompt("Veuillez entrer le nom du fichier :", "a_univers");
+
+	var png = document.getElementById("png");
+	var jpg = document.getElementById("jpg");
+	var svg = document.getElementById("svg-1");
 	if (format.options[0].selected) {
+		png.setAttribute("download", nomFichier + ".png");
 		png.click();
 	} else if (format.options[1].selected) {
+		jpg.setAttribute("download", nomFichier + ".jpg");
 		jpg.click();
 	} else {
+		svg.setAttribute("download", nomFichier + ".svg");
 		svg.click();
 	}
-
 }
 
 

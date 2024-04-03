@@ -1298,25 +1298,28 @@ function siTrajectoireSimple() {
 
 
 
-function enregistrer(){
-  // ces 2 fonctions sont issues des biblios saveSvgAsPng.js et canvas-to-image.js
-	if(document.getElementById('trace_present').value=="1"){
+// -------------------------------------{fonction enregistrer}--------------------------------------------
 
-		canvas3 = document.getElementById("myCanvas3three");
-		context3 = canvas3.getContext("2d");
-		context3.drawImage(canvas, 0,0);
-		document.getElementById("enregistrer2").click();
+function enregistrer() {
+	if (document.getElementById('trace_present').value === "1") {
+		// Demander à l'utilisateur le nom du fichier
+		var nomFichier = prompt("Veuillez saisir le nom du fichier :", "Trajectoire_photon_Schwar");
 
-		canvasToImage(canvas3, {
-			name: 'Trajectoire_photons_Inter',
-			type: 'png'
-		});
-		majFondFixe3();
-
-	// permet si l'on veut d'enregistrer le graphe du potentiel
-	// saveSvgAsPng(document.getElementById("grsvg_2"),"Potentiel_massive_Schwar.png",{backgroundColor:"white"});
-	}
-	else{
+		if (nomFichier !== null && nomFichier.trim() !== '') {
+			// Si l'utilisateur a saisi un nom de fichier valide
+			canvas3 = document.getElementById("myCanvas3three");
+			context3 = canvas3.getContext("2d");
+			context3.drawImage(canvas, 0, 0);
+			document.getElementById("enregistrer2").click();
+			canvasToImage(canvas3, {
+				name: nomFichier.trim(), // Utiliser le nom de fichier saisi par l'utilisateur
+				type: 'png'
+			});
+			majFondFixe3();
+		} else {
+			alert("Veuillez saisir un nom de fichier valide.");
+		}
+	} else {
 		var texte = o_recupereJson();
 		alert(texte.pages_trajectoire.message_enregistrer);
 	}

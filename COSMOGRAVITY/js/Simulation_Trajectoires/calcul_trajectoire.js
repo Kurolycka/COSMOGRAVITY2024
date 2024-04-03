@@ -1550,18 +1550,21 @@ function rafraichir() {
 	element2.value="observateur";
 }
 
-function enregistrer() {
-	if (document.getElementById('trace_present').value == "1") {
-		// Récupération du nom de fichier saisi par l'utilisateur
-		var fileName = prompt("Veuillez saisir le nom du fichier :", "Trajectoire_massive_Schwar");
+// -------------------------------------{fonction enregistrer}--------------------------------------------
 
-		if (fileName) { // Vérifie si l'utilisateur a saisi un nom de fichier
+function enregistrer() {
+	if (document.getElementById('trace_present').value === "1") {
+		// Demander à l'utilisateur le nom du fichier
+		var nomFichier = prompt("Veuillez saisir le nom du fichier :", "Trajectoire_photon_Schwar");
+
+		if (nomFichier !== null && nomFichier.trim() !== '') {
+			// Si l'utilisateur a saisi un nom de fichier valide
 			canvas3 = document.getElementById("myCanvas3three");
 			context3 = canvas3.getContext("2d");
 			context3.drawImage(canvas, 0, 0);
 			document.getElementById("enregistrer2").click();
 			canvasToImage(canvas3, {
-				name: fileName, // Utilise le nom de fichier saisi par l'utilisateur
+				name: nomFichier.trim(), // Utiliser le nom de fichier saisi par l'utilisateur
 				type: 'png'
 			});
 			majFondFixe3();

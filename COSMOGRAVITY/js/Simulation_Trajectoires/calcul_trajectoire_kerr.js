@@ -1073,6 +1073,8 @@ function siTrajectoireSimple() {
 function enregistrer(){
 	// ces 2 fonctions sont issues des biblios saveSvgAsPng.js et canvas-to-image.js
 
+	var nomFichier = prompt("Veuillez entrer le nom du fichier : ", "Trajectoire_massive_Kerr")
+
 	if(document.getElementById('trace_present').value=="1"){
 		canvas3 = document.getElementById("myCanvas3");
 		context3 = canvas3.getContext("2d");
@@ -1084,7 +1086,7 @@ function enregistrer(){
 		context3.lineWidth = "1";
 		context3.fill();
 		canvasToImage(canvas3, {
-			name: 'Trajectoire_massive_Kerr',
+			name: nomFichier.trim(),
 			type: 'png'
 		});
 		majFondFixe3();
@@ -1096,7 +1098,7 @@ function enregistrer(){
 			context3.lineWidth = "1";
 			context3.fill();
 			canvasToImage(canvas3, {
-				name: 'Trajectoire_massive_Kerr',
+				name: nomFichier.trim(),
 				type: 'png'
 			});
 			majFondFixe3();
@@ -1110,6 +1112,8 @@ function enregistrer(){
 		alert(texte.pages_trajectoire.message_enregistrer);
 	}
 }
+
+
 
 function traceEstAbsent(){
 	document.getElementById('trace_present').value="0";

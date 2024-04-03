@@ -132,7 +132,7 @@
 			</div>
 			<div id="balise_H0" class="inp">
 				<label>&nbsp; &nbsp; H<sub>0</sub> = </label>
-				<input id="H0" type="text" value="67.74" size "10" onChange="document.getElementById('H0calc').value = this.value;update_omegar0_simu();verifnbr()"></input>
+				<input id="H0" type="text" value="67.74" size="10" onChange="document.getElementById('H0calc').value = this.value;update_omegar0_simu();verifnbr()"></input>
 				<label> km.s<sup>-1</sup>.Mpc<sup>-1</sup></label>
 			</div>
 			<div class="inp">
@@ -226,18 +226,18 @@
 			"></input>&nbsp;&nbsp;
 		</div>
 		<span id="txt_enregistrerEn" style="font-weight:bold;"></span>
-	
 		<select id="format_enr">
 			<option selected>png</option>
 			<option>jpg</option>
 			<option>svg</option>
 		</select>&nbsp;
-		<input class="myButton" id="button_enregistrer" type="button" OnClick="enre()" value="Enregistrer"></input>
+		<input class="myButton" id="button_enregistrer" type="button" OnClick="enregistrer()" value="Enregistrer"></input>
+		<a id="png" download="Graphique.png" style="display:none"></a>
+		<a id="jpg" download="Graphique.jpg" style="display:none"></a>
+		<a id="svg-1" download="Graphique.svg" style="display:none"></a>
 	</div>
-	<a id="png" download="Graphique.png" style="display:none"></a>
-	<a id="jpg" download="Graphique.jpg" style="display:none"></a>
-	<a id="svg-1" download="Graphique.svg" style="display:none"></a>
 	<a id="ret" href="#nav" style="display:none;"></a>
+
 	<script>
 		update_omegar0_simu();
 	</script>

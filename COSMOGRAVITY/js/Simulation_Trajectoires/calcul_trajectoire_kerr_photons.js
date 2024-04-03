@@ -840,41 +840,41 @@ function siTrajectoireSimple() {
 
 
 function enregistrer(){
-  // ces 2 fonctions sont issues des biblios saveSvgAsPng.js et canvas-to-image.js
-  
-  	if(document.getElementById('trace_present').value=="1"){
+	// ces 2 fonctions sont issues des biblios saveSvgAsPng.js et canvas-to-image.js
 
-    canvas3 = document.getElementById("myCanvas3");
-    context3 = canvas3.getContext("2d");
-    context3.drawImage(canvas, 0,0);
-    
-    if (element2.value != "mobile"){
-		context3.beginPath();
-		context3.fillStyle = COULEUR_BLEU;
-		context3.arc(posX2, posY2 , 5, 0, Math.PI * 2);
-		context3.lineWidth = "1";
-		context3.fill();
-		canvasToImage(canvas3, {
-			name: 'Trajectoire_photon_Kerr',
-			type: 'png'
-		});
-    majFondFixe3();
-    }
-	else{
-		context3.beginPath();
-		context3.fillStyle = COULEUR_BLEU;
-		context3.arc(posX1, posY1 , 5, 0, Math.PI * 2);
-		context3.lineWidth = "1";
-		context3.fill();
-		canvasToImage(canvas3, {
-			name: 'Trajectoire_photon_Kerr',
-			type: 'png'
-		});
-    majFondFixe3();
-    }
+	var nomFichier = prompt("Veuillez entrer le nom du fichier : ", "Trajectoire_photon_Kerr")
 
-    // permet si l'on veut d'enregistrer le graphe du potentiel
-    // saveSvgAsPng(document.getElementById("grsvg_2"),"Potentiel_massive_Schwar.png",{backgroundColor:"white"});
+	if(document.getElementById('trace_present').value=="1"){
+		canvas3 = document.getElementById("myCanvas3");
+		context3 = canvas3.getContext("2d");
+		context3.drawImage(canvas, 0,0);
+		if (element2.value != "mobile"){
+			context3.beginPath();
+			context3.fillStyle = COULEUR_BLEU;
+			context3.arc(posX2, posY2 , 5, 0, Math.PI * 2);
+			context3.lineWidth = "1";
+			context3.fill();
+			canvasToImage(canvas3, {
+				name: nomFichier.trim(),
+				type: 'png'
+			});
+			majFondFixe3();
+		}
+		else{
+			context3.beginPath();
+			context3.fillStyle = COULEUR_BLEU;
+			context3.arc(posX1, posY1 , 5, 0, Math.PI * 2);
+			context3.lineWidth = "1";
+			context3.fill();
+			canvasToImage(canvas3, {
+				name: nomFichier.trim(),
+				type: 'png'
+			});
+			majFondFixe3();
+		}
+
+		// permet si l'on veut d'enregistrer le graphe du potentiel
+		// saveSvgAsPng(document.getElementById("grsvg_2"),"Potentiel_massive_Schwar.png",{backgroundColor:"white"});
 	}
 	else{
 		var texte = o_recupereJson();
