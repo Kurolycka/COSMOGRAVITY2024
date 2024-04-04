@@ -232,7 +232,7 @@
 	"vrarret":"0",
 	"vphiarret":"0",
 	"vphikerrarret":"Infinity",
-	"vitesseurlabeld":"Initial speed",
+	"vitesseurlabeld":"Initial speed of the projectile",
 	"vitesseurt":"radial speed",
 	"vitesseuphi":"tangential speed",
 	"vitesseurlabellambda":"Initial dr/d&lambda;",
@@ -288,13 +288,14 @@
 	"v_total" :"Speed(m/s)",
 	"r0egale0": "r0 is positif",
 	"commandes_horsSchwarMassif":"Keyboard : \n\n- Complete trajectory : key a \n- Simple trajectory : key z\n- Stop the calculate : key q \n- Reset : key s \n- Save : key d \n- Last values : key f \n- Slow down : key w \n- Pause / Read : key x \n- Speed up : key c",
-	"theta_label":"Angle of the speed",
-	"philabel":"Start angle",
+	"theta_label":"Angle of initial velocity of projectile",
+	"philabel":"Angle of the initial position of the projectile",
 	"TempTN":"Hawking radiation temperature",
 	"tempsEvapTN":"Hawking evaporation time",
 	"Vlibtitle":"Escape velocity on the surface of the celestial body",
 	"infinity":"Infinity",
-	"gravSurface_BulleInfo":"Theoretical surface gravity when R=Rh+"
+	"gravSurface_BulleInfo":"Theoretical surface gravity when R=Rh+",
+	"vitesseuphilabeltau":"Angle of initial velocity of projectile"
 },
 
 "page_trajectoire_massive":{
