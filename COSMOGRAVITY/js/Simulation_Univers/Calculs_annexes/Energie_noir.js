@@ -267,8 +267,8 @@ avertissement();
   Tz1 = Tz1.toExponential(8);
   Omz1 = omegam0 * Math.pow(1 + Number(z1), 3) / fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1);
   Omz1 = Omz1.toExponential(8);
-  Olz1 = Number(omegaDE0) / fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1);
-  Olz1 = Olz1.toExponential(8);
+  Olz1 = omegaDE0 * ( 8 * Math.PI * G * rho_lambda * Ya(Number(z1)) ) / ( 3 * (h0  * fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1)) );
+  Olz1 = Olz1.toExponential(8)
   Orz1 = Or * Math.pow(1 + Number(z1), 4) / fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1);
   Orz1 = Orz1.toExponential(8);
   Okz1 = omegak0 * Math.pow(1 + Number(z1), 2) / fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1);
@@ -281,8 +281,8 @@ avertissement();
   Tz2 = Tz2.toExponential(8);
   Omz2 = omegam0 * Math.pow(1 + Number(z2), 3) / fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1);
   Omz2 = Omz2.toExponential(8);
-  Olz2 = Number(omegaDE0) / fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1);
-  Olz2 = Olz2.toExponential(8);
+  Olz2 = omegaDE0 * ( 8 * Math.PI * G * rho_lambda * Ya(Number(z2)) ) / ( 3 * (h0 * fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1)) );
+  Olz2 = Olz2.toExponential(8)
   Orz2 = Or * Math.pow(1 + Number(z2), 4) / fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1);
   Orz2 = Orz2.toExponential(8);
   Okz2 = omegak0 * Math.pow(1 + Number(z2), 2) / fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1);
