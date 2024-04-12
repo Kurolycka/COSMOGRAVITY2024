@@ -10,8 +10,9 @@ var nzoom=0;
 var facteurDeMalheur;
 var fact_defaut;
 
-var factGlobalAvecClef //pour l'échelle avant lancement
-var compteurVitesseAvantLancement = 0
+var factGlobalAvecClef ;//pour l'échelle avant lancement
+var compteurVitesseAvantLancement = 0;
+var temps_observateur_distant=0;
 
 // -------------------------------------{Variables globales, key values}--------------------------------------------
 
@@ -1001,8 +1002,8 @@ function animate(compteur,mobile,mobilefactor) {
 	if (element2.value != "mobile"){  //observateur
 		if(mobile.r_part_obs >= rs*1.000001){
 			mobile.temps_particule =0; 
-			mobile.temps_observateur += mobile.dtau;
-			document.getElementById("to"+compteur.toString()).innerHTML = mobile.temps_observateur.toExponential(3);
+			temps_observateur_distant+= mobile.dtau;
+			document.getElementById("to"+compteur.toString()).innerHTML = temps_observateur_distant.toExponential(3);
 			document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part_obs.toExponential(3);
 			document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3);
 			document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_2_obs.toExponential(3);
@@ -1010,10 +1011,10 @@ function animate(compteur,mobile,mobilefactor) {
 			document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(8);
 			
 		} else {
-				mobile.temps_observateur += mobile.dtau;
+				temps_observateur_distant += mobile.dtau;
 				mobile.r_part_obs=rs;
 				vr_2_obs=c ; vp_2_obs=0 ; vtotal=c ;
-				document.getElementById("to"+compteur.toString()).innerHTML = mobile.temps_observateur.toExponential(3);
+				document.getElementById("to"+compteur.toString()).innerHTML = temps_observateur_distant.toExponential(3);
 				document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(8); 
 				document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part_obs.toExponential(3);
 				document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_2_obs.toExponential(3);
@@ -1052,10 +1053,10 @@ function animate(compteur,mobile,mobilefactor) {
 	
 	if (element2.value == "mobile"){
 	if(mobile.r_part > rs*1.00001) {
-		mobile.temps_observateur+=mobile.dtau; 
+		temps_observateur_distant+=mobile.dtau; 
 	}else{
-		mobile.temps_observateur =1/0;	} //GROS PROBLEME
-	document.getElementById("to"+compteur.toString()).innerHTML = mobile.temps_observateur.toExponential(3);}
+		temps_observateur_distant=1/0;	} //GROS PROBLEME
+		document.getElementById("to"+compteur.toString()).innerHTML = temps_observateur_distant.toExponential(3);}
 	
 	
 
@@ -1183,6 +1184,7 @@ function pausee(compteur,mobile,mobilefactor) {
 		document.getElementById("pau").title = texte.pages_trajectoire.bouton_lecture;
         document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_enpause;
         document.getElementById("pause/resume").innerHTML =texte.pages_trajectoire.bouton_resume;
+		document.getElementById("to"+compteur.toString()).innerHTML = temps_observateur_distant.toExponential(3);
 		clearInterval(mobile.myInterval);
 	} 
     else if(mobile.peuxonrelancer) {
