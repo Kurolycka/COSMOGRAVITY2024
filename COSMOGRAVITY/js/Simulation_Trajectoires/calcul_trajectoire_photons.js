@@ -1252,38 +1252,26 @@ function rafraichir() {
 // -------------------------------------{fonction enregistrer}--------------------------------------------
 
 function enregistrer() {
+	var texte = o_recupereJson();
+
 	if (document.getElementById('trace_present').value === "1") {
 		// Demander à l'utilisateur le nom du fichier
-		if (document.getElementById('trace_present').value === "1") {
-			// Demander à l'utilisateur le nom du fichier
-			if (sessionStorage.getItem("LANGUE") === "fr") {
-				var nomFichier = prompt("Veuillez entrer le nom du fichier désiré :", "Trajectoire_bary_photon");
-			}
-			if (sessionStorage.getItem("LANGUE") === "en") {
-				var nomFichier = prompt("Please enter the desired file name :", "Trajectory_bary_photon");
-			}
-
-			if (nomFichier === "null") {
-				return;
-			}
-		}
+		var nomFichier = prompt(texte.pages_trajectoire.message_nomFichier, "traject_Schaw_B_P");
 
 		if (nomFichier !== null && nomFichier.trim() !== '') {
-			// Si l'utilisateur a saisi un nom de fichier valide
 			canvas3 = document.getElementById("myCanvas3three");
 			context3 = canvas3.getContext("2d");
 			context3.drawImage(canvas, 0, 0);
 			document.getElementById("enregistrer2").click();
 			canvasToImage(canvas3, {
-				name: nomFichier.trim(), // Utiliser le nom de fichier saisi par l'utilisateur
+				name: nomFichier.trim(),
 				type: 'png'
 			});
 			majFondFixe3();
 		} else {
-			alert("Veuillez saisir un nom de fichier valide.");
+			alert(texte.pages_trajectoire.alerte_nomFichier);
 		}
 	} else {
-		var texte = o_recupereJson();
 		alert(texte.pages_trajectoire.message_enregistrer);
 	}
 }

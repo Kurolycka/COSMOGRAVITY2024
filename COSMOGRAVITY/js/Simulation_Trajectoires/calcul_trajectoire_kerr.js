@@ -1072,55 +1072,43 @@ function siTrajectoireSimple() {
 
 function enregistrer(){
 	// ces 2 fonctions sont issues des biblios saveSvgAsPng.js et canvas-to-image.js
+	var texte = o_recupereJson();
 
-	if (document.getElementById('trace_present').value === "1") {
-		// Demander à l'utilisateur le nom du fichier
-		if (sessionStorage.getItem("LANGUE") === "fr") {
-			var nomFichier = prompt("Veuillez entrer le nom du fichier désiré :", "Trajectoire_bary_bary_Kerr");
-		}
-		if (sessionStorage.getItem("LANGUE") === "en") {
-			var nomFichier = prompt("Please enter the desired file name :", "Trajectory_bary_bary_kerr");
-		}
+	if(document.getElementById('trace_present').value=="1") {
+		var nomFichier = prompt(texte.pages_trajectoire.message_nomFichier, "traject_Kerr_B_B");
 
-		if (nomFichier === "null") {
-			return;
-		}
-	}
+		if (nomFichier !== null && nomFichier.trim() !== '') {
+			canvas3 = document.getElementById("myCanvas3");
+			context3 = canvas3.getContext("2d");
+			context3.drawImage(canvas, 0, 0);
+			if (element2.value != "mobile") {
+				context3.beginPath();
+				context3.fillStyle = COULEUR_BLEU;
+				context3.arc(posX2, posY2, 5, 0, Math.PI * 2);
+				context3.lineWidth = "1";
+				context3.fill();
+				canvasToImage(canvas3, {
+					name: nomFichier.trim(),
+					type: 'png'
+				});
+				majFondFixe3();
+			} else {
+				context3.beginPath();
+				context3.fillStyle = COULEUR_BLEU;
+				context3.arc(posX1, posY1, 5, 0, Math.PI * 2);
+				context3.lineWidth = "1";
+				context3.fill();
+				canvasToImage(canvas3, {
+					name: nomFichier.trim(),
+					type: 'png'
+				});
+				majFondFixe3();
+			}
 
-	if(document.getElementById('trace_present').value=="1"){
-		canvas3 = document.getElementById("myCanvas3");
-		context3 = canvas3.getContext("2d");
-		context3.drawImage(canvas, 0,0);
-		if (element2.value != "mobile"){
-		context3.beginPath();
-		context3.fillStyle = COULEUR_BLEU;
-		context3.arc(posX2, posY2 , 5, 0, Math.PI * 2);
-		context3.lineWidth = "1";
-		context3.fill();
-		canvasToImage(canvas3, {
-			name: nomFichier.trim(),
-			type: 'png'
-		});
-		majFondFixe3();
+		} else {
+			alert(texte.pages_trajectoire.alerte_nomFichier);
 		}
-		else{
-			context3.beginPath();
-			context3.fillStyle = COULEUR_BLEU;
-			context3.arc(posX1, posY1 , 5, 0, Math.PI * 2);
-			context3.lineWidth = "1";
-			context3.fill();
-			canvasToImage(canvas3, {
-				name: nomFichier.trim(),
-				type: 'png'
-			});
-			majFondFixe3();
-		}
-
-		// permet si l'on veut d'enregistrer le graphe du potentiel
-		// saveSvgAsPng(document.getElementById("grsvg_2"),"Potentiel_massive_Schwar.png",{backgroundColor:"white"});
-		}
-	else{
-		var texte = o_recupereJson();
+	} else{
 		alert(texte.pages_trajectoire.message_enregistrer);
 	}
 }

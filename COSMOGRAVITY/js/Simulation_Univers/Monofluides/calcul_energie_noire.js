@@ -286,17 +286,28 @@ function calcul() { // fonction principale de cosmogravity
   });
 }
 
-function enre() {
-  format = document.getElementById("format_enr");
-  png = document.getElementById("png");
-  jpg = document.getElementById("jpg");
-  svg = document.getElementById("svg-1");
-  if (format.options[0].selected) {
-    png.click();
-  } else if (format.options[1].selected) {
-    jpg.click();
+function enregistrer() {
+  var format = document.getElementById("format_enr");
+  var texte = o_recupereJson();
+  var png = document.getElementById("png");
+  var jpg = document.getElementById("jpg");
+  var svg = document.getElementById("svg-1");
+
+  var nomFichier = prompt(texte.page_univers_general.message_nomFichier, "univ_DE");
+
+  if (nomFichier !== null && nomFichier.trim() !== '') {
+    if (format.options[0].selected) {
+      png.setAttribute("download", nomFichier + ".png");
+      png.click();
+    } else if (format.options[1].selected) {
+      jpg.setAttribute("download", nomFichier + ".jpg");
+      jpg.click();
+    } else {
+      svg.setAttribute("download", nomFichier + ".svg");
+      svg.click();
+    }
   } else {
-    svg.click();
+    alert(texte.page_univers_general.alerte_nomFichier)
   }
 }
 

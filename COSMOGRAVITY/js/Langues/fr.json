@@ -68,7 +68,9 @@
 		"temps_BF": "Temps depuis le Big Fall",
 		"dureeUnivers":"Durée de l'univers",
 		"simuavertissement":"Avertissement",
-		"avertissement":"La simulation Univers avec ses calculs annexes permet de choisir les valeurs d'une dizaine de paramètres (en comptant celles des constantes fondamentales). Le code actuel n'est évidemment pas robuste sur tout le domaine accessible de cet espace à 10 dimensions.   Nous espérons que les résultats sont exacts dans un voisinage 'prudent' du modèle standard, des valeurs usuelles des observables (z, thêta) et des constantes fondamentales. Nous pensons qu'ils le sont encore pour des univers très différents du nôtre mais il est évident que le risque d'échec de la simulation (temps de calcul excessif sur le processeur de l'utilisateur) ou, pire, de résultat inexact augmente lorsque l'on s'aventure très loin du modèle standard. L'option 'mono-fluides', avec son formalisme analytique, permet d'aller plus fiablement explorer les extrêmes. Près des 'séparatrices' entre types d'univers différents (avec ou sans Big Bang, avec ou sans Big Crunch), un avertissement automatique est normalement affiché."
+		"avertissement":"La simulation Univers avec ses calculs annexes permet de choisir les valeurs d'une dizaine de paramètres (en comptant celles des constantes fondamentales). Le code actuel n'est évidemment pas robuste sur tout le domaine accessible de cet espace à 10 dimensions.   Nous espérons que les résultats sont exacts dans un voisinage 'prudent' du modèle standard, des valeurs usuelles des observables (z, thêta) et des constantes fondamentales. Nous pensons qu'ils le sont encore pour des univers très différents du nôtre mais il est évident que le risque d'échec de la simulation (temps de calcul excessif sur le processeur de l'utilisateur) ou, pire, de résultat inexact augmente lorsque l'on s'aventure très loin du modèle standard. L'option 'mono-fluides', avec son formalisme analytique, permet d'aller plus fiablement explorer les extrêmes. Près des 'séparatrices' entre types d'univers différents (avec ou sans Big Bang, avec ou sans Big Crunch), un avertissement automatique est normalement affiché.",
+		"message_nomFichier": "Veuillez saisir le nom de fichier désiré",
+		"alerte_nomFichier": "Le nom de fichier n'est pas valide"
 	},
 
 	"page_univers":{
@@ -289,7 +291,9 @@
 		"tempsEvapTN":"temps d'évaporation de Hawking",
 		"Vlibtitle":"Vitesse de libération à la surface de l'astre",
 		"infinity":"Infini",
-		"gravSurface_BulleInfo":"Gravité de surface théorique pour R=Rh+"
+		"gravSurface_BulleInfo":"Gravité de surface théorique pour R=Rh+",
+		"message_nomFichier": "Veuillez saisir le nom de fichier désiré",
+		"alerte_nomFichier": "Le nom de fichier n'est pas valide"
 	},
 
 	"page_trajectoire_massive":{

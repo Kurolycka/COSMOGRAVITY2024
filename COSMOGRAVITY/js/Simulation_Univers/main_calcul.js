@@ -940,25 +940,26 @@ function graphique_creation(){
 
 function enregistrer() {
     var format = document.getElementById("format_enr");
-    if (sessionStorage.getItem("LANGUE") === "fr") {
-        var nomFichier = prompt("Veuillez entrer le nom du fichier désiré :", "a_univers");
-    }
-    else {
-        nomFichier = prompt("Please enter the desired file name :", "a_universe");
-    }
-
     var png = document.getElementById("png");
     var jpg = document.getElementById("jpg");
     var svg = document.getElementById("svg-1");
-    if (format.options[0].selected) {
-        png.setAttribute("download", nomFichier + ".png");
-        png.click();
-    } else if (format.options[1].selected) {
-        jpg.setAttribute("download", nomFichier + ".jpg");
-        jpg.click();
+
+    var texte = o_recupereJson();
+    var nomFichier = prompt(texte.page_univers_general.message_nomFichier, "univ_lambda");
+
+    if (nomFichier !== null && nomFichier.trim() !== '') {
+        if (format.options[0].selected) {
+            png.setAttribute("download", nomFichier + ".png");
+            png.click();
+        } else if (format.options[1].selected) {
+            jpg.setAttribute("download", nomFichier + ".jpg");
+            jpg.click();
+        } else {
+            svg.setAttribute("download", nomFichier + ".svg");
+            svg.click();
+        }
     } else {
-        svg.setAttribute("download", nomFichier + ".svg");
-        svg.click();
+        alert(texte.page_univers_general.alerte_nomFichier)
     }
 }
 

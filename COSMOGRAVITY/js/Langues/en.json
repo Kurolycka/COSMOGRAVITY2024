@@ -68,7 +68,9 @@
 		"temps_BF": "Time since Big Fall",
 		"dureeUnivers":"Universe duration",
 		"simuavertissement":"Warning",
-		"avertissement":"The Universe simulation with it's annex calculations allows 10 or so parameters to be chosen(counting the fundamental constants). The current code is obviously not robust on all the accessible domain of this 10 dimensional space. We hope the results are exact in a 'prudent' neighborhood of the standard model, of the usual observable values (z, thêta) and of the fundamental constants. We think that they are still exact for universes very different from our own but it's obvious that the simulation's chances to fail(too long of a calculation time on the user's processor) or, worse, of erroneous results increase the further away we go from the standard model. The 'mono-fluids' option, with it's analytical formalism, allows us to explore more accurately those extremes. Near the 'seperators(?)' between different types of universes(with or without a Big Bang, with or without a Big Crunch), an automatic warning is normally displayed."
+		"avertissement":"The Universe simulation with it's annex calculations allows 10 or so parameters to be chosen(counting the fundamental constants). The current code is obviously not robust on all the accessible domain of this 10 dimensional space. We hope the results are exact in a 'prudent' neighborhood of the standard model, of the usual observable values (z, thêta) and of the fundamental constants. We think that they are still exact for universes very different from our own but it's obvious that the simulation's chances to fail(too long of a calculation time on the user's processor) or, worse, of erroneous results increase the further away we go from the standard model. The 'mono-fluids' option, with it's analytical formalism, allows us to explore more accurately those extremes. Near the 'seperators(?)' between different types of universes(with or without a Big Bang, with or without a Big Crunch), an automatic warning is normally displayed.",
+		"message_nomFichier": "Please enter the desired file name",
+		"alerte_nomFichier": "File name is not valid"
 	},
 
 	"page_univers":{
@@ -282,7 +284,9 @@
 	"tempsEvapTN":"Hawking evaporation time",
 	"Vlibtitle":"Escape velocity on the surface of the celestial body",
 	"infinity":"Infinity",
-	"gravSurface_BulleInfo":"Theoretical surface gravity when R=Rh+"
+	"gravSurface_BulleInfo":"Theoretical surface gravity when R=Rh+",
+	"message_nomFichier": "Please enter the desired file name",
+	"alerte_nomFichier": "File name is not valid"
 },
 
 "page_trajectoire_massive":{
