@@ -622,7 +622,16 @@ function graphique_creation_noir(boolBigRip,modele) { //S Ajout d'un booléen po
 
 function enregistrer() {
 	var format = document.getElementById("format_enr");
-	var nomFichier = prompt("Veuillez entrer le nom du fichier :", "a_univers");
+	if (sessionStorage.getItem("LANGUE") === "fr") {
+		var nomFichier = prompt("Veuillez entrer le nom du fichier désiré :", "a_univers");
+	}
+	if (sessionStorage.getItem("LANGUE") === "en") {
+		var nomFichier = prompt("Please enter the desired file name :", "a_universe");
+	}
+
+	if (nomFichier === "null") {
+		return;
+	}
 
 	var png = document.getElementById("png");
 	var jpg = document.getElementById("jpg");

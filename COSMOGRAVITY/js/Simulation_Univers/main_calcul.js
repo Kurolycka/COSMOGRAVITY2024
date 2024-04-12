@@ -940,7 +940,12 @@ function graphique_creation(){
 
 function enregistrer() {
     var format = document.getElementById("format_enr");
-    var nomFichier = prompt("Veuillez entrer le nom du fichier :", "a_univers");
+    if (sessionStorage.getItem("LANGUE") === "fr") {
+        var nomFichier = prompt("Veuillez entrer le nom du fichier désiré :", "a_univers");
+    }
+    else {
+        nomFichier = prompt("Please enter the desired file name :", "a_universe");
+    }
 
     var png = document.getElementById("png");
     var jpg = document.getElementById("jpg");

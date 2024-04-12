@@ -1073,7 +1073,19 @@ function siTrajectoireSimple() {
 function enregistrer(){
 	// ces 2 fonctions sont issues des biblios saveSvgAsPng.js et canvas-to-image.js
 
-	var nomFichier = prompt("Veuillez entrer le nom du fichier : ", "Trajectoire_massive_Kerr")
+	if (document.getElementById('trace_present').value === "1") {
+		// Demander à l'utilisateur le nom du fichier
+		if (sessionStorage.getItem("LANGUE") === "fr") {
+			var nomFichier = prompt("Veuillez entrer le nom du fichier désiré :", "Trajectoire_bary_bary_Kerr");
+		}
+		if (sessionStorage.getItem("LANGUE") === "en") {
+			var nomFichier = prompt("Please enter the desired file name :", "Trajectory_bary_bary_kerr");
+		}
+
+		if (nomFichier === "null") {
+			return;
+		}
+	}
 
 	if(document.getElementById('trace_present').value=="1"){
 		canvas3 = document.getElementById("myCanvas3");

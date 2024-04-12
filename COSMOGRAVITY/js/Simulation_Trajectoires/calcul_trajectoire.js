@@ -1555,7 +1555,16 @@ function rafraichir() {
 function enregistrer() {
 	if (document.getElementById('trace_present').value === "1") {
 		// Demander à l'utilisateur le nom du fichier
-		var nomFichier = prompt("Veuillez saisir le nom du fichier :", "Trajectoire_photon_Schwar");
+		if (sessionStorage.getItem("LANGUE") === "fr") {
+			var nomFichier = prompt("Veuillez entrer le nom du fichier désiré :", "Trajectoire_bary_bary");
+		}
+		if (sessionStorage.getItem("LANGUE") === "en") {
+			var nomFichier = prompt("Please enter the desired file name :", "Trajectory_bary_bary");
+		}
+
+		if (nomFichier === "null") {
+			return;
+		}
 
 		if (nomFichier !== null && nomFichier.trim() !== '') {
 			// Si l'utilisateur a saisi un nom de fichier valide
