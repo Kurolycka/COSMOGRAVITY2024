@@ -774,11 +774,12 @@ function animate() {
 
 	if (element2.value != "mobile"){  // observateur
 
-		//cette a ete simplment sortie par Khaled de la condition 
-		//car le temps de l'observateur change dans tout les cas !
+		
 
 		temps_observateur += dtau;
 		document.getElementById("to").innerHTML = temps_observateur.toExponential(3);
+		//ces deux lignes ont ete simplment sortie par Khaled de la condition 
+		//car le temps de l'observateur change dans tout les cas !
 
 	if(r_part_obs >= rhp*1.00001)   {
 			
