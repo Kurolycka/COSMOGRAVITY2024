@@ -188,7 +188,8 @@ function Calc() {
 			eps = 0.0001;
 		}
 		initial_a = 0;
-		age_sec = simpson(0, 0.999999999999, cv_Enoire_temps_substitution, omegam0, Number(omegaDE0), Number(Or), eps);console.log("192  age_sec  modele ",age_sec,modele);
+		age_sec = simpson(0, 0.999999999999, cv_Enoire_temps_substitution, omegam0, Number(omegaDE0), Number(Or), eps);
+		console.log("192  age_sec  modele ",age_sec,modele);
 		if(isNaN(age_sec)) {
 			modele=1;
 			age_afficher="NaN";  
@@ -205,7 +206,12 @@ function Calc() {
 	    ymoinsrungederiv = [1, 1];
 	    k = [0, 0, 0, 0];
 	    j = [0, 0, 0, 0];
-	    pas = age*5e-6;   if(modele==1){pas=1e-5;age=0;}
+	    pas = age*5e-6;
+
+		if(modele===1){
+			pas=1e-5;age=0;
+		}
+
 	    m = 0;
 	    yrunge = 1;
 	    yrunge2 = 0.1;

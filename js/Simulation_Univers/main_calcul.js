@@ -58,7 +58,7 @@ function calcul_Omegar(h, c, k, t0, H0parsec) {
 }
 
 function ajustePrecision(valeur) {
-    if (valeur != 0) {
+    if (valeur !== 0) {
         valeur = parseFloat(valeur).toExponential(4);
     } else {
         valeur = 0;
@@ -132,7 +132,7 @@ function calcul() { // fonction principale de cosmogravity
     omegak0 = Number(document.getElementById("resultat_omegak0").innerHTML);
 
     // Renvoie vers le cas monofluides dans le cas où 3 omega=0 et omegak0=1
-    if( omegam0==0 && omegalambda0==0 && Or==0 && omegak0==1)  
+    if( omegam0===0 && omegalambda0===0 && Or===0 && omegak0===1)
     {
         window.location="https://www.lupm.in2p3.fr/cosmogravity/Simulation_univers_monofluides.html";
     }
@@ -238,11 +238,11 @@ function calcul() { // fonction principale de cosmogravity
     amax1=amax; amin1=amin;
         
     if(amin >= 1 || amax >= 1){amin=0;amax=grandamax;}
-    if( amax==0) { amax=grandamax;}
+    if( amax===0) { amax=grandamax;}
     
         
     //  Modele exponentiel modele=0
-    if (omegalambda0 == 1 && omegam0==0 && Or==0 && omegak0==0) {
+    if (omegalambda0 === 1 && omegam0===0 && Or===0 && omegak0===0) {
         modele=0;
         pas=1e-2; 
         temps = -30;
@@ -257,7 +257,7 @@ function calcul() { // fonction principale de cosmogravity
  
  //  Modele sans big bang et sans big crunch
  
-    if(modele==1) {
+    if(modele===1) {
         pas = 5e-4 ;  
        if(amax1<=1) {
             amax1=5;
@@ -296,10 +296,10 @@ function calcul() { // fonction principale de cosmogravity
     }
     // Fin du modele 1 sans big bang et sans big crunch
 
-    if(modele!=0 && modele!=1) {
-        // on cherche si on a un big crunch c'est à dire quand adetau s'annulle, i final est le temps avant le big crunch
+    if(modele!==0 && modele!==1) {
+        // on cherche si on a un big crunch c'est à dire quand a de tau s'annulle, i final est le temps avant le big crunch
         tBC=0;
-        if(age != 0) {
+        if(age !== 0) {
             if (Math.abs(H0)>=100) {
                 exposant=Math.round(Math.log10(H0));
                 pas = 1e-5;
@@ -317,10 +317,12 @@ function calcul() { // fonction principale de cosmogravity
             }
             adetau1bis=adetau1;
             //  modele big crunch
-            if(adetau1bis<=0) { modelebis=20;
+            if(adetau1bis<=0) {
+                modelebis=20;
                 tBC = (i-pas/2) / H0engannee;
                 tBC_sec= tBC*nbJoursParAn()*86400*1e9;
             }
+
             // recherche big bang
             if (Math.abs(H0)>=100) {
                 exposant=Math.round(Math.log10(Math.abs(H0)));
@@ -338,6 +340,7 @@ function calcul() { // fonction principale de cosmogravity
                 i = i - pas;
             }
             adetau1ter=adetau1;
+
             //  modele big bang ou non
             if(adetau1ter<=0) {
                 modeleter=25;
@@ -346,14 +349,14 @@ function calcul() { // fonction principale de cosmogravity
             }
         }
     }
-    if(modelebis==20 && modeleter==25) {
+    if(modelebis===20 && modeleter===25) {
         modele=2;
     }
     //  Fin de la recherche d'un big crunch
 
     // Si big crunch on trace le graphe zoomé coté big bang en partant de amax  vers amin
     // à la condition que amax soit inférieur à 1 si non on trace de a=0 à a=0
-    if(modele==2 ) {
+    if(modele===2 ) {
         // calcul indispensable meme pour amax<1 du temps depuis le big bang
         if(amin2>=1) {
             amin2=0;
@@ -369,11 +372,14 @@ function calcul() { // fonction principale de cosmogravity
         }
         //  de a=1 à a=0 temps décroissants
         if(H0 < 0) {
-            agegraphe=0; epsilon=-1;
+            agegraphe=0;
+            epsilon=-1;
         } else {
-            agegraphe=age; epsilon=1;
+            agegraphe=age;
+            epsilon=1;
         }
 
+//================={Résolution avec Runge Kutta}=================
         adetau2 = 1;
         dasurdtau = epsilon;
         m=0;
@@ -385,12 +391,12 @@ function calcul() { // fonction principale de cosmogravity
             data_y.push(adetau2);
             m = m - pas;
         }
-        
+
         if(H0<0 && adetau2<=0) {
             tdepuisbigbang1=Math.abs(m/ H0engannee);
         }
 
-        //temps  croissants
+        //temps croissants
         fin = data_y.length;
         data_x.reverse();
         data_y.reverse();
@@ -409,6 +415,7 @@ function calcul() { // fonction principale de cosmogravity
         if(H0<0  && adetau2 <=0) {
             tdepuisbigbang2=Math.abs(m/ H0engannee);
         }
+
         if(amax2 <= 1) {
             data = [];
             data_x = [];
@@ -417,23 +424,27 @@ function calcul() { // fonction principale de cosmogravity
             zmax= (1-amax2)/amax2;
             dasurdtau = derivee_premiere(amax2,omegam0, omegalambda0, Or);
             agefinal= simpson_simple_degre2(fonction_integrale, Number(zmax), Number(omegam0), Number(omegalambda0), Number(Or))*1e-9;
-            if(amin2==0) {
+
+            if(amin2===0) {
                 agedebut=0;
             } else {
                 zmin= (1-amin2)/amin2;
                 agedebut= simpson_simple_degre2(fonction_integrale, Number(zmin), Number(omegam0), Number(omegalambda0), Number(Or))*1e-9;
             }
+
             if (Math.abs(H0)>=100) {
                 exposant=Math.round(Math.log10(Math.abs(H0)));
                 pas =  1e-7*age*Math.pow(10,exposant);
             } else  {
                 pas=Math.abs(agefinal-agedebut)*1e-5;
             }
+
             if(H0 < 0) {
                 agegraphe=agefinal+tBC;
             } else {
                 agegraphe=agefinal;
             }
+
             m=0;
             while (adetau2 > amin2 && adetau2 <= amax2) {
                 val = rungekutta_univers(-pas, adetau2, dasurdtau);
@@ -449,6 +460,7 @@ function calcul() { // fonction principale de cosmogravity
                 data_x.reverse();
                 data_y.reverse();
             }
+//================={fin résolution avec Runge Kutta}=================
         
     }
 }
@@ -456,14 +468,14 @@ function calcul() { // fonction principale de cosmogravity
 
     // Si big bang sans big crunch  on trace le graphe zoomé (amax<1)  en partant de amax  vers amin
     //  ou non zoomé (amax=5) en partant de   vers amin
-    if(modele == 3 ) {
+    if(modele === 3 ) {
         
         if(H0<0) {modele=5;}
         adetau3 = amax3; 
         zmax= (1-amax3)/amax3;
         dasurdtau = derivee_premiere(amax3,omegam0, omegalambda0, Or);
         agefinal= simpson_simple_degre2(fonction_integrale, Number(zmax), Number(omegam0), Number(omegalambda0), Number(Or))*1e-9;
-        if(amin3==0) {        //zmin= (1-0.1)/0.1;
+        if(amin3===0) {        //zmin= (1-0.1)/0.1;
 
             //agedebut= simpson_simple_degre2(fonction_integrale, Number(zmin), Number(omegam0), Number(omegalambda0), Number(Or))*1e-9;
             //console.log(agedebut);
@@ -501,12 +513,12 @@ function calcul() { // fonction principale de cosmogravity
     }
      // Fin du modele 3
 
-    if (omegalambda0 == 1 && omegam0==0 && Or==0 && omegak0==0) { modele=0;	}
+    if (omegalambda0 === 1 && omegam0===0 && Or===0 && omegak0===0) { modele=0;	}
 
     //liste les differents cas pour afficher a l'utilisateur les informations
     var dure_annee = 0;
-    if(modele==0 || modele==1 ) {
-        if (sessionStorage.getItem("LANGUE") == "fr") {
+    if(modele===0 || modele===1 ) {
+        if (sessionStorage.getItem("LANGUE") === "fr") {
             document.getElementById("resultat_ageunivers_ga").innerHTML = "Pas de Big Bang";
             document.getElementById("resultat_ageunivers_s").innerHTML = "Pas de Big Bang";
             document.getElementById("resultat_bigcrunch").innerHTML = "Pas de Big Crunch";
@@ -518,14 +530,13 @@ function calcul() { // fonction principale de cosmogravity
             document.getElementById("resultat_dureeuniv").innerHTML = "&#8734;";
         } 
     }
-    if(modele==2) {
+    if(modele===2) {
          //if(H0<0) {age_afficher=-tBC;}
         document.getElementById("resultat_ageunivers_ga").innerHTML = "" + age_afficher;
         document.getElementById("resultat_ageunivers_s").innerHTML = "" + age_sec_afficher;
         tBC_sec = tBC* nbJoursParAn()*86400*1e9;
         total = Number(age) + Number(tBC);
         console.log("ligne534 age total tBC",age,total,tBC);
-        dure_annee = total;
         total_sec = (total*nbJoursParAn()*86400*1e9).toExponential(4);
         tBC=Number(tBC).toExponential(4);
         tBC_sec = Number(tBC_sec).toExponential(4);
@@ -534,8 +545,8 @@ function calcul() { // fonction principale de cosmogravity
         document.getElementById("resultat_dureeuniv").innerHTML = total + " Ga = " + total_sec + " s";
     }
 
-    if(modele==3 ) {
-        if (sessionStorage.getItem("LANGUE") == "fr") {
+    if(modele===3 ) {
+        if (sessionStorage.getItem("LANGUE") === "fr") {
             document.getElementById("resultat_bigcrunch").innerHTML = "Pas de Big Crunch";
             document.getElementById("resultat_dureeuniv").innerHTML = "&#8734;";
         } else {
@@ -546,20 +557,19 @@ function calcul() { // fonction principale de cosmogravity
         document.getElementById("resultat_ageunivers_s").innerHTML = "" + age_sec.toExponential(4);
     }
 
-    if(modele==4) {
+    if(modele===4) {
         tBB_sec=Math.abs(age_ans)*86400*nbJoursParAn();
         tBC_sec=tBC*nbJoursParAn()*86400*1e9;
         document.getElementById("resultat_ageunivers_ga").innerHTML = "" + Math.abs(tBC).toExponential(4);
         document.getElementById("resultat_ageunivers_s").innerHTML = "" + Math.abs(tBC_sec).toExponential(4);
         total = (Math.abs(age_ans) + Math.abs(tBC*1e9)).toExponential(4);
-        dure_annee = total;
         total_sec = (total*nbJoursParAn()*86400).toExponential(4);
         document.getElementById("resultat_dureeuniv").innerHTML = (total*1e-9).toExponential(4) + " Ga = " + total_sec + " s";
         document.getElementById("resultat_bigcrunch").innerHTML = texte.calculs_univers.tempsavtBC + Math.abs(age_ans*1e-9).toExponential(4) + " Ga = " + Math.abs(tBB_sec).toExponential(4) + " s";
     }  
 
-    if(modele==5) {
-        if (sessionStorage.getItem("LANGUE") == "fr") {
+    if(modele===5) {
+        if (sessionStorage.getItem("LANGUE") === "fr") {
             document.getElementById("resultat_ageunivers_ga").innerHTML = "Pas de Big Bang";
             document.getElementById("resultat_ageunivers_s").innerHTML = "Pas de Big Bang";
             document.getElementById("resultat_dureeuniv").innerHTML = "&#8734;";
@@ -577,7 +587,7 @@ function calcul() { // fonction principale de cosmogravity
     }
  
     //on cree le graphique
-    if( modele==0 || modele==1  ) {
+    if( modele===0 || modele===1  ) {
         graphique_creation();
     } else {
         graphique_creation2(); 
@@ -625,7 +635,7 @@ function graphique_creation2(){
     omegam0 = ajustePrecision(omegam0);
     h0 = ajustePrecision(h0);
 
-    if (document.getElementById("resultat_dureeuniv").innerHTML == "∞") {
+    if (document.getElementById("resultat_dureeuniv").innerHTML === "∞") {
         dure_annee = "∞";
     }
 
@@ -811,7 +821,7 @@ function graphique_creation(){
     omegam0 = ajustePrecision(omegam0);
     H0 = ajustePrecision(H0);
 
-    if (document.getElementById("resultat_dureeuniv").innerHTML == "∞") {
+    if (document.getElementById("resultat_dureeuniv").innerHTML === "∞") {
         dure_annee = "∞";
     }
 
@@ -890,7 +900,6 @@ function graphique_creation(){
         
     
         xaxis: {
-            autorange: true,
             autorange: true,
             title: 't (Ga)',
             showline: true
@@ -991,17 +1000,17 @@ function simpson_simple_degre2(fonction,bornInf, omegam0, omegalambda0, Or){
     var Sum=0.0;
     var n=Math.pow(10,8);
     for(var i=1;i<=7;i+=1){
-        if(bornInf<100 && i==1){
+        if(bornInf<100 && i===1){
 
             var bornI=bornInf;
             var bornS=bornInf+1000;
         }
-        else if(bornInf<100 && i!=1){
+        else if(bornInf<100 && i!==1){
 
                 var bornI=bornS;
                 var bornS=bornS*10;
         }
-        else if(i==1){
+        else if(i===1){
             var bornI=bornInf;
             var bornS=(Math.pow(10,i+1)*bornInf);
         }
@@ -1016,7 +1025,7 @@ function simpson_simple_degre2(fonction,bornInf, omegam0, omegalambda0, Or){
         var h=(bornS-bornI)/n;
         for(var o=1;o<n-1;o+=1){
             var x1=bornI+o*h;
-            if ((o%2) == 0){
+            if ((o%2) === 0){
                 S_2+=fonction(x1,omegam0,omegalambda0,Or);
                 }
             else{
