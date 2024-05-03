@@ -299,7 +299,9 @@
 	"gravSurface_BulleInfo":"Theoretical surface gravity when R=Rh+",
 	"vitesseuphilabeltau":"Angle of initial velocity of projectile",
 	"message_nomFichier": "Please enter the desired file name",
-	"alerte_nomFichier": "File name is not valid"
+	"alerte_nomFichier": "File name is not valid",
+	"nombre_de_g": "g felt",
+	"nombre_g_infobulle": "Number of g felt by the pilot with 1g = 9.81m/s²."
 },
 
 "page_trajectoire_massive":{
