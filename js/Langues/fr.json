@@ -260,9 +260,9 @@
 		"bouton_pause":"Pause",
 		"bouton_resume":"Reprendre",
 		"bouton_lecture":"Lecture",
-		"bouton_start":"Start",
+		"bouton_start":"Débuter", 
 		"boutton_prézoom":"Pré-zoom",
-		"bouton_reset":"Reset",
+		"bouton_reset":"Réinitialiser", 
 		"bouton_enregistrer":"Enregistrer",
 		"trajectoire_complete":"Trajectoire complète",
 		"trajectoire_simple":"Trajectoire simple",											 
@@ -304,7 +304,9 @@
 		"infinity":"Infini",
 		"gravSurface_BulleInfo":"Gravité de surface théorique pour R=Rh+",
 		"message_nomFichier": "Veuillez saisir le nom de fichier désiré",
-		"alerte_nomFichier": "Le nom de fichier n'est pas valide"
+		"alerte_nomFichier": "Le nom de fichier n'est pas valide",
+		"nombre_de_g": "g ressenti",
+		"nombre_g_infobulle": "Nombre de g ressenti par le pilote avec 1g = 9.81m/s²."
 	},
 
 	"page_trajectoire_massive":{
