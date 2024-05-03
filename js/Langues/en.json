@@ -301,7 +301,9 @@
 	"message_nomFichier": "Please enter the desired file name",
 	"alerte_nomFichier": "File name is not valid",
 	"nombre_de_g": "g felt",
-	"nombre_g_infobulle": "Number of g felt by the pilot with 1g = 9.81m/s². Valid only for Newtonian mechanics."
+	"nombre_g_infobulle": "Number of g felt by the pilot with 1g = 9.81m/s². Valid only for Newtonian mechanics.",
+	"distance_metrique_parcourue":"D(m)",
+	"distance_metrique_parcourue_infobulle":"Metric distance since the initial moment."
 },
 
 "page_trajectoire_massive":{
