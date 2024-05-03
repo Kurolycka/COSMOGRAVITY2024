@@ -306,7 +306,7 @@
 		"message_nomFichier": "Veuillez saisir le nom de fichier désiré",
 		"alerte_nomFichier": "Le nom de fichier n'est pas valide",
 		"nombre_de_g": "g ressenti",
-		"nombre_g_infobulle": "Nombre de g ressenti par le pilote avec 1g = 9.81m/s²."
+		"nombre_g_infobulle": "Nombre de g ressenti par le pilote avec 1g = 9.81m/s². Valable seulement pour la mécanique Newtonienne."
 	},
 
 	"page_trajectoire_massive":{
