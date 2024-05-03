@@ -584,6 +584,7 @@ function texteUniversMonofluidesNoire() {
 
 function texteTrajectoireMassive(nbrderockets) {
   var texte = o_recupereJson();
+  element2=document.getElementById('traject_type2');
   
  
   document.getElementById("txt_titre").innerHTML = texte.page_trajectoire_massive.titre;
@@ -609,7 +610,8 @@ function texteTrajectoireMassive(nbrderockets) {
  		document.getElementById("decal_spect"+count.toString()+"").innerHTML = texte.pages_trajectoire.decal_spect+"&nbsp;<span id='DivClignotantePilot"+count.toString()+"'></span>";
 		document.getElementById("decal_spect"+count.toString()).title = texte.pages_trajectoire.decalageSpec_EnergyReserve;
 		document.getElementById("v_tot"+count.toString()+"").innerHTML = texte.pages_trajectoire.vtotal;
-
+    document.getElementById("nb_g"+count.toString()+"").innerHTML = texte.pages_trajectoire.nombre_de_g;//Manon
+    document.getElementById("nb_g"+count.toString()).title = texte.pages_trajectoire.nombre_g_infobulle;
 		
 	}
   var canvaswidthheightt = document.getElementById("canvaswidthheight").value;
