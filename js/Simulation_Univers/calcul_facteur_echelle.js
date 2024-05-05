@@ -70,43 +70,74 @@ function calcul_facteur_echelle(equa_diff_1, equa_diff_2) {
     let a_init = 1
     // Dérivée de a à tau initial
     let ap_init = 1;
+    // On pose t0 = 0 pour le moment, on le recalculera plus tard
+    let t_0 = 0
 
     /* on crée des solutions sur un gros intervalle de a pour estimer :
         - L'âge minimal et l'âge maximal de l'univers
         - une condition initiale qui correspond si jamais celle de base ne va pas
      */
-    let Solutions_neg = RungeKuttaEDO1(-pas, tau_init, a_init, equa_diff_1, 0, 1000);
-    let Solutions_pos = RungeKuttaEDO1(pas, tau_init, a_init, equa_diff_1, 0, 1000);
+    let Solutions_neg = RungeKutta_D1_D2(-pas, tau_init, a_init, ap_init, equa_diff_1, equa_diff_2, 0, 1000);
+    let Solutions_pos = RungeKutta_D1_D2(pas, tau_init, a_init, ap_init, equa_diff_1, equa_diff_2, 0, 1000);
     let Solutions = fusion_solutions(Solutions_neg, Solutions_pos)
+
     tau = Solutions[0];
+    let temps_min = Math.abs(tau[0] / H0parsec)
     facteur_echelle = Solutions[1];
 
+    let facteur_echelle_original = facteur_echelle;
+    let facteur_echelle_reversed = facteur_echelle.reverse();
+
     // On fait les changements nécessaires sur la condition initiale si besoin
-    if (a_min > 1) {
-        for (const a of facteur_echelle) {
-            if (a > a_min) {
-                let index = facteur_echelle.indexOf(a)
-                tau_init = tau[index]
-                a_init = a
-                ap_init = equa_diff_1(tau_init, a_init)
-            }
+    for (const t of tau) {
+        let index = tau.indexOf(t);
+        let a_sensPos = facteur_echelle_original[index];
+        let a_sensNeg = facteur_echelle_reversed[index];
+        let temps = [];
+
+        temps.push(t/H0parsec + temps_min)
+
+        if (a_min > 1 && a_sensPos > a_min) {
+            tau_init = temps;
+            a_init = a_sensPos;
+            ap_init = equa_diff_1(tau_init, a_init);
+        }
+
+        if (a_max < 1 && a_sensNeg < a_max) {
+            tau_init = temps;
+            a_init = a_sensPos;
+            ap_init = equa_diff_1(tau_init, a_init);
         }
     }
 
-    if (1 > a_max) {
-        let facteur_echelle_reversed = facteur_echelle.reverse()
-        for (const a of facteur_echelle_reversed) {
-            if (a < a_max) {
-                let index = facteur_echelle.indexOf(a)
-                tau_init = tau[index]
-                a_init = a
-                ap_init = equa_diff_1(tau_init, a_init)
-            }
-        }
-    }
-
-    Solutions_neg = RungeKuttaEDO1(-pas, tau_init, a_init, equa_diff_1, a_min, a_max);
-    Solutions_pos = RungeKuttaEDO1(pas, tau_init, a_init, equa_diff_1, a_min, a_max);
-    return fusion_solutions(Solutions_neg, Solutions_pos)
+    Solutions_neg = RungeKutta_D1_D2(-pas, tau_init, a_init, ap_init, equa_diff_1, equa_diff_2, a_min, a_max);
+    Solutions_pos = RungeKutta_D1_D2(pas, tau_init, a_init, ap_init, equa_diff_1, equa_diff_2, a_min, a_max);
+    return fusion_solutions(Solutions_neg, Solutions_pos);
 }
 
+function graphique_facteur_echelle(solution) {
+    let abscisse = solution[0];
+    let ordonnee = solution[1];
+
+    let donnee = [{
+        x: abscisse,
+        y: ordonnee,
+        type: "line",
+        mode: "line",
+        name: "Facteur d'échelle",
+        marker: {color: 'purple'}
+    }]
+
+    let apparence = [{
+        title: "Tracé du facteur d'échelle réduit en fonction du temps",
+        xaxis: {title: "Temps en milliard d'année"},
+        yaxis: {title: "facteur d'échelle réduit"}
+    }]
+
+    Plotly.newPlot("test.graphique", donnee, apparence)
+}
+
+function affichage_site() {
+    let donnee = calcul_facteur_echelle(equa_diff_1, equa_diff_2)
+    graphique_facteur_echelle(donnee)
+}

@@ -1,9 +1,9 @@
-const AU = 149597870700; // unite astronomique
+const AU = 149597870000; // unite astronomique
 
 function lance_calc() {
     document.getElementById("ret").click();
     chargement();
-    setTimeout(calcul, 100);
+    setTimeout(affichage_site, 100);
 }
 
 //on recupere le bon nombre de jour par an.
@@ -23,7 +23,7 @@ function nbJoursParAn() {
 
 //calcule de H0 en secondes-1 
 function calcul_H0parsec(H0) {
-    return H0 * 1000 / ((AU * (180 * 3600)) / Math.PI * Math.pow(10, 6));
+    return H0 * 1e-3 * (Math.PI / 648000) * (1 / AU);
 }
 //calcule de H0 en années-1
 function calcul_H0enannee(H0parsec, nbrjours) {
