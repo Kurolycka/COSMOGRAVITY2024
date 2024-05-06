@@ -411,6 +411,10 @@ function genereHtml(){
 //-----------------------------{Fonction rajoutée par Manon}--------------------------------------------
 
 function rendreVisibleNbG() {
+
+	blyo = Number(document.getElementById("nombredefusees").value);//nombre de mobiles
+	element2=document.getElementById('traject_type2');//si spationaute ou observateur
+	
     // Sélectionne toutes les cellules dont l'ID commence par "nb_g" :
     var nbGCells = document.querySelectorAll('[id^="nb_g"]');
 
@@ -418,8 +422,8 @@ function rendreVisibleNbG() {
 	var gRessCells = document.querySelectorAll('[id^="g_ressenti"]');
 
     
-    // Si element2.value est "mobile", rend les cellules visibles, sinon les cache
-    if (element2.value === "mobile") {
+    // Si element2.value est "mobile" et que y a que 1 mobile, rend les cellules visibles, sinon les cache
+    if (element2.value == "mobile" && blyo==1) {
         nbGCells.forEach(function(cell) {
             cell.style.display = ''; // Rend visible la cellule nb_g
         });
@@ -1078,6 +1082,7 @@ function animate(compteur,mobile,mobilefactor) {
 	var isrebond = document.getElementById("boutton_ammorti").value;					  								   
 	//Tracé de la particule
 	element2=document.getElementById('traject_type2');
+	blyo=Number(document.getElementById('nombredefusees').value)//ManonGeneralisation
 
 	if (mobile.r0 != 0.0) {
 		if (element2.value != "mobile"){  //observateur
@@ -1129,7 +1134,7 @@ function animate(compteur,mobile,mobilefactor) {
 				distance_metrique_res+=vtotal*mobile.dtau; //Manonbis
 			}//Manonbis
 
-			if(joy.GetPhi()!=0){ //Manon
+			if(joy.GetPhi()!=0 && blyo==1){ //Manon
 				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_précédente_nombre_g)/mobile.dtau)/9.80665 //Manon
 			}
 			
@@ -1416,7 +1421,7 @@ function animate(compteur,mobile,mobilefactor) {
 
 			//------------------------{Manon}----------------------------------
 
-			if(element2.value == "mobile" ) {
+			if(element2.value == "mobile" && blyo==1 && mobile.r_part>rs) { //ManonGeneralisation
 				setInterval(function(){
 					if(joy.GetPhi()!=0){ 
 						document.getElementById("g_ressenti"+compteur.toString()).innerHTML = nombre_de_g_calcul.toExponential(3);}
@@ -1432,7 +1437,6 @@ function animate(compteur,mobile,mobilefactor) {
 				document.getElementById("v_tot"+compteur.toString()).innerHTML ="";
 				document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = "";
 				document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = "";
-				document.getElementById("g_ressenti"+compteur.toString()).innerHTML = ""; //Manon
 				document.getElementById("to"+compteur.toString()).innerHTML = 1/0;
 				document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=distance_metrique_res.toExponential(3); //Manonbis
 
