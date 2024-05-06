@@ -182,7 +182,7 @@ function Calc() {
 		i = i + pas;
 	}
 		
-/*	if(amax<1){
+	if(amax<1){
 		eps =1e-10;
 		if (omegaDE0 > 1e6 || omegam0 > 1e6) {
 			eps = 0.0001;
@@ -230,7 +230,7 @@ function Calc() {
 	}
 		
 
-	}*/
+	}
 
 	//liste les differents cas pour afficher a l'utilisateur les informations
 	

@@ -3,7 +3,7 @@ const AU = 149597870000; // unite astronomique
 function lance_calc() {
     document.getElementById("ret").click();
     chargement();
-    setTimeout(calcul, 100);
+    setTimeout(affichage_site, 100);
 }
 
 //on recupere le bon nombre de jour par an.

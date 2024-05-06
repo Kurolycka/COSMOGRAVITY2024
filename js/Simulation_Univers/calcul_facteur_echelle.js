@@ -1,13 +1,3 @@
-// Déclaration des variables globales
-let c = Number(document.getElementById("c_p").value);
-let G = Number(document.getElementById("G_p").value);
-let h = Number(document.getElementById("h_p").value);
-let k = Number(document.getElementById("k_p").value);
-let T0 = document.getElementById("T0").value;
-let H0 = document.getElementById("H0").value;
-let texte = o_recupereJson();
-let H0parsec = calcul_H0parsec(H0);
-
 /**
  * Première équation caractéristique du facteur d'échelle. La dérivée première de a à un temps t
  * @param a {number} La valeur de a au temps indiqué
@@ -15,16 +5,26 @@ let H0parsec = calcul_H0parsec(H0);
  * @returns {number} La valeur de la dérivée de a en ce temps
  */
 function equa_diff_1(t, a) {
+    // Déclaration des variables globales
+    let c = Number(document.getElementById("c_p").value);
+    let G = Number(document.getElementById("G_p").value);
+    let h = Number(document.getElementById("h_p").value);
+    let k = Number(document.getElementById("k_p").value);
+    let T0 = document.getElementById("T0").value;
+    let H0 = document.getElementById("H0").value;
+    let texte = o_recupereJson();
+    let H0parsec = calcul_H0parsec(H0);
+
     // On récupère les valeurs des omégas
     let Omegam0 = Number(document.getElementById("omegam0").value);
     let Omegal0 = Number(document.getElementById("omegalambda0").value);
     let Omegar0 = calcul_Omegar(h, c, k, T0, H0parsec);
     let Omegak0 = Number(document.getElementById("resultat_omegak0").innerHTML);
 
-    let a_carre = math.pow(a, 2)
+    let a_carre = Math.pow(a, 2)
 
     let temp = -(Omegar0 / a_carre) + (Omegam0 / a) + Omegal0 * a_carre + Omegak0
-    return math.pow(temp, 1/2)
+    return Math.pow(temp, 1/2)
 }
 
 /**
@@ -35,13 +35,23 @@ function equa_diff_1(t, a) {
  * @returns {number} La valeur de la dérivée seconde de a en ce temps
  */
 function equa_diff_2(t, a, ap) {
+    // Déclaration des variables globales
+    let c = Number(document.getElementById("c_p").value);
+    let G = Number(document.getElementById("G_p").value);
+    let h = Number(document.getElementById("h_p").value);
+    let k = Number(document.getElementById("k_p").value);
+    let T0 = document.getElementById("T0").value;
+    let H0 = document.getElementById("H0").value;
+    let texte = o_recupereJson();
+    let H0parsec = calcul_H0parsec(H0);
+
     // On récupère les valeurs des omégas
     let Omegam0 = Number(document.getElementById("omegam0").value);
     let Omegal0 = Number(document.getElementById("omegalambda0").value);
     let Omegar0 = calcul_Omegar(h, c, k, T0, H0parsec);
 
-    let a_carre = math.pow(a, 2)
-    let a_cube = math.pow(a,3)
+    let a_carre = Math.pow(a, 2)
+    let a_cube = Math.pow(a,3)
     return -(Omegar0 / a_cube) - 0.5 * (Omegam0 / a_carre) + Omegal0 * a_carre
 }
 
@@ -56,9 +66,19 @@ function tau_to_temps(tau, H0) {
  * @return Liste des abscisses ou la fonction a été calculée et liste des valeurs de la fonction.
  */
 function calcul_facteur_echelle(equa_diff_1, equa_diff_2) {
+    // Déclaration des variables globales
+    let c = Number(document.getElementById("c_p").value);
+    let G = Number(document.getElementById("G_p").value);
+    let h = Number(document.getElementById("h_p").value);
+    let k = Number(document.getElementById("k_p").value);
+    let T0 = document.getElementById("T0").value;
+    let H0 = document.getElementById("H0").value;
+    let texte = o_recupereJson();
+    let H0parsec = calcul_H0parsec(H0);
+
     //on recupere les valeurs des variables
-    let a_min = Number(document.getElementById("a_min").value);
-    let a_max = Number(document.getElementById("a_max").value);
+    let a_min = Number(document.getElementById("ami").value);
+    let a_max = Number(document.getElementById("ama").value);
 
 
     // On initie les listes qui vont stocker les solutions et autres variables
@@ -116,6 +136,16 @@ function calcul_facteur_echelle(equa_diff_1, equa_diff_2) {
 }
 
 function graphique_facteur_echelle(solution) {
+    // Déclaration des variables globales
+    let c = Number(document.getElementById("c_p").value);
+    let G = Number(document.getElementById("G_p").value);
+    let h = Number(document.getElementById("h_p").value);
+    let k = Number(document.getElementById("k_p").value);
+    let T0 = document.getElementById("T0").value;
+    let H0 = document.getElementById("H0").value;
+    let texte = o_recupereJson();
+    let H0parsec = calcul_H0parsec(H0);
+
     let abscisse = solution[0];
     let ordonnee = solution[1];
 
