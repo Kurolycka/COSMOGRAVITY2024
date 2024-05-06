@@ -171,3 +171,23 @@ function fusion_solutions(solutions_neg, solutions_pos) {
             solutions_neg[1].concat(solutions_pos[1])]
 }
 
+function simpson_composite(fonction, borne_inf, borne_sup, subdivisions=100) {
+    let pas = (borne_sup - borne_inf) / subdivisions
+    let a = borne_inf
+    let b = borne_inf + pas
+    let m = (b - a) / 2
+    let integrale = 0
+    while (b < borne_sup) {
+        integrale = integrale + fonction(a) + 4 * fonction(m) + fonction(b)
+        a = a + pas
+        b = b + pas
+        m = m + pas
+    }
+    return pas / 6 * integrale
+}
+
+function simple(x) {
+    return x * x
+}
+
+console.log(simpson_composite(simple, 0, 5, 100))
