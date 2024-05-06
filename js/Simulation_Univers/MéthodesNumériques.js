@@ -173,15 +173,16 @@ function fusion_solutions(solutions_neg, solutions_pos) {
 
 function simpson_composite(fonction, borne_inf, borne_sup, subdivisions=100) {
     let pas = (borne_sup - borne_inf) / subdivisions
-    let a = borne_inf
-    let b = borne_inf + pas
-    let m = (b - a) / 2
-    let integrale = 0
-    while (b < borne_sup) {
-        integrale = integrale + fonction(a) + 4 * fonction(m) + fonction(b)
-        a = a + pas
-        b = b + pas
-        m = m + pas
+    let x = borne_inf
+    let integrale = fonction(borne_inf) + fonction(borne_sup)
+    for (let n = 0; n < 2 * subdivisions; n = n + 1) {
+        if (n % 2 === 0) {
+            integrale = integrale + 2 * fonction(x)
+        } else {
+            integrale = integrale + 4 * fonction(x)
+        }
+        x = x + pas/2
+
     }
     return pas / 6 * integrale
 }
