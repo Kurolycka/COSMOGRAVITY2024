@@ -82,7 +82,7 @@ function calcul_facteur_echelle(equa_diff_1, equa_diff_2) {
     let Solutions = fusion_solutions(Solutions_neg, Solutions_pos)
 
     tau = Solutions[0];
-    let temps_min = Math.abs(tau[0] / H0parsec)
+    let temps_min = Math.abs(tau[0] / H0parsec + t_0)
     facteur_echelle = Solutions[1];
 
     let facteur_echelle_original = facteur_echelle;

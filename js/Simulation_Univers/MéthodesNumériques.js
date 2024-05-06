@@ -8,7 +8,6 @@
  *      - Du paramètre de la fonction inconnue
  *      - De la fonction inconnue
  * Dans cet ordre, pas plus pas moins.
- * @param x_max {number} valeur maximale que peut prendre x
  * @param y_min {number} valeur maximale que la fonction à déterminer peut prendre
  * @param y_max {number} valeur minimale que la fonction à déterminer peut prendre
  * @return liste des valeurs de la fonction inconnue et des abscisses ou elle a été calculée
@@ -62,7 +61,6 @@ function RungeKuttaEDO1(pas, x0, y0, fonctionCarac,
  *      - De la dérivée de la fonction inconnue
  * Dans cet ordre, pas plus pas moins.
  * déterminer, de sa dérivée première et de son paramètre, pas plus pas moins.
- * @param x_max {number} valeur maximale que peut prendre x
  * @param y_min {number} valeur maximale que la fonction à déterminer peut prendre
  * @param y_max {number} valeur minimale que la fonction à déterminer peut prendre
  * @return liste des valeurs de la fonction inconnue et des abscisses ou elle a été calculée
@@ -171,24 +169,22 @@ function fusion_solutions(solutions_neg, solutions_pos) {
             solutions_neg[1].concat(solutions_pos[1])]
 }
 
+/**
+ * Méthode d'intégration de simpson qui divise l'intervalle d'intégration en subdivision et interpole un polynôme
+ * dans chacune de ces subdivisions.
+ * @param fonction {function} Fonction ne dépendant que d'un seul paramètre
+ * @param borne_inf {number} Borne inférieure d'intégration
+ * @param borne_sup {number} Borne supérieure d'intégration
+ * @param subdivisions {number} Nombre de subdivisions à créer
+ * @returns {number} Valeur de l'intégrale
+ */
 function simpson_composite(fonction, borne_inf, borne_sup, subdivisions=100) {
-    let pas = (borne_sup - borne_inf) / subdivisions
-    let x = borne_inf
-    let integrale = fonction(borne_inf) + fonction(borne_sup)
-    for (let n = 0; n < 2 * subdivisions; n = n + 1) {
-        if (n % 2 === 0) {
-            integrale = integrale + 2 * fonction(x)
-        } else {
-            integrale = integrale + 4 * fonction(x)
-        }
-        x = x + pas/2
-
+    let pas = (borne_sup - borne_inf) / subdivisions;
+    let x = borne_inf;
+    let integrale = 0;
+    for (let j = 0; j < subdivisions; j = j + 1) {
+        integrale = integrale + fonction(x) + 4 * fonction(x + (pas / 2)) + fonction(x + pas);
+        x = x + pas;
     }
-    return pas / 6 * integrale
+    return (pas / 6) * integrale;
 }
-
-function simple(x) {
-    return x * x
-}
-
-console.log(simpson_composite(simple, 0, 5, 100))
