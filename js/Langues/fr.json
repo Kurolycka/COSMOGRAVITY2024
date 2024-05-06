@@ -308,7 +308,7 @@
 		"nombre_de_g": "g ressenti",
 		"nombre_g_infobulle": "Nombre de g ressenti par le pilote avec 1g = 9.81m/s². Valable seulement pour la mécanique Newtonienne.",
 		"distance_metrique_parcourue":"D(m)",
-		"distance_metrique_parcourue_infobulle":"Distance métrique parcourue depuis l'instant initial."
+		"distance_metrique_parcourue_infobulle":"Distance métrique parcourue par le mobile depuis l'instant initial."
 
 	},
 
