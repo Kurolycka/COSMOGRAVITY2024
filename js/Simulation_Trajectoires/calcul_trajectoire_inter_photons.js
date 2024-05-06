@@ -8,7 +8,7 @@ const c = 299792458;
 var nzoom=0;
 var facteurDeMalheur;
 var fact_defaut;
-var temps_observateur_distant=0;
+
 
 // liste de couleurs en hexa
 const COULEUR_NOIR = '#2F2D2B';
@@ -605,8 +605,8 @@ function trajectoire(compteur,mobile) {
 
     temps_particule = 0;
     mobile["temps_particule"]=temps_particule;
-    temps_observateur = 0;
-    mobile["temps_observateur"]=temps_observateur;//mobile.temps_observateur
+    temps_observateur_distant = 0;
+    mobile["temps_observateur_distant"]=temps_observateur_distant;//mobile.temps_observateur_distant
 
     // permet de gérer les touches du clavier pour certaines actions
     clavierEvenement();	
@@ -657,7 +657,7 @@ function trajectoire(compteur,mobile) {
     // à voir, l'utilisation du settimeout à la place de setinterval. Ca permettrait de remplacer le 10/6 par une variable dt_simu pouvant être modifiée à la place du pas dtau utilisé dans rungekutta
     // lorsqu'on est dans le setinterval, il est impossible ce modifier ce 10/6 par une variable qu'on pourrait incrémenter. Il utilise la valeur initiale avant l'entrée dans setinterval
 
-	mobile.myInterval = setInterval(animate.bind(null,compteur,mobile,mobilefactor), 10 / 6);
+	mobile.myInterval = setInterval(animate.bind(null,compteur,mobile,mobilefactor), 1);
     Dtau1 = 1e8 * mobile.dtau ;
     mobile["Dtau1"]=Dtau1;//mobile.Dtau1
     Dtau2 = mobile.dtau / 1e8;
@@ -845,7 +845,7 @@ function trajectoire(compteur,mobile) {
    
     }, false);*/
 	}else {
-		mobile.myInterval = setInterval(animate.bind(null,compteur,mobile,mobilefactor), 10 / 6);
+		mobile.myInterval = setInterval(animate.bind(null,compteur,mobile,mobilefactor), 1);
 		
 	} // fin du if(pause...
 	
@@ -1016,46 +1016,46 @@ function animate(compteur,mobile,mobilefactor) {
 //  Les différents "temps" et autres valeurs à afficher
 	if (element2.value != "mobile"){
 		if(mobile.r_part_obs > r_phy){
-			temps_observateur_distant+=mobile.dtau;
+			mobile.temps_observateur_distant+=mobile.dtau;
 			mobile.temps_particule += 0;
 			document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3);
 			document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part_obs.toExponential(3); 
 			document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_1_obs.toExponential(3);
     		document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_1_obs.toExponential(3);
-			document.getElementById("to"+compteur.toString()).innerHTML = temps_observateur_distant.toExponential(3);
+			document.getElementById("to"+compteur.toString()).innerHTML = mobile.temps_observateur_distant.toExponential(3);
 			
 		    document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(8); 
 		}
 		else{
-			temps_observateur_distant+=mobile.dtau;
+			mobile.temps_observateur_distant+=mobile.dtau;
 			mobile.temps_particule += 0;
 			document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3);
 			document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part_obs.toExponential(3);
 			document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_1_obs.toExponential(3);
     		document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_1_obs.toExponential(3); 
-			document.getElementById("to"+compteur.toString()).innerHTML = temps_observateur_distant.toExponential(3);
+			document.getElementById("to"+compteur.toString()).innerHTML = mobile.temps_observateur_distant.toExponential(3);
 		    document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(8);
 		}	
 	}
 	else{
 		if (mobile.r_part>= r_phy){
 			mobile.temps_particule+=0;
-			temps_observateur_distant+=mobile.dtau;
+			mobile.temps_observateur_distant+=mobile.dtau;
 			document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3); 
 			document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part.toExponential(3);
 			document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_1.toExponential(3);
 			document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_1.toExponential(3);
-			document.getElementById("to"+compteur.toString()).innerHTML = temps_observateur_distant.toExponential(3);
+			document.getElementById("to"+compteur.toString()).innerHTML = mobile.temps_observateur_distant.toExponential(3);
 		    document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(8); 			
 		}
 		else{
 			mobile.temps_particule+=0;
-			temps_observateur_distant+=mobile.dtau;
+			mobile.temps_observateur_distant+=mobile.dtau;
 			document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3); 
 			document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part.toExponential(3);
 			document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_1.toExponential(3);
 			document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_1.toExponential(3);
-			document.getElementById("to"+compteur.toString()).innerHTML = temps_observateur_distant.toExponential(3);
+			document.getElementById("to"+compteur.toString()).innerHTML = mobile.temps_observateur_distant.toExponential(3);
 		    document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(8);			
 		}
 	}
@@ -1218,28 +1218,58 @@ function calcul_rmax(L,E,vr,r0,rmax1ou2){
 
 
 
+// -------------------------------------{fonction pausee}--------------------------------------------
+
+
+// Fonction ajouté par Khaled dans tous les fichier SCH
+//qui verifie si les temps obersvateur sont egaux comme ça tout est synchronisé
+//cette fonction permet de verifer que ya aucun decalage concerant les temps observateur lointain, et 
+//ainsi tout les mobiles sont synchronisés par rapport à SetInterval 
+function verfiertempsegaux()
+{
+	const tailleListe = Object.keys(listejsonfusees).length;
+	const tempsobs1=listejsonfusees[1].temps_observateur_distant;
+	if(tailleListe==1){return true;}
+	else
+		{
+			for (let i = 2; i <= tailleListe; i += 1) 
+				{
+					if(tempsobs1!=listejsonfusees[i].temps_observateur_distant)
+						 {return false;}
+				}
+			return true;
+		}
+}
+
 // Fonction bouton pause
 function pausee(compteur,mobile,mobilefactor) {
-
-  if (! mobile.pause) {
-      mobile.pause = true;
-      document.getElementById("pau").src = "Images/lecture.png";
-      document.getElementById("pau").title = texte.pages_trajectoire.bouton_lecture;
-      document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_enpause;
-	  document.getElementById("pause/resume").innerHTML =texte.pages_trajectoire.bouton_resume; 
-	  document.getElementById("to"+compteur.toString()).innerHTML = temps_observateur_distant.toExponential(3);
-	  clearInterval(mobile.myInterval);
-
-  } 
-  else if( mobile.peuxonrelancer) {
-    mobile.pause = false;
-    document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_encours;
-    document.getElementById("pau").title = texte.pages_trajectoire.bouton_pause;
-    document.getElementById("pau").src = "Images/pause.png";
-	document.getElementById("pause/resume").innerHTML = texte.pages_trajectoire.bouton_pause;
-    mobile.myInterval = setInterval(animate.bind(null,compteur,mobile,mobilefactor), 10/6);
-    
-  }
+		
+	if(verfiertempsegaux())
+		{
+		if (! mobile.pause) {
+			mobile.pause = true; 
+			
+			document.getElementById("pau").src = "Images/lecture.png";
+			document.getElementById("pau").title = texte.pages_trajectoire.bouton_lecture;
+			document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_enpause;
+			document.getElementById("pause/resume").innerHTML =texte.pages_trajectoire.bouton_resume;		
+			clearInterval(mobile.myInterval);
+			} 
+		else if(mobile.peuxonrelancer) {
+				mobile.pause = false;
+				document.getElementById("pause/resume").innerHTML = texte.pages_trajectoire.bouton_pause;
+				document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_encours;
+				document.getElementById("pau").title = texte.pages_trajectoire.bouton_pause;
+				document.getElementById("pau").src = "Images/pause.png";
+				mobile.myInterval = setInterval(animate.bind(null,compteur,mobile,mobilefactor), 1);
+			}
+	}
+	
+	else 
+	{
+			pausee(compteur,mobile,mobilefactor);
+			
+	}
 }
 
 // permet de gérer les touches du clavier pour certaines actions

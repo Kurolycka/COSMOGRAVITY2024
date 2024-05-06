@@ -10,7 +10,7 @@ var nzoom=0
 var facteurDeMalheur=[];
 var cle;
 var fact_defaut;
-var temps_observateur_distant=0
+
 
 // liste de couleurs en hexa
 const COULEUR_ORANGE = '#ffb407';
@@ -708,6 +708,7 @@ function trajectoire(compteur,mobile) {
 					data2 = [];
 
 					temps_particule = 0;
+					temps_observateur_distant=0
 					mobile["temps_particule"]=temps_particule;
 					mobile["temps_observateur_distant"]=temps_observateur_distant;
 					
@@ -1503,12 +1504,15 @@ function calcul_rmax(L,E,vr,r0,rmax1ou2){
 	}
 	return rmax;
 }
-// Fonction qui verifie si les temps obersvateur sont egaux comme ça tout est synchronisé
+// Fonction ajouté par Khaled dans tous les fichier SCH 
+//qui verifie si les temps obersvateur sont egaux comme ça tout est synchronisé
+//cette fonction permet de verifer que ya aucun decalage concerant les temps observateur lointain, et 
+//ainsi tout les mobiles sont synchronisés par rapport à SetInterval 
 function verfiertempsegaux()
 {
 	const tailleListe = Object.keys(listejsonfusees).length;
 	const tempsobs1=listejsonfusees[1].temps_observateur_distant;
-	if(length==1){return true;}
+	if(tailleListe==1){return true;}
 	else
 		{
 			for (let i = 2; i <= tailleListe; i += 1) 
@@ -1523,7 +1527,6 @@ function verfiertempsegaux()
 // Fonction bouton pause
 function pausee(compteur,mobile,mobilefactor) {
 		
-	//if(listejsonfusees[1].temps_observateur_distant===listejsonfusees[2].temps_observateur_distant && listejsonfusees[1].temps_observateur_distant===listejsonfusees[3].temps_observateur_distant  )
 	if(verfiertempsegaux())
 		{
 		if (! mobile.pause) {
