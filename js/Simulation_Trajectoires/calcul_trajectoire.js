@@ -11,7 +11,6 @@ var facteurDeMalheur=[];
 var cle;
 var fact_defaut;
 var temps_observateur_distant=0
-var distance_metrique_res=0 //Manonbis
 
 // liste de couleurs en hexa
 const COULEUR_ORANGE = '#ffb407';
@@ -334,8 +333,8 @@ function genereHtml(){
 		<th id="temps_obs`+countt.toString()+`" class="tg-aicv"></th>
 		<th id="decal_spect`+countt.toString()+`" title="" class="tg-aicv"></th>
 		<th id="v_total`+countt.toString()+`" title="" class="tg-aicv">   V<SUB>physique</SUB> (m.s<sup>-1</sup>) </th>
-		<th id="distance_metrique`+countt.toString()+`" title="" class="tg-aicv"></th>
-		<th id="nb_g`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>`; //Manon + Manonbis
+		<th id="distance_metrique`+countt.toString()+`" title="" class="tg-aicv"></th> 
+		<th id="nb_g`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>`; //ManonGeneralisation
 		
 
 		var newRow2=document.getElementById('tableauresultatsimu').insertRow();
@@ -350,7 +349,7 @@ function genereHtml(){
 		<td class="tg-3ozo" id="decal`+countt.toString()+`">res</td>
 		<td class="tg-3ozo" id="v_tot`+countt.toString()+`">res</td>
 		<td class="tg-3ozo" id="distance_parcourue`+countt.toString()+`">res</td>
-		<td class="tg-3ozo" id="g_ressenti`+countt.toString()+`" style="display: none;">N/A</td>`; //Manon + Manonbis
+		<td class="tg-3ozo" id="g_ressenti`+countt.toString()+`" style="display: none;">N/A</td>`; //ManonGeneralisation
 	}
 
 
@@ -736,6 +735,10 @@ function trajectoire(compteur,mobile) {
 	mobile["A_part_obs"]=A_part_obs; //mobile.A_part_obs
 	vrobs=A_init_obs; 
 	vphiobs=mobile.vphi*(1-rs/mobile.r0)/mobile.E;
+
+
+	distance_parcourue_totale=0; //ManonGeneralisation
+	mobile["distance_parcourue_totale"]=distance_parcourue_totale; //ManonGeneralisation
 	 
 
 	
@@ -1107,9 +1110,14 @@ function animate(compteur,mobile,mobilefactor) {
 			mobile.position.posX2 = mobilefactor[compteur] * mobile.r_part_obs * (Math.cos(mobile.phi_obs) / rmax) + (canvas.width / 2.);  // rmax pas mobile.rmax <-----  JPC
 			mobile.position.posY2 = mobilefactor[compteur] * mobile.r_part_obs * (Math.sin(mobile.phi_obs) / rmax) + (canvas.height / 2.);  // rmax pas mobile.rmax <-----  JPC
 			
-			if (mobile.r_part>r_phy){ //Manonbis
-				distance_metrique_res+=vtotal*mobile.dtau; //Manonbis
-			}//Manonbis
+			if (mobile.r_part>r_phy){
+				if (r_phy==0 && mobile.r_part_obs<=1.0001*rs){
+					mobile.distance_parcourue_totale+=0; //ManonGeneralisation
+				}
+				else{
+					mobile.distance_parcourue_totale+=vtotal*mobile.dtau; //ManonGeneralisation
+				}
+			}//ManonGeneralisation
 			
 		}
 		else{   // spationaute
@@ -1130,9 +1138,9 @@ function animate(compteur,mobile,mobilefactor) {
 			mobile.positionspatio.posX1 = mobilefactor[compteur] * mobile.r_part * (Math.cos(mobile.phi) / rmax) + (canvas.width / 2.);  // rmax pas mobile.rmax <-----  JPC
 			mobile.positionspatio.posY1 = mobilefactor[compteur] * mobile.r_part * (Math.sin(mobile.phi) / rmax) + (canvas.height / 2.)   // rmax pas mobile.rmax <-----  JPC
 
-			if (mobile.r_part>r_phy){ //Manonbis
-				distance_metrique_res+=vtotal*mobile.dtau; //Manonbis
-			}//Manonbis
+			if (mobile.r_part>r_phy){ //ManonGeneralisation
+				mobile.distance_parcourue_totale+=vtotal*(mobile.dtau*(1-rs/mobile.r_part)/mobile.E); //ManonGeneralisation
+			}
 
 			if(joy.GetPhi()!=0 && blyo==1){ //Manon
 				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_précédente_nombre_g)/mobile.dtau)/9.80665 //Manon
@@ -1381,7 +1389,7 @@ function animate(compteur,mobile,mobilefactor) {
 		    document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_1_obs.toExponential(3);
 			document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(3);	
 			document.getElementById("decal"+compteur.toString()).innerHTML=z_obs.toExponential(3);
-			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=distance_metrique_res.toExponential(3); //Manonbis
+			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation
 
 						
 			}else{
@@ -1396,7 +1404,7 @@ function animate(compteur,mobile,mobilefactor) {
 			document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(3); 
 			document.getElementById("decal"+compteur.toString()).innerHTML= z_obs.toExponential(3); 		
 			document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part_obs.toExponential(3);
-			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=distance_metrique_res.toExponential(3); //Manonbis
+			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation
 
 		}
 		
@@ -1416,7 +1424,7 @@ function animate(compteur,mobile,mobilefactor) {
 			document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_1.toExponential(3);
 			document.getElementById("ga"+compteur.toString()).innerHTML = fm.toExponential(3);
 		    document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(3); 
-			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=distance_metrique_res.toExponential(3); //Manonbis
+			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation
 
 
 			//------------------------{Manon}----------------------------------
@@ -1438,7 +1446,7 @@ function animate(compteur,mobile,mobilefactor) {
 				document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = "";
 				document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = "";
 				document.getElementById("to"+compteur.toString()).innerHTML = 1/0;
-				document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=distance_metrique_res.toExponential(3); //Manonbis
+				document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation
 
 			}
 		}else {
