@@ -59,6 +59,33 @@ function tau_to_temps(tau, H0) {
     return  (tau / H0) + t0
 }
 
+function fonction_E(x) {
+    let Omegam0 = Number(document.getElementById("omegam0").value);
+    let Omegal0 = Number(document.getElementById("omegalambda0").value);
+    let Omegar0 = calcul_Omegar(h, c, k, T0, H0parsec);
+    let Omegak0 = Number(document.getElementById("resultat_omegak0").innerHTML);
+
+    // On calcule les terme 1 à 1 par soucis de clareté
+    let terme_1 = Omegar0 * Math.pow((1 + x), 4)
+    let terme_2 = Omegam0 * Math.pow((1 + x), 3)
+    let terme_3 = (1 - Omegam0 - Omegal0 - Omegar0) * Math.pow((1 + x), 2)
+    return terme_1 + terme_2 + terme_3 + Omegal0
+}
+
+/**
+ * Fonction permettant de calculer l'âge de l'univers
+ * @param fonction {function} La fonction qui permet de simplifier l'écriture des relations
+ * @param H0 {number} taux d'expansion actuel
+ * @return {number} âge de l'univers.
+ */
+function calcul_age_univers(fonction, H0) {
+    function integrande(x){
+        return Math.pow((1 + x), -1) * Math.pow(fonction(x), -1/2)
+    }
+
+    return (1 / H0) * simpson_composite(integrande, 0, 9999999, 100)
+}
+
 /**
  * Fonction permettant de calculer le facteur d'échelle en fonction du temps
  * @param equa_diff_1 {function} Fonction qui décrit la première dérivée du facteur d'échelle en fonction de tau
@@ -91,7 +118,7 @@ function calcul_facteur_echelle(equa_diff_1, equa_diff_2) {
     // Dérivée de a à tau initial
     let ap_init = 1;
     // On pose t0 = 0 pour le moment, on le recalculera plus tard
-    let t_0 = 0
+    let t_0 = calcul_age_univers(fonction_E, H0parsec)
 
     /* on crée des solutions sur un gros intervalle de a pour estimer :
         - L'âge minimal et l'âge maximal de l'univers

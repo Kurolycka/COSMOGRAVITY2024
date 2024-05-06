@@ -173,7 +173,7 @@ function fusion_solutions(solutions_neg, solutions_pos) {
  * Méthode d'intégration de simpson qui divise l'intervalle d'intégration en subdivision et interpole un polynôme
  * dans chacune de ces subdivisions.
  * @param fonction {function} Fonction ne dépendant que d'un seul paramètre
- * @param borne_inf {number} Borne inférieure d'intégration
+ * @param borne_inf {number} Borne inférieure d'intégration.
  * @param borne_sup {number} Borne supérieure d'intégration
  * @param subdivisions {number} Nombre de subdivisions à créer
  * @returns {number} Valeur de l'intégrale
