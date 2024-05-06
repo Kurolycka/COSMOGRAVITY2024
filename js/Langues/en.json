@@ -303,7 +303,7 @@
 	"nombre_de_g": "g felt",
 	"nombre_g_infobulle": "Number of g felt by the pilot with 1g = 9.81m/s². Valid only for Newtonian mechanics.",
 	"distance_metrique_parcourue":"D(m)",
-	"distance_metrique_parcourue_infobulle":"Metric distance since the initial moment."
+	"distance_metrique_parcourue_infobulle":"Metric distance traveled by the mobile since the initial moment."
 },
 
 "page_trajectoire_massive":{
