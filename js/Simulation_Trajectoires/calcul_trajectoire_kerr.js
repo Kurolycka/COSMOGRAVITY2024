@@ -1086,22 +1086,44 @@ function enregistrer(){
 				context3.arc(posX2, posY2, 5, 0, Math.PI * 2);
 				context3.lineWidth = "1";
 				context3.fill();
+
+				//Dessiner le logo en bas :
+				var logo = new Image() //ManonLogo
+				logo.src='Images/CosmoGravity_logo.png'; //ManonLogo
+				logo.onload = function() {
+				var largeurLogo = 100; //ManonLogo
+				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //ManonLogo
+				var x = canvas3.width - largeurLogo; // Position en x pour le coin inférieur droit
+				var y = canvas3.height - hauteurLogo; // Position en y pour le coin inférieur droit
+				context3.drawImage(logo,x,y, largeurLogo, hauteurLogo); //ManonLogo
+
 				canvasToImage(canvas3, {
 					name: nomFichier.trim(),
 					type: 'png'
 				});
-				majFondFixe3();
+				majFondFixe3();};
 			} else {
 				context3.beginPath();
 				context3.fillStyle = COULEUR_BLEU;
 				context3.arc(posX1, posY1, 5, 0, Math.PI * 2);
 				context3.lineWidth = "1";
 				context3.fill();
+
+				//Dessiner le logo en bas :
+				var logo = new Image() //ManonLogo
+				logo.src='Images/CosmoGravity_logo.png'; //ManonLogo
+				logo.onload = function() {
+				var largeurLogo = 100; //ManonLogo
+				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //ManonLogo
+				var x = canvas3.width - largeurLogo; // Position en x pour le coin inférieur droit
+				var y = canvas3.height - hauteurLogo; // Position en y pour le coin inférieur droit
+				context3.drawImage(logo,x,y, largeurLogo, hauteurLogo); //ManonLogo
+
 				canvasToImage(canvas3, {
 					name: nomFichier.trim(),
 					type: 'png'
 				});
-				majFondFixe3();
+				majFondFixe3();};
 			}
 
 		} else {

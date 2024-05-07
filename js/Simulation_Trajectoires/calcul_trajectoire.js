@@ -180,6 +180,8 @@ function htmlDecode(input) {
 	return doc.documentElement.textContent;
 }
 
+//---------------------------------------------------------------{fonction genereHtml}---------------------------------------------------------
+
 function genereHtml(){
 	var nbredefuseesgenere = Number(document.getElementById("nombredefusees").value);
 	
@@ -317,9 +319,11 @@ function genereHtml(){
 	newRow2.innerHTML = jstring;
 
 	//element2=document.getElementById('traject_type2');  <------------------------------------JPC
+
 	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
 		var newRow=document.getElementById('tableauresultatsimu').insertRow();
 		// il faudrait songer a la sécurité ici, 'never trust user input', serait il possible pour un utilisateur de prendre le controle avec ses user input?
+
 		newRow.innerHTML = `<tr id="tg2gga`+countt.toString()+`">
 		<th class="tg-aicv">r(m)</th>
 		<th id="temps_ecoule`+countt.toString()+`" class="tg-aicv"></th>
@@ -328,7 +332,10 @@ function genereHtml(){
 		<th id="vitesseuphi`+countt.toString()+`" title="" class="tg-aicv"  >V<SUB>&phi;</SUB>(m.s<sup>-1</sup>)</th>
 		<th id="temps_obs`+countt.toString()+`" class="tg-aicv"></th>
 		<th id="decal_spect`+countt.toString()+`" title="" class="tg-aicv"></th>
-		<th id="v_total`+countt.toString()+`" title="" class="tg-aicv">   V<SUB>physique</SUB> (m.s<sup>-1</sup>) </th>`;
+		<th id="v_total`+countt.toString()+`" title="" class="tg-aicv">   V<SUB>physique</SUB> (m.s<sup>-1</sup>) </th>
+		<th id="distance_metrique`+countt.toString()+`" title="" class="tg-aicv"></th> 
+		<th id="nb_g`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>`; //ManonGeneralisation
+		
 
 		var newRow2=document.getElementById('tableauresultatsimu').insertRow();
 
@@ -340,9 +347,12 @@ function genereHtml(){
 		<td class="tg-3ozo" id="vp_sc_mas`+countt.toString()+`">res</td>
 		<td class="tg-3ozo" id="to`+countt.toString()+`">res</td>
 		<td class="tg-3ozo" id="decal`+countt.toString()+`">res</td>
-		<td class="tg-3ozo" id="v_tot`+countt.toString()+`">res</td>`;
-
+		<td class="tg-3ozo" id="v_tot`+countt.toString()+`">res</td>
+		<td class="tg-3ozo" id="distance_parcourue`+countt.toString()+`">res</td>
+		<td class="tg-3ozo" id="g_ressenti`+countt.toString()+`" style="display: none;">N/A</td>`; //ManonGeneralisation
 	}
+
+
 
 		var canvaswidthheight = document.getElementById("canvaswidthheight").value;
 		var canvasgenere = document.createElement("canvas");
@@ -396,6 +406,40 @@ function genereHtml(){
 	});
 	 
 }// fin fonction genereHtml
+
+//-----------------------------{Fonction rajoutée par Manon}--------------------------------------------
+
+function rendreVisibleNbG() {
+
+	blyo = Number(document.getElementById("nombredefusees").value);//nombre de mobiles
+	element2=document.getElementById('traject_type2');//si spationaute ou observateur
+	
+    // Sélectionne toutes les cellules dont l'ID commence par "nb_g" :
+    var nbGCells = document.querySelectorAll('[id^="nb_g"]');
+
+	// Sélectionne toutes les cellules dont l'ID commence par "g_ressenti" :
+	var gRessCells = document.querySelectorAll('[id^="g_ressenti"]');
+
+    
+    // Si element2.value est "mobile" et que y a que 1 mobile, rend les cellules visibles, sinon les cache
+    if (element2.value == "mobile" && blyo==1) {
+        nbGCells.forEach(function(cell) {
+            cell.style.display = ''; // Rend visible la cellule nb_g
+        });
+		gRessCells.forEach(function(cell) {
+            cell.style.display = ''; // Rend visible la cellule g_ressenti
+        });
+    } else {
+        nbGCells.forEach(function(cell) {
+            cell.style.display = 'none'; // Cache la cellule nb_g
+        });
+		gRessCells.forEach(function(cell) {
+            cell.style.display = 'none'; // Cache la cellule g_ressenti
+        });
+    }
+}
+
+//--------------------------{Fin fonction rajoutée par Manon}---------------------------------------------
 
 // calcul en temps réel des E, L,...
 //on crée un objet json(idée de Mme Mougenot) mobile pour chaque mobile, pour bien differencier/contenir les variables appartenant a chaque mobile de maniere distincte.
@@ -521,6 +565,7 @@ function initialisation(compteur){
 	return mobile;
 }  // fin fonction initialisation
 
+//---------------------------------------------------------------{début fonction verifnbr}---------------------------------------------------------
 
 function verifnbr() {//fonction qui affiche un message d'erreur si des valeurs ne sont pas donnée dans l'une des cases
 	
@@ -565,6 +610,11 @@ function verifnbr() {//fonction qui affiche un message d'erreur si des valeurs n
 
 }
 
+//---------------------------------------------------------------{fin fonction verifnbr}---------------------------------------------------------
+
+//---------------------------------------------------------------{début fonction trajectoire}---------------------------------------------------------
+
+
 // première étape qui lance la partie calculatoire
 function trajectoire(compteur,mobile) {
   	texte = o_recupereJson();
@@ -598,8 +648,14 @@ function trajectoire(compteur,mobile) {
 		var blyo = Number(document.getElementById("nombredefusees").value);
 
 		element2=document.getElementById('traject_type2');
+
+		rendreVisibleNbG() //Manon
+
 		if(blyo == 1 && element2.value == "mobile") { 	
-			document.getElementById("joyDiv").style.visibility='visible'; }
+			document.getElementById("joyDiv").style.visibility='visible';
+		
+		}
+
 
 		for (countt = 1; countt <= blyo; countt += 1) {
 			document.getElementById('r0'+countt.toString()+'').disabled = true;
@@ -631,13 +687,13 @@ function trajectoire(compteur,mobile) {
 
    // n = 1; //Variable qui comptera le nombre de rebonds effectués par la particule
     temps_chute_libre = Math.PI * rmax * Math.sqrt(rmax / (2 * G * M)) / 2;
-	mobile["temps_chute_libre"]=temps_chute_libre;//mobile.temps_chute_libre
+	mobile["temps_chute_libre"]=temps_chute_libre/1000;//mobile.temps_chute_libre //modif du temps de chute libre
     A_init = mobile.vr;
     r_init = mobile.r0;     
 
    var nbredefusees = Number(document.getElementById("nombredefusees").value);
    //on passe dans ces conditions seulement une fois
-   //on trouve le r0 maximum
+   //on trouve le r0 maximum  
    	if (nbredefusees==1) {
 		if(ifUneFois2){
 			maximum=r0o2[1];
@@ -679,6 +735,10 @@ function trajectoire(compteur,mobile) {
 	mobile["A_part_obs"]=A_part_obs; //mobile.A_part_obs
 	vrobs=A_init_obs; 
 	vphiobs=mobile.vphi*(1-rs/mobile.r0)/mobile.E;
+
+
+	distance_parcourue_totale=0; //ManonGeneralisation
+	mobile["distance_parcourue_totale"]=distance_parcourue_totale; //ManonGeneralisation
 	 
 
 	
@@ -764,24 +824,26 @@ function trajectoire(compteur,mobile) {
 
 	if(blyo == 1 && element2.value == "mobile" ) {
 	setInterval(function(){
-		if(joy.GetPhi()<0){
-				
+		if(joy.GetPhi()<0){ 
+
+				vitesse_précédente_nombre_g = vtotal //Manon
+				temps_précédent_nombre_g = mobile.temps_particule //Manon
+
 				Delta_L=joy.GetPhi()*1e-2*Math.log10(10+Math.abs(mobile.L))*Math.log10(10+Math.abs(vtotal))*Math.log10(10+mobile.r_part)/Math.log10(Math.sqrt(1-(vtotal/c)^2));     
 				mobile.L=mobile.L+Delta_L ;
 				Delta_E=(1-rs/mobile.r_part)*mobile.L*Delta_L/mobile.E/Math.pow(mobile.r_part,2);
 				mobile.E=mobile.E+Delta_E; 
 				deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/mobile.E);
-		
-				
-				
+						
 				
 				document.getElementById("E"+compteur.toString()).innerHTML = mobile.E.toExponential(3);
 				document.getElementById("L"+compteur.toString()).innerHTML = mobile.L.toExponential(3);
 				document.getElementById("decal"+compteur.toString()).innerHTML = deltam_sur_m.toExponential(3);
 			 
-		}else if(joy.GetPhi()>0){
-										  
-			
+		}else if(joy.GetPhi()>0){ 
+
+			vitesse_précédente_nombre_g = vtotal //Manon
+			temps_précédent_nombre_g = mobile.temps_particule //Manon
 				
 				Delta_L=joy.GetPhi()*1e-2*Math.log10(10+Math.abs(mobile.L))*Math.log10(10+Math.abs(vtotal))*Math.log10(10+mobile.r_part)/Math.log10(Math.sqrt(1-(vtotal/c)^2));     
 				mobile.L=mobile.L+Delta_L ;
@@ -1009,6 +1071,8 @@ function trajectoire(compteur,mobile) {
 	
 }  // fin fonction trajectoire
 
+//---------------------------------------------------------------{Fin fonction trajectoire}---------------------------------------------------------
+
 
 // tracé de la particule
 function animate(compteur,mobile,mobilefactor) {
@@ -1021,6 +1085,7 @@ function animate(compteur,mobile,mobilefactor) {
 	var isrebond = document.getElementById("boutton_ammorti").value;					  								   
 	//Tracé de la particule
 	element2=document.getElementById('traject_type2');
+	blyo=Number(document.getElementById('nombredefusees').value)//ManonGeneralisation
 
 	if (mobile.r0 != 0.0) {
 		if (element2.value != "mobile"){  //observateur
@@ -1045,6 +1110,14 @@ function animate(compteur,mobile,mobilefactor) {
 			mobile.position.posX2 = mobilefactor[compteur] * mobile.r_part_obs * (Math.cos(mobile.phi_obs) / rmax) + (canvas.width / 2.);  // rmax pas mobile.rmax <-----  JPC
 			mobile.position.posY2 = mobilefactor[compteur] * mobile.r_part_obs * (Math.sin(mobile.phi_obs) / rmax) + (canvas.height / 2.);  // rmax pas mobile.rmax <-----  JPC
 			
+			if (mobile.r_part>r_phy){
+				if (r_phy==0 && mobile.r_part_obs<=1.0001*rs){
+					mobile.distance_parcourue_totale+=0; //ManonGeneralisation
+				}
+				else{
+					mobile.distance_parcourue_totale+=vtotal*mobile.dtau; //ManonGeneralisation
+				}
+			}//ManonGeneralisation
 			
 		}
 		else{   // spationaute
@@ -1064,6 +1137,16 @@ function animate(compteur,mobile,mobilefactor) {
 			mobile.phi = mobile.phi + varphi;
 			mobile.positionspatio.posX1 = mobilefactor[compteur] * mobile.r_part * (Math.cos(mobile.phi) / rmax) + (canvas.width / 2.);  // rmax pas mobile.rmax <-----  JPC
 			mobile.positionspatio.posY1 = mobilefactor[compteur] * mobile.r_part * (Math.sin(mobile.phi) / rmax) + (canvas.height / 2.)   // rmax pas mobile.rmax <-----  JPC
+
+			if (mobile.r_part>r_phy){ //ManonGeneralisation
+				mobile.distance_parcourue_totale+=vtotal*(mobile.dtau*(1-rs/mobile.r_part)/mobile.E); //ManonGeneralisation
+			}
+
+			if(joy.GetPhi()!=0 && blyo==1){ //Manon
+				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_précédente_nombre_g)/mobile.dtau)/9.80665 //Manon
+			}
+			
+
 		}
 
 
@@ -1306,6 +1389,8 @@ function animate(compteur,mobile,mobilefactor) {
 		    document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_1_obs.toExponential(3);
 			document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(3);	
 			document.getElementById("decal"+compteur.toString()).innerHTML=z_obs.toExponential(3);
+			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation
+
 						
 			}else{
 				temps_observateur_distant+= dtau;
@@ -1319,15 +1404,19 @@ function animate(compteur,mobile,mobilefactor) {
 			document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(3); 
 			document.getElementById("decal"+compteur.toString()).innerHTML= z_obs.toExponential(3); 		
 			document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part_obs.toExponential(3);
+			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation
+
 		}
 		
 	}   // spationaute
 	else{
-		if (mobile.r_part>0){	
+		if (mobile.r_part>0){
 
 			temps_observateur_distant+=dtau;
 			mobile.temps_particule+=mobile.dtau*(1-rs/mobile.r_part)/mobile.E; 
 			
+
+
 			document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3); 
 			document.getElementById("to"+compteur.toString()).innerHTML = temps_observateur_distant.toExponential(3);
 			document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part.toExponential(3);
@@ -1335,11 +1424,30 @@ function animate(compteur,mobile,mobilefactor) {
 			document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_1.toExponential(3);
 			document.getElementById("ga"+compteur.toString()).innerHTML = fm.toExponential(3);
 		    document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(3); 
+			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation
+
+
+			//------------------------{Manon}----------------------------------
+
+			if(element2.value == "mobile" && blyo==1 && mobile.r_part>rs) { //ManonGeneralisation
+				setInterval(function(){
+					if(joy.GetPhi()!=0){ 
+						document.getElementById("g_ressenti"+compteur.toString()).innerHTML = nombre_de_g_calcul.toExponential(3);}
+					else{
+						document.getElementById("g_ressenti"+compteur.toString()).innerHTML = "N/A";}
+
+					}, 50); 
+			}
+			
+			//-------------------{Fin Manon}------------------------------------
+
 			if(mobile.r_part<=rs){
 				document.getElementById("v_tot"+compteur.toString()).innerHTML ="";
 				document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = "";
 				document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = "";
 				document.getElementById("to"+compteur.toString()).innerHTML = 1/0;
+				document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation
+
 			}
 		}else {
 			mobile.r_part=0;
@@ -1347,7 +1455,10 @@ function animate(compteur,mobile,mobilefactor) {
 			document.getElementById("ga"+compteur.toString()).innerHTML =1/0;
 			document.getElementById("v_tot"+compteur.toString()).innerHTML ="";
 			document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = "";
-			document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = "";				 
+			document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = "";
+			document.getElementById("g_ressenti"+compteur.toString()).innerHTML = ""; 	//Manon			 
+			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=1/0; //Manonbis
+
 		}
 	}
 
@@ -1553,6 +1664,7 @@ function rafraichir() {
 
 // -------------------------------------{fonction enregistrer}--------------------------------------------
 
+
 function enregistrer() {
 	var texte = o_recupereJson();
 
@@ -1563,13 +1675,28 @@ function enregistrer() {
 		if (nomFichier !== null && nomFichier.trim() !== '') {
 			canvas3 = document.getElementById("myCanvas3three");
 			context3 = canvas3.getContext("2d");
+
+			//Contenu déjà existant :
 			context3.drawImage(canvas, 0, 0);
+
+			//Dessiner le logo en bas :
+			var logo = new Image() //ManonLogo
+			logo.src='Images/CosmoGravity_logo.png'; //ManonLogo
+			logo.onload = function() {
+				var largeurLogo = 100; //ManonLogo
+				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //ManonLogo
+				var x = canvas3.width - largeurLogo; // Position en x pour le coin inférieur droit
+				var y = canvas3.height - hauteurLogo; // Position en y pour le coin inférieur droit
+				context3.drawImage(logo,x,y, largeurLogo, hauteurLogo); //ManonLogo
+
+			//Enregistrer le canvas avec le contenu et le logo
 			document.getElementById("enregistrer2").click();
 			canvasToImage(canvas3, {
 				name: nomFichier.trim(),
 				type: 'png'
 			});
 			majFondFixe3();
+		};
 		} else {
 			alert(texte.pages_trajectoire.alerte_nomFichier);
 		}
@@ -1908,5 +2035,3 @@ function foncPourVitAvantLancement(accelerer){
 	}
 	document.getElementById('nsimtxt').innerHTML= "ns="+ compteurVitesseAvantLancement.toString();
 }
-
-

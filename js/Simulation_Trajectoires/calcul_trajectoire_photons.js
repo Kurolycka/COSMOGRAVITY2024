@@ -287,7 +287,8 @@ function genereHtml(){
 					<th id="vitesseur`+countt.toString()+`" title="" class="tg-aicv"  >V<SUB>r</SUB>(m.s<sup>-1</sup>) </th>
 					<th id="vitesseuphi`+countt.toString()+`" title="" class="tg-aicv"  >V<SUB>&phi;</SUB>(m.s<sup>-1</sup>)</th>
 					<th id="temps_obs`+countt.toString()+`" class="tg-aicv"></th>
-					<th id="v_total`+countt.toString()+`" class="tg-aicv">V<SUB>physique</SUB> (m.s<sup>-1</sup>)</th>`;
+					<th id="v_total`+countt.toString()+`" class="tg-aicv">V<SUB>physique</SUB> (m.s<sup>-1</sup>)</th>
+					<th id="distance_metrique`+countt.toString()+`" title="" class="tg-aicv"></th>`; //ManonGeneralisation
 
 		var newRow2=document.getElementById('tableauresultatsimu').insertRow();
 
@@ -298,7 +299,8 @@ function genereHtml(){
 					<td class="tg-3ozo" id="vr_sc_mas`+countt.toString()+`">res</td>
 					<td class="tg-3ozo" id="vp_sc_mas`+countt.toString()+`">res</td>
 					<td class="tg-3ozo" id="to`+countt.toString()+`">res</td>
-					<td class="tg-3ozo" id="v_tot`+countt.toString()+`">res</td>`;
+					<td class="tg-3ozo" id="v_tot`+countt.toString()+`">res</td>
+					<td class="tg-3ozo" id="distance_parcourue`+countt.toString()+`">res</td>`; //ManonGeneralisation
 
 	}
 
@@ -614,6 +616,9 @@ function trajectoire(compteur,mobile) {
     r_init_obs = mobile.r0; 
     r_part_obs=r_init_obs;
     mobile["r_part_obs"]=r_part_obs; //mobile.r_part_obs
+
+	distance_parcourue_totale=0; //ManonGeneralisation
+	mobile["distance_parcourue_totale"]=distance_parcourue_totale; //ManonGeneralisation
 	
 
     temps_particule = 0;
@@ -871,7 +876,7 @@ function animate(compteur,mobile,mobilefactor) {
 	element2=document.getElementById('traject_type2');													 
 
 	if (mobile.r0 != 0.0) {
-		if (element2.value == "mobile"){
+		if (element2.value == "mobile"){ //photon
 			
 	
 			
@@ -883,6 +888,8 @@ function animate(compteur,mobile,mobilefactor) {
 			mobile.phi = mobile.phi + c * mobile.L * mobile.dtau / Math.pow(mobile.r_part, 2);
 			vr_2=resultat[1]*Math.sign(mobile.A_part);  
 			vp_2=resultat[2];
+			
+			mobile.distance_parcourue_totale+=0 //ManonGeneralisation
 			
 
 		}
@@ -897,6 +904,15 @@ function animate(compteur,mobile,mobilefactor) {
 			if(mobile.r_part_obs<rs*1.0001) { mobile.r_part_obs=rs;}
 			vr_2_obs=resultat[1]*Math.sign(mobile.A_part_obs); 
 			vp_2_obs=resultat[2]; 
+
+			if (mobile.r_part>r_phy){
+				if (r_phy==0 && mobile.r_part_obs<=1.0001*rs){
+					mobile.distance_parcourue_totale+=0; //ManonGeneralisation
+				}
+				else{
+					mobile.distance_parcourue_totale+=vtotal*mobile.dtau; //ManonGeneralisation
+				}
+			}//ManonGeneralisation
 			
 		}
       
@@ -1009,6 +1025,7 @@ function animate(compteur,mobile,mobilefactor) {
 			document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_2_obs.toExponential(3);
 			document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_2_obs.toExponential(3);
 			document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(8);
+			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation
 			
 		} else {
 				temps_observateur_distant += mobile.dtau;
@@ -1019,6 +1036,7 @@ function animate(compteur,mobile,mobilefactor) {
 				document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part_obs.toExponential(3);
 				document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_2_obs.toExponential(3);
 				document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_2_obs.toExponential(3); 
+				document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation
 
 		}
 	}
@@ -1032,11 +1050,13 @@ function animate(compteur,mobile,mobilefactor) {
             document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_2.toExponential(3);
 			document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(8);
 		    document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part.toExponential(3);
+			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation
 			
 			if(mobile.r_part<=rs){
 				document.getElementById("v_tot"+compteur.toString()).innerHTML ="";
 				document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = "";
 				document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = "";
+				document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation
 			}
 		} 
 		else {
@@ -1046,7 +1066,8 @@ function animate(compteur,mobile,mobilefactor) {
 			if(mobile.L!=0) { 
 				document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML="";
 				document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML="";  
-			}				
+			}
+			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation				
       	}  
 	}
 	
@@ -1264,12 +1285,23 @@ function enregistrer() {
 			canvas3 = document.getElementById("myCanvas3three");
 			context3 = canvas3.getContext("2d");
 			context3.drawImage(canvas, 0, 0);
+
+		//Dessiner le logo en bas :
+		var logo = new Image() //ManonLogo
+		logo.src='Images/CosmoGravity_logo.png'; //ManonLogo
+		logo.onload = function() {
+		var largeurLogo = 100; //ManonLogo
+		var hauteurLogo = (logo.height / logo.width) * largeurLogo; //ManonLogo
+		var x = canvas3.width - largeurLogo; // Position en x pour le coin inférieur droit
+		var y = canvas3.height - hauteurLogo; // Position en y pour le coin inférieur droit
+		context3.drawImage(logo,x,y, largeurLogo, hauteurLogo); //ManonLogo
+
 			document.getElementById("enregistrer2").click();
 			canvasToImage(canvas3, {
 				name: nomFichier.trim(),
 				type: 'png'
 			});
-			majFondFixe3();
+			majFondFixe3();};
 		} else {
 			alert(texte.pages_trajectoire.alerte_nomFichier);
 		}
