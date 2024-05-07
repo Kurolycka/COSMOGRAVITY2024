@@ -388,6 +388,7 @@ function texteUnivers() {
   document.getElementById("txt_sorties").innerHTML = texte.page_univers_general.sorties;
   document.getElementById("txt_tempsBB").innerHTML = texte.page_univers_general.tempsBigBang;
   document.getElementById("txt_dureeeUniv").innerHTML = texte.page_univers_general.dureeUnivers;
+  document.getElementById("txt_distance_decalage_HorizonEvenement").innerHTML = texte.page_univers_general.DistanceDecalageHorizon;
   document.getElementById("txt_univplat").innerHTML = texte.page_univers.univers_plat;
   document.getElementById("txt_MLRFCN").innerHTML = texte.page_univers.matierelambdaRFCNeu;
   document.getElementById("txt_MLRFC").innerHTML = texte.page_univers.matierelambdaRFC;
