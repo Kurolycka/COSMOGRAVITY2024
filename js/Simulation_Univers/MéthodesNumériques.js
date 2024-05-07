@@ -189,10 +189,8 @@ function simpson_composite(fonction, borne_inf, borne_sup, subdivisions=100) {
     return (pas / 6) * integrale;
 }
 
-function simple1(x, y) {
-    return 3 * x * x
+function simple(x) {
+    return Math.exp(x)
 }
 
-function simple2(x, y, yp) {
-    return 6 * x
-}
+console.log(simpson_composite(simple, 0, 100, 100))

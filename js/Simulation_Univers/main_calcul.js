@@ -23,7 +23,7 @@ function nbJoursParAn() {
 
 //calcule de H0 en secondes-1 
 function calcul_H0parsec(H0) {
-    return H0 * 1e-3 * (Math.PI / 648000) * (1 / AU);
+    return H0 * 1000 / ((AU * (180 * 3600)) / Math.PI * Math.pow(10, 6));
 }
 //calcule de H0 en années-1
 function calcul_H0enannee(H0parsec, nbrjours) {
