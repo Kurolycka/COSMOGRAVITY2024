@@ -68,7 +68,6 @@ function ajustePrecision(valeur) {
 
 
 function calcul() { // fonction principale de cosmogravity
-
     //on recupere les valeurs des variables
     c = Number(document.getElementById("c_p").value);
     G = Number(document.getElementById("G_p").value);
@@ -462,7 +461,7 @@ function calcul() { // fonction principale de cosmogravity
         adetau3 = amax3; 
         zmax= (1-amax3)/amax3;
         dasurdtau = derivee_premiere(amax3,omegam0, omegalambda0, Or);
-        agefinal= simpson_simple_degre2(fonction_integrale, Number(zmax), Number(omegam0), Number(omegalambda0), Number(Or))*1e-9;
+        agefinal= simpson_simple_degre2(fonction_integrale, Number(zmax), Number(omegam0), Number(omegalambda0), Number(Or))*1e-9;   
         if(amin3==0) {        //zmin= (1-0.1)/0.1;
 
             //agedebut= simpson_simple_degre2(fonction_integrale, Number(zmin), Number(omegam0), Number(omegalambda0), Number(Or))*1e-9;
@@ -498,6 +497,37 @@ function calcul() { // fonction principale de cosmogravity
         data_x.reverse();
         data_y.reverse();
         }
+        //partie Remy
+        dm_horizon=age_sec*c;
+
+        
+
+        var texte = o_recupereJson();
+        // on cherche la plus grande valeur de dm  en supposant z=1e10
+        z_max=1e10
+        eps=1e-6;
+        if (omegak0>0){ 
+            integ_1 = Math.sqrt( Math.abs(omegak0)) * simpson(0,z_max, fonction_dm, omegam0, Number(omegalambda0), Number(Or),eps);
+            dm_max=(c/(H0parsec*Math.sqrt( Math.abs(omegak0) ))) * Math.sin(integ_1);
+            }
+        else if (omegak0==0 ){
+            dm_max=(c/(H0parsec) * simpson(0,z_max , fonction_dm, omegam0, Number(omegalambda0), Number(Or),eps));
+            }
+        else {
+            integ_1 = Math.sqrt( Math.abs(omegak0)) * simpson(0, z_max, fonction_dm, omegam0, Number(omegalambda0), Number(Or),eps);
+            dm_max=(c/(H0parsec*Math.sqrt( Math.abs(omegak0) ))) * Math.sinh(integ_1);
+        }
+        
+        if(dm_horizon>=dm_max){
+            messagebox(texte.page_univers_calculs.erreur,texte.page_univers_calculs.dm_trop_grand + "\u0020(" + dm_max.toExponential(4) + "  m)");
+            z_horizon=NaN;
+            }else{
+            z_horizon = bisection_method_dm(dm_horizon, omegam0, omegalambda0, Or, eps);  
+        }
+        //modifier la fonction get_root_dm dans bisection_root_finder.js
+
+
+
     }
      // Fin du modele 3
 
@@ -508,17 +538,21 @@ function calcul() { // fonction principale de cosmogravity
     if(modele==0 || modele==1 ) {
         if (sessionStorage.getItem("LANGUE") == "fr") {
             document.getElementById("resultat_ageunivers_ga").innerHTML = "Pas de Big Bang";
+            document.getElementById("resultat_DmHorizon").innerHTML = "? (Pas de Big Bang)"
+            document.getElementById("resultat_ZHorizon").innerHTML = "? (Pas de Big Bang)"
             document.getElementById("resultat_ageunivers_s").innerHTML = "Pas de Big Bang";
             document.getElementById("resultat_bigcrunch").innerHTML = "Pas de Big Crunch";
             document.getElementById("resultat_dureeuniv").innerHTML = "&#8734;";
         } else {
             document.getElementById("resultat_ageunivers_ga").innerHTML = "No Big Bang";
             document.getElementById("resultat_ageunivers_s").innerHTML = "No Big Bang";
+            document.getElementById("resultat_DmHorizon").innerHTML = "? (No Big Bang)"
+            document.getElementById("resultat_ZHorizon").innerHTML = "? (No Big Bang)"
             document.getElementById("resultat_bigcrunch").innerHTML = "No Big Crunch";
             document.getElementById("resultat_dureeuniv").innerHTML = "&#8734;";
         } 
     }
-    if(modele==2) {
+    if(modele==2) {  //ajouter dm et z dans ce cas 
          //if(H0<0) {age_afficher=-tBC;}
         document.getElementById("resultat_ageunivers_ga").innerHTML = "" + age_afficher;
         document.getElementById("resultat_ageunivers_s").innerHTML = "" + age_sec_afficher;
@@ -544,6 +578,8 @@ function calcul() { // fonction principale de cosmogravity
         } 
         document.getElementById("resultat_ageunivers_ga").innerHTML = "" + age.toExponential(4);
         document.getElementById("resultat_ageunivers_s").innerHTML = "" + age_sec.toExponential(4);
+        document.getElementById("resultat_DmHorizon").innerHTML = dm_horizon
+        document.getElementById("resultat_ZHorizon").innerHTML = z_horizon
     }
 
     if(modele==4) {
