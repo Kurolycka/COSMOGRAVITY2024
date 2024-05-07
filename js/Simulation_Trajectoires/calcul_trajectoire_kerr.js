@@ -774,11 +774,12 @@ function animate() {
 
 	if (element2.value != "mobile"){  // observateur
 	
-
-	if(r_part_obs >= rhp*1.00001)   {
-			temps_observateur += dtau;
+		temps_observateur += dtau;
 		document.getElementById("to").innerHTML = temps_observateur.toExponential(3);
-																																	
+		//ces deux lignes ont ete simplment sortie par Khaled de la condition 
+		//car le temps de l'observateur change dans tout les cas !
+	if(r_part_obs >= rhp*1.00001)   {
+																																
 			temps_particule += dtau*delta(r_part_obs)/( (Math.pow(r_part_obs,2)+Math.pow(a,2)+rs*Math.pow(a,2)/r_part_obs)*E - rs*a*L/r_part_obs );
 			document.getElementById("tp").innerHTML = temps_particule.toExponential(3);					 
 			document.getElementById("ga").innerHTML = fm.toExponential(3);
