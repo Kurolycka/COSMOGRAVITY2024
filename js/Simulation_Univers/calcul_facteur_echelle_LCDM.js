@@ -18,13 +18,13 @@ function equa_diff_1(t, a) {
     // On récupère les valeurs des omégas
     let Omegam0 = Number(document.getElementById("omegam0").value);
     let Omegal0 = Number(document.getElementById("omegalambda0").value);
-    let Omegar0 = calcul_Omegar(h, c, k, T0, H0parsec);
+    let Omegar0 = Number(calcul_Omegar(h, c, k, T0, H0parsec));
     let Omegak0 = Number(document.getElementById("resultat_omegak0").innerHTML);
 
-    let a_carre = Math.pow(a, 2)
+    let a_carre = Math.pow(a, 2);
 
-    let temp = -(Omegar0 / a_carre) + (Omegam0 / a) + Omegal0 * a_carre + Omegak0
-    return Math.pow(temp, 1/2)
+    let temp = -(Omegar0 / a_carre) + (Omegam0 / a) + Omegal0 * a_carre + Omegak0;
+    return Math.pow(temp, 1/2);
 }
 
 /**
@@ -50,40 +50,56 @@ function equa_diff_2(t, a, ap) {
     let Omegal0 = Number(document.getElementById("omegalambda0").value);
     let Omegar0 = calcul_Omegar(h, c, k, T0, H0parsec);
 
-    let a_carre = Math.pow(a, 2)
-    let a_cube = Math.pow(a,3)
-    return -(Omegar0 / a_cube) - 0.5 * (Omegam0 / a_carre) + Omegal0 * a_carre
+    let a_carre = Math.pow(a, 2);
+    let a_cube = Math.pow(a,3);
+    return -(Omegar0 / a_cube) - 0.5 * (Omegam0 / a_carre) + Omegal0 * a_carre;
 }
 
-function tau_to_temps(tau, H0) {
-    return  (tau / H0) + t0
+/**
+ * Permet de convertir les tau en temps
+ * @param tau {Number} valeur de tau
+ * @param H0 {Number} taux d'expansion actuel
+ * @param t0 {Number} temps actuel
+ * @return {Number} valeur du temps
+ */
+function tau_to_temps(tau, H0, t0) {
+    return  (tau / H0) + t0;
 }
 
+/**
+ * Fonction facilitant l'écriture des expression dans le cas du modlèle LCDM
+ * @param x {number} Paramètre de la fonction
+ * @return {number} Valeur de la fonction
+ */
 function fonction_E(x) {
     let Omegam0 = Number(document.getElementById("omegam0").value);
+    console.log(typeof Omegam0);
     let Omegal0 = Number(document.getElementById("omegalambda0").value);
-    let Omegar0 = calcul_Omegar(h, c, k, T0, H0parsec);
+    console.log(typeof Omegal0);
+    let Omegar0 = Number(document.getElementById("resultat_omegar0").innerHTML);
+    console.log(typeof Omegar0);
     let Omegak0 = Number(document.getElementById("resultat_omegak0").innerHTML);
+    console.log(typeof Omegak0);
 
     // On calcule les terme 1 à 1 par soucis de clareté
-    let terme_1 = Omegar0 * Math.pow((1 + x), 4)
-    let terme_2 = Omegam0 * Math.pow((1 + x), 3)
-    let terme_3 = (1 - Omegam0 - Omegal0 - Omegar0) * Math.pow((1 + x), 2)
-    return terme_1 + terme_2 + terme_3 + Omegal0
+    let terme_1 = Omegar0 * Math.pow((1 + x), 4);
+    let terme_2 = Omegam0 * Math.pow((1 + x), 3);
+    let terme_3 = (1 - Omegam0 - Omegal0 - Omegar0) * Math.pow((1 + x), 2);
+    return terme_1 + terme_2 + terme_3 + Omegal0;
 }
 
 /**
  * Fonction permettant de calculer l'âge de l'univers
- * @param fonction {function} La fonction qui permet de simplifier l'écriture des relations
+ * @param fonction {function} La fonction qui permet de simplifier l'écriture des relations,
+ * ne doit dépendre que d'une variable
  * @param H0 {number} taux d'expansion actuel
  * @return {number} âge de l'univers.
  */
 function calcul_age_univers(fonction, H0) {
-    function integrande(x){
-        return Math.pow((1 + x), -1) * Math.pow(fonction(x), -1/2)
+    function integrande(x) {
+        return Math.pow((1 + x), -1) * Math.pow(Math.sqrt(fonction(x)) , -1);
     }
-
-    return (1 / H0) * simpson_composite(integrande, 0, 9999999, 100)
+    return (1 / H0) * simpson_composite(integrande, 0, 9999999, 100);
 }
 
 /**
@@ -92,7 +108,7 @@ function calcul_age_univers(fonction, H0) {
  * @param equa_diff_2 {function} Fonction qui décrit la deuxième dérivée du facteur d'échelle en fonction de tau
  * @return Liste des abscisses ou la fonction a été calculée et liste des valeurs de la fonction.
  */
-function calcul_facteur_echelle(equa_diff_1, equa_diff_2) {
+function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2) {
     // Déclaration des variables globales
     let c = Number(document.getElementById("c_p").value);
     let G = Number(document.getElementById("G_p").value);
@@ -114,11 +130,12 @@ function calcul_facteur_echelle(equa_diff_1, equa_diff_2) {
     let facteur_echelle;
     let tau_init = 0;
     // Valeur de a à tau initial
-    let a_init = 1
+    let a_init = 1;
     // Dérivée de a à tau initial
     let ap_init = 1;
     // On pose t0 = 0 pour le moment, on le recalculera plus tard
-    let t_0 = calcul_age_univers(fonction_E, H0parsec)
+    let t_0 = calcul_age_univers(fonction_E, H0parsec);
+    pas = 1e-6 * t_0;
 
     /* on crée des solutions sur un gros intervalle de a pour estimer :
         - L'âge minimal et l'âge maximal de l'univers
@@ -126,10 +143,9 @@ function calcul_facteur_echelle(equa_diff_1, equa_diff_2) {
      */
     let Solutions_neg = RungeKutta_D1_D2(-pas, tau_init, a_init, ap_init, equa_diff_1, equa_diff_2, 0, 1000);
     let Solutions_pos = RungeKutta_D1_D2(pas, tau_init, a_init, ap_init, equa_diff_1, equa_diff_2, 0, 1000);
-    let Solutions = fusion_solutions(Solutions_neg, Solutions_pos)
+    let Solutions = fusion_solutions(Solutions_neg, Solutions_pos);
 
     tau = Solutions[0];
-    let temps_min = Math.abs(tau[0] / H0parsec + t_0)
     facteur_echelle = Solutions[1];
 
     let facteur_echelle_original = facteur_echelle;
@@ -142,7 +158,7 @@ function calcul_facteur_echelle(equa_diff_1, equa_diff_2) {
         let a_sensNeg = facteur_echelle_reversed[index];
         let temps = [];
 
-        temps.push(t/H0parsec + temps_min)
+        temps.push(tau_to_temps(t, H0parsec, t0));
 
         if (a_min > 1 && a_sensPos > a_min) {
             tau_init = temps;
@@ -162,6 +178,10 @@ function calcul_facteur_echelle(equa_diff_1, equa_diff_2) {
     return fusion_solutions(Solutions_neg, Solutions_pos);
 }
 
+/**
+ * Fonction permettant de tracer le facteur d'échelle en fonction du temps dans le cas du modlèle LCDM.
+ * @param solution {[number[], number[]]} Liste contenant la liste des temps et les valeurs du facteur d'échelle
+ */
 function graphique_facteur_echelle(solution) {
     // Déclaration des variables globales
     let c = Number(document.getElementById("c_p").value);
@@ -195,6 +215,6 @@ function graphique_facteur_echelle(solution) {
 }
 
 function affichage_site() {
-    let donnee = calcul_facteur_echelle(equa_diff_1, equa_diff_2)
+    let donnee = calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2)
     graphique_facteur_echelle(donnee)
 }
