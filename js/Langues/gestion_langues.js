@@ -328,11 +328,19 @@ function texteApropos() {
   document.getElementById("txt_descriptif").innerHTML = texte.page_apropos.descriptif;
   document.getElementById("txt_contact").innerHTML = texte.page_apropos.contact;
   document.getElementById("bouton_envoyer").innerHTML = texte.page_apropos.envoyer;
+  document.getElementById("txt_version_2009").innerHTML = texte.page_apropos.version_2009; //ManonVersion
+  document.getElementById("txt_version_2013").innerHTML = texte.page_apropos.version_2013; //ManonVersion
+  document.getElementById("txt_version_2014").innerHTML = texte.page_apropos.version_2014; //ManonVersion
+  document.getElementById("txt_version_2015").innerHTML = texte.page_apropos.version_2015; //ManonVersion
+  document.getElementById("txt_version_2016").innerHTML = texte.page_apropos.version_2016; //ManonVersion
+  document.getElementById("txt_version_2017").innerHTML = texte.page_apropos.version_2017; //ManonVersion
+  document.getElementById("txt_version_2018").innerHTML = texte.page_apropos.version_2018; //ManonVersion
   document.getElementById("txt_version_2019").innerHTML = texte.page_apropos.version_2019;	
   document.getElementById("txt_version_2020").innerHTML = texte.page_apropos.version_2020;  
   document.getElementById("txt_version_2021").innerHTML = texte.page_apropos.version_2021;
   document.getElementById("txt_version_2022").innerHTML = texte.page_apropos.version_2022;  
   document.getElementById("txt_version_2023").innerHTML = texte.page_apropos.version_2023; 
+  document.getElementById("txt_version_2024").innerHTML = texte.page_apropos.version_2024;
 }
 
 function texteMenu() {
