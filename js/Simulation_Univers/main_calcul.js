@@ -500,7 +500,19 @@ function calcul() { // fonction principale de cosmogravity
         //partie Remy
         dm_horizon=age_sec*c;
 
-        
+        function dasurdtauRemy(tau,a){  //fonction en double avec les précedentes mais pour verifier que tout marche independamment
+            return Math.sqrt(-Or/Math.pow(a,2)+omegam0/a+omegalambda0*Math.pow(a,2)+Number(omegak0));
+        };
+        function dasurdtausecondeRemy(tau, a, ap){
+            return -Or/Math.pow(a,3)-.5*(omegam0/Math.pow(a,2))+omegalambda0*a
+        };
+
+        aRemy=RungeKutta_D1_D2(age/10000,0,1,1,dasurdtauRemy,dasurdtausecondeRemy,0,5);
+        valeur_integrale=aRemy[1].map(x => c/x);
+        dm=integraleTrapezes(aRemy[0],valeur_integrale,0,age);
+        console.log(age_sec*c);
+        console.log(dm);
+
 
         var texte = o_recupereJson();
         // on cherche la plus grande valeur de dm  en supposant z=1e10
