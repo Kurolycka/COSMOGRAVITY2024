@@ -794,7 +794,6 @@ function trajectoire(compteur,mobile) {
 				if(joy.GetPhi()<0){
 
 						vitesse_précédente_nombre_g = vtotal //ManonGeneralisation
-						temps_précédent_nombre_g = mobile.temps_particule //ManonGeneralisation
 
 						Delta_L=-(joy.GetPhi()/5)/((1e-10)*mobile.r0/rs)*mobile.E;
 						mobile.L=mobile.L+Delta_L ;
@@ -812,7 +811,6 @@ function trajectoire(compteur,mobile) {
 				else if(joy.GetPhi()>0){
 
 						vitesse_précédente_nombre_g = vtotal //ManonGeneralisation
-						temps_précédent_nombre_g = mobile.temps_particule //ManonGeneralisation
 
 						Delta_L=-(joy.GetPhi()/5)/((1e-10)*mobile.r0/rs)*mobile.E;
 						mobile.L=mobile.L+Delta_L ;
@@ -1114,7 +1112,7 @@ function animate(compteur,mobile,mobilefactor) {
 			vtotal=Math.sqrt(vr_1*vr_1 + vp_1*vp_1) ;
 
 			if(joy.GetPhi()!=0 && blyo==1){ //Manon
-				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_précédente_nombre_g)/mobile.dtau)/9.80665 //Manon
+				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_précédente_nombre_g)/(mobile.dtau*(1-rs/mobile.r_part)/mobile.E))/9.80665 //Manon
 			}
 
 			mobile.distance_parcourue_totale+=vtotal*(mobile.dtau*Math.pow(beta(mobile.r_part),2)/mobile.E); //ManonGeneralisation
@@ -1350,7 +1348,7 @@ function animate(compteur,mobile,mobilefactor) {
 						else{
 							document.getElementById("g_ressenti"+compteur.toString()).innerHTML = "N/A";}
 
-					}, 50); 
+					}, mobile.dtau*(1-rs/mobile.r_part)/mobile.E); 
 				}
 			
 				//-------------------{Fin Manon}------------------------------------
