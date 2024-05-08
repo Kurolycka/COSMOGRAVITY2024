@@ -198,10 +198,8 @@ function notationvitesseree2(){
 	else{
 		document.getElementById("vitesseurlabel").title = htmlDecode(texte.pages_trajectoire.vitesseurlabeld);
 		document.getElementById("thetalabel").title = htmlDecode(texte.pages_trajectoire.theta_label	);
-	 
-		
-																											
-		document.getElementById("philabel").title = htmlDecode(texte.pages_trajectoire.philabelt);
+	  document.getElementById("philabel").title = htmlDecode(texte.pages_trajectoire.philabelt);
+
 		for (count = 1; count <= numberoftherockets; count += 1) {
 			document.getElementById("vitesseur"+count.toString()+"").title = htmlDecode(texte.pages_trajectoire.vitesseurt);
 			document.getElementById("vitesseuphi"+count.toString()+"").title = htmlDecode(texte.pages_trajectoire.vitesseuphi);
@@ -272,6 +270,7 @@ function notationvitesseree2kerr(){
   	document.getElementById("vitesseuphi").title = htmlDecode(texte.pages_trajectoire.vitesseuphi);
     document.getElementById("philabel").title = htmlDecode(texte.pages_trajectoire.philabel);
     document.getElementById("theta_label").title = htmlDecode(texte.pages_trajectoire.theta_label);
+    document.getElementById("nb_g").title= htmlDecode(texte.pages_trajectoire.nombre_g_infobulle); //Manon
   }
 
 
@@ -282,6 +281,7 @@ function notationvitesseree1kerr(){
     document.getElementById("vitesseuphi").title = htmlDecode(texte.pages_trajectoire.vitesseuphi);
     document.getElementById("philabel").title = htmlDecode(texte.pages_trajectoire.philabel);
     document.getElementById("theta_label").title = htmlDecode(texte.pages_trajectoire.theta_label);
+    document.getElementById("nb_g").title = htmlDecode(texte.pages_trajectoire.nombre_g_infobulle); //Manon
 }
 
 function notationvitesseree1(){
@@ -396,6 +396,7 @@ function texteUnivers() {
   document.getElementById("txt_sorties").innerHTML = texte.page_univers_general.sorties;
   document.getElementById("txt_tempsBB").innerHTML = texte.page_univers_general.tempsBigBang;
   document.getElementById("txt_dureeeUniv").innerHTML = texte.page_univers_general.dureeUnivers;
+  document.getElementById("txt_distance_decalage_HorizonEvenement").innerHTML = texte.page_univers_general.DistanceDecalageHorizon;
   document.getElementById("txt_univplat").innerHTML = texte.page_univers.univers_plat;
   document.getElementById("txt_MLRFCN").innerHTML = texte.page_univers.matierelambdaRFCNeu;
   document.getElementById("txt_MLRFC").innerHTML = texte.page_univers.matierelambdaRFC;
@@ -774,6 +775,7 @@ function texteTrajectoireMassiveKerr() {
   //document.getElementById("boutton_prézoom").innerHTML = texte.pages_trajectoire.boutton_prézoom;
   document.getElementById("temps_ecoule").innerHTML = texte.pages_trajectoire.temps_ecoule;
   document.getElementById("acceleration").innerHTML = texte.pages_trajectoire.acceleration;
+  document.getElementById("nb_g").innerHTML = texte.pages_trajectoire.nombre_de_g; //Manon
   document.getElementById("temps_obs").innerHTML = texte.pages_trajectoire.temps_obs;
   document.getElementById("boutton_recup").innerHTML = texte.pages_trajectoire.boutton_recup;
   		 		document.getElementById("decal_spect").innerHTML = texte.pages_trajectoire.decal_spect+"&nbsp;<span id='DivClignotantePilot'></span>";
@@ -800,6 +802,7 @@ function texteTrajectoireMassiveKerrGrand() {  // ne sert pas
   document.getElementById("r4").innerHTML = texte.pages_trajectoire.mobile; 
   document.getElementById("temps_ecoule").innerHTML = texte.pages_trajectoire.temps_ecoule;
   document.getElementById("acceleration").innerHTML = texte.pages_trajectoire.acceleration;
+  document.getElementById("nb_g").innerHTML = texte.pages_trajectoire.nombre_de_g;
   document.getElementById("temps_obs").innerHTML = texte.pages_trajectoire.temps_obs;
   document.getElementById("boutton_recup").innerHTML = texte.pages_trajectoire.boutton_recup;
   document.getElementById("decal_spect").innerHTML = texte.pages_trajectoire.decal_spect;
