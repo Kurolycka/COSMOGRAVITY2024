@@ -74,6 +74,7 @@
 		"tempsBigBang":"Time since Big Bang",
 		"temps_BF": "Time since Big Fall",
 		"dureeUnivers":"Universe duration",
+		"DistanceDecalageHorizon":"Metric distance and redshift of the event horizon",
 		"simuavertissement":"Warning",
 		"avertissement":"The Universe simulation with it's annex calculations allows 10 or so parameters to be chosen(counting the fundamental constants). The current code is obviously not robust on all the accessible domain of this 10 dimensional space. We hope the results are exact in a 'prudent' neighborhood of the standard model, of the usual observable values (z, thêta) and of the fundamental constants. We think that they are still exact for universes very different from our own but it's obvious that the simulation's chances to fail(too long of a calculation time on the user's processor) or, worse, of erroneous results increase the further away we go from the standard model. The 'mono-fluids' option, with it's analytical formalism, allows us to explore more accurately those extremes. Near the 'seperators(?)' between different types of universes(with or without a Big Bang, with or without a Big Crunch), an automatic warning is normally displayed.",
 		"message_nomFichier": "Please enter the desired file name",
@@ -285,7 +286,7 @@
 	"rayonHorzInfRayon":"Please, input a value of r0 higher than outer horizon Rh+ !",
 	"lancerInterdit":"Throw in physical radius is forbidden !",
 	"simuavertissement":"Warning",
-	"avertissement":"The simulations of the trajectories respect the velocity dynamics. When the initial conditions are chosen to make this dynamic too big, the calculation step becomes too big(the trajectory appears in dots) near the periaster and this creates mistakes in the rest of the trajectory. The plus and minus buttons are there to interactively adapt the calculation step for those excentric orbitals. <br> A too big of a modification on this 'speed' will alter the precision of the trajectory. <br> The acceleration experienced in g by the astronaut is not calculated.",
+	"avertissement":"The simulations of the trajectories respect the velocity dynamics. When the initial conditions are chosen to make this dynamic too big, the calculation step becomes too big(the trajectory appears in dots) near the periaster and this creates mistakes in the rest of the trajectory. The plus and minus buttons are there to interactively adapt the calculation step for those excentric orbitals. <br> A too big of a modification on this 'speed' will alter the precision of the trajectory. <br><br> For the calculation of speeds, it is assumed that a fixed observer (following a geodesic) measures the speed of the mobile when it passes to its position. In the case of the Kerr metric when r is less than rs there can be no geodesic having the previous property so no observer of can remain fixed. So once rs exceeded, the calculation of speeds is not possible hence the 'undefined'.",
 	"message_enregistrer":"Plot before saving !",
 	"entrees":"Inputs :",
 	"horiz_ext_atteint":"Outer horizon is reached !",
@@ -344,12 +345,14 @@
   },
   "page_trajectoire_massive_kerr":{
     "titre":"Trajectory of a massive particle with Kerr metric",
-    "moment_angulaire":"Angular momentum is bigger than maximum value \r"
+    "moment_angulaire":"Angular momentum is bigger than maximum value \r",
+	"vitesse_pas_définie":"undefined"
   },
 
   "page_trajectoire_photon_kerr":{
     "titre":"Trajectory of a photon with Kerr metric",
-    "moment_angulaire":"Angular momentum is bigger than maximum value \r"
+    "moment_angulaire":"Angular momentum is bigger than maximum value \r",
+	"vitesse_pas_définie":"undefined"
   }
 
 }
