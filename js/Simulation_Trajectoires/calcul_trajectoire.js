@@ -827,7 +827,6 @@ function trajectoire(compteur,mobile) {
 		if(joy.GetPhi()<0){ 
 
 				vitesse_précédente_nombre_g = vtotal //Manon
-				temps_précédent_nombre_g = mobile.temps_particule //Manon
 
 				Delta_L=joy.GetPhi()*1e-2*Math.log10(10+Math.abs(mobile.L))*Math.log10(10+Math.abs(vtotal))*Math.log10(10+mobile.r_part)/Math.log10(Math.sqrt(1-(vtotal/c)^2));     
 				mobile.L=mobile.L+Delta_L ;
@@ -842,8 +841,7 @@ function trajectoire(compteur,mobile) {
 			 
 		}else if(joy.GetPhi()>0){ 
 
-			vitesse_précédente_nombre_g = vtotal //Manon
-			temps_précédent_nombre_g = mobile.temps_particule //Manon
+				vitesse_précédente_nombre_g = vtotal //Manon
 				
 				Delta_L=joy.GetPhi()*1e-2*Math.log10(10+Math.abs(mobile.L))*Math.log10(10+Math.abs(vtotal))*Math.log10(10+mobile.r_part)/Math.log10(Math.sqrt(1-(vtotal/c)^2));     
 				mobile.L=mobile.L+Delta_L ;
@@ -855,7 +853,7 @@ function trajectoire(compteur,mobile) {
 				
 				
 				
-			document.getElementById("E"+compteur.toString()).innerHTML = mobile.E.toExponential(3);
+				document.getElementById("E"+compteur.toString()).innerHTML = mobile.E.toExponential(3);
 				document.getElementById("L"+compteur.toString()).innerHTML = mobile.L.toExponential(3);
 				document.getElementById("decal"+compteur.toString()).innerHTML = deltam_sur_m.toExponential(3);
 		}
@@ -1143,7 +1141,7 @@ function animate(compteur,mobile,mobilefactor) {
 			}
 
 			if(joy.GetPhi()!=0 && blyo==1){ //Manon
-				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_précédente_nombre_g)/mobile.dtau)/9.80665 //Manon
+				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_précédente_nombre_g)/(mobile.dtau*(1-rs/mobile.r_part)/mobile.E))/9.80665 //Manon
 			}
 			
 
@@ -1436,7 +1434,7 @@ function animate(compteur,mobile,mobilefactor) {
 					else{
 						document.getElementById("g_ressenti"+compteur.toString()).innerHTML = "N/A";}
 
-					}, 50); 
+					}, mobile.dtau*(1-rs/mobile.r_part)/mobile.E); 
 			}
 			
 			//-------------------{Fin Manon}------------------------------------
