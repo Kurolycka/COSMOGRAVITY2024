@@ -74,6 +74,7 @@
 		"tempsBigBang":"Temps depuis le Big Bang",
 		"temps_BF": "Temps depuis le Big Fall",
 		"dureeUnivers":"Durée de l'univers",
+		"DistanceDecalageHorizon":"Distance metrique et décalage z de l'horizon des évenements",
 		"simuavertissement":"Avertissement",
 		"avertissement":"La simulation Univers avec ses calculs annexes permet de choisir les valeurs d'une dizaine de paramètres (en comptant celles des constantes fondamentales). Le code actuel n'est évidemment pas robuste sur tout le domaine accessible de cet espace à 10 dimensions.   Nous espérons que les résultats sont exacts dans un voisinage 'prudent' du modèle standard, des valeurs usuelles des observables (z, thêta) et des constantes fondamentales. Nous pensons qu'ils le sont encore pour des univers très différents du nôtre mais il est évident que le risque d'échec de la simulation (temps de calcul excessif sur le processeur de l'utilisateur) ou, pire, de résultat inexact augmente lorsque l'on s'aventure très loin du modèle standard. L'option 'mono-fluides', avec son formalisme analytique, permet d'aller plus fiablement explorer les extrêmes. Près des 'séparatrices' entre types d'univers différents (avec ou sans Big Bang, avec ou sans Big Crunch), un avertissement automatique est normalement affiché.",
 		"message_nomFichier": "Veuillez saisir le nom de fichier désiré",
@@ -292,7 +293,7 @@
 		"rayonHorzInfRayon":"Veuillez saisir une valeur de r0 strictement supérieure à l'horizon extérieur Rh+ !",
 		"lancerInterdit":"Lancer depuis l'intérieur du rayon physique interdit !",
 		"simuavertissement":"Avertissement",
-		"avertissement":"Les simulations trajectoires respectent la cinématique. Pour certaines  conditions initiales le pas de calcul devient trop grand  près des périastres et cela entraine des erreurs sur la suite de la trajectoire. Pour la matière non baryonique, les trajectoires calculées numériquement au voisinage de r=0 sont parfois imprévisibles (les équations des géodésiques ont « r » en dénominateur). <br> Le bouton « Décélérer » permet, en diminuant interactivement le pas de calcul, de palier (la plupart du temps) à ces  difficultés numériques.<br> L’accélération ressentie en g par le spationaute n’est pas calculée.",
+		"avertissement":"Les simulations trajectoires respectent la cinématique. Pour certaines  conditions initiales le pas de calcul devient trop grand  près des périastres et cela entraine des erreurs sur la suite de la trajectoire. Pour la matière non baryonique, les trajectoires calculées numériquement au voisinage de r=0 sont parfois imprévisibles (les équations des géodésiques ont « r » en dénominateur). <br> Le bouton « Décélérer » permet, en diminuant interactivement le pas de calcul, de palier (la plupart du temps) à ces  difficultés numériques.<br><br> Pour le calcul des vitesses on suppose qu'un observateur fixe (suivant une géodésique) mesure la vitesse du mobile quand celui-ci passe à sa position. Dans le cas de la métrique de Kerr lorsque r est inférieur à rs il ne peut y avoir de géodésique ayant la propriété précédente donc aucun observateur de ne peut demeurer fixe. Ainsi une fois rs dépassé le calcul des vitesses n'est pas possible d'où le 'pas définie'. ",
 		"message_enregistrer":"Tracez avant d'enregistrer !",
 		"entrees":"Entrées :",
 		"horiz_ext_atteint":"Horizon extérieur atteint !",
@@ -348,14 +349,17 @@
 	"page_trajectoire_photon_nonBar":{
 		"titre":"Trajectoire d'un photon en métrique de Schwarzchild <br/> (cas non baryonique)"
 	},
+
 	"page_trajectoire_massive_kerr":{
 		"titre":"Trajectoire d'une particule massive en métrique de Kerr",
-		"moment_angulaire":"Moment angulaire supérieur à la valeur maximale \r"
+		"moment_angulaire":"Moment angulaire supérieur à la valeur maximale \r",
+		"vitesse_pas_définie":"pas définie"
 	},
 
 	"page_trajectoire_photon_kerr":{
 		"titre":"Trajectoire d'un photon en métrique de Kerr",
-		"moment_angulaire":"Moment angulaire supérieur à la valeur maximale \r"
+		"moment_angulaire":"Moment angulaire supérieur à la valeur maximale \r",
+		"vitesse_pas_définie":"pas définie"
 	}
 }
 
