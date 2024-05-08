@@ -74,13 +74,13 @@ function tau_to_temps(tau, H0, t0) {
  * @return {number} âge de l'univers.
  */
 function calcul_age_univers(fonction, H0) {
-    function integrande(x) {
-        let terme_1 = Math.pow((1 + x), -1)
-        let terme_2 = Math.sqrt(fonction(x))
+    function integrande(u) {
+        let terme_1 = Math.pow(u, -1)
+        let terme_2 = Math.sqrt(fonction(u))
 
         return terme_1 * Math.pow(terme_2 , -1);
     }
-    return (1 / H0) * simpson_composite(integrande, 0, 1000, 100);
+    return (1 / H0) * simpson_composite(integrande, 0.00000001, 0.999999999, 100);
 }
 
 /**
@@ -116,50 +116,77 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     // Dérivée de a à tau initial
     let ap_init = 1;
 
-    // On calcule t0 pour en déduire un pas raisonnable
+    // On calcule t0 pour en déduire un pas raisonnable pour la résolution grossière
     let t_0 = calcul_age_univers(fonction_simplifiant, H0parsec);
-    t_0 = t_0 / (365.25 * 24 * 3600 * Math.pow(10, 9))
-    console.log(t_0)
+    t_0 = t_0 / (365.25 * 24 * 3600 * 1e9)
+    console.log("t0 =", t_0)
     let pas = 0.0001 * t_0;
 
     /* on crée des solutions sur un gros intervalle de a pour estimer :
         - l'âge maximal de l'univers
         - une condition initiale qui correspond si jamais celle de base ne va pas
      */
-    let Solutions_neg = RungeKutta_D1_D2(-pas, tau_init, a_init, ap_init, equa_diff_1, equa_diff_2, 0, 100);
-    let Solutions_pos = RungeKutta_D1_D2(pas, tau_init, a_init, ap_init, equa_diff_1, equa_diff_2, 0, 100);
-    let Solutions = fusion_solutions(Solutions_neg, Solutions_pos);
+    let Solution_neg = RungeKutta_D1_D2(-pas, tau_init, a_init, ap_init, equa_diff_1, equa_diff_2, 0, 100);
+    let Solution_pos = RungeKutta_D1_D2(pas, tau_init, a_init, ap_init, equa_diff_1, equa_diff_2, 0, 100);
+    let Solution = fusion_solutions(Solution_neg, Solution_pos);
+    tau = Solution[0];
+    facteur_echelle = Solution[1];
 
-    tau = Solutions[0];
-    facteur_echelle = Solutions[1];
-
+    // on créer une liste des facteurs d'échelle inversée pour faire les tests dans les 2 sens en même temps
     let facteur_echelle_original = facteur_echelle;
-    let facteur_echelle_reversed = facteur_echelle.reverse();
+    let facteur_echelle_reversed = facteur_echelle.slice().reverse();
 
-    // On fait les changements nécessaires sur la condition initiale si besoin
+
+    // On fait les changements nécessaires sur la condition initiale si besoin et on récupère un t_min et un t_max qui correspondent
+    // à a_min et a_max
+    let tau_max;
+    let tau_max_recup = true
+    let tau_min;
+    let tau_min_recup = true
+    let CI_recup = true
     for (const t of tau) {
         let index = tau.indexOf(t);
         let a_sensPos = facteur_echelle_original[index];
         let a_sensNeg = facteur_echelle_reversed[index];
 
-        //tau[index] = tau_to_temps(t, H0parsec, t_0);
 
-        if (a_min > 1 && a_sensPos > a_min) {
+        if (a_min > 1 && a_sensPos > a_min && CI_recup) {
             tau_init = tau[index];
             a_init = a_sensPos;
             ap_init = equa_diff_1(tau_init, a_init);
+            CI_recup = false
+            console.log("CI a_min > 1", tau_init, a_init, ap_init)
         }
 
-        if (a_max < 1 && a_sensNeg < a_max) {
+        if (a_max < 1 && a_sensNeg < a_max && CI_recup) {
             tau_init = tau[index];
             a_init = a_sensNeg;
             ap_init = equa_diff_1(tau_init, a_init);
+            CI_recup = false
+            console.log("CI a_max < 1", tau_init, a_init, ap_init)
+        }
+
+        if (a_sensPos > a_max && tau_max_recup) {
+            tau_max = tau[index]
+            console.log("tau_max=", tau_max)
+            tau_max_recup = false
+
+        }
+
+        if (a_sensNeg < a_min && tau_min_recup) {
+            tau_min = tau[tau.length - index]
+            console.log("tau_min=", tau_min)
+            tau_min_recup = false
         }
     }
 
-    Solutions_neg = RungeKutta_D1_D2(-pas, tau_init, a_init, ap_init, equa_diff_1, equa_diff_2, a_min, a_max);
-    Solutions_pos = RungeKutta_D1_D2(pas, tau_init, a_init, ap_init, equa_diff_1, equa_diff_2, a_min, a_max);
-    return fusion_solutions(Solutions_neg, Solutions_pos);
+    pas = (tau_max - tau_min) * 1e-3
+    console.log(-pas, tau_init, a_init, ap_init, a_min, a_max)
+    Solution_neg = RungeKutta_D1_D2(-pas, tau_init, a_init, ap_init, equa_diff_1, equa_diff_2, a_min, a_max);
+    Solution_pos = RungeKutta_D1_D2(pas, tau_init, a_init, ap_init, equa_diff_1, equa_diff_2, a_min, a_max);
+    Solution = fusion_solutions(Solution_neg, Solution_pos);
+
+    return Solution
 }
 
 /**
@@ -177,7 +204,7 @@ function graphique_facteur_echelle(solution) {
     let texte = o_recupereJson();
     let H0parsec = calcul_H0parsec(H0);
 
-    let abscisse = temps;
+    let abscisse = solution[0];
     let ordonnee = solution[1];
 
     let donnee = [{
@@ -200,20 +227,20 @@ function graphique_facteur_echelle(solution) {
 
 function affichage_site() {
     /**
-     * Fonction facilitant l'écriture des expression dans le cas du modlèle LCDM
-     * @param x {number} Paramètre de la fonction
+     * Fonction facilitant l'écriture des expression dans le cas du modlèle LCDM. On a fait la substitution u = 1 / (1 + x)
+     * @param u {number} Paramètre de la fonction
      * @return {number} Valeur de la fonction
      */
-    function fonction_E(x) {
+    function fonction_E(u) {
         let Omegam0 = Number(document.getElementById("omegam0").value);
         let Omegal0 = Number(document.getElementById("omegalambda0").value);
         let Omegar0 = Number(document.getElementById("resultat_omegar0").innerHTML);
         let Omegak0 = Number(document.getElementById("resultat_omegak0").innerHTML);
 
         // On calcule les terme 1 à 1 par soucis de clareté
-        let terme_1 = Omegar0 * Math.pow((1 + x), 4);
-        let terme_2 = Omegam0 * Math.pow((1 + x), 3);
-        let terme_3 = (1 - Omegam0 - Omegal0 - Omegar0) * Math.pow((1 + x), 2);
+        let terme_1 = Omegar0 * Math.pow(u, -4);
+        let terme_2 = Omegam0 * Math.pow(u, -3);
+        let terme_3 = (1 - Omegam0 - Omegal0 - Omegar0) * Math.pow(u, -2);
         return terme_1 + terme_2 + terme_3 + Omegal0;
     }
 

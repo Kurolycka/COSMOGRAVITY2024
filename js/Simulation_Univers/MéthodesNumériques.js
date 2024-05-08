@@ -156,9 +156,9 @@ function RungeKutta_D1_D2(pas, x0, y0, yp0, derivee_premiere, derivee_seconde,
 
 /**
  * Fonction qui permet de fusionner les solutions qui ont un pas négatif avec les solutions qui ont un pas positif
- * @param solutions_neg {[number[], number[]]} solutions avec un pas négatif
- * @param solutions_pos {[number[], number[]]} solutions avec un pas positif
- * @returns {*[]} solutions avec un pas négatif et positif
+ * @param solutions_neg {[number[], number[]]} solution avec un pas négatif
+ * @param solutions_pos {[number[], number[]]} solution avec un pas positif
+ * @returns {*[]} solution avec un pas négatif et positif
  */
 function fusion_solutions(solutions_neg, solutions_pos) {
     solutions_neg[0] = solutions_neg[0].reverse()
@@ -188,9 +188,3 @@ function simpson_composite(fonction, borne_inf, borne_sup, subdivisions=100) {
     }
     return (pas / 6) * integrale;
 }
-
-function simple(x) {
-    return Math.exp(x)
-}
-
-console.log(simpson_composite(simple, 0, 100, 100))
