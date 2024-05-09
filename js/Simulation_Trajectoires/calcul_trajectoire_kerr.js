@@ -237,7 +237,6 @@ function trajectoire() {
 		temps_observateur = 0;
 		bool = true;
 		deltam_sur_m = 0;
-
 	
 
 		// permet de gérer les touches du clavier pour certaines actions
@@ -329,6 +328,10 @@ function trajectoire() {
 		
 		if(joy.GetPhi()<0){
 
+			if (isNaN(vtot)){ //Manon
+				joy.GetPhi()=0; //Manon
+			}else{ //Manon
+
 			vitesse_précédente_nombre_g = vtot; //Manon
 
 			//while (deltam_sur_m < 0.5) { 					// tant que la réserve d'énergie est inférieur à 50%, on peut piloter
@@ -355,9 +358,14 @@ function trajectoire() {
 				
 				document.getElementById("E").innerHTML = E.toExponential(3);
 				document.getElementById("L").innerHTML = L.toExponential(3);
-				document.getElementById("decal").innerHTML = deltam_sur_m.toExponential(3);
+				document.getElementById("decal").innerHTML = deltam_sur_m.toExponential(3);}
 
 		}else if(joy.GetPhi()>0){
+
+			if (isNaN(vtot)){ //Manon
+				joy.GetPhi()=0; //Manon
+			}else{ //Manon
+
 
 				vitesse_précédente_nombre_g = vtot //Manon
 
@@ -390,7 +398,7 @@ function trajectoire() {
 			//}
 		}
 														
-		}, 50)	
+		}}, 50)	
 
 					}
 	
@@ -664,7 +672,7 @@ function animate() {
 				distance_parcourue_totale=NaN;//Manon
 			}
 			else{
-				resulta=calculs.MK_vitess(E,L,a,r_part_obs,rs,A_part_obs,false); /// voir fichier fonctions.js
+				resulta=calculs.MK_vitess(E,L,a,r_part_obs,rs,false); /// voir fichier fonctions.js //Manon
 				vtot=resulta[0];
 				vr_3_obs=resulta[1]*Math.sign(A_part_obs);
 				vp_3_obs= resulta[2]; 
@@ -688,7 +696,7 @@ function animate() {
 				distance_parcourue_totale=NaN; //Manon
 			}
 			else{
-				resulta=calculs.MK_vitess(E,L,a,r_part,rs,A_part,false); /// voir fichier fonctions.js
+				resulta=calculs.MK_vitess(E,L,a,r_part,rs,false); /// voir fichier fonctions.js //Manon
 				vtot=resulta[0];
 				//console.log(vtot)
 				vr_3=resulta[1]*Math.sign(A_part);
@@ -828,6 +836,8 @@ function animate() {
 
 	}	
 	else{   // spationaute
+
+
 				
 		if (r_part>rs*1.00001){
 
@@ -869,7 +879,6 @@ function animate() {
 				
 		}else{ 
 		
-		
 			if(r_part<=0){r_part=0;
 			document.getElementById("ga").innerHTML = 1/0;
 			arretkerr();}
@@ -887,6 +896,8 @@ function animate() {
 				document.getElementById("vrk").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie;
 		    	document.getElementById("vpk").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie;
 				document.getElementById("distance_parcourue").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie; //Manon
+				document.getElementById("joyDiv").style.display = 'none';
+
 				}
 			
 	}
@@ -1448,3 +1459,4 @@ function foncPourVitAvantLancement(accelerer){
 	}
 	document.getElementById('nsimtxt').innerHTML= "ns="+ compteurVitesseAvantLancement.toString();
 }
+
