@@ -71,16 +71,18 @@ function tau_to_temps(tau, H0, t0) {
  * @param fonction {function} La fonction qui permet de simplifier l'écriture des relations,
  * ne doit dépendre que d'une variable
  * @param H0 {number} taux d'expansion actuel
+ * @param borneInf {number} Borne inférieure d'intégration
+ * @param borneSup {number} Borne supérieure d'intégration
  * @return {number} âge de l'univers.
  */
-function calcul_age_univers(fonction, H0) {
+function calcul_ages(fonction, H0, borneInf, borneSup) {
     function integrande(u) {
         let terme_1 = Math.pow(u, -1)
         let terme_2 = Math.sqrt(fonction(u))
 
         return terme_1 * Math.pow(terme_2 , -1);
     }
-    return (1 / H0) * simpson_composite(integrande, 0.00000001, 0.999999999, 100);
+    return (1 / H0) * simpson_composite(integrande, borneInf, borneSup, 100);
 }
 
 /**
@@ -105,10 +107,6 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     let a_max = Number(document.getElementById("ama").value);
 
 
-    // On initie les listes qui vont stocker les solutions et autres variables
-    let tau;
-    let facteur_echelle;
-
     // Valeur de tau initial
     let tau_init = 0;
     // Valeur de a à tau initial
@@ -116,87 +114,63 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     // Dérivée de a à tau initial
     let ap_init = 1;
 
-    // On calcule t0 pour en déduire un pas raisonnable pour la résolution grossière
-    let t_0 = calcul_age_univers(fonction_simplifiant, H0parsec);
+    // On calcule t0
+    let t_0 = calcul_ages(fonction_simplifiant, H0parsec, 0.000000001, 0.999999999);
     t_0 = t_0 / (365.25 * 24 * 3600 * 1e9)
     console.log("t0 =", t_0)
     let pas = 0.001 * t_0;
 
-    /* on crée des solutions sur un gros intervalle de a pour estimer :
-        - l'âge maximal de l'univers
-        - une condition initiale qui correspond si jamais celle de base ne va pas
-     */
-    let Solution_neg = RungeKutta_D1_D2(-pas, tau_init, a_init, ap_init, equa_diff_1, equa_diff_2, 0, 100);
-    let Solution_pos = RungeKutta_D1_D2(pas, tau_init, a_init, ap_init, equa_diff_1, equa_diff_2, 0, 100);
-    let Solution = fusion_solutions(Solution_neg, Solution_pos);
-    tau = Solution[0];
-    facteur_echelle = Solution[1];
+    // On calcule les temps associés à a_min et a_max
 
-    // on créer une liste des facteurs d'échelle inversée pour faire les tests dans les 2 sens en même temps
-    let facteur_echelle_original = facteur_echelle;
-    let facteur_echelle_reversed = facteur_echelle.slice().reverse();
+    let t_min = calcul_ages(fonction_simplifiant, H0parsec, 0.000000001, a_min)
+    let tau_min = H0parsec * (t_min - t_0)
+    let t_max = calcul_ages(fonction_simplifiant, H0parsec, 0.000000001, a_max)
+    let tau_max = H0parsec * (t_max - t_0)
+    console.log("t min =", t_min / (365.25 * 24 * 3600 * 1e9),"t max =", t_max / (365.25 * 24 * 3600 * 1e9))
 
-
-    // On fait les changements nécessaires sur la condition initiale si besoin et on récupère un t_min et un t_max qui correspondent
-    // à a_min et a_max
-    let tau_max;
-    let tau_max_recup = true
-    let tau_min;
-    let tau_min_recup = true
-    let CI_recup = true
-    for (const t of tau) {
-        let index = tau.indexOf(t);
-        let a_sensPos = facteur_echelle_original[index];
-        let a_sensNeg = facteur_echelle_reversed[index];
-
-
-        if (a_min > 1 && a_sensPos > a_min && CI_recup) {
-            tau_init = tau[index];
-            a_init = a_sensPos;
-            ap_init = equa_diff_1(tau_init, a_init);
-            CI_recup = false
-            console.log("CI a_min > 1", tau_init, a_init, ap_init)
+    if ( !(isNaN(t_0)) ) {
+        if (a_min > 1) {
+            tau_init = tau_min
+            a_init = a_min
+            ap_init = equa_diff_1(tau_init, a_init)
         }
 
-        if (a_max < 1 && a_sensNeg < a_max && CI_recup) {
-            tau_init = tau[index];
-            a_init = a_sensNeg;
-            ap_init = equa_diff_1(tau_init, a_init);
-            CI_recup = false
-            console.log("CI a_max < 1", tau_init, a_init, ap_init)
+        if (a_max < 1) {
+            tau_init = tau_max
+            a_init = a_max
+            ap_init = equa_diff_1(tau_init, a_init)
         }
 
-        if (a_sensPos > a_max && tau_max_recup) {
-            tau_max = tau[index - 1]
-            console.log("tau_max=", tau_max)
-            tau_max_recup = false
-
-        }
-
-        if (a_sensNeg < a_min && tau_min_recup) {
-            tau_min = tau[tau.length - index]
-            console.log("tau_min=", tau_min)
-            tau_min_recup = false
-        }
+        pas = (tau_max - tau_min) * 1e-3
+    }
+    else {
+        pas = 1e-3
     }
 
-    pas = (tau_max - tau_min) * 1e-3
-    console.log(-pas, tau_init, a_init, ap_init, a_min, a_max)
-    Solution_neg = RungeKutta_D1_D2(-pas, tau_init, a_init, ap_init, equa_diff_1, equa_diff_2, a_min, a_max);
+    console.log("tau min =", tau_min,"tau max =", tau_max)
+    console.log("CI :", tau_init, a_init, ap_init)
+
+
+    let Solution_neg = RungeKutta_D1_D2(-pas, tau_init, a_init, ap_init, equa_diff_1, equa_diff_2, a_min, a_max);
     Solution_neg[0].pop()
     Solution_neg[1].pop()
+    console.log("pas neg", Solution_neg)
 
-    Solution_pos = RungeKutta_D1_D2(pas, tau_init, a_init, ap_init, equa_diff_1, equa_diff_2, a_min, a_max);
+    let Solution_pos = RungeKutta_D1_D2(pas, tau_init, a_init, ap_init, equa_diff_1, equa_diff_2, a_min, a_max);
     Solution_pos[0].pop()
     Solution_pos[1].pop()
-    
-    Solution = fusion_solutions(Solution_neg, Solution_pos);
+    console.log("pas pos", Solution_pos)
+    console.log("param", -pas, tau_init, a_init, ap_init, a_min, a_max)
 
-    for (let index = 0; index < Solution[0].length; index = index + 1) {
-        Solution[0][index] = Solution[0][index] / (H0parsec * (365.25 * 24 * 3600 * 1e9))
-        Solution[0][index] = Solution[0][index] + t_0
+    let Solution = fusion_solutions(Solution_neg, Solution_pos);
+
+    if ( !(isNaN(t_0)) ) {
+        for (let index = 0; index < Solution[0].length; index = index + 1) {
+            Solution[0][index] = Solution[0][index] / (H0parsec * (365.25 * 24 * 3600 * 1e9))
+            Solution[0][index] = Solution[0][index] + t_0
+        }
     }
-
+    console.log(Solution)
     return Solution
 }
 
@@ -229,8 +203,15 @@ function graphique_facteur_echelle(solution) {
 
     let apparence = [{
         title: "Tracé du facteur d'échelle réduit en fonction du temps",
-        xaxis: {title: "Temps en milliard d'année"},
-        yaxis: {title: "facteur d'échelle réduit"}
+        xaxis: {
+            title: "Temps en milliard d'année",
+            autorange: true,
+
+        },
+        yaxis: {
+            title: "facteur d'échelle réduit",
+            autorange: true,
+        }
     }]
 
     Plotly.newPlot("test.graphique", donnee, apparence)

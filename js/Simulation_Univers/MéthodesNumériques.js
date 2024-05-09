@@ -31,7 +31,7 @@ function RungeKuttaEDO1(pas, x0, y0, fonctionCarac,
     let yn1 = 0;
 
 
-    while (ListeY[ListeY.length-1] > y_min && ListeY[ListeY.length-1] < y_max) {
+    while (ListeY[ListeY.length-1] >= y_min && ListeY[ListeY.length-1] <= y_max) {
         xn = ListeX[ListeX.length-1];
         yn = ListeY[ListeY.length-1];
 
@@ -81,7 +81,7 @@ function RungeKuttaEDO2(pas, x0, y0, yp0, fonctionCarac,
     let yn1 = 0;
     let ypn1 = 0;
 
-    while (ListeY[ListeY.length-1] > y_min && ListeY[ListeY.length-1] < y_max) {
+    while (ListeY[ListeY.length-1] >= y_min && ListeY[ListeY.length-1] <= y_max) {
         xn = ListeX[ListeX.length-1];
         yn = ListeY[ListeY.length-1];
         ypn = ListeYp[ListeYp.length-1];
@@ -136,7 +136,7 @@ function RungeKutta_D1_D2(pas, x0, y0, yp0, derivee_premiere, derivee_seconde,
     let ypn = derivee_premiere(x0, y0);
     let yn1 = 0;
 
-    while (ListeY[ListeY.length-1] > y_min && ListeY[ListeY.length-1] < y_max) {
+    while (ListeY[ListeY.length-1] >= y_min && ListeY[ListeY.length-1] <= y_max) {
         xn = ListeX[ListeX.length-1];
         yn = ListeY[ListeY.length-1];
         ypn = derivee_premiere(xn, yn);
