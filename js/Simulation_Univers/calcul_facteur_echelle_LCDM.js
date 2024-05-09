@@ -120,7 +120,7 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     let t_0 = calcul_age_univers(fonction_simplifiant, H0parsec);
     t_0 = t_0 / (365.25 * 24 * 3600 * 1e9)
     console.log("t0 =", t_0)
-    let pas = 0.0001 * t_0;
+    let pas = 0.001 * t_0;
 
     /* on crée des solutions sur un gros intervalle de a pour estimer :
         - l'âge maximal de l'univers
@@ -167,7 +167,7 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
         }
 
         if (a_sensPos > a_max && tau_max_recup) {
-            tau_max = tau[index]
+            tau_max = tau[index - 1]
             console.log("tau_max=", tau_max)
             tau_max_recup = false
 
@@ -183,8 +183,19 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     pas = (tau_max - tau_min) * 1e-3
     console.log(-pas, tau_init, a_init, ap_init, a_min, a_max)
     Solution_neg = RungeKutta_D1_D2(-pas, tau_init, a_init, ap_init, equa_diff_1, equa_diff_2, a_min, a_max);
+    Solution_neg[0].pop()
+    Solution_neg[1].pop()
+
     Solution_pos = RungeKutta_D1_D2(pas, tau_init, a_init, ap_init, equa_diff_1, equa_diff_2, a_min, a_max);
+    Solution_pos[0].pop()
+    Solution_pos[1].pop()
+    
     Solution = fusion_solutions(Solution_neg, Solution_pos);
+
+    for (let index = 0; index < Solution[0].length; index = index + 1) {
+        Solution[0][index] = Solution[0][index] / (H0parsec * (365.25 * 24 * 3600 * 1e9))
+        Solution[0][index] = Solution[0][index] + t_0
+    }
 
     return Solution
 }
