@@ -495,7 +495,7 @@ function animate() {
 			phi_obs=phi_obs+varphi_obs;
 			if(r_part_obs<rhp*1.001) { r_part_obs=rhp;}
 			A_part_obs = val_obs[1];
-			resulta=calculs.MK_vitess(E,L,a,r_part_obs,rs,A_part_obs,true);
+			resulta=calculs.MK_vitess(E,L,a,r_part_obs,rs,true);
 			vtot=resulta[0];
 			vr_3_obs=resulta[1]*Math.sign(A_part_obs);
 			if(r_part_obs<rhp*1.0001) { vr_3_obs=0;}
@@ -517,7 +517,7 @@ function animate() {
         	val = rungekutta(dtau, r_part, A_part);
         	r_part = val[0];
         	A_part = val[1];
-			resulta=calculs.MK_vitess(E,L,a,r_part,rs,A_part,true);
+			resulta=calculs.MK_vitess(E,L,a,r_part,rs,true);
 			vtot=resulta[0];
 			vr_3=resulta[1]*Math.sign(A_part);
         	vp_3=resulta[2];
