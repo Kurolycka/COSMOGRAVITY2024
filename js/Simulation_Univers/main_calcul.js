@@ -497,24 +497,25 @@ function calcul() { // fonction principale de cosmogravity
         data_x.reverse();
         data_y.reverse();
         }
-        //partie Remy
-        dm_horizon=age_sec*c;
 
+        //partie Remy
         function dasurdtauRemy(tau,a){  //fonction en double avec les précedentes mais pour verifier que tout marche independamment
             return Math.sqrt(-Or/Math.pow(a,2)+omegam0/a+omegalambda0*Math.pow(a,2)+Number(omegak0));
         };
         function dasurdtausecondeRemy(tau, a, ap){
-            return -Or/Math.pow(a,3)-.5*(omegam0/Math.pow(a,2))+omegalambda0*a
+            return -Or/Math.pow(a,3)-.5*(omegam0/Math.pow(a,2))+omegalambda0*a;
         };
 
-        aRemy=RungeKutta_D1_D2(age/10000,0,1,1,dasurdtauRemy,dasurdtausecondeRemy,0,5);
-        valeur_integrale=aRemy[1].map(x => c/x);
-        dm=integraleTrapezes(aRemy[0],valeur_integrale,0,age);
-        console.log(age_sec*c);
-        console.log(dm);
+        aRemy_neg=RungeKutta_D1_D2(-age/1e5,0,1,1,dasurdtauRemy,dasurdtausecondeRemy,0,5);
+        aRemy_pos=RungeKutta_D1_D2(age/1e5,0,1,1,dasurdtauRemy,dasurdtausecondeRemy,0,5);
+        aRemy=fusion_solutions(aRemy_neg,aRemy_pos);
+        valeur_integrale_dmHorizon=aRemy[1].map(a => 1e9/a);  //vitesse lumiere par 1 Ga = 1e9 AL/Ga
+        valeur_temps_dmHorizon=aRemy[0].map(tau=>tau/H0engannee+age);
 
+        dm_horizon_Ga=integraleTrapezes(valeur_temps_dmHorizon,valeur_integrale_dmHorizon,0,age)/1e9;
+        dm_horizon_m=dm_horizon_Ga*1e9*3.154e7*c; //(3.154e7 seconde par année)
+        console.log(dm_horizon_m);
 
-        var texte = o_recupereJson();
         // on cherche la plus grande valeur de dm  en supposant z=1e10
         z_max=1e10
         eps=1e-6;
@@ -530,14 +531,9 @@ function calcul() { // fonction principale de cosmogravity
             dm_max=(c/(H0parsec*Math.sqrt( Math.abs(omegak0) ))) * Math.sinh(integ_1);
         }
         
-        if(dm_horizon>=dm_max){
-            messagebox(texte.page_univers_calculs.erreur,texte.page_univers_calculs.dm_trop_grand + "\u0020(" + dm_max.toExponential(4) + "  m)");
-            z_horizon=NaN;
-            }else{
-            z_horizon = bisection_method_dm(dm_horizon, omegam0, omegalambda0, Or, eps);  
-        }
-        //modifier la fonction get_root_dm dans bisection_root_finder.js
+        z_horizon = Number(bisection_method_dm(dm_horizon_m, omegam0, omegalambda0, Or, eps)); 
 
+        //modifier la fonction get_root_dm dans bisection_root_finder.js
 
 
     }
@@ -590,8 +586,8 @@ function calcul() { // fonction principale de cosmogravity
         } 
         document.getElementById("resultat_ageunivers_ga").innerHTML = "" + age.toExponential(4);
         document.getElementById("resultat_ageunivers_s").innerHTML = "" + age_sec.toExponential(4);
-        document.getElementById("resultat_DmHorizon").innerHTML = dm_horizon
-        document.getElementById("resultat_ZHorizon").innerHTML = z_horizon
+        document.getElementById("resultat_DmHorizon").innerHTML = dm_horizon_Ga.toExponential(4);
+        document.getElementById("resultat_ZHorizon").innerHTML = z_horizon.toExponential(4);
     }
 
     if(modele==4) {
