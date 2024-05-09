@@ -577,7 +577,9 @@ function animate() {
 			majFondFixe22();
 			context22.beginPath();
 			context22.fillStyle = COULEUR_BLEU;
-			context22.arc(posX1, posY1 , 5, 0, Math.PI * 2);
+			if (r_part==0){context22.arc((canvas.width / 2.), (canvas.height / 2.) , 5, 0, Math.PI * 2);} //Manon
+			else{ //Manon
+				context22.arc(posX1, posY1 , 5, 0, Math.PI * 2);}//Manon
 			context22.lineWidth = "1";
 						
 			context22.fill();
