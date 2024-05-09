@@ -22,6 +22,7 @@ var compteurVitesseAvantLancement = 0;
 var distance_parcourue_totale=0; //Manon
 
 
+
 //puisqu'il faux initaliser data1 et data2 avant l'appel dans graphique_creation_pot
 var data1 = [];
 var data2 = [];
@@ -190,11 +191,9 @@ function trajectoire() {
 
 		//joystick
 
-
 		element2=document.getElementById('traject_type2');
-
 		if(element2.value == "mobile") { 	
-			document.getElementById("joyDiv").style.visibility='visible'; 
+			document.getElementById("joyDiv").style.visibility='visible';
 			document.getElementById("nb_g").style.visibility='visible'; //Manon
 			document.getElementById("g_ressenti").style.visibility='visible'; //Manon
 		}else{
@@ -202,7 +201,6 @@ function trajectoire() {
 			document.getElementById("nb_g").style.display='none'; //Manon
 
 		}
-
 
 		//empecher de passer d'observateur a mobile ou inversement pendant la simulation
 		document.getElementById('r3').disabled = true;
@@ -312,56 +310,89 @@ function trajectoire() {
 	
 			
 	
-			if(element2.value == "mobile") { // spationaute
-				setInterval(function(){
+					if(element2.value == "mobile") { // spationaute
+	setInterval(function(){
 		
-					if (Number(deltam_sur_m) <= 0.03) {
-						document.getElementById('DivClignotantePilot').innerHTML = " <img src='./Images/diodever.gif' height='14px' />";
-						document.getElementById('DivClignotantePilot').style.color = "green";
-					} 
-					else if (0.3 < Number(deltam_sur_m) && Number(deltam_sur_m) < 0.05) {
-						document.getElementById('DivClignotantePilot').innerHTML = " <img src='./Images/diodejaune.gif' height='14px' />";
-						document.getElementById('DivClignotantePilot').style.color = "yellow";
-					} 
-					else if (Number(deltam_sur_m) >= 0.05) {
-						document.getElementById('DivClignotantePilot').innerHTML = " <img src='./Images/dioderouge.gif' height='14px' />";
-						document.getElementById('DivClignotantePilot').style.color = "red";
-					} 
+		if (Number(deltam_sur_m) <= 0.03) {
+			document.getElementById('DivClignotantePilot').innerHTML = " <img src='./Images/diodever.gif' height='14px' />";
+			document.getElementById('DivClignotantePilot').style.color = "green";
+		} 
+		else if (0.3 < Number(deltam_sur_m) && Number(deltam_sur_m) < 0.05) {
+			document.getElementById('DivClignotantePilot').innerHTML = " <img src='./Images/diodejaune.gif' height='14px' />";
+			document.getElementById('DivClignotantePilot').style.color = "yellow";
+		} 
+		else if (Number(deltam_sur_m) >= 0.05) {
+			document.getElementById('DivClignotantePilot').innerHTML = " <img src='./Images/dioderouge.gif' height='14px' />";
+			document.getElementById('DivClignotantePilot').style.color = "red";
+		} 
 		
 		
-					if(joy.GetPhi()<0){
+		if(joy.GetPhi()<0){
 
-						vitesse_précédente_nombre_g = vtot //Manon
+			vitesse_précédente_nombre_g = vtot; //Manon
 
-						//while (deltam_sur_m < 0.5) { 					// tant que la réserve d'énergie est inférieur à 50%, on peut piloter
-						Delta_L=joy.GetPhi()*Math.log10(10+Math.abs(L))*Math.log10(10+Math.abs(vtot))*Math.log10(10+r_part)/Math.log10(Math.sqrt(1-(vtot/c)^2))*1e-3;
-						L=L+Delta_L ;
-						Delta_E=(1-rs/r_part)*L*Delta_L/E/Math.pow(r_part,2);
-						E=E+Delta_E; 
-						deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/E);
+			//while (deltam_sur_m < 0.5) { 					// tant que la réserve d'énergie est inférieur à 50%, on peut piloter
+				Delta_L=joy.GetPhi()*Math.log10(10+Math.abs(L))*Math.log10(10+Math.abs(vtot))*Math.log10(10+r_part)/Math.log10(Math.sqrt(1-(vtot/c)^2))*1e-3;
+				L=L+Delta_L ;
+				Delta_E=(1-rs/r_part)*L*Delta_L/E/Math.pow(r_part,2);
+				E=E+Delta_E; 
+				deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/E);
+				
+/*	data1 = []; 
+	data2 = []; 
+	$('#grsvg_2').empty();   //resize();
+	
+	dr = 0.6*r_part/ 50;
+	
+	for (r = 0.7*r_part; r < 1.3*r_part; r += dr) {										   
+     V = Vr_mob(r);
+      data1.push({date: r, close: V });
+    }
+    V = Vr_mob(r_part);
+    data2.push({date: r_part, close: V });
+    graphique_creation_pot(); */
 
 				
-						document.getElementById("E").innerHTML = E.toExponential(3);
-						document.getElementById("L").innerHTML = L.toExponential(3);
-						document.getElementById("decal").innerHTML = deltam_sur_m.toExponential(3);
-					}else if(joy.GetPhi()>0){
+				document.getElementById("E").innerHTML = E.toExponential(3);
+				document.getElementById("L").innerHTML = L.toExponential(3);
+				document.getElementById("decal").innerHTML = deltam_sur_m.toExponential(3);
 
-						vitesse_précédente_nombre_g = vtot //Manon
+		}else if(joy.GetPhi()>0){
 
-						Delta_L=joy.GetPhi()*Math.log10(10+Math.abs(L))*Math.log10(10+Math.abs(vtot))*Math.log10(10+r_part)/Math.log10(Math.sqrt(1-(vtot/c)^2))*1e-3;
-						L=L+Delta_L ;
-						Delta_E=(1-rs/r_part)*L*Delta_L/E/Math.pow(r_part,2) ;
-						E=E+Delta_E; 
-						deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/E);
+				vitesse_précédente_nombre_g = vtot //Manon
+
+				Delta_L=joy.GetPhi()*Math.log10(10+Math.abs(L))*Math.log10(10+Math.abs(vtot))*Math.log10(10+r_part)/Math.log10(Math.sqrt(1-(vtot/c)^2))*1e-3;
+				L=L+Delta_L ;
+				Delta_E=(1-rs/r_part)*L*Delta_L/E/Math.pow(r_part,2) ;
+				E=E+Delta_E; 
+				deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/E);
+														  
+
+	 
+/*	$('#grsvg_2').empty(); 
+	data1 = []; 
+	data2 = [];	//resize();
 	
-						document.getElementById("E").innerHTML = E.toExponential(3);
-						document.getElementById("L").innerHTML = L.toExponential(3);
-						document.getElementById("decal").innerHTML = deltam_sur_m.toExponential(3);
-					}
-														
-				}, 50)	
+	dr = 0.6*r_part/ 50;
+	
+	for (r = 0.7*r_part; r < 1.3*r_part; r += dr) {										   
+     V = Vr_mob(r);
+      data1.push({date: r, close: V });
+    }
+    V = Vr_mob(r_part);
+    data2.push({date: r_part, close: V });
+    graphique_creation_pot();*/
 
-			}
+	
+				document.getElementById("E").innerHTML = E.toExponential(3);
+				document.getElementById("L").innerHTML = L.toExponential(3);
+				document.getElementById("decal").innerHTML = deltam_sur_m.toExponential(3);
+			//}
+		}
+														
+		}, 50)	
+
+					}
 	
 
 		if(element2.value=="mobile"){		
@@ -617,7 +648,7 @@ function animate() {
 
 	if (r0 != 0.0) {
 			
-		if (element2.value != "mobile"){ //observateur distant 
+		if (element2.value != "mobile"){
 			val_obs = rungekutta_obs(dtau, r_part_obs, A_part_obs);
 			r_part_obs = val_obs[0];
 			varphi_obs = c *dtau* ( rs*a*E/r_part_obs + (1-rs/r_part_obs)*L )/( (Math.pow(r_part_obs,2)+Math.pow(a,2)+rs*Math.pow(a,2)/r_part_obs)*E - rs*a*L/r_part_obs ); 
@@ -641,10 +672,9 @@ function animate() {
 			}
 			posX2 = scale_factor * r_part_obs * (Math.cos(phi_obs) / rmax) + (canvas.width / 2.);
 			posY2 = scale_factor * r_part_obs * (Math.sin(phi_obs) / rmax) + (canvas.height / 2.);
-
 			
 		}	
-		else{ //spationaute 
+		else{
 			val = rungekutta(dtau, r_part, A_part);
 			r_part = val[0];
 			A_part = val[1];
@@ -668,7 +698,7 @@ function animate() {
 					nombre_de_g_calcul = (Math.abs(vtot-vitesse_précédente_nombre_g)/(dtau))/9.80665 //Manon
 				}
 
-				distance_parcourue_totale+=vtot*dtau; //Manon 
+				distance_parcourue_totale+=vtot*dtau; //Manon
 			}
 			posX1 = scale_factor * r_part * (Math.cos(phi) / rmax) + (canvas.width / 2.);
 			posY1 = scale_factor * r_part * (Math.sin(phi) / rmax) + (canvas.height / 2.);
@@ -738,8 +768,7 @@ function animate() {
 	// Decalage spectral
 		//z_obs=Math.pow(1-((vr_1_obs*vr_1_obs + vp_1_obs*vp_1_obs)/(c*c)),(-1/2))*Math.pow(1-rs/mobile.r_part_obs,-(1/2)) -1;
 		//z_obs=(1+Math.abs(vr_1_obs)/c)/(1-(vtotal/c)**2)**(1/2)*(1-rs/mobile.r_part_obs)**(-1/2)-1;
-
-	if (element2.value != "mobile"){ //Observateur
+	if (element2.value != "mobile"){
 		pvr=0;//pvr c'est la projection de la vitesse totale sur la direction de l'observateur ici = 0 car on a prit l'observateur est perpendiculaire au plan de mouvement du mobile
 		if(r_part_obs<rs){
 		   z_obs= 1/0;
@@ -788,11 +817,11 @@ function animate() {
         }
 
 		if(isNaN(vtot)){ //Manon
-			var texte = o_recupereJson();
-			document.getElementById("v_tot").innerHTML = texte.page_trajectoire_massive_kerr.vitesse_pas_définie;
-			document.getElementById("vrk").innerHTML = texte.page_trajectoire_massive_kerr.vitesse_pas_définie;
-			document.getElementById("vpk").innerHTML = texte.page_trajectoire_massive_kerr.vitesse_pas_définie;
-			document.getElementById("distance_parcourue").innerHTML = texte.page_trajectoire_massive_kerr.vitesse_pas_définie; //Manon
+			var textou = o_recupereJson();
+			document.getElementById("v_tot").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie;
+			document.getElementById("vrk").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie;
+			document.getElementById("vpk").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie;
+			document.getElementById("distance_parcourue").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie; //Manon
 			}
 
 	}	
@@ -801,9 +830,8 @@ function animate() {
 		if (r_part>rs*1.00001){
 
 			temps_particule+=dtau;
-			temps_observateur+=dtau*( (Math.pow(r_part,2)+Math.pow(a,2)+rs*Math.pow(a,2)/r_part)*E - rs*a*L/r_part )/delta(r_part);
-
 			document.getElementById("tp").innerHTML = temps_particule.toExponential(3);
+			temps_observateur+=dtau*( (Math.pow(r_part,2)+Math.pow(a,2)+rs*Math.pow(a,2)/r_part)*E - rs*a*L/r_part )/delta(r_part);
 			document.getElementById("to").innerHTML = temps_observateur.toExponential(3);
 			document.getElementById("ga").innerHTML = fm.toExponential(3);
 			document.getElementById("r_par").innerHTML = r_part.toExponential(3);
@@ -817,14 +845,14 @@ function animate() {
 			setInterval(function(){ //Manon
 				if(joy.GetPhi()!=0){ 
 					document.getElementById("g_ressenti").innerHTML = nombre_de_g_calcul.toExponential(3);}
+					else{
+					document.getElementById("g_ressenti").innerHTML = "N/A";
+					}
 				}, dtau); 
-
 			
 			
 		}else if (r_part>=rhp){ 
 				temps_particule+=dtau;
-				temps_observateur+=dtau*( (Math.pow(r_part,2)+Math.pow(a,2)+rs*Math.pow(a,2)/r_part)*E - rs*a*L/r_part )/delta(r_part);
-
 				document.getElementById("tp").innerHTML = temps_particule.toExponential(3);
 				document.getElementById("ga").innerHTML = fm.toExponential(3); 
 				document.getElementById("to").innerHTML = 1/0; 									
@@ -832,17 +860,17 @@ function animate() {
 				document.getElementById("v_tot").innerHTML = " "; 
 				document.getElementById("vpk").innerHTML = " "; 
 				document.getElementById("r_par").innerHTML = r_part.toExponential(3);  
+				temps_observateur+=dtau*( (Math.pow(r_part,2)+Math.pow(a,2)+rs*Math.pow(a,2)/r_part)*E - rs*a*L/r_part )/delta(r_part);
 				document.getElementById("to").innerHTML = temps_observateur.toExponential(3);
 				document.getElementById("distance_parcourue").innerHTML = " "; //Manon
+
 				
 		}else{ 
 		
 		
-			if(r_part<=0){
-				r_part=0;
-				document.getElementById("ga").innerHTML = 1/0;
-				arretkerr();}
-
+			if(r_part<=0){r_part=0;
+			document.getElementById("ga").innerHTML = 1/0;
+			arretkerr();}
 			temps_particule+=dtau;
 			document.getElementById("r_par").innerHTML = r_part.toExponential(3);	
 			document.getElementById("ga").innerHTML = fm.toExponential(3);
@@ -852,11 +880,11 @@ function animate() {
 			}	
 
 			if(isNaN(vtot)){ //Manon
-				var texte = o_recupereJson();
-				document.getElementById("v_tot").innerHTML = texte.page_trajectoire_massive_kerr.vitesse_pas_définie;
-				document.getElementById("vrk").innerHTML = texte.page_trajectoire_massive_kerr.vitesse_pas_définie;
-		    	document.getElementById("vpk").innerHTML = texte.page_trajectoire_massive_kerr.vitesse_pas_définie;
-				document.getElementById("distance_parcourue").innerHTML = texte.page_trajectoire_massive_kerr.vitesse_pas_définie; //Manon
+				var textou = o_recupereJson();
+				document.getElementById("v_tot").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie;
+				document.getElementById("vrk").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie;
+		    	document.getElementById("vpk").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie;
+				document.getElementById("distance_parcourue").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie; //Manon
 				}
 			
 	}
