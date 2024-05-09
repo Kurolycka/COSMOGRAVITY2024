@@ -617,11 +617,11 @@ function animate() {
 			}
 
 			if(isNaN(vtot)){ //Manon
-				var texte = o_recupereJson();
-				document.getElementById("v_tot").innerHTML = texte.page_trajectoire_photon_kerr.vitesse_pas_définie;
-				document.getElementById("vrkp").innerHTML = texte.page_trajectoire_photon_kerr.vitesse_pas_définie;
-				document.getElementById("vpkp").innerHTML = texte.page_trajectoire_photon_kerr.vitesse_pas_définie;
-				document.getElementById("distance_parcourue").innerHTML = texte.page_trajectoire_photon_kerr.vitesse_pas_définie; //Manon
+				var textou = o_recupereJson();
+				document.getElementById("v_tot").innerHTML = textou.page_trajectoire_photon_kerr.vitesse_pas_définie;
+				document.getElementById("vrkp").innerHTML = textou.page_trajectoire_photon_kerr.vitesse_pas_définie;
+				document.getElementById("vpkp").innerHTML = textou.page_trajectoire_photon_kerr.vitesse_pas_définie;
+				document.getElementById("distance_parcourue").innerHTML = textou.page_trajectoire_photon_kerr.vitesse_pas_définie; //Manon
 				}
         }
 		else{    
@@ -642,11 +642,11 @@ function animate() {
             }
 
 			if(isNaN(vtot)){ //Manon
-				var texte = o_recupereJson();
-				document.getElementById("v_tot").innerHTML = texte.page_trajectoire_photon_kerr.vitesse_pas_définie;
-				document.getElementById("vrkp").innerHTML = texte.page_trajectoire_photon_kerr.vitesse_pas_définie;
-				document.getElementById("vpkp").innerHTML = texte.page_trajectoire_photon_kerr.vitesse_pas_définie;
-				document.getElementById("distance_parcourue").innerHTML = texte.page_trajectoire_photon_kerr.vitesse_pas_définie; //Manon
+				var textou = o_recupereJson();
+				document.getElementById("v_tot").innerHTML = textou.page_trajectoire_photon_kerr.vitesse_pas_définie;
+				document.getElementById("vrkp").innerHTML = textou.page_trajectoire_photon_kerr.vitesse_pas_définie;
+				document.getElementById("vpkp").innerHTML = textou.page_trajectoire_photon_kerr.vitesse_pas_définie;
+				document.getElementById("distance_parcourue").innerHTML = textou.page_trajectoire_photon_kerr.vitesse_pas_définie; //Manon
 				}
 
         }
