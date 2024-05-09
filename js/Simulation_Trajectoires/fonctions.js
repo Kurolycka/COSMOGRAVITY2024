@@ -74,7 +74,8 @@ var calculs = calculs || (function() {
          * @param {*} ref choix référentiel 
          * @returns 
          */
-        MK_vitess :function(E,l,a,r,rs,A_part,photon){
+        MK_vitess :function(E,l,a,r,rs,photon){
+
             //alert(a);
             delta_=(r**2)-(rs*r)+(a**2); ///delta dans la metric de kerr
             dphi=c*((rs*a*E)/r+(1-rs/r)*l)/((r**2+a**2+(rs/r)*(a**2))*E-rs*a*l/r);   //  OK
@@ -90,9 +91,13 @@ var calculs = calculs || (function() {
                 
             }
             else{
-               // dr=(c**2)*(E**2-1+(rs/r)+((a**2)*(E**2-1)-l**2)/(r**2)+rs*(((l-a*E)**2)/(r**3)));
-               // dr*=(delta_**2)/((r**2+a**2+(rs/r)*a**2)*E-rs*a*l/r)**2;                               // <-------------- c'est dr/dt au carré
-                vr_au_carre=(1-rs/r)*((r**2)*A_part*A_part/delta_)/((1-(rs/r)+rs*a*(dphi)/(c*r))**2);   //A_part   c'est dr/dt
+                partie1= E**2 - 1 + rs/r + ((a**2)*(E**2 - 1)-l**2)/(r**2) + (rs*((l-a*E)**2))/(r**3); //Manon
+                partie2= (a**2 + r**2 - r*rs)**2; //Manon
+                partie3= ((r**2 + a**2 + (a**2)*(rs/r))*E - (rs*a*l)/r)**2; //Manon
+
+                dr2= (c**2)*((partie1*partie2)/(partie3)); //Manon
+
+                vr_au_carre=(1-rs/r)*(((r**2)*dr2)/delta_)/((1-(rs/r)+rs*a*(dphi)/(c*r))**2);   //Manon
                 vr=Math.sqrt(Math.abs(vr_au_carre));
             }
             vtot=Math.sqrt(vr**2+vphie**2);
