@@ -52,7 +52,7 @@ function equa_diff_2(t, a, ap) {
 
     let a_carre = Math.pow(a, 2);
     let a_cube = Math.pow(a,3);
-    return -(Omegar0 / a_cube) - 0.5 * (Omegam0 / a_carre) + Omegal0 * a_carre;
+    return -(Omegar0 / a_cube) - 0.5 * (Omegam0 / a_carre) + Omegal0 * a;
 }
 
 /**
@@ -114,7 +114,9 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     // Dérivée de a à tau initial
     let ap_init = 1;
     // Pas pour la résolution
-    let erreurToleree;
+    let pas;
+    // Liste pour la solution
+    let Solution;
 
     // On calcule les temps et tau associé à l'instant présent, a_min et a_max
     let t_0 = calcul_ages(fonction_simplifiant, H0parsec, 0.000000001, 0.999999999);
@@ -133,6 +135,7 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     let tau_min = H0parGAnnee * (t_min - t_0)
     let tau_max = H0parGAnnee * (t_max - t_0)
 
+
     console.log("t min =", t_min)
     console.log("t0 =", t_0)
     console.log("t max =", t_max)
@@ -145,21 +148,22 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
         a_init = a_max
         ap_init = equa_diff_1(tau_init, a_init)
 
-        erreurToleree = 0.01 * Math.abs(a_max - a_min)
+        pas = 5e-4 * Math.abs(tau_max - tau_min)
+        Solution = RungeKuttaEDO2(-pas, tau_init, a_init, ap_init, equa_diff_2, a_min, a_max);
     }
     else {
-        erreurToleree = 0.1 * Math.abs(a_max - a_min)
+        pas = 5e-4
+        let Solution_neg = RungeKuttaEDO2(-pas, tau_init, a_init, ap_init, equa_diff_2, a_min, a_max);
+        let Solution_pos = RungeKuttaEDO2(pas, tau_init, a_init, ap_init, equa_diff_2, a_min, a_max);
+        Solution = fusion_solutions(Solution_neg, Solution_pos)
     }
 
 
     console.log("CI :", tau_init, a_init)
-
-
-    let Solution = RungeKuttaAdaptative_EDO1(erreurToleree, tau_init, a_init, equa_diff_1, a_min, a_max);
     Solution[0].pop()
     Solution[1].pop()
-    console.log("pas neg", Solution)
-    console.log("param", erreurToleree, tau_init, a_init, ap_init, a_min, a_max)
+    console.log("Solution", Solution)
+    console.log("param", pas, tau_init, a_init, a_min, a_max)
 
 
     if ( !(isNaN(t_0)) ) {

@@ -97,6 +97,7 @@ function RungeKuttaEDO2(pas, x0, y0, yp0, fonctionCarac,
         ListeX.push(xn + pas);
         ListeY.push(yn1);
         ListeYp.push(ypn1);
+        console.log("yn et xn =", xn, yn)
     }
     return [ListeX, ListeY]
 }
@@ -171,7 +172,7 @@ function RungeKutta_D1_D2(pas, x0, y0, yp0, derivee_premiere, derivee_seconde,
  * @param y_max {number} valeur minimale que la fonction à déterminer peut prendre
  * @return liste des valeurs de la fonction inconnue et des abscisses ou elle a été calculée
  */
-function RungeKuttaAdaptative_EDO1(tolerance, x0, y0, fonctionCarac,
+function RungeKuttaAdaptative_EDO2(tolerance, x0, y0, fonctionCarac,
                                    y_min= 0, y_max = 5) {
     // La méthode de RKF adaptative faisant intervenir beaucoup de coefficients on les définit au préalable par soucis de clareté.
 
@@ -210,7 +211,7 @@ function RungeKuttaAdaptative_EDO1(tolerance, x0, y0, fonctionCarac,
 
     let erreur;
 
-    while (ListeY[ListeY.length-1] >= y_min && ListeY[ListeY.length-1] <= y_max) {
+    while ( (ListeY[ListeY.length-1] >= y_min && ListeY[ListeY.length-1] <= y_max) && !( isNaN(hn) ) ) {
         xn = ListeX[ListeX.length-1];
         yn = ListeY[ListeY.length-1];
 
@@ -228,9 +229,6 @@ function RungeKuttaAdaptative_EDO1(tolerance, x0, y0, fonctionCarac,
             yn + coeffsY[1][0] * K[0] + coeffsY[1][1] * K[1]
         )
 
-        console.log(xn + coeffsX[2] * hn)
-        console.log(yn + coeffsY[1][0] * K[0] + coeffsY[1][1] * K[1])
-
         K[3] = hn * fonctionCarac(
             xn + coeffsX[3] * hn,
             yn + coeffsY[2][0] * K[0] + coeffsY[2][1] * K[1] + coeffsY[2][2] * K[2]
@@ -246,7 +244,7 @@ function RungeKuttaAdaptative_EDO1(tolerance, x0, y0, fonctionCarac,
             yn + coeffsY[4][0] * K[0] + coeffsY[4][1] * K[1] + coeffsY[4][2] * K[2] + coeffsY[4][3] * K[3] + coeffsY[4][4] * K[4]
         )
 
-        console.log("k =", K)
+        console.log("xn et yn =", xn, yn)
 
         // Calcul de l'erreur
         erreur = Math.abs(
@@ -267,11 +265,9 @@ function RungeKuttaAdaptative_EDO1(tolerance, x0, y0, fonctionCarac,
             ListeX.push(xn + hn);
             hn = hn1
             ListeY.push(yn1);
-            // console.log("C'est passé. Pas =", hn)
         }
         else {
             hn = hn1
-            // console.log("C'est pas passé. Pas =", hn)
         }
     }
     return [ListeX, ListeY]
