@@ -113,64 +113,64 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     let a_init = 1;
     // Dérivée de a à tau initial
     let ap_init = 1;
+    // Pas pour la résolution
+    let erreurToleree;
 
-    // On calcule t0
+    // On calcule les temps et tau associé à l'instant présent, a_min et a_max
     let t_0 = calcul_ages(fonction_simplifiant, H0parsec, 0.000000001, 0.999999999);
-    t_0 = t_0 / (365.25 * 24 * 3600 * 1e9)
-    console.log("t0 =", t_0)
-    let pas = 0.001 * t_0;
-
-    // On calcule les temps associés à a_min et a_max
-
     let t_min = calcul_ages(fonction_simplifiant, H0parsec, 0.000000001, a_min)
-    let tau_min = H0parsec * (t_min - t_0)
     let t_max = calcul_ages(fonction_simplifiant, H0parsec, 0.000000001, a_max)
-    let tau_max = H0parsec * (t_max - t_0)
-    console.log("t min =", t_min / (365.25 * 24 * 3600 * 1e9),"t max =", t_max / (365.25 * 24 * 3600 * 1e9))
+
+    // On convertis les temps en giga année
+    t_0 = t_0 / (365.25 * 24 * 3600 * 1e9)
+    t_min = t_min / (365.25 * 24 * 3600 * 1e9)
+    t_max = t_max / (365.25 * 24 * 3600 * 1e9)
+
+    // On convertis H0 en GigaAnnée ^-1
+    let H0parGAnnee = H0parsec * (365.25 * 24 * 3600 * 1e9)
+
+    // On en déduit les tau_min et tau_max correspondants
+    let tau_min = H0parGAnnee * (t_min - t_0)
+    let tau_max = H0parGAnnee * (t_max - t_0)
+
+    console.log("t min =", t_min)
+    console.log("t0 =", t_0)
+    console.log("t max =", t_max)
+
+    console.log("tau min =", tau_min)
+    console.log("tau max =", tau_max)
 
     if ( !(isNaN(t_0)) ) {
-        if (a_min > 1) {
-            tau_init = tau_min
-            a_init = a_min
-            ap_init = equa_diff_1(tau_init, a_init)
-        }
+        tau_init = tau_max
+        a_init = a_max
+        ap_init = equa_diff_1(tau_init, a_init)
 
-        if (a_max < 1) {
-            tau_init = tau_max
-            a_init = a_max
-            ap_init = equa_diff_1(tau_init, a_init)
-        }
-
-        pas = (tau_max - tau_min) * 1e-3
+        erreurToleree = 0.01 * Math.abs(a_max - a_min)
     }
     else {
-        pas = 1e-3
+        erreurToleree = 0.1 * Math.abs(a_max - a_min)
     }
 
-    console.log("tau min =", tau_min,"tau max =", tau_max)
-    console.log("CI :", tau_init, a_init, ap_init)
+
+    console.log("CI :", tau_init, a_init)
 
 
-    let Solution_neg = RungeKutta_D1_D2(-pas, tau_init, a_init, ap_init, equa_diff_1, equa_diff_2, a_min, a_max);
-    Solution_neg[0].pop()
-    Solution_neg[1].pop()
-    console.log("pas neg", Solution_neg)
+    let Solution = RungeKuttaAdaptative_EDO1(erreurToleree, tau_init, a_init, equa_diff_1, a_min, a_max);
+    Solution[0].pop()
+    Solution[1].pop()
+    console.log("pas neg", Solution)
+    console.log("param", erreurToleree, tau_init, a_init, ap_init, a_min, a_max)
 
-    let Solution_pos = RungeKutta_D1_D2(pas, tau_init, a_init, ap_init, equa_diff_1, equa_diff_2, a_min, a_max);
-    Solution_pos[0].pop()
-    Solution_pos[1].pop()
-    console.log("pas pos", Solution_pos)
-    console.log("param", -pas, tau_init, a_init, ap_init, a_min, a_max)
-
-    let Solution = fusion_solutions(Solution_neg, Solution_pos);
 
     if ( !(isNaN(t_0)) ) {
         for (let index = 0; index < Solution[0].length; index = index + 1) {
-            Solution[0][index] = Solution[0][index] / (H0parsec * (365.25 * 24 * 3600 * 1e9))
+            Solution[0][index] = Solution[0][index] / H0parGAnnee
             Solution[0][index] = Solution[0][index] + t_0
         }
     }
-    console.log(Solution)
+
+    console.log("Liste temps :", Solution[0])
+    console.log("Liste facteur :", Solution[1])
     return Solution
 }
 
