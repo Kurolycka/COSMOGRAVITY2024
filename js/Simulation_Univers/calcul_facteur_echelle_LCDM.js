@@ -50,8 +50,9 @@ function equa_diff_2(t, a, ap) {
     let Omegal0 = Number(document.getElementById("omegalambda0").value);
     let Omegar0 = calcul_Omegar(h, c, k, T0, H0parsec);
 
-    let a_carre = Math.pow(a, 2);
-    let a_cube = Math.pow(a,3);
+    let a_carre = a * a;
+    let a_cube = a * a * a;
+    console.log(a_carre, a_cube)
     return -(Omegar0 / a_cube) - 0.5 * (Omegam0 / a_carre) + Omegal0 * a;
 }
 
@@ -104,6 +105,9 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
 
     //on recupere les valeurs des variables
     let a_min = Number(document.getElementById("ami").value);
+    if (a_min <= 0) {
+        a_min = 1e-10
+    }
     let a_max = Number(document.getElementById("ama").value);
 
 
@@ -143,13 +147,13 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     console.log("tau min =", tau_min)
     console.log("tau max =", tau_max)
 
-    if ( !(isNaN(t_0)) ) {
-        tau_init = tau_max
-        a_init = a_max
+    if ( !(isNaN(t_min)) || !(isNaN(t_max)) ) {
+        tau_init = tau_min
+        a_init = a_min
         ap_init = equa_diff_1(tau_init, a_init)
 
         pas = 5e-4 * Math.abs(tau_max - tau_min)
-        Solution = RungeKuttaEDO2(-pas, tau_init, a_init, ap_init, equa_diff_2, a_min, a_max);
+        Solution = RungeKuttaEDO2(pas, tau_init, a_init, ap_init, equa_diff_2, a_min, a_max);
     }
     else {
         pas = 5e-4
@@ -206,7 +210,19 @@ function graphique_facteur_echelle(solution) {
     }]
 
     let apparence = [{
-        title: "Tracé du facteur d'échelle réduit en fonction du temps",
+
+        title: {
+            text: "Tracé du facteur facteur d'échelle",
+            font: {
+                family: 'Arial black, sans-serif',
+                size: 16,
+                color: '#111111'
+            },
+            xref: 'paper',
+            x: 0.55,
+
+        },
+
         xaxis: {
             title: "Temps en milliard d'année",
             autorange: true,

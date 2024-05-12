@@ -97,7 +97,8 @@ function RungeKuttaEDO2(pas, x0, y0, yp0, fonctionCarac,
         ListeX.push(xn + pas);
         ListeY.push(yn1);
         ListeYp.push(ypn1);
-        console.log("yn et xn =", xn, yn)
+        console.log("xn1 et yn1 =", xn+pas, yn1)
+        console.log("k", k1, k2, k3, k4)
     }
     return [ListeX, ListeY]
 }
@@ -172,7 +173,7 @@ function RungeKutta_D1_D2(pas, x0, y0, yp0, derivee_premiere, derivee_seconde,
  * @param y_max {number} valeur minimale que la fonction à déterminer peut prendre
  * @return liste des valeurs de la fonction inconnue et des abscisses ou elle a été calculée
  */
-function RungeKuttaAdaptative_EDO2(tolerance, x0, y0, fonctionCarac,
+function RungeKuttaAdaptative_EDO1(tolerance, x0, y0, fonctionCarac,
                                    y_min= 0, y_max = 5) {
     // La méthode de RKF adaptative faisant intervenir beaucoup de coefficients on les définit au préalable par soucis de clareté.
 
@@ -216,8 +217,10 @@ function RungeKuttaAdaptative_EDO2(tolerance, x0, y0, fonctionCarac,
         yn = ListeY[ListeY.length-1];
 
         // Calculs des coefficients k
-        K[0] = hn * fonctionCarac(xn + coeffsX[0] * hn,
-            yn)
+        K[0] = hn * fonctionCarac(
+            xn + coeffsX[0] * hn,
+            yn
+        )
 
         K[1] = hn * fonctionCarac(
             xn + coeffsX[1] * hn,
