@@ -52,7 +52,6 @@ function equa_diff_2(t, a, ap) {
 
     let a_carre = a * a;
     let a_cube = a * a * a;
-    console.log(a_carre, a_cube)
     return -(Omegar0 / a_cube) - 0.5 * (Omegam0 / a_carre) + Omegal0 * a;
 }
 
@@ -90,10 +89,11 @@ function calcul_ages(fonction, H0, borneInf, borneSup) {
  * Fonction permettant de calculer le facteur d'échelle en fonction du temps
  * @param equa_diff_1 {function} Fonction qui décrit la première dérivée du facteur d'échelle en fonction de tau
  * @param equa_diff_2 {function} Fonction qui décrit la deuxième dérivée du facteur d'échelle en fonction de tau
+ * @param fonction_simplifiant Fonction qui permet de simplifier l'écriture des expression dans le modèle LCDM
  * @return Liste des abscisses ou la fonction a été calculée et liste des valeurs de la fonction.
  */
 function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifiant) {
-    // Déclaration des variables globales
+    // Déclaration des variables
     let c = Number(document.getElementById("c_p").value);
     let G = Number(document.getElementById("G_p").value);
     let h = Number(document.getElementById("h_p").value);
@@ -102,14 +102,45 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     let H0 = document.getElementById("H0").value;
     let texte = o_recupereJson();
     let H0parsec = calcul_H0parsec(H0);
+    // On convertis H0 en GigaAnnée ^-1
+    let H0parGAnnee = H0parsec * (365.25 * 24 * 3600 * 1e9)
 
     //on recupere les valeurs des variables
     let a_min = Number(document.getElementById("ami").value);
-    if (a_min <= 0) {
-        a_min = 1e-10
-    }
     let a_max = Number(document.getElementById("ama").value);
 
+    /**
+     * Fonction qui permet de borner le temps en fonction des a_min et a_max ainsi que le type d'univers.
+     * Cette fonction exécute simplement un RK4 très très grossier pour trouver les bornes sups et infs de tau qu'on
+     * utilisera come tau_max et tau_min
+     */
+    function bornes_temps() {
+        let tau_min;
+        let tau_max;
+        let t_min = calcul_ages(fonction_simplifiant, H0parsec, 0.000000001, a_min)
+        let t_max = calcul_ages(fonction_simplifiant, H0parsec, 0.000000001, a_max)
+        let t_minIsNan = isNaN(t_min)
+        let t_maxIsNan = isNaN(t_min)
+
+        if ( !(t_minIsNan || t_maxIsNan) ) {
+            console.log("Je fais à l'arrache")
+            pas = 1e-1
+            let Solution_neg = RungeKuttaEDO2(-pas, tau_init, a_init, ap_init, equa_diff_2, a_min, a_max);
+            let Solution_pos = RungeKuttaEDO2(pas, tau_init, a_init, ap_init, equa_diff_2, a_min, a_max);
+            Solution = fusion_solutions(Solution_neg, Solution_pos)
+            tau_min = Solution[0][1]
+            tau_max = Solution[0][Solution[0].length - 2]
+        }
+        else {
+            console.log("Je fais l'intégrale")
+            t_min = t_min / (365.25 * 24 * 3600 * 1e9)
+            tau_min = H0parGAnnee * (t_min - t_0)
+            t_max = t_max / (365.25 * 24 * 3600 * 1e9)
+            tau_max = H0parGAnnee * (t_max - t_0)
+        }
+
+        return [tau_min, tau_max]
+    }
 
     // Valeur de tau initial
     let tau_init = 0;
@@ -122,50 +153,33 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     // Liste pour la solution
     let Solution;
 
-    // On calcule les temps et tau associé à l'instant présent, a_min et a_max
-    let t_0 = calcul_ages(fonction_simplifiant, H0parsec, 0.000000001, 0.999999999);
-    let t_min = calcul_ages(fonction_simplifiant, H0parsec, 0.000000001, a_min)
-    let t_max = calcul_ages(fonction_simplifiant, H0parsec, 0.000000001, a_max)
-
-    // On convertis les temps en giga année
+    // On calcule les temps et tau associé à l'instant présent
+    let t_0 = calcul_ages(fonction_simplifiant, H0parsec, 1e-8, 0.999999999);
     t_0 = t_0 / (365.25 * 24 * 3600 * 1e9)
-    t_min = t_min / (365.25 * 24 * 3600 * 1e9)
-    t_max = t_max / (365.25 * 24 * 3600 * 1e9)
 
-    // On convertis H0 en GigaAnnée ^-1
-    let H0parGAnnee = H0parsec * (365.25 * 24 * 3600 * 1e9)
+    // On détermine les bornes temporelle
+    let taus = bornes_temps()
+    let tau_min = taus[0]
+    let tau_max = taus[1]
 
-    // On en déduit les tau_min et tau_max correspondants
-    let tau_min = H0parGAnnee * (t_min - t_0)
-    let tau_max = H0parGAnnee * (t_max - t_0)
-
-
-    console.log("t min =", t_min)
     console.log("t0 =", t_0)
-    console.log("t max =", t_max)
-
     console.log("tau min =", tau_min)
     console.log("tau max =", tau_max)
 
-    if ( !(isNaN(t_min)) || !(isNaN(t_max)) ) {
-        tau_init = tau_min
-        a_init = a_min
+    if (isNaN(t_0)) {
+        tau_init = tau_max
+        a_init = a_max
         ap_init = equa_diff_1(tau_init, a_init)
-
-        pas = 5e-4 * Math.abs(tau_max - tau_min)
-        Solution = RungeKuttaEDO2(pas, tau_init, a_init, ap_init, equa_diff_2, a_min, a_max);
-    }
-    else {
-        pas = 5e-4
-        let Solution_neg = RungeKuttaEDO2(-pas, tau_init, a_init, ap_init, equa_diff_2, a_min, a_max);
-        let Solution_pos = RungeKuttaEDO2(pas, tau_init, a_init, ap_init, equa_diff_2, a_min, a_max);
-        Solution = fusion_solutions(Solution_neg, Solution_pos)
     }
 
-
-    console.log("CI :", tau_init, a_init)
+    pas = 5e-3 * Math.abs(tau_max - tau_min)
+    let Solution_neg = RungeKuttaEDO2(-pas, tau_init, a_init, ap_init, equa_diff_2, a_min, a_max);
+    let Solution_pos = RungeKuttaEDO2(pas, tau_init, a_init, ap_init, equa_diff_2, a_min, a_max);
+    Solution = fusion_solutions(Solution_neg, Solution_pos)
     Solution[0].pop()
     Solution[1].pop()
+
+    console.log("CI :", tau_init, a_init)
     console.log("Solution", Solution)
     console.log("param", pas, tau_init, a_init, a_min, a_max)
 
