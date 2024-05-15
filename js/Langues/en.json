@@ -286,7 +286,7 @@
 	"rayonHorzInfRayon":"Please, input a value of r0 higher than outer horizon Rh+ !",
 	"lancerInterdit":"Throw in physical radius is forbidden !",
 	"simuavertissement":"Warning",
-	"avertissement":"The simulations of the trajectories respect the velocity dynamics. When the initial conditions are chosen to make this dynamic too big, the calculation step becomes too big(the trajectory appears in dots) near the periaster and this creates mistakes in the rest of the trajectory. The plus and minus buttons are there to interactively adapt the calculation step for those excentric orbitals. <br> A too big of a modification on this 'speed' will alter the precision of the trajectory. <br> The acceleration experienced in g by the astronaut is not calculated.",
+	"avertissement":"The simulations of the trajectories respect the velocity dynamics. When the initial conditions are chosen to make this dynamic too big, the calculation step becomes too big(the trajectory appears in dots) near the periaster and this creates mistakes in the rest of the trajectory. The plus and minus buttons are there to interactively adapt the calculation step for those excentric orbitals. <br> A too big of a modification on this 'speed' will alter the precision of the trajectory. <br><br> For the calculation of speeds, it is assumed that a fixed observer (following a geodesic) measures the speed of the mobile when it passes to its position. In the case of the Kerr metric when r is less than rs there can be no geodesic having the previous property so no observer of can remain fixed. So once rs exceeded, the calculation of speeds is not possible hence the 'undefined'.",
 	"message_enregistrer":"Plot before saving !",
 	"entrees":"Inputs :",
 	"horiz_ext_atteint":"Outer horizon is reached !",
@@ -345,12 +345,14 @@
   },
   "page_trajectoire_massive_kerr":{
     "titre":"Trajectory of a massive particle with Kerr metric",
-    "moment_angulaire":"Angular momentum is bigger than maximum value \r"
+    "moment_angulaire":"Angular momentum is bigger than maximum value \r",
+	"vitesse_pas_définie":"undefined"
   },
 
   "page_trajectoire_photon_kerr":{
     "titre":"Trajectory of a photon with Kerr metric",
-    "moment_angulaire":"Angular momentum is bigger than maximum value \r"
+    "moment_angulaire":"Angular momentum is bigger than maximum value \r",
+	"vitesse_pas_définie":"undefined"
   }
 
 }

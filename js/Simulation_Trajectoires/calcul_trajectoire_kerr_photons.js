@@ -21,6 +21,7 @@ var z=0;
 var z_obs=0;
 var input=0;//si on entre rien dans l'entrée nzoom 
 var compteurVitesseAvantLancement = 0;
+var distance_parcourue_totale=0; //Manon
 
 //puisqu'il faux initaliser data1 et data2 avant l'appel dans graphique_creation_pot
 //var data1 = [];
@@ -494,17 +495,20 @@ function animate() {
 			phi_obs=phi_obs+varphi_obs;
 			if(r_part_obs<rhp*1.001) { r_part_obs=rhp;}
 			A_part_obs = val_obs[1];
-			resulta=calculs.MK_vitess(E,L,a,r_part_obs,rs,A_part_obs,true);
+			resulta=calculs.MK_vitess(E,L,a,r_part_obs,rs,true);
 			vtot=resulta[0];
 			vr_3_obs=resulta[1]*Math.sign(A_part_obs);
 			if(r_part_obs<rhp*1.0001) { vr_3_obs=0;}
 			vp_3_obs=resulta[2]; // r_part_obs*varphi_obs/dtau;
 			posX2 = scale_factor * r_part_obs * (Math.cos(phi_obs) / rmax) + (canvas.width / 2.);
 			posY2 = scale_factor * r_part_obs * (Math.sin(phi_obs) / rmax) + (canvas.height / 2.);
+			distance_parcourue_totale+=vtot*dtau; //Manon
+
 			if(r_part_obs<rs){
 				vtot=NaN
 				vp_3_obs=NaN
 				vr_3_obs=NaN
+				distance_parcourue_totale=NaN //Manon
 			}
 		}
 		else{
@@ -513,16 +517,20 @@ function animate() {
         	val = rungekutta(dtau, r_part, A_part);
         	r_part = val[0];
         	A_part = val[1];
-			resulta=calculs.MK_vitess(E,L,a,r_part,rs,A_part,true);
+			resulta=calculs.MK_vitess(E,L,a,r_part,rs,true);
 			vtot=resulta[0];
 			vr_3=resulta[1]*Math.sign(A_part);
         	vp_3=resulta[2];
 			posX1 = scale_factor * r_part * (Math.cos(phi) / rmax) + (canvas.width / 2.);
 			posY1 = scale_factor * r_part * (Math.sin(phi) / rmax) + (canvas.height / 2.);
+			distance_parcourue_totale+=0
+
+
 			if(r_part<rs){
 				vtot=NaN
 				vp_3_obs=NaN
 				vr_3_obs=NaN
+				distance_parcourue_totale=NaN //Manon
 			}
 
 		}
@@ -569,7 +577,9 @@ function animate() {
 			majFondFixe22();
 			context22.beginPath();
 			context22.fillStyle = COULEUR_BLEU;
-			context22.arc(posX1, posY1 , 5, 0, Math.PI * 2);
+			if (r_part==0){context22.arc((canvas.width / 2.), (canvas.height / 2.) , 5, 0, Math.PI * 2);} //Manon
+			else{ //Manon
+				context22.arc(posX1, posY1 , 5, 0, Math.PI * 2);}//Manon
 			context22.lineWidth = "1";
 						
 			context22.fill();
@@ -598,19 +608,23 @@ function animate() {
 
         if (element2.value != "mobile"){
             if(r_part_obs >= rhp){
-                temps_particule =0;
+                temps_particule=0;
 				document.getElementById("tp").innerHTML = temps_particule.toExponential(3);
 				//document.getElementById("ga").innerHTML = '';
 				document.getElementById("r_par").innerHTML = r_part_obs.toExponential(3);
 				document.getElementById("vrkp").innerHTML = vr_3_obs.toExponential(3);
 				document.getElementById("vpkp").innerHTML = vp_3_obs.toExponential(3);
 				document.getElementById("v_tot").innerHTML = vtot.toExponential(8);
-				if(isNaN(vtot)){
-					document.getElementById("v_tot").innerHTML = "";
-					document.getElementById("vrkp").innerHTML = "";
-					document.getElementById("vpkp").innerHTML = "";
-				}
+				document.getElementById("distance_parcourue").innerHTML=distance_parcourue_totale.toExponential(3); //Manon
 			}
+
+			if(isNaN(vtot)){ //Manon
+				var textou = o_recupereJson();
+				document.getElementById("v_tot").innerHTML = textou.page_trajectoire_photon_kerr.vitesse_pas_définie;
+				document.getElementById("vrkp").innerHTML = textou.page_trajectoire_photon_kerr.vitesse_pas_définie;
+				document.getElementById("vpkp").innerHTML = textou.page_trajectoire_photon_kerr.vitesse_pas_définie;
+				document.getElementById("distance_parcourue").innerHTML = textou.page_trajectoire_photon_kerr.vitesse_pas_définie; //Manon
+				}
         }
 		else{    
             if (r_part>=0){
@@ -624,13 +638,22 @@ function animate() {
                 document.getElementById("vpkp").innerHTML = vp_3.toExponential(3);
 				document.getElementById("v_tot").innerHTML = vtot.toExponential(8);	
 				console.log(vtot)
-				if(isNaN(vtot)){
-					document.getElementById("v_tot").innerHTML = "";
-					document.getElementById("vrkp").innerHTML = "";
-					document.getElementById("vpkp").innerHTML = "";
-				}	
+				
+				document.getElementById("distance_parcourue").innerHTML=distance_parcourue_totale.toExponential(3); //Manon
+				
             }
+
+			if(isNaN(vtot)){ //Manon
+				var textou = o_recupereJson();
+				document.getElementById("v_tot").innerHTML = textou.page_trajectoire_photon_kerr.vitesse_pas_définie;
+				document.getElementById("vrkp").innerHTML = textou.page_trajectoire_photon_kerr.vitesse_pas_définie;
+				document.getElementById("vpkp").innerHTML = textou.page_trajectoire_photon_kerr.vitesse_pas_définie;
+				document.getElementById("distance_parcourue").innerHTML = textou.page_trajectoire_photon_kerr.vitesse_pas_définie; //Manon
+				}
+
         }
+
+
         if (element2.value != "mobile"){
             temps_observateur += dtau;
             document.getElementById("to").innerHTML = temps_observateur.toExponential(3);	
