@@ -98,7 +98,6 @@ function RungeKuttaEDO2(pas, x0, y0, yp0, fonctionCarac,
         ListeY.push(yn1);
         ListeYp.push(ypn1);
         console.log("xn1 et yn1 =", xn+pas, yn1)
-        console.log("k", k1, k2, k3, k4)
     }
     return [ListeX, ListeY]
 }
@@ -283,9 +282,9 @@ function RungeKuttaAdaptative_EDO1(tolerance, x0, y0, fonctionCarac,
  * @returns {*[]} solution avec un pas négatif et positif
  */
 function fusion_solutions(solutions_neg, solutions_pos) {
-    solutions_neg[0] = solutions_neg[0].reverse()
+    solutions_neg[0].reverse()
     solutions_neg[0].pop()
-    solutions_neg[1] = solutions_neg[1].reverse()
+    solutions_neg[1].reverse()
     solutions_neg[1].pop()
     return [solutions_neg[0].concat(solutions_pos[0]),
             solutions_neg[1].concat(solutions_pos[1])]
