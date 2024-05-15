@@ -177,7 +177,7 @@ function calcu(path) {
 	//on recupere les valeurs de z1 et z2
 	z1 = Number(document.getElementById("z1").value);
 	z2 = Number(document.getElementById("z2").value);
-    if (z1<=-1) {stop_spin();//Ce pour arrêter le GIF spin à côté du bouton calcule
+    if (z1<=-1) {stop_spin();//C'est pour arrêter le GIF spin à côté du bouton calcule
 	return messagebox(texte.page_univers_calculs.message_z1_incorrect,"z1 >-1");}
 	if (z2<=-1) {stop_spin();
 	return messagebox(texte.page_univers_calculs.message_z2_incorrect,"z2 >-1");}
