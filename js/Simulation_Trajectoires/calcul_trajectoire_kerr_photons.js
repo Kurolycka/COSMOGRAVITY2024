@@ -535,10 +535,8 @@ function animate() {
 			vr_3=resulta[1]*Math.sign(A_part);
         	vp_3=resulta[2];
 
-			
-			posX1 = scale_factor * r_part * (Math.cos(phi) / rmax) + (canvas.width / 2.);
-			posY1 = scale_factor * r_part * (Math.sin(phi) / rmax) + (canvas.height / 2.);
-
+			posX1 = scale_factor * Math.sqrt(r_part **2+a**2) * (Math.sin(teta_spherique) * Math.cos(phi) / rmax) + (canvas.width / 2); //khaled
+			posY1 = scale_factor * Math.sqrt(r_part **2+a**2) * (Math.sin(teta_spherique) *Math.sin(phi) / rmax) + (canvas.height / 2);
 
 			if(r_part<rs){
 				vtot=NaN
