@@ -676,8 +676,9 @@ function animate() {
 				vtot=resulta[0];
 				vr_3_obs=resulta[1]*Math.sign(A_part_obs);
 				vp_3_obs= resulta[2]; 
-				distance_parcourue_totale+=vtot*dtau; //Manon 
+				distance_parcourue_totale+=vtot*(dtau*delta(r_part_obs)/( (Math.pow(r_part_obs,2)+Math.pow(a,2)+rs*Math.pow(a,2)/r_part_obs)*E - rs*a*L/r_part_obs )); //ManonCorrection
 			}
+
 			posX2 = scale_factor * r_part_obs * (Math.cos(phi_obs) / rmax) + (canvas.width / 2.);
 			posY2 = scale_factor * r_part_obs * (Math.sin(phi_obs) / rmax) + (canvas.height / 2.);
 			
@@ -706,7 +707,7 @@ function animate() {
 					nombre_de_g_calcul = (Math.abs(vtot-vitesse_précédente_nombre_g)/(dtau))/9.80665 //Manon
 				}
 
-				distance_parcourue_totale+=vtot*dtau; //Manon
+				distance_parcourue_totale+=vtot*dtau; //ManonCorrection
 			}
 			posX1 = scale_factor * r_part * (Math.cos(phi) / rmax) + (canvas.width / 2.);
 			posY1 = scale_factor * r_part * (Math.sin(phi) / rmax) + (canvas.height / 2.);
