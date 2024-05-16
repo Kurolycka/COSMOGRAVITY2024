@@ -502,7 +502,6 @@ function animate() {
 			vp_3_obs=resulta[2]; // r_part_obs*varphi_obs/dtau;
 			posX2 = scale_factor * r_part_obs * (Math.cos(phi_obs) / rmax) + (canvas.width / 2.);
 			posY2 = scale_factor * r_part_obs * (Math.sin(phi_obs) / rmax) + (canvas.height / 2.);
-			distance_parcourue_totale+=vtot*dtau; //Manon
 
 			if(r_part_obs<rs){
 				vtot=NaN
@@ -523,7 +522,6 @@ function animate() {
         	vp_3=resulta[2];
 			posX1 = scale_factor * r_part * (Math.cos(phi) / rmax) + (canvas.width / 2.);
 			posY1 = scale_factor * r_part * (Math.sin(phi) / rmax) + (canvas.height / 2.);
-			distance_parcourue_totale+=0
 
 
 			if(r_part<rs){
