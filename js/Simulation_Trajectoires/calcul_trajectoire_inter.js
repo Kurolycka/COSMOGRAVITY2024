@@ -1081,7 +1081,7 @@ function animate(compteur,mobile,mobilefactor) {
 				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_précédente_nombre_g)/mobile.dtau)/9.80665 //Manon
 			}
 
-			mobile.distance_parcourue_totale+=vtotal*(mobile.dtau*(1-rs/mobile.r_part)/mobile.E); //ManonGeneralisation
+			mobile.distance_parcourue_totale+=vtotal*(mobile.dtau*(1-rs/mobile.r_part)/mobile.E); //ManonCorrection
 		
 		}else {	// spationaute intérieur masse	
 		
@@ -1115,7 +1115,7 @@ function animate(compteur,mobile,mobilefactor) {
 				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_précédente_nombre_g)/(mobile.dtau*(1-rs/mobile.r_part)/mobile.E))/9.80665 //Manon
 			}
 
-			mobile.distance_parcourue_totale+=vtotal*(mobile.dtau*Math.pow(beta(mobile.r_part),2)/mobile.E); //ManonGeneralisation
+			mobile.distance_parcourue_totale+=vtotal*(mobile.dtau*Math.pow(beta(mobile.r_part),2)/mobile.E); //ManonCorrection
 
 		}
 		
@@ -1138,7 +1138,7 @@ function animate(compteur,mobile,mobilefactor) {
 			vr_1_obs=mobile.A_part_obs/(1-rs/(mobile.r_part_obs))  // <-----------JPC
 			vp_1_obs=resultat[2];
 			vtotal=Math.sqrt(vr_1_obs*vr_1_obs + vp_1_obs*vp_1_obs) ;
-			mobile.distance_parcourue_totale+=vtotal*mobile.dtau; //ManonGeneralisation
+			mobile.distance_parcourue_totale+=vtotal*(mobile.dtau*(1-rs/mobile.r_part_obs)/mobile.E); //ManonCorrection
 			
 		}else {  // observateur intérieur masse
 		
@@ -1177,7 +1177,7 @@ function animate(compteur,mobile,mobilefactor) {
 			vr_1_obs= mobile.A_part_obs/beta(mobile.r_part_obs)/Math.sqrt(alpha(mobile.r_part_obs))   ;  // <-----------JPC
 			vp_1_obs=resultat[2];
 			vtotal=Math.sqrt(vr_1_obs*vr_1_obs + vp_1_obs*vp_1_obs) ;
-			mobile.distance_parcourue_totale+=vtotal*mobile.dtau //ManonGeneralisation
+			mobile.distance_parcourue_totale+=vtotal*(mobile.dtau*Math.pow(beta(mobile.r_part_obs),2)/mobile.E) //ManonCorrection
 
 			
 		/*	for(i=0;i<nbr;i++){
