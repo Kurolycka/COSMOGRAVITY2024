@@ -199,7 +199,7 @@ function trajectoire() {
 		//--------------------------------------------------------------------------------------//
 		//Cette Partie traite le calcul de la trajectoire de la particule, dans son référentiel propre, et aussi dans celui de l'observateur//
 
-		const teta_spherique=Math.PI/2; //ajoute par khaled pour generaliser les coordonnees
+		teta_spherique=Math.PI/2; //ajoute par khaled pour generaliser les coordonnees
 		phi = phi0;
 		phi_obs = phi0;
 		temps_chute_libre = (Math.PI * r0 * Math.sqrt(r0 / (2 * G * M)) / 2);
