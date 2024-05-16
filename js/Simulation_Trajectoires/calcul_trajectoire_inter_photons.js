@@ -921,10 +921,6 @@ function animate(compteur,mobile,mobilefactor) {
 			mobile.positionspatio.posX1 = mobilefactor[compteur] * mobile.r_part * (Math.cos(mobile.phi) / rmax) + (canvas.width / 2.);
     		mobile.positionspatio.posY1 = mobilefactor[compteur] * mobile.r_part * (Math.sin(mobile.phi) / rmax) + (canvas.height / 2.);
 
-			if (mobile.r_part>r_phy){ //ManonGeneralisation
-				mobile.distance_parcourue_totale+=0; //ManonGeneralisation
-			}
-
 		}else{  // observateur
 			if(mobile.r_part_obs > r_phy) {   // observateur extérieur masse
 				val = rungekutta_externe_photon_obs(mobile.dtau, mobile.r_part_obs, mobile.A_part_obs,mobile.E,mobile.L);
@@ -939,7 +935,6 @@ function animate(compteur,mobile,mobilefactor) {
 				//alert(vr_1_obs);
 				vp_1_obs=resultat[2]; 
 
-				mobile.distance_parcourue_totale+=vtotal*mobile.dtau; //ManonGeneralisation
 		
 			}else{    // observateur intérieur masse
 						
@@ -967,7 +962,6 @@ function animate(compteur,mobile,mobilefactor) {
 				vr_1_obs=vitess_phys[1]*Math.sign(mobile.A_part_obs);
 				vp_1_obs=vitess_phys[2];
 
-				mobile.distance_parcourue_totale+=vtotal*mobile.dtau; //ManonGeneralisation
 				
 			}  // FIN observateur intérieur masse
 			
