@@ -889,8 +889,6 @@ function animate(compteur,mobile,mobilefactor) {
 			vr_2=resultat[1]*Math.sign(mobile.A_part);  
 			vp_2=resultat[2];
 			
-			mobile.distance_parcourue_totale+=0 //ManonGeneralisation
-			
 
 		}
 		else{
@@ -905,14 +903,6 @@ function animate(compteur,mobile,mobilefactor) {
 			vr_2_obs=resultat[1]*Math.sign(mobile.A_part_obs); 
 			vp_2_obs=resultat[2]; 
 
-			if (mobile.r_part>r_phy){
-				if (r_phy==0 && mobile.r_part_obs<=1.0001*rs){
-					mobile.distance_parcourue_totale+=0; //ManonGeneralisation
-				}
-				else{
-					mobile.distance_parcourue_totale+=vtotal*mobile.dtau; //ManonGeneralisation
-				}
-			}//ManonGeneralisation
 			
 		}
       
@@ -1076,7 +1066,7 @@ function animate(compteur,mobile,mobilefactor) {
 	if(mobile.r_part > rs*1.00001) {
 		temps_observateur_distant+=mobile.dtau; 
 	}else{
-		temps_observateur_distant=1/0;	} //GROS PROBLEME
+		temps_observateur_distant=1/0;	} 
 		document.getElementById("to"+compteur.toString()).innerHTML = temps_observateur_distant.toExponential(3);}
 	
 	
