@@ -1107,15 +1107,10 @@ function animate(compteur,mobile,mobilefactor) {
 			
 			mobile.position.posX2 = mobilefactor[compteur] * mobile.r_part_obs * (Math.cos(mobile.phi_obs) / rmax) + (canvas.width / 2.);  // rmax pas mobile.rmax <-----  JPC
 			mobile.position.posY2 = mobilefactor[compteur] * mobile.r_part_obs * (Math.sin(mobile.phi_obs) / rmax) + (canvas.height / 2.);  // rmax pas mobile.rmax <-----  JPC
+
+			if (mobile.r_part > r_phy){
+			mobile.distance_parcourue_totale += vtotal*(mobile.dtau*(1-rs/mobile.r_part_obs)/(mobile.E));} //ManonCorrection
 			
-			if (mobile.r_part>r_phy){
-				if (r_phy==0 && mobile.r_part_obs<=1.0001*rs){
-					mobile.distance_parcourue_totale+=0; //ManonGeneralisation
-				}
-				else{
-					mobile.distance_parcourue_totale+=vtotal*mobile.dtau; //ManonGeneralisation
-				}
-			}//ManonGeneralisation
 			
 		}
 		else{   // spationaute
@@ -1136,8 +1131,8 @@ function animate(compteur,mobile,mobilefactor) {
 			mobile.positionspatio.posX1 = mobilefactor[compteur] * mobile.r_part * (Math.cos(mobile.phi) / rmax) + (canvas.width / 2.);  // rmax pas mobile.rmax <-----  JPC
 			mobile.positionspatio.posY1 = mobilefactor[compteur] * mobile.r_part * (Math.sin(mobile.phi) / rmax) + (canvas.height / 2.)   // rmax pas mobile.rmax <-----  JPC
 
-			if (mobile.r_part>r_phy){ //ManonGeneralisation
-				mobile.distance_parcourue_totale+=vtotal*(mobile.dtau*(1-rs/mobile.r_part)/mobile.E); //ManonGeneralisation
+			if (mobile.r_part>r_phy){ 
+				mobile.distance_parcourue_totale+=vtotal*(mobile.dtau*(1-rs/mobile.r_part)/mobile.E); //ManonCorrection
 			}
 
 			if(joy.GetPhi()!=0 && blyo==1){ //Manon
