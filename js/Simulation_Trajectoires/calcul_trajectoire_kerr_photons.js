@@ -113,11 +113,16 @@ function initialisation(){
 	E=Math.sqrt(Math.abs(E));
 	L = (delta(r0) * vphi / c - rs * a * E) / (r0 - rs);
 
+	rayon_orbite_pro=rs*(1+Math.cos((2/3)*Math.acos(-(2*a)/rs)));
+	rayon_orbite_retro=rs*(1+Math.cos((2/3)*Math.acos((2*a)/rs)));
+
 	textegravetetc_Kerr();				   
 	document.getElementById("a").innerHTML = a.toExponential(3);
 	document.getElementById("m").innerHTML = rs.toExponential(3);
 	document.getElementById("L").innerHTML = L.toExponential(3);
 	document.getElementById("E").innerHTML = E.toExponential(3);
+	document.getElementById("circulaire_prograde_res").innerHTML=rayon_orbite_pro.toExponential(5);
+	document.getElementById("circulaire_retrograde_res").innerHTML=rayon_orbite_retro.toExponential(5);
 
 	if (isNaN(rhp)){document.getElementById("rhp").innerHTML = 0;}
 	else {  document.getElementById("rhp").innerHTML = rhp.toExponential(3);}
