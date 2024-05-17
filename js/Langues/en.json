@@ -326,13 +326,15 @@
 	"titre":"Trajectory of a massive projectile with Schwarzschild metric",
 	"titre2":"Baryonic mass and particle",
 	"rayon_physique":"r<sub>physical</sub> (m) =",
+	"temps_acceleration_pilotage":"t<sub>acc</sub> (ms) =",
 	"particule_arretee":"The projectile landed on the celestial body's surface.",
 	"particule_ecrasee":"The projectile crashed on the celestial body's surface.",
 	"particule_atteint_rh":"The projectile has gotten to Rh-.",
 	"rebond":"Bounce",
 	"amortissement":"Shock absorption : the bounce is limited to an impact speed of",
 	"non_baryonique":"Nonbaryonic mass and or particle",													 
-	"commandes":"Keyboard : \n\n- Complete trajectory : key a \n- Simple trajectory : key z \n- With or without rebbond : key e \n- Stop the calculate : key q \n- Reset : key s \n- Save : key d \n- Last values : key f \n- Slow down : key w \n- Pause / Read : key x \n- Speed up : key c"
+	"commandes":"Keyboard : \n\n- Complete trajectory : key a \n- Simple trajectory : key z \n- With or without rebbond : key e \n- Stop the calculate : key q \n- Reset : key s \n- Save : key d \n- Last values : key f \n- Slow down : key w \n- Pause / Read : key x \n- Speed up : key c",
+	"temps_acceleration_pilotage_infobulle":"Pilot option reaction time/adjustment time"
 },
 
 "page_trajectoire_photon":{
