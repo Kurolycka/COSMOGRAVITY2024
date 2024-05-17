@@ -56,33 +56,22 @@ function equa_diff_2(t, a, ap) {
 }
 
 /**
- * Permet de convertir les tau en temps
- * @param tau {Number} valeur de tau
- * @param H0 {Number} taux d'expansion actuel
- * @param t0 {Number} temps actuel
- * @return {Number} valeur du temps
- */
-function tau_to_temps(tau, H0, t0) {
-    return  (tau / H0) + t0;
-}
-
-/**
  * Fonction permettant de calculer l'âge de l'univers
  * @param fonction {function} La fonction qui permet de simplifier l'écriture des relations,
  * ne doit dépendre que d'une variable
  * @param H0 {number} taux d'expansion actuel
- * @param borneInf {number} Borne inférieure d'intégration
- * @param borneSup {number} Borne supérieure d'intégration
+ * @param a1 {number}
+ * @param a2 {number}
  * @return {number} âge de l'univers.
  */
-function calcul_ages(fonction, H0, borneInf, borneSup) {
+function calcul_ages(fonction, H0, a1, a2) {
     function integrande(u) {
         let terme_1 = Math.pow(u, -1)
         let terme_2 = Math.sqrt(fonction(u))
 
         return terme_1 * Math.pow(terme_2 , -1);
     }
-    return (1 / H0) * simpson_composite(integrande, borneInf, borneSup, 100);
+    return (1 / H0) * simpson_composite(integrande, a1, a2, 100);
 }
 
 /**
@@ -127,13 +116,13 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
      */
     function bornes_temps_CI() {
 
-        // on commence par recalculer les conditions initiales si nécéssaire
+        // on commence par initier les conditions initiales
         let pas = 1e-1;
         let tau_init = 0;
         let a_init = 1;
         let ap_init = 1;
 
-        // on recalcule les CI
+        // on recalcule les CI si nécéssaire donc dans le cas ou 1 n'est pas dans [a_min; a_max]
         let a_min_grossier;
         let a_max_grossier;
         let Solution_pos;
@@ -166,16 +155,14 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
 
         pas = Math.abs(tau_max - tau_min) * 5e-3
 
-
-
         return [pas, tau_init, a_init, ap_init]
     }
 
-    // On calcule les temps et tau associé à l'instant présent
+    // On calcule le temps associé à l'instant présent
     let t_0 = calcul_ages(fonction_simplifiant, H0parsec, 1e-8, 0.999999999);
     t_0 = t_0 / (365.25 * 24 * 3600 * 1e9)
 
-    // On détermine les bornes temporelle
+    // On détermine les bornes temporelle et conditions initiales
     let params = bornes_temps_CI()
     pas = params[0]
     tau_init = params[1]
@@ -183,15 +170,20 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     ap_init = params [3]
 
     let Solution_neg = RungeKuttaEDO2(-pas, tau_init, a_init, ap_init, equa_diff_2, a_min, a_max);
+    Solution_neg[0].pop()
+    Solution_neg[1].pop()
+
     let Solution_pos = RungeKuttaEDO2(pas, tau_init, a_init, ap_init, equa_diff_2, a_min, a_max);
+    Solution_pos[0].pop()
+    Solution_pos[1].pop()
+
     Solution = fusion_solutions(Solution_neg, Solution_pos)
-    Solution[0].pop()
-    Solution[1].pop()
+
 
     console.log("Solution", Solution)
     console.log("param", params, a_min, a_max)
 
-
+    // Si le temps de l'instant présent est pas définis on convertis les tau en temps
     if ( !(isNaN(t_0)) ) {
         for (let index = 0; index < Solution[0].length; index = index + 1) {
             Solution[0][index] = Solution[0][index] / H0parGAnnee
@@ -201,6 +193,12 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
 
     console.log("Liste temps :", Solution[0])
     console.log("Liste facteur :", Solution[1])
+    let t_min = calcul_ages(fonction_simplifiant, H0parGAnnee, 1e-10, a_min)
+    let t_max = calcul_ages(fonction_simplifiant, H0parGAnnee, 1e-10, a_max)
+    console.log("t_min et t_max et t_0", t_min, t_max, t_0)
+
+    let a_derivee_nulle = secante(equa_diff_1, 0.1, 1, 1e-8)
+    console.log("da/dt = 0", a_derivee_nulle)
     return Solution
 }
 

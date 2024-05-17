@@ -343,7 +343,7 @@ function calcul() { // fonction principale de cosmogravity
             }
             adetau1ter=adetau1;
 
-            // Relevé temps du big crunch
+            // Relevé temps du big bang
             if(adetau1ter<=0) {
                 modeleter=25;
                 tBB = i/ H0engannee;
