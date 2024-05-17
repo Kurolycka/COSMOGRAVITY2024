@@ -19,6 +19,7 @@ function save_schwarshild_massif(nbrderockets) {
 	// recuperation des variables de la page simulation
 	r_phy = document.getElementById("r_phy").value;
 	M = document.getElementById("M").value;
+	temps_acc_g_ressenti = document.getElementById("temps_acc_g_ressenti").value;//Manon
 	boutton_ammorti = document.getElementById("boutton_ammorti").value;
 	reb = document.getElementById("reb").value;
 	traject_type = document.getElementById("traject_type").value;
@@ -43,6 +44,7 @@ function save_schwarshild_massif(nbrderockets) {
 	// Stockage des valeurs
 	sessionStorage.setItem("r_phy", r_phy);
 	sessionStorage.setItem("M", M);
+	sessionStorage.setItem("temps_acc_g_ressenti",temps_acc_g_ressenti); //manon
 	sessionStorage.setItem("boutton_ammorti", boutton_ammorti);
 	sessionStorage.setItem("reb", reb);
 	sessionStorage.setItem("traject_type", traject_type);
@@ -74,6 +76,7 @@ function load_schwarshild_massif() {
 
 		document.getElementById("r_phy").value = sessionStorage.getItem("r_phy");
 		document.getElementById("M").value = sessionStorage.getItem("M");
+		document.getElementById("temps_acc_g_ressenti").value = sessionStorage.getItem("temps_acc_g_ressenti"); // Ajout de cette ligne
 		document.getElementById("boutton_ammorti").value = sessionStorage.getItem("boutton_ammorti");
 		document.getElementById("reb").value = sessionStorage.getItem("reb");
 		document.getElementById("traject_type").value = sessionStorage.getItem("traject_type");
@@ -99,13 +102,28 @@ function load_schwarshild_massif() {
 			document.getElementById('ammorti').innerHTML = document.getElementById("reb").value / 100;
 		}
 
+		var inputNbfusees = document.getElementById("nombredefusees"); //manon
+		var labelNbfusees = document.getElementById("labelnumberfusees"); //manon
+		var labelNbGTempsAcc = document.getElementById("temps_acceleration_nb_g_txt"); //Manon
+		var inputNbGTempsAcc = document.getElementById("temps_acc_g_ressenti"); //Manon
+
 		if (document.getElementById("traject_type2").value == "observateur") {
 			pressionBouttonObservateur();
+			inputNbfusees.style.display = "inline"; //manon
+			labelNbfusees.style.display = "inline"; //manon
+			labelNbGTempsAcc.style.display="none"; //Manon
+			inputNbGTempsAcc.style.display="none"; //Manon
 		} 
 		else if (document.getElementById("traject_type2").value == "mobile") {
 			pressionBouttonMobile();
+			inputNbfusees.style.display = "none"; //manon
+			labelNbfusees.style.display = "none"; //manon
+			labelNbGTempsAcc.style.display="inline"; //Manon
+			inputNbGTempsAcc.style.display="inline"; //Manon
 
 		}
+
+	
   	}
 }
 
@@ -240,11 +258,20 @@ function load_schwarshild_massif_nonBar() {
 		else if (document.getElementById("traject_type").value == "complete") {
 			pressionBouttonTrajectoireComplete();
 		}
+
+
+		var inputNbfusees = document.getElementById("nombredefusees"); //manon
+		var labelNbfusees = document.getElementById("labelnumberfusees"); //manon
+
 		if (document.getElementById("traject_type2").value == "observateur") {
 			pressionBouttonObservateur();
+			inputNbfusees.style.display = "inline"; //manon
+			labelNbfusees.style.display = "inline"; //manon
 		} 
 		else if (document.getElementById("traject_type2").value == "mobile") {
 			pressionBouttonMobile();
+			inputNbfusees.style.display = "none"; //manon
+			labelNbfusees.style.display = "none"; //manon
 		}
   	}
 }
@@ -286,10 +313,17 @@ function load_schwarshild_photon() {
 			pressionBouttonTrajectoireComplete();
 		}
 
+		var inputNbfusees = document.getElementById("nombredefusees"); //manon
+		var labelNbfusees = document.getElementById("labelnumberfusees"); //manon
+
 		if (document.getElementById("traject_type2").value == "observateur") {
 			pressionBouttonObservateur();
+			inputNbfusees.style.display = "inline"; //manon
+			labelNbfusees.style.display = "inline"; //manon
 		} else if (document.getElementById("traject_type2").value == "mobile") {
 			pressionBouttonMobile();
+			inputNbfusees.style.display = "none"; //manon
+			labelNbfusees.style.display = "none"; //manon
 
 		}
 
@@ -340,10 +374,17 @@ function load_schwarshild_photon_nonBar() {
 			pressionBouttonTrajectoireComplete();
 		}
 
+		var inputNbfusees = document.getElementById("nombredefusees"); //manon
+		var labelNbfusees = document.getElementById("labelnumberfusees"); //manon
+
 		if (document.getElementById("traject_type2").value == "observateur") {
 			pressionBouttonObservateur();
+			inputNbfusees.style.display = "inline"; //manon
+			labelNbfusees.style.display = "inline"; //manon
 		} else if (document.getElementById("traject_type2").value == "mobile") {
 			pressionBouttonMobile();
+			inputNbfusees.style.display = "none"; //manon
+			labelNbfusees.style.display = "none"; //manon
 
 		}
 	}
@@ -399,10 +440,17 @@ function load_kerr_massif() {
 			pressionBouttonTrajectoireComplete();
 		}
 
+		var inputNbfusees = document.getElementById("nombredefusees"); //manon
+		var labelNbfusees = document.getElementById("labelnumberfusees"); //manon
+
 		if (document.getElementById("traject_type2").value == "observateur") {
 			pressionBouttonObservateur2();
+			inputNbfusees.style.display = "inline"; //manon
+			labelNbfusees.style.display = "inline"; //manon
 		} else if (document.getElementById("traject_type2").value == "mobile") {
 			pressionBouttonMobile2();
+			inputNbfusees.style.display = "none"; //manon
+			labelNbfusees.style.display = "none"; //manon
 
 		}
 	}
@@ -452,10 +500,17 @@ function load_kerr_photon() {
 			pressionBouttonTrajectoireComplete();
 		}
 
+		var inputNbfusees = document.getElementById("nombredefusees"); //manon
+		var labelNbfusees = document.getElementById("labelnumberfusees"); //manon
+
 		if (document.getElementById("traject_type2").value == "observateur") {
 			pressionBouttonObservateur2();
+			inputNbfusees.style.display = "inline"; //manon
+			labelNbfusees.style.display = "inline"; //manon
 		} else if (document.getElementById("traject_type2").value == "mobile") {
 			pressionBouttonMobile2();
+			inputNbfusees.style.display = "none"; //manon
+			labelNbfusees.style.display = "none"; //manon
 
 		}
 	}
