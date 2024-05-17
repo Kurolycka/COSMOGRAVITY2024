@@ -253,7 +253,7 @@ if (element !== null && element2 !== null) {// pas pratique mais c'est juste par
   document.getElementById("ctreastre").title = texte.pages_trajectoire.ctreastre;
   document.getElementById("rayonschwars").title = texte.pages_trajectoire.rayonschwars;
   document.getElementById("massetxt").title = texte.pages_trajectoire.massetxt;
-  document.getElementById("txt_rphysique").title = texte.pages_trajectoire.txt_rphysique;
+  document.getElementById("txt_rphysique").title = texte.pages_trajectoire.txt_rphysique;															   
   document.getElementById("labelnumberfusees").innerHTML = texte.pages_trajectoire.labelnumberfusees;
   var canvaswidthheightt = document.getElementById("canvaswidthheight").value;
   if(canvaswidthheightt=="750"){
@@ -592,10 +592,10 @@ function texteUniversMonofluidesNoire() {
 function texteTrajectoireMassive(nbrderockets) {
   var texte = o_recupereJson();
   element2=document.getElementById('traject_type2');
-  
  
   document.getElementById("txt_titre").innerHTML = texte.page_trajectoire_massive.titre;
-  document.getElementById("txt_rphysique").innerHTML = texte.page_trajectoire_massive.rayon_physique;																				   
+  document.getElementById("txt_rphysique").innerHTML = texte.page_trajectoire_massive.rayon_physique;		
+  document.getElementById("temps_acceleration_nb_g_txt").innerHTML = texte.page_trajectoire_massive.temps_acceleration_pilotage;																		   
   document.getElementById("moinsvi").title = texte.pages_trajectoire.bouton_moins;
   document.getElementById("plusvi").title = texte.pages_trajectoire.bouton_plus;
   document.getElementById("boutton_enregis").innerHTML = texte.pages_trajectoire.bouton_enregistrer;
@@ -636,7 +636,8 @@ function texteTrajectoireMassive(nbrderockets) {
 function texteTrajectoireMassiveEnGrand() {  // ne sert pas!!!!!!!!!!!!!
   var texte = o_recupereJson();
   document.getElementById("txt_titre").innerHTML = texte.page_trajectoire_massive.titre;
-  document.getElementById("txt_rphysique").innerHTML = texte.page_trajectoire_massive.rayon_physique;																			   
+  document.getElementById("txt_rphysique").innerHTML = texte.page_trajectoire_massive.rayon_physique;					
+  document.getElementById("temps_acceleration_nb_g_txt").innerHTML = texte.page_trajectoire_massive.temps_acceleration_pilotage;																		   														   
   document.getElementById("moinsvi").title = texte.pages_trajectoire.bouton_moins;
   document.getElementById("plusvi").title = texte.pages_trajectoire.bouton_plus;
   document.getElementById("boutton_enregis").innerHTML = texte.pages_trajectoire.bouton_enregistrer;
