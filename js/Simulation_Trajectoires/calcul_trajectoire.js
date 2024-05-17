@@ -443,6 +443,7 @@ function rendreVisibleNbG() {
     }
 }
 
+
 //--------------------------{Fin fonction rajoutée par Manon}---------------------------------------------
 
 // calcul en temps réel des E, L,...
@@ -670,7 +671,6 @@ function trajectoire(compteur,mobile) {
 
 		if(blyo == 1 && element2.value == "mobile") { 	
 			document.getElementById("joyDiv").style.visibility='visible';
-		
 		}
 
 
@@ -836,8 +836,6 @@ function trajectoire(compteur,mobile) {
     	pausee(compteur,mobile,mobilefactor);
     }, false);
 	
-
-
 
 	if(blyo == 1 && element2.value == "mobile" ) {
 	setInterval(function(){
@@ -1439,14 +1437,17 @@ function animate(compteur,mobile,mobilefactor) {
 
 			//------------------------{Manon}----------------------------------
 
-			if(element2.value == "mobile" && blyo==1 && mobile.r_part>rs) { //ManonGeneralisation
-				setInterval(function(){
+
+			if(element2.value == "mobile" && blyo==1) { //ManonGeneralisation
+
+				intervalID = setInterval(function(){
 					if(joy.GetPhi()!=0){ 
 						document.getElementById("g_ressenti"+compteur.toString()).innerHTML = nombre_de_g_calcul.toExponential(3);}
 					else{
 						document.getElementById("g_ressenti"+compteur.toString()).innerHTML = "N/A";}
+						clearInterval(intervalID);
 
-					}, mobile.dtau*(1-rs/mobile.r_part)/mobile.E); 
+					}, 2000); 
 			}
 			
 			//-------------------{Fin Manon}------------------------------------
