@@ -283,10 +283,11 @@ function genereHtml(){
 	var newRow=document.getElementById('tableauconstanteslers').insertRow();
 	var jstring = '<tr id="tgggg1" >'
 	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
-		jstring += '<th class="tg-aicv">$L'+countt.toString()+'(m)$</th>';} //  <---------modif
-
+		jstring += '<th class="tg-aicv">$L'+countt.toString()+'(m)$</th>';}
 	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
-		jstring += '<th class="tg-aicv">$E'+countt.toString()+'$</th>'; //  <---------modif
+		jstring += '<th class="tg-aicv">$E'+countt.toString()+'$</th>';}
+	for (countt = 1; countt <= nbredefuseesgenere; countt +=1) {
+		jstring += '<th class="tg-aicv" id="vitesse_orb_circ'+countt.toString()+'" title="">$Vcirc'+countt.toString()+' (m/s)$</th>'; //ManonCirculaire
 	}
 
 	//pour katex il faux mettre un antislash devant le antislash
@@ -308,6 +309,9 @@ function genereHtml(){
 
 	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
 		jstring += '<td class="tg-3ozo" id="E'+countt.toString()+'">0</td>';
+	}
+	for (countt =1; countt <= nbredefuseesgenere; countt +=1) {
+		jstring += '<td class="tg-3ozo" id="Vcirc'+countt.toString()+'">0</td>'; //ManonCirculaire
 	}
 
 	jstring +='<td class="tg-3ozo" id="m">0</td>';
@@ -444,8 +448,11 @@ function rendreVisibleNbG() {
 // calcul en temps réel des E, L,...
 //on crée un objet json(idée de Mme Mougenot) mobile pour chaque mobile, pour bien differencier/contenir les variables appartenant a chaque mobile de maniere distincte.
 function initialisation(compteur){
-  c = 299792458;
-  G = 6.67385 * Math.pow(10, -11);							  
+
+	var texte = o_recupereJson();
+
+	c = 299792458;
+	G = 6.67385 * Math.pow(10, -11);							  
 	M = Number(document.getElementById("M").value);
 	r_phy = Number(document.getElementById("r_phy").value);
 	m = G * M / Math.pow(c, 2); 
@@ -475,10 +482,20 @@ function initialisation(compteur){
 	
 	deltam_sur_m = 0;
 
+	v_rotation = c*Math.sqrt(rs/(2*(r0-rs))); //ManonCirculaire
+
 	document.getElementById("L"+compteur.toString()).innerHTML = L.toExponential(3);
 	document.getElementById("E"+compteur.toString()).innerHTML = E.toExponential(3);
+	document.getElementById("Vcirc"+compteur.toString()).innerHTML = v_rotation.toExponential(5); //ManonCirculaire
 	document.getElementById("m").innerHTML = rs.toExponential(3);
 	document.getElementById("decal"+compteur.toString()).innerHTML = "";	//   affichage en blanc au debut de la simulation
+
+	if (v_rotation>= (c/2)){ //ManonCirculaire
+		document.getElementById("Vcirc"+compteur.toString()).title=texte.pages_trajectoire.orbite_circulaire_instable;
+	}else{
+		document.getElementById("Vcirc"+compteur.toString()).title=texte.pages_trajectoire.orbite_circulaire_stable;
+	}
+
 
 	scale_factor = Number(document.getElementById("scalefactor").value);
 	mobile = { r0:r0, vphi:vphi, vr:vr, L:L, E:E , phi0:phi0  };     
