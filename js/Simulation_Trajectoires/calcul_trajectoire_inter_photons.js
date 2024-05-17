@@ -333,7 +333,6 @@ function genereHtml(){
 	texteTrajectoirePhotonNonBar(nbredefuseesgenere);
 	notationvitesseree1();
 	infobulleobservateurdistant();
-	textegravetetc();					
 	//pour le bon affichage du katex
 	renderMathInElement(document.body, {
 				// ...options...
