@@ -179,7 +179,7 @@ function genereHtml(){
 		newinput.setAttribute("id","r0"+countt.toString()+"");
 		newinput.setAttribute("value","1.7685e11");
 		newinput.setAttribute("align","left");
-		newinput.setAttribute("maxlength","10");
+		newinput.setAttribute("maxlength","11");
 		newinput.setAttribute("type","text");
 		newinput.setAttribute("size","10");
 		newinput.setAttribute("onChange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
@@ -244,7 +244,11 @@ function genereHtml(){
 
 	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
 		jstring += '<th class="tg-aicv">$E'+countt.toString()+'$</th>';
-	}																	 
+	}
+	for (countt = 1; countt <= nbredefuseesgenere; countt +=1) {
+		jstring += '<th class="tg-aicv" id="rayon_orb_circ'+countt.toString()+'" title="">$rc'+countt.toString()+'(m)$</th>'; //ManonCirculaire
+	}
+																		 
  
     //pour katex il faux mettre un antislash devant le antislash  	
 	jstring +='<th class="tg-6l4m" id="rayonschwars" title="" >$rs=\\frac{2GM}{c^{2}}(m)$</th>';
@@ -268,6 +272,11 @@ function genereHtml(){
 	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
 		jstring += '<td class="tg-3ozo" id="E'+countt.toString()+'">0</td>';
 	}
+
+	for (countt = 1; countt<= nbredefuseesgenere; countt += 1) {
+		jstring += '<td class="tg-3ozo" id="rayon_orbite_circ_res'+countt.toString()+'">0</td>'; //ManonCirculaire
+	}
+
 	jstring +='<td class="tg-3ozo" id="m">0</td>';
 	jstring +='<td class="tg-3ozo" id="g">0</td>';
 	jstring +='<td class="tg-3ozo" id="Vlib"></td>';
@@ -386,9 +395,12 @@ function initialisation(compteur){
 	L = vphi * r0 / c;
 	E = Math.sqrt(Math.pow(vr / c, 2) + (1 - rs / r0)* Math.pow(L / r0, 2));
 
+	rayon_orbite = (3/2)*rs; //ManonCirculaire
+
 	document.getElementById("L"+compteur.toString()).innerHTML = L.toExponential(3);
 	document.getElementById("E"+compteur.toString()).innerHTML = E.toExponential(3);
 	document.getElementById("m").innerHTML = rs.toExponential(3);
+	document.getElementById("rayon_orbite_circ_res"+compteur.toString()).innerHTML = rayon_orbite.toExponential(5); //ManonCirculaire
 
 	scale_factor = Number(document.getElementById("scalefactor").value);
 	mobile = { r0:r0, vphi:vphi, vr:vr, L:L, E:E, phi0:phi0 }; 
