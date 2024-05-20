@@ -153,7 +153,7 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
         let tau_min = Solution[0][1]
         let tau_max = Solution[0][Solution[0].length - 2]
 
-        pas = Math.abs(tau_max - tau_min) * 5e-3
+        pas = Math.abs(tau_max - tau_min) * 1e-4
 
         return [pas, tau_init, a_init, ap_init]
     }
@@ -223,14 +223,13 @@ function graphique_facteur_echelle(solution) {
     let donnee = [{
         x: abscisse,
         y: ordonnee,
-        type: "line",
-        mode: "line",
+        type: "scatter", // Change 'line' to 'scatter'
+        mode: "lines", // Change 'line' to 'lines'
         name: "Facteur d'échelle",
-        marker: {color: 'purple'}
-    }]
+        line: {color: 'purple'} // Change 'marker' to 'line' for line color
+    }];
 
-    let apparence = [{
-
+    let apparence = {
         title: {
             text: "Tracé du facteur facteur d'échelle",
             font: {
@@ -239,27 +238,25 @@ function graphique_facteur_echelle(solution) {
                 color: '#111111'
             },
             xref: 'paper',
-            x: 0.55,
-
+            x: 0.55
         },
-
         xaxis: {
             title: "Temps en milliard d'année",
-            autorange: true,
-
+            autorange: true
         },
         yaxis: {
             title: "facteur d'échelle réduit",
-            autorange: true,
+            autorange: true
         }
-    }]
+    };
 
-    Plotly.newPlot("test.graphique", donnee, apparence)
+    Plotly.newPlot("test.graphique", donnee, apparence);
 }
 
 function affichage_site() {
     /**
      * Fonction facilitant l'écriture des expression dans le cas du modlèle LCDM. On a fait la substitution u = 1 / (1 + x)
+     * afin que les bornes d'intégrations soient finies
      * @param u {number} Paramètre de la fonction
      * @return {number} Valeur de la fonction
      */

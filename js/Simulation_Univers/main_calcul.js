@@ -424,7 +424,7 @@ function calcul() { // fonction principale de cosmogravity
             data_y = [];
 
             // calcul t_amax
-            adetau2 = amax2;
+            adetau2 = amax2; 
             zmax= (1-amax2)/amax2;
             dasurdtau = derivee_premiere(amax2,omegam0, omegalambda0, Or);
             agefinal= simpson_simple_degre2(fonction_integrale, Number(zmax), Number(omegam0), Number(omegalambda0), Number(Or))*1e-9;

@@ -218,16 +218,16 @@ function Calc() {
 	    data_x = [];
 	    data_y = [];
 	    while (yrunge2 >= amin && yrunge2 <= amax) {
-		   yrunge2 = rungekutta_neg(m);
-		   ymoinsrunge[0] = ymoinsrunge[1];
-		   res = age + m / H0engannee;
-		   ymoinsrungederiv[0] = ymoinsrungederiv[1];
-		   if (yrunge2 > 0) {
-			data_x.push(age + m / H0engannee);
-			data_y.push(yrunge2);
-	 	}
-		m = m - pas;
-	}
+			yrunge2 = rungekutta_neg(m);
+			ymoinsrunge[0] = ymoinsrunge[1];
+			res = age + m / H0engannee;
+			ymoinsrungederiv[0] = ymoinsrungederiv[1];
+			if (yrunge2 > 0) {
+				data_x.push(age + m / H0engannee);
+				data_y.push(yrunge2);
+			}
+			m = m - pas;
+		}
 		
 
 	}
