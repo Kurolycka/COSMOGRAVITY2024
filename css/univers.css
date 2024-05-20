@@ -1,0 +1,13 @@
+.petits_boutons{
+    position: absolute;
+    top:5px;
+    right:15px;
+}
+
+.graph_univers{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
