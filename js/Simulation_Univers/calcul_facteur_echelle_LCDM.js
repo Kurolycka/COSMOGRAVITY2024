@@ -23,7 +23,7 @@ function equa_diff_1(t, a) {
 
     let a_carre = Math.pow(a, 2);
 
-    let temp = -(Omegar0 / a_carre) + (Omegam0 / a) + Omegal0 * a_carre + Omegak0;
+    let temp = (Omegar0 / a_carre) + (Omegam0 / a) + Omegal0 * a_carre + Omegak0;
     return Math.sqrt(temp);
 }
 
@@ -133,12 +133,16 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
         if ( (isNaN(tau_min) || isNaN(tau_max)) && !isNaN(t_0)) {
             console.log("Pas calculé avec t_0")
             pas = t_0 * 1e-3
+        } else {
+            pas = 1e-2
         }
 
         if (!isNaN(tau_min) && !isNaN(tau_max)) {
             console.log("Pas calculé avec tau_min - tau_max")
-            pas = Math.abs(tau_min - tau_max) * 1e-3
+            pas = Math.abs(tau_max - tau_min) * 1e-3
         }
+
+        console.log("les taus :", t_min, t_0, t_max)
 
         return [tau_init, a_init, ap_init, pas]
     }
@@ -156,6 +160,7 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
         set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
         taus.push(set_solution[0])
         facteur_echelle.push(set_solution[1])
+        console.log(set_solution)
     }
 
     // On inverse pour que les listes commencent avec le tau le plus petit puis on réinitialise les conditions initiales
@@ -168,6 +173,7 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
         set_solution = RungeKuttaEDO2(pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
         taus.push(set_solution[0])
         facteur_echelle.push(set_solution[1])
+        console.log(set_solution)
     }
 
     // On calcule le temps associé à l'instant présent et si il n'est pas définis on le met à zéro
@@ -245,7 +251,7 @@ function graphique_facteur_echelle(solution) {
         }
     };
 
-    Plotly.newPlot("test.graphique", donnee, apparence);
+    Plotly.newPlot("graphique", donnee, apparence);
 }
 
 function affichage_site() {
