@@ -106,7 +106,7 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     function bornes_temps_CI() {
 
         // on commence par initier les conditions initiales
-        let pas;
+        let pas; // C'est le problème en soit...
         let tau = 0;
         let a = 1;
         let ap = 1;
@@ -135,6 +135,7 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
         let tau_init = set_solution[0]
         let a_init = set_solution[1]
         let ap_init = set_solution[2]
+        pas = Math.abs(a_min - a_max) * 1e-2
 
         // On initialise et on récupère tau_min
         set_solution = [tau_init, a_init, ap_init]
