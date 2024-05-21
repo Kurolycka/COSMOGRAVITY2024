@@ -91,115 +91,127 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     let H0 = document.getElementById("H0").value;
     let texte = o_recupereJson();
     let H0parsec = calcul_H0parsec(H0);
-    // On convertis H0 en GigaAnnée ^-1
+    // On convertis H0 en GigaAnnée ^ -1
     let H0parGAnnee = H0parsec * (365.25 * 24 * 3600 * 1e9)
 
     //on recupere les valeurs des variables
     let a_min = Number(document.getElementById("ami").value);
     let a_max = Number(document.getElementById("ama").value);
 
-    // Valeur de tau initial
-    let tau_init = 0;
-    // Valeur de a à tau initial
-    let a_init = 1;
-    // Dérivée de a à tau initial
-    let ap_init = 1;
-    // Pas pour la résolution
-    let pas;
-    // Liste pour la solution
-    let Solution;
-
     /**
-     * Fonction qui permet de borner le temps en fonction des a_min et a_max ainsi que le type d'univers.
-     * Cette fonction exécute simplement un RK4 très très grossier pour trouver les bornes sups et infs de tau qu'on
-     * utilisera come tau_max et tau_min
+     * Fonction qui permet de :
+     *      - Redéfinir les conditions initiales
+     *      - Calcule l'intervale de temps de résolution et en déduis un pas raisonnable
      */
     function bornes_temps_CI() {
 
         // on commence par initier les conditions initiales
-        let pas = 1e-1;
-        let tau_init = 0;
-        let a_init = 1;
-        let ap_init = 1;
+        let pas;
+        let tau = 0;
+        let a = 1;
+        let ap = 1;
 
         // on recalcule les CI si nécéssaire donc dans le cas ou 1 n'est pas dans [a_min; a_max]
-        let a_min_grossier;
-        let a_max_grossier;
-        let Solution_pos;
-        let Solution_neg;
+        let set_solution = [0, 1, 1];
+        let a_depart = 1;
 
         if (a_min > 1) {
-            a_min_grossier = 1
-            Solution_pos = RungeKuttaEDO2(pas, tau_init, a_init, ap_init, equa_diff_2, a_min_grossier, a_min)
-            tau_init = Solution_pos[0][Solution_pos[1].length - 1]
-            a_init = Solution_pos[1][Solution_pos[1].length - 1]
-            ap_init = equa_diff_1(tau_init, a_init)
+            console.log("Passage par a_min > 1")
+            while (set_solution[1] >= 1 && set_solution[1] <= a_min) {
+                set_solution = RungeKuttaEDO2(pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
+                console.log(set_solution)
+            }
         }
 
         if (a_max < 1) {
-            a_max_grossier = 1
-            Solution_neg = RungeKuttaEDO2(-pas, tau_init, a_init, ap_init, equa_diff_2, a_max, a_max_grossier)
-            tau_init = Solution_neg[0][Solution_neg[0].length - 1]
-            a_init = Solution_neg[1][Solution_neg[1].length - 1]
-            ap_init = equa_diff_1(tau_init, a_init)
+            console.log("Passage par a_max < 1")
+            while (set_solution[1] >= a_max && set_solution[1] <= 1) {
+                set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
+                console.log(set_solution)
+            }
         }
 
-        console.log("CI", pas,  tau_init, a_init, ap_init)
+        // On conserve les valeurs des CI
+        let tau_init = set_solution[0]
+        let a_init = set_solution[1]
+        let ap_init = set_solution[2]
 
-        Solution_neg = RungeKuttaEDO2(-pas, tau_init, a_init, ap_init, equa_diff_2, a_min, a_max)
-        Solution_pos = RungeKuttaEDO2(pas, tau_init, a_init, ap_init, equa_diff_2, a_min, a_max)
-        Solution = fusion_solutions(Solution_neg, Solution_pos)
-        console.log(Solution)
-        let tau_min = Solution[0][1]
-        let tau_max = Solution[0][Solution[0].length - 2]
+        // On initialise et on récupère tau_min
+        set_solution = [tau_init, a_init, ap_init]
+        console.log("CI pour résolution grossière sens pos", set_solution)
 
-        pas = Math.abs(tau_max - tau_min) * 1e-4
+        while (set_solution[1] >= a_min && set_solution[1] <= a_max) {
+            set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
+            console.log(set_solution)
+        }
+        let tau_min = set_solution[0]
 
-        return [pas, tau_init, a_init, ap_init]
+        // On réinitialise et on récupère tau_max
+        set_solution = [tau_init, a_init, ap_init]
+        while (set_solution[1] >= a_min && set_solution[1] <= a_max) {
+            set_solution = RungeKuttaEDO2(pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
+            console.log(set_solution)
+        }
+        let tau_max = set_solution[0]
+
+        // On calcule le pas qui sera utilisé
+        pas = Math.abs(tau_max - tau_min) * 1e-3
+
+        return [tau_init, a_init, ap_init, pas]
     }
 
-    // On calcule le temps associé à l'instant présent
+    let params = bornes_temps_CI();
+    console.log("Paramètres sortant de borne et CI", params)
+
+    let set_solution = [params[0], params[1], params[2]];
+    let pas = params[3];
+    let taus = [set_solution[0]]
+    let facteur_echelle = [set_solution[1]]
+
+    // Résolution dans le sens négatif
+    while (set_solution[1] >= a_min && set_solution[1] <= a_max) {
+        set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
+        taus.push(set_solution[0])
+        facteur_echelle.push(set_solution[1])
+    }
+
+    // On inverse pour que les listes commencent avec le tau le plus petit puis on réinitialise les conditions initiales
+    taus.reverse()
+    facteur_echelle.reverse()
+    set_solution = [params[0], params[1], params[2]];
+
+    // Résolution dans le sens positif
+    while (set_solution[1] >= a_min && set_solution[1] <= a_max) {
+        set_solution = RungeKuttaEDO2(pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
+        taus.push(set_solution[0])
+        facteur_echelle.push(set_solution[1])
+    }
+
+    // On calcule le temps associé à l'instant présent et si il n'est pas définis on le met à zéro
     let t_0 = calcul_ages(fonction_simplifiant, H0parsec, 1e-8, 0.999999999);
-    t_0 = t_0 / (365.25 * 24 * 3600 * 1e9)
-
-    // On détermine les bornes temporelle et conditions initiales
-    let params = bornes_temps_CI()
-    pas = params[0]
-    tau_init = params[1]
-    a_init = params [2]
-    ap_init = params [3]
-
-    let Solution_neg = RungeKuttaEDO2(-pas, tau_init, a_init, ap_init, equa_diff_2, a_min, a_max);
-    Solution_neg[0].pop()
-    Solution_neg[1].pop()
-
-    let Solution_pos = RungeKuttaEDO2(pas, tau_init, a_init, ap_init, equa_diff_2, a_min, a_max);
-    Solution_pos[0].pop()
-    Solution_pos[1].pop()
-
-    Solution = fusion_solutions(Solution_neg, Solution_pos)
-
-
-    console.log("Solution", Solution)
-    console.log("param", params, a_min, a_max)
-
-    // Si le temps de l'instant présent est pas définis on convertis les tau en temps
-    if ( !(isNaN(t_0)) ) {
-        for (let index = 0; index < Solution[0].length; index = index + 1) {
-            Solution[0][index] = Solution[0][index] / H0parGAnnee
-            Solution[0][index] = Solution[0][index] + t_0
-        }
+    if (isNaN(t_0)) {
+        console.log("t0 est NaN")
+        t_0 = 0
+    } else {
+        console.log("t0 n'est pas NaN")
+        t_0 = t_0 / (365.25 * 24 * 3600 * 1e9)
     }
 
-    console.log("Liste temps :", Solution[0])
-    console.log("Liste facteur :", Solution[1])
-    let t_min = calcul_ages(fonction_simplifiant, H0parGAnnee, 1e-10, a_min)
-    let t_max = calcul_ages(fonction_simplifiant, H0parGAnnee, 1e-10, a_max)
-    console.log("t_min et t_max et t_0", t_min, t_max, t_0)
+    // On transforme les taux en temps
+    for (let index = 0; index < taus.length; index = index + 1) {
+        taus[index] = taus[index] / H0parGAnnee
+        taus[index] = taus[index] + t_0
+    }
 
-    let a_derivee_nulle = secante(equa_diff_1, 0.1, 1, 1e-8)
-    console.log("da/dt = 0", a_derivee_nulle)
-    return Solution
+    taus.pop()
+    facteur_echelle.pop()
+
+    taus.shift()
+    facteur_echelle.shift()
+    console.log("Liste temps :", taus)
+    console.log("Liste facteur :", facteur_echelle)
+
+    return [taus, facteur_echelle]
 }
 
 /**

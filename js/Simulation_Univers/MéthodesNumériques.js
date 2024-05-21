@@ -1,55 +1,39 @@
 /**
  * Méthode de résolution d'équations différentielles d'ordre 2 grâce à la méthode de Runge-Kutta d'ordre 4
  * @param {number} pas pas utilisé pour la méthode
- * @param x0 {number} paramètre initial ou on connait la valeur de la fonction à déterminer
- * @param y0 {number} valeur de la fonction à déterminer au paramètre initial. Cette valeur doit être
+ * @param xn {number} paramètre initial ou on connait la valeur de la fonction à déterminer
+ * @param yn {number} valeur de la fonction à déterminer au paramètre initial. Cette valeur doit être
  * comprise entre a_min et a_max
- * @param yp0 {number} valeur de la dérivée fonction à déterminer au paramètre initial.
+ * @param ypn {number} valeur de la dérivée fonction à déterminer au paramètre initial.
  * @param fonctionCarac {function} Équation caractéristique du système qui ne doit dépendre que :
  *      - Du paramètre de la fonction inconnue
  *      - De la fonction inconnue
  *      - De la dérivée de la fonction inconnue
  * Dans cet ordre, pas plus pas moins.
  * déterminer, de sa dérivée première et de son paramètre, pas plus pas moins.
- * @param y_min {number} valeur maximale que la fonction à déterminer peut prendre
- * @param y_max {number} valeur minimale que la fonction à déterminer peut prendre
- * @return liste des valeurs de la fonction inconnue et des abscisses ou elle a été calculée
+ * @return liste de 3 valeurs : [x_n+1, y_n+1, y'_n+1]
  */
-function RungeKuttaEDO2(pas, x0, y0, yp0, fonctionCarac,
-                        y_min= 0, y_max = 5) {
-    let ListeX = [x0];
-    let ListeY = [y0];
-    let ListeYp = [yp0];
+function RungeKuttaEDO2(pas, xn, yn, ypn, fonctionCarac) {
+
     let k1 = 0;
     let k2 = 0;
     let k3 = 0;
     let k4 = 0;
 
-    let xn = x0;
-    let yn = y0;
-    let ypn = yp0;
     let yn1 = 0;
     let ypn1 = 0;
+    let xn1 = 0
 
-    while (ListeY[ListeY.length-1] >= y_min && ListeY[ListeY.length-1] <= y_max) {
-        xn = ListeX[ListeX.length-1];
-        yn = ListeY[ListeY.length-1];
-        ypn = ListeYp[ListeYp.length-1];
+    k1 = fonctionCarac(xn, yn, ypn);
+    k2 = fonctionCarac(xn + pas/2, yn + 0.5 * pas * ypn, ypn + 0.5 * pas * k1);
+    k3 = fonctionCarac(xn + pas/2, yn + 0.5 * pas * ypn + pas * pas * 0.25 * k1, ypn + 0.5 * pas * k2);
+    k4 = fonctionCarac(xn + pas, yn + pas * ypn + pas * pas * 0.5 * k2, ypn + pas * k3);
 
-        k1 = fonctionCarac(xn, yn, ypn);
-        k2 = fonctionCarac(xn + pas/2, yn + 0.5 * pas * ypn, ypn + 0.5 * pas * k1);
-        k3 = fonctionCarac(xn + pas/2, yn + 0.5 * pas * ypn + pas * pas * 0.25 * k1, ypn + 0.5 * pas * k2);
-        k4 = fonctionCarac(xn + pas, yn + pas * ypn + pas * pas * 0.5 * k2, ypn + pas * k3);
+    ypn1 = ypn + (pas / 6) * (k1 + 2*k2 + 2*k3 + k4);
+    yn1 = yn + pas * ypn + (pas * pas / 6) * (k1 + k2 + k3);
+    xn1 = xn + pas
 
-        ypn1 = ypn + (pas / 6) * (k1 + 2*k2 + 2*k3 + k4);
-        yn1 = yn + pas * ypn + (pas * pas / 6) * (k1 + k2 + k3);
-
-        ListeX.push(xn + pas);
-        ListeY.push(yn1);
-        ListeYp.push(ypn1);
-        console.log("xn1 et yn1 =", xn+pas, yn1)
-    }
-    return [ListeX, ListeY]
+    return [xn1, yn1, ypn1]
 }
 
 /**
