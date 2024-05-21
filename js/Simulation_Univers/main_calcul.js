@@ -3,7 +3,7 @@ const AU = 149597870000; // unite astronomique
 function lance_calc() {
     document.getElementById("ret").click();
     chargement();
-    setTimeout(affichage_site, 100);
+    setTimeout(calcul, 100);
 }
 
 //on recupere le bon nombre de jour par an.
@@ -984,7 +984,8 @@ function enregistrer() {
 
 
 function derivee_premiere(a,omegam0, omegalambda0, Or){
-return Math.pow(Or/Math.pow(a,2) + omegam0/a + omegalambda0*Math.pow(a,2) +1-omegalambda0-Or-omegam0 ,0.5); }
+    return Math.pow(Or/Math.pow(a,2) + omegam0/a + omegalambda0*Math.pow(a,2) +1-omegalambda0-Or-omegam0 ,0.5);
+}
 
 
 function derivee_seconde_univers(adetau) {

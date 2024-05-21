@@ -24,7 +24,7 @@ function equa_diff_1(t, a) {
     let a_carre = Math.pow(a, 2);
 
     let temp = -(Omegar0 / a_carre) + (Omegam0 / a) + Omegal0 * a_carre + Omegak0;
-    return Math.pow(temp, 1/2);
+    return Math.sqrt(temp);
 }
 
 /**
@@ -104,59 +104,41 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
      *      - Calcule l'intervale de temps de résolution et en déduis un pas raisonnable
      */
     function bornes_temps_CI() {
+        let pas;
+        let tau_init = 0;
+        let a_init = 1;
+        let ap_init = 1;
 
-        // on commence par initier les conditions initiales
-        let pas; // C'est le problème en soit...
-        let tau = 0;
-        let a = 1;
-        let ap = 1;
+        let t_0 = calcul_ages(fonction_simplifiant, H0parGAnnee, 1e-10, 1)
 
-        // on recalcule les CI si nécéssaire donc dans le cas ou 1 n'est pas dans [a_min; a_max]
-        let set_solution = [0, 1, 1];
-        let a_depart = 1;
+        let t_min = calcul_ages(fonction_simplifiant, H0parGAnnee, 1e-10, a_min)
+        let tau_min = H0parGAnnee * (t_min - t_0)
 
-        if (a_min > 1) {
-            console.log("Passage par a_min > 1")
-            while (set_solution[1] >= 1 && set_solution[1] <= a_min) {
-                set_solution = RungeKuttaEDO2(pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
-                console.log(set_solution)
-            }
+        let t_max = calcul_ages(fonction_simplifiant, H0parGAnnee, 1e-10, a_max)
+        let tau_max = H0parGAnnee * (t_max - t_0)
+
+        if (a_min > 1 && !isNaN(tau_min)) {
+            tau_init = tau_min
+            a_init = a_min
+            ap_init = equa_diff_1(tau_min, a_init)
         }
 
-        if (a_max < 1) {
-            console.log("Passage par a_max < 1")
-            while (set_solution[1] >= a_max && set_solution[1] <= 1) {
-                set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
-                console.log(set_solution)
-            }
+        if (a_max < 1 && !isNaN(tau_max)) {
+            tau_init = tau_max
+            a_init = a_max
+            ap_init = equa_diff_1(tau_max, a_init)
         }
-
-        // On conserve les valeurs des CI
-        let tau_init = set_solution[0]
-        let a_init = set_solution[1]
-        let ap_init = set_solution[2]
-        pas = Math.abs(a_min - a_max) * 1e-2
-
-        // On initialise et on récupère tau_min
-        set_solution = [tau_init, a_init, ap_init]
-        console.log("CI pour résolution grossière sens pos", set_solution)
-
-        while (set_solution[1] >= a_min && set_solution[1] <= a_max) {
-            set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
-            console.log(set_solution)
-        }
-        let tau_min = set_solution[0]
-
-        // On réinitialise et on récupère tau_max
-        set_solution = [tau_init, a_init, ap_init]
-        while (set_solution[1] >= a_min && set_solution[1] <= a_max) {
-            set_solution = RungeKuttaEDO2(pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
-            console.log(set_solution)
-        }
-        let tau_max = set_solution[0]
 
         // On calcule le pas qui sera utilisé
-        pas = Math.abs(tau_max - tau_min) * 1e-3
+        if ( (isNaN(tau_min) || isNaN(tau_max)) && !isNaN(t_0)) {
+            console.log("Pas calculé avec t_0")
+            pas = t_0 * 1e-3
+        }
+
+        if (!isNaN(tau_min) && !isNaN(tau_max)) {
+            console.log("Pas calculé avec tau_min - tau_max")
+            pas = Math.abs(tau_min - tau_max) * 1e-3
+        }
 
         return [tau_init, a_init, ap_init, pas]
     }
