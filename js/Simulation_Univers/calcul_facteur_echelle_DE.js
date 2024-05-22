@@ -1,56 +1,96 @@
 /**
- * Première équation caractéristique du facteur d'échelle. La dérivée première de a à un temps t
- * @param a {number} La valeur de a au temps indiqué
- * @param t {number} La valeur du temps
- * @returns {number} La valeur de la dérivée de a en ce temps
+ * Première fonction facilitant l'écriture des expression dans le cas du modlèle DE.
+ * @param x {number} Paramètre de la fonction
+ * @return {number} Valeur de la fonction
  */
-function equa_diff_1_LCDM(t, a) {
-    // Déclaration des variables globales
-    let c = Number(document.getElementById("c_p").value);
-    let h = Number(document.getElementById("h_p").value);
-    let k = Number(document.getElementById("k_p").value);
-    let T0 = document.getElementById("T0").value;
-    let H0 = document.getElementById("H0").value;
-    let texte = o_recupereJson();
-    let H0parsec = calcul_H0parsec(H0);
+function fonction_Y(x) {
+    let w0 = Number(document.getElementById("omega0").value)
+    let w1 = Number(document.getElementById("omega1").value)
 
-    // On récupère les valeurs des omégas
-    let Omegam0 = Number(document.getElementById("omegam0").value);
-    let Omegal0 = Number(document.getElementById("omegalambda0").value);
-    let Omegar0 = Number(calcul_Omegar(h, c, k, T0, H0parsec));
-    let Omegak0 = Number(document.getElementById("resultat_omegak0").innerHTML);
+    // On calcule les termes 1 à 1 par soucis de clareté
+    let terme_1 = -3 * ( 1 + w0 + w1 ) * Math.log(x);
+    let terme_2 = -3 * w1 * (1 - x)
 
-    let a_carre = Math.pow(a, 2);
-
-    let temp = (Omegar0 / a_carre) + (Omegam0 / a) + Omegal0 * a_carre + Omegak0;
-    return Math.sqrt(temp);
+    return Math.exp(terme_1 + terme_2)
 }
 
 /**
- * Deuxième équation caractéristique du facteur d'échelle. La dérivée seconde de a à un temps t
+ * Dérivée analytique de la fonction Y(x). On aurait pu utiliser une approximation numérique mais
+ * ça aurait été moins précis
+ * @param x {number} Paramètre de la fonction
+ * @return {number} Valeur de la fonction
+ */
+function derivee_fonction_Y(x) {
+    let w0 = Number(document.getElementById("omega0").value)
+    let w1 = Number(document.getElementById("omega1").value)
+
+    return -3 * (1 + w0 + w1) * fonction_Y(x)
+}
+
+/**
+ * Deuxième fonction facilitant l'écriture des expression dans le cas du modlèle DE.
+ * @param x {number} Paramètre de la fonction
+ * @return {number} Valeur de la fonction
+ */
+function fonction_F(x) {
+    let Omegam0 = Number(document.getElementById("omegam0").value)
+    let OmegaDE0 = Number(document.getElementById("omegaDE0").value)
+    let Omegak0 = Number(document.getElementById("resultat_omegak0").value)
+    let Omegar0 = Number(document.getElementById("resultat_omegar0").value)
+
+    let terme_1 = Omegak0 * Math.pow(1 + x, 2)
+    let terme_2 = Omegam0 * Math.pow(1 + x, 3)
+    let terme_3 = Omegar0 * Math.pow(1 + x, 4)
+    let terme_4 = OmegaDE0 * fonction_Y(Math.pow(1 + x, -1))
+
+    return terme_1 + terme_2 + terme_3 + terme_4
+}
+
+/**
+ * Première équation caractéristique du facteur d'échelle dans le cas DE.
+ * C'est la dérivée première de a à un temps t
+ * @param a {number} La valeur de a au temps indiqué
+ * @param t {number} La valeur du temps
+ * Ne doit dépendre que d'un paramètre
+ * @returns {number} La valeur de la dérivée de a en ce temps
+ */
+function equa_diff_1_DE(t, a) {
+    let Omegam0 = Number(document.getElementById("omegam0").value)
+    let OmegaDE0 = Number(document.getElementById("omegaDE0").value)
+    let Omegak0 = Number(document.getElementById("resultat_omegak0").value)
+    let Omegar0 = Number(document.getElementById("resultat_omegar0").value)
+
+    let a_carre = a * a
+    let terme_1 = Omegar0 / a_carre
+    let terme_2 = Omegam0 / a
+    let terme_3 = OmegaDE0 * a_carre * fonction_Y(a)
+    let terme_4 = Omegak0
+
+    return Math.sqrt(terme_1 + terme_2 + terme_3 + terme_4)
+}
+
+/**
+ * Deuxième équation caractéristique du facteur d'échelle dans le cas DE.
+ * C'est la dérivée seconde de a à un temps t
  * @param a {number} La valeur de a au temps indiqué
  * @param ap {number} La valeur de la dérivée de a au temps indiqué
  * @param t {number} La valeur du temps
  * @returns {number} La valeur de la dérivée seconde de a en ce temps
  */
-function equa_diff_2_LCDM(t, a, ap) {
-    // Déclaration des variables globales
-    let c = Number(document.getElementById("c_p").value);
-    let h = Number(document.getElementById("h_p").value);
-    let k = Number(document.getElementById("k_p").value);
-    let T0 = document.getElementById("T0").value;
-    let H0 = document.getElementById("H0").value;
-    let texte = o_recupereJson();
-    let H0parsec = calcul_H0parsec(H0);
+function equa_diff_2_DE(t, a, ap) {
+    let Omegam0 = Number(document.getElementById("omegam0").value)
+    let OmegaDE0 = Number(document.getElementById("omegaDE0").value)
+    let Omegar0 = Number(document.getElementById("resultat_omegar0").value)
 
-    // On récupère les valeurs des omégas
-    let Omegam0 = Number(document.getElementById("omegam0").value);
-    let Omegal0 = Number(document.getElementById("omegalambda0").value);
-    let Omegar0 = calcul_Omegar(h, c, k, T0, H0parsec);
+    console.log(OmegaDE0, Omegar0, Omegam0)
 
-    let a_carre = a * a;
-    let a_cube = a * a * a;
-    return -(Omegar0 / a_cube) - 0.5 * (Omegam0 / a_carre) + Omegal0 * a;
+    let a_carre = a * a
+    let a_cube = a * a * a
+    let terme_1 = - (Omegar0 / a_cube)
+    let terme_2 = - 0.5 * (Omegam0 / a_carre)
+    let terme_3 = OmegaDE0 * (a * fonction_Y(a) + 0.5 * a_carre * derivee_fonction_Y(a))
+
+    return terme_1 + terme_2 + terme_3
 }
 
 /**
@@ -76,10 +116,11 @@ function calcul_ages(fonction, H0, a1, a2) {
  * Fonction permettant de calculer le facteur d'échelle en fonction du temps
  * @param equa_diff_1 {function} Fonction qui décrit la première dérivée du facteur d'échelle en fonction de tau
  * @param equa_diff_2 {function} Fonction qui décrit la deuxième dérivée du facteur d'échelle en fonction de tau
- * @param fonction_simplifiant Fonction qui permet de simplifier l'écriture des expression dans le modèle LCDM
+ * @param fonction_simplifiant_1 Fonction utilisé dans l'expression de F et des équations différentielles
+ * @param fonction_simplifiant_2 Fonction utilisée dans le calcul des âges.
  * @return Liste des abscisses ou la fonction a été calculée et liste des valeurs de la fonction.
  */
-function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifiant) {
+function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifiant_1, fonction_simplifiant_2) {
     let H0 = document.getElementById("H0").value;
     let texte = o_recupereJson();
     let H0parsec = calcul_H0parsec(H0);
@@ -101,12 +142,14 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
         let a_init = 1;
         let ap_init = 1;
 
-        let t_0 = calcul_ages(fonction_simplifiant, H0parGAnnee, 1e-10, 1)
+        let t_0 = calcul_ages(fonction_simplifiant_1, H0parGAnnee, 0, 1e12)
 
-        let t_min = calcul_ages(fonction_simplifiant, H0parGAnnee, 1e-10, a_min)
+        let z_min = (1 - a_min) / a_min
+        let t_min = calcul_ages(fonction_simplifiant_1, H0parGAnnee, z_min, 1e12)
         let tau_min = H0parGAnnee * (t_min - t_0)
 
-        let t_max = calcul_ages(fonction_simplifiant, H0parGAnnee, 1e-10, a_max)
+        let z_max = (1 - a_max) / a_max
+        let t_max = calcul_ages(fonction_simplifiant_1, H0parGAnnee, z_max, 1e12)
         let tau_max = H0parGAnnee * (t_max - t_0)
 
         if (a_min > 1 && !isNaN(tau_min)) {
@@ -169,7 +212,7 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     }
 
     // On calcule le temps associé à l'instant présent et si il n'est pas définis on le met à zéro
-    let t_0 = calcul_ages(fonction_simplifiant, H0parsec, 1e-8, 0.999999999);
+    let t_0 = calcul_ages(fonction_simplifiant_1, H0parsec, 0, 1e12);
     if (isNaN(t_0)) {
         console.log("t0 est NaN")
         t_0 = 0
@@ -189,6 +232,7 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
 
     taus.shift()
     facteur_echelle.shift()
+
     console.log("Liste temps :", taus)
     console.log("Liste facteur :", facteur_echelle)
 
@@ -233,28 +277,10 @@ function graphique_facteur_echelle(solution) {
         }
     };
 
-    Plotly.newPlot("graphique", donnee, apparence);
+    Plotly.newPlot("graphique_sombre", donnee, apparence);
 }
 
-function affichage_site_LCDM() {
-    /**
-     * Fonction facilitant l'écriture des expression dans le cas du modlèle LCDM. On a fait la substitution u = 1 / (1 + x)
-     * afin que les bornes d'intégrations soient finies
-     * @param u {number} Paramètre de la fonction
-     * @return {number} Valeur de la fonction
-     */
-    function fonction_E(u) {
-        let Omegam0 = Number(document.getElementById("omegam0").value);
-        let Omegal0 = Number(document.getElementById("omegalambda0").value);
-        let Omegar0 = Number(document.getElementById("resultat_omegar0").innerHTML);
-
-        // On calcule les terme 1 à 1 par soucis de clareté
-        let terme_1 = Omegar0 * Math.pow(u, -4);
-        let terme_2 = Omegam0 * Math.pow(u, -3);
-        let terme_3 = (1 - Omegam0 - Omegal0 - Omegar0) * Math.pow(u, -2);
-        return terme_1 + terme_2 + terme_3 + Omegal0;
-    }
-
-    let donnee = calcul_facteur_echelle_LCDM(equa_diff_1_LCDM, equa_diff_2_LCDM, fonction_E)
+function affichage_site_DE() {
+    let donnee = calcul_facteur_echelle_DE(equa_diff_1_DE, equa_diff_2_DE, fonction_F, fonction_Y)
     graphique_facteur_echelle(donnee)
 }

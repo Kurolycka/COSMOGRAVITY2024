@@ -2,7 +2,7 @@ function Lancer_calc() {
 	// ramène la page en haut (pour que les annotations du graphique se placent bien).
 	document.getElementById("ret").click();
 	chargement();
-	setTimeout(Calc, 100);
+	setTimeout(affichage_site_DE, 100);
 }
 
 function ajustePrecision(valeur) {
