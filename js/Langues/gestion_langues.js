@@ -388,11 +388,14 @@ function texteUnivers() {
   document.getElementById("txt_sorties").innerHTML = texte.page_univers_general.sorties;
   document.getElementById("txt_tempsBB").innerHTML = texte.page_univers_general.tempsBigBang;
   document.getElementById("txt_dureeeUniv").innerHTML = texte.page_univers_general.dureeUnivers;
-  document.getElementById("txt_distance_decalage_HorizonEvenement").innerHTML = texte.page_univers_general.DistanceDecalageHorizon;
   document.getElementById("txt_univplat").innerHTML = texte.page_univers.univers_plat;
   document.getElementById("txt_MLRFCN").innerHTML = texte.page_univers.matierelambdaRFCNeu;
   document.getElementById("txt_MLRFC").innerHTML = texte.page_univers.matierelambdaRFC;
   document.getElementById("txt_ML").innerHTML = texte.page_univers.matierelambda;
+  document.getElementById('DmHorizonEvenement_label').title = texte.page_univers_general.dm_horizon_evenement_infobulle;
+  document.getElementById('ZHorizonEvenement_label').title = texte.page_univers_general.z_horizon_evenement_infobulle;
+  document.getElementById('DmHorizonParticule_label').title = texte.page_univers_general.dm_horizon_particule_infobulle;
+  document.getElementById('ZHorizonParticule_label').title = texte.page_univers_general.z_horizon_particule_infobulle;
 }
 
 function texteUniversCalculs() {//Beaucoup des redondants, il faut gérer tout ça 

@@ -264,8 +264,8 @@ function Calc() {
 			let z_value_s = Math.trunc((z_value / (1 + z_value)) * 1000) / 1000;
 						
 			age_sec=1./ H0parsec*simpson(0,z_value-1e-9,cv_Enoire_temps, Number(omegam0), Number(omegaDE0), Number(Or),1e-5);
-			 
-			 
+
+			
 			age_univ_sec = (Number(age_sec) + temps_restant) * 2;
 
 			
