@@ -1,4 +1,22 @@
 /**
+ * Fonction facilitant l'écriture des expression dans le cas du modlèle LCDM. On a fait la substitution u = 1 / (1 + x)
+ * afin que les bornes d'intégrations soient finies
+ * @param u {number} Paramètre de la fonction
+ * @return {number} Valeur de la fonction
+ */
+function fonction_E(u) {
+    let Omegam0 = Number(document.getElementById("omegam0").value);
+    let Omegal0 = Number(document.getElementById("omegalambda0").value);
+    let Omegar0 = Number(document.getElementById("resultat_omegar0").innerHTML);
+
+    // On calcule les terme 1 à 1 par soucis de clareté
+    let terme_1 = Omegar0 * Math.pow(u, -4);
+    let terme_2 = Omegam0 * Math.pow(u, -3);
+    let terme_3 = (1 - Omegam0 - Omegal0 - Omegar0) * Math.pow(u, -2);
+    return terme_1 + terme_2 + terme_3 + Omegal0;
+}
+
+/**
  * Première équation caractéristique du facteur d'échelle. La dérivée première de a à un temps t
  * @param a {number} La valeur de a au temps indiqué
  * @param t {number} La valeur du temps
@@ -237,24 +255,6 @@ function graphique_facteur_echelle(solution) {
 }
 
 function affichage_site_LCDM() {
-    /**
-     * Fonction facilitant l'écriture des expression dans le cas du modlèle LCDM. On a fait la substitution u = 1 / (1 + x)
-     * afin que les bornes d'intégrations soient finies
-     * @param u {number} Paramètre de la fonction
-     * @return {number} Valeur de la fonction
-     */
-    function fonction_E(u) {
-        let Omegam0 = Number(document.getElementById("omegam0").value);
-        let Omegal0 = Number(document.getElementById("omegalambda0").value);
-        let Omegar0 = Number(document.getElementById("resultat_omegar0").innerHTML);
-
-        // On calcule les terme 1 à 1 par soucis de clareté
-        let terme_1 = Omegar0 * Math.pow(u, -4);
-        let terme_2 = Omegam0 * Math.pow(u, -3);
-        let terme_3 = (1 - Omegam0 - Omegal0 - Omegar0) * Math.pow(u, -2);
-        return terme_1 + terme_2 + terme_3 + Omegal0;
-    }
-
     let donnee = calcul_facteur_echelle_LCDM(equa_diff_1_LCDM, equa_diff_2_LCDM, fonction_E)
     graphique_facteur_echelle(donnee)
 }
