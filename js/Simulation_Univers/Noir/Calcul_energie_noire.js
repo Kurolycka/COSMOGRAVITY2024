@@ -134,7 +134,7 @@ function Calc() {
 		document.getElementById("resultat_ageunivers").innerHTML = texte.calculs_univers.pasBB;
 		age = 0;
 	}
-
+	document.getElementById("div_horizon_cosmologique").style.display="block";
 
 
 	//on fait appel a la methode de rungekutta pour calculer les points de la courbe
@@ -182,57 +182,16 @@ function Calc() {
 		i = i + pas;
 	}
 		
-/*	if(amax<1){
-		eps =1e-10;
-		if (omegaDE0 > 1e6 || omegam0 > 1e6) {
-			eps = 0.0001;
-		}
-		initial_a = 0;
-		age_sec = simpson(0, 0.999999999999, cv_Enoire_temps_substitution, omegam0, Number(omegaDE0), Number(Or), eps);console.log("192  age_sec  modele ",age_sec,modele);
-		if(isNaN(age_sec)) {
-			modele=1;
-			age_afficher="NaN";  
-		} else {
-			age_sec = age_sec * (1. / H0parsec);
-			//on le passe en gigaannees
-			age = age_sec / ((3600 * 24 * nbrjours) * Math.pow(10, 9));
-			//on creer une variable limite en nombre de decimal pour l'affichage
-			age_afficher = Number(age).toExponential(3);
-			age_sec_afficher = Number(age_sec).toExponential(3);
-		}
-    
-	    ymoinsrunge = [0.1,0.1];
-	    ymoinsrungederiv = [1, 1];
-	    k = [0, 0, 0, 0];
-	    j = [0, 0, 0, 0];
-	    pas = age*5e-6;   if(modele==1){pas=1e-5;age=0;}
-	    m = 0;
-	    yrunge = 1;
-	    yrunge2 = 0.1;
-	    data_x = [];
-	    data_y = [];
-	    while (yrunge2 >= amin && yrunge2 <= amax) {
-		   yrunge2 = rungekutta_neg(m);
-		   ymoinsrunge[0] = ymoinsrunge[1];
-		   res = age + m / H0engannee;
-		   ymoinsrungederiv[0] = ymoinsrungederiv[1];
-		   if (yrunge2 > 0) {
-			data_x.push(age + m / H0engannee);
-			data_y.push(yrunge2);
-	 	}
-		m = m - pas;
-	}
-		
-
-	}*/
 
 	//liste les differents cas pour afficher a l'utilisateur les informations
 	
 	
 	if (age < 0) {   //Big Bang et big Crunch
+		document.getElementById("div_horizon_cosmologique").style.display="none";
 		document.getElementById("resultat_bigcrunch").innerHTML = texte.calculs_univers.tempsdepuisBC + Math.abs(age_afficher) + " Ga = " + Math.abs(age_sec_afficher) + " s";
 		console.log("234  age<0");
 	} else if (yrunge <= 0 || isNaN(yrunge)) {   //  Big Bang et Big Crunch  (évidemment pas de Big rip)
+		document.getElementById("div_horizon_cosmologique").style.display="none";
 		tBC = (i-pas/2) / H0engannee;
 		tBC_sec = Number((i-pas/2) / H0parsec).toExponential(3);
 		tBC_afficher = Number(tBC).toExponential(3);
@@ -242,9 +201,11 @@ function Calc() {
 		document.getElementById("resultat_dureeuniv").innerHTML = (total) + " Ga = " + total_sec + " s";
 	console.log("243  yrunge<=0");	
 	} else if (h0 < 0 && (yrunge2 <= 0 || isNaN(yrunge2))) {
+	document.getElementById("div_horizon_cosmologique").style.display="none";
 		document.getElementById("resultat_bigcrunch").innerHTML = texte.calculs_univers.calculBC;
 	console.log("246  h0<0");	
 	} else if (big_rip_detection(yrunge)) {  // tous les modeles avec Big Rip
+	document.getElementById("div_horizon_cosmologique").style.display="none";
 	console.log("247 bigripdetection");
 		let age_univ_sec;
 		let temps_restant = (1 / H0parsec) * simpson(-.999999999999, 0, cv_Enoire_temps, omegam0, Number(omegaDE0), Number(Or), eps);
@@ -287,8 +248,29 @@ function Calc() {
 		}
 
 	} else {
+		//Remy 2024
+        //nouvelle théorie pour calcul des horizons cosmologiques
+        //pour trouver un z suffisament élevé pour être considéré à l'infini mais pas trop pour que l'integral se fasse sans voir besoin de 1 milliard de points
+        z_infini=0
+        while (Math.pow(fonction_F(z_infini,Number(omegak0),Number(Or),Number(omegam0),Number(omegaDE0)),-0.5)>1e-7){
+            z_infini=z_infini+1;
+        }
+        dm_horizon_particule_mpc=DistanceMetriqueDE(0,z_infini,h0*1e3,Number(omegak0),Number(Or),Number(omegam0),Number(omegaDE0));
+        dm_horizon_particule_m=pc_vers_m(dm_horizon_particule_mpc*1e6);    //passage du megaparsec au metre puis giga annee lumiere
+        dm_horizon_particule_Ga=m_vers_AL(dm_horizon_particule_m)/1e9 
+
+        dm_horizon_evenement_mpc=DistanceMetriqueDE(-.99999,0,h0*1e3,Number(omegak0),Number(Or),Number(omegam0),Number(omegaDE0));
+        dm_horizon_evenement_m=pc_vers_m(dm_horizon_evenement_mpc*1e6);    //passage du megaparsec au metre puis giga annee lumiere
+        dm_horizon_evenement_Ga=m_vers_AL(dm_horizon_evenement_m)/1e9 
+
+		document.getElementById("div_horizon_cosmologique").style.display="block";
+		document.getElementById("resultat_DmHorizonEvenement").innerHTML = dm_horizon_evenement_Ga.toExponential(4);
+        document.getElementById("resultat_ZHorizonEvenement").innerHTML = -1;
+        document.getElementById("resultat_DmHorizonParticule").innerHTML = dm_horizon_particule_Ga.toExponential(4);
+        document.getElementById("resultat_ZHorizonParticule").innerHTML = "∞";
+
 		document.getElementById("resultat_bigcrunch").innerHTML = texte.calculs_univers.pasBC;
-				console.log("290 ");    //   pas Big Rip  pour modeles "Big Bang"  et "sans Big Bang et sans Big Crunch"    
+		//   pas Big Rip  pour modeles "Big Bang"  et "sans Big Bang et sans Big Crunch"    
 	}
 		
 		
@@ -305,6 +287,7 @@ function Calc() {
 			document.getElementById("resultat_ageunivers_ga").innerHTML = "No Big Bang";
 			document.getElementById("resultat_ageunivers_s").innerHTML = "No Big Bang";
 		} 
+		document.getElementById("div_horizon_cosmologique").style.display="none";
 	}
 }
 
@@ -676,7 +659,7 @@ return Or/Math.pow(adetau,2)
  }
  
  
-  function derivee_seconde_speciale(a,omegam0, omegaDE0, Or){
+function derivee_seconde_speciale(a,omegam0, omegaDE0, Or){
 	 w0 = Number(document.getElementById("omega0").value);
 		w1 = Number(document.getElementById("omega1").value);
  

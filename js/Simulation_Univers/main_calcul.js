@@ -498,10 +498,11 @@ function calcul() { // fonction principale de cosmogravity
         data_y.reverse();
         }
 
+        //Remy 2024
         //nouvelle théorie pour calcul des horizons cosmologiques
         //pour trouver un z suffisament élevé pour être considéré à l'infini mais pas trop pour que l'integral se fasse sans voir besoin de 1 milliard de points
         z_infini=0
-        while (Math.pow(E(z_infini,Number(Or),Number(omegam0),Number(omegalambda0)),-0.5)>1e-8){
+        while (Math.pow(E(z_infini,Number(Or),Number(omegam0),Number(omegalambda0)),-0.5)>1e-7){
             z_infini=z_infini+1;
         }
         //formule 21 dans la théorie du 20/05/2024

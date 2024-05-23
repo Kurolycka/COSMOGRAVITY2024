@@ -12,6 +12,16 @@ function E(z,OmegaR0=OmegaR0,OmegaM0=OmegaM0,OmegaLambda0=OmegaLambda0){
     return OmegaR0*pow(1+z,4)+OmegaM0*pow(1+z,3)+(1-OmegaM0-OmegaR0-OmegaLambda0)*pow(1+z,2)+OmegaLambda0;
 };
 
+function Y(x){
+    w0 = Number(document.getElementById("omega0").value);
+	w1 = Number(document.getElementById("omega1").value);
+    return Math.exp(-3*(1+w0+w1)*Math.log(x)-3*w1*(1-x));
+}
+
+function fonction_F(z,OmegaK0=OmegaK0,OmegaR0=OmegaR0,OmegaM0=OmegaM0,OmegaDE0=OmegaDE0){
+    return OmegaK0*pow(1+z,2)+OmegaM0*pow(1+z,3)+OmegaR0*pow(1+z,4)+OmegaDE0*Y(pow(1+z,-1));
+}
+
 /** renvoie la fonction Sk pour calculer les distances cosmologiques en fontion de la courbure de l'espace
  * (Univers,simple,DarkEnergy et monofluide)
  * @param {*} x Paramètre d'entré
@@ -47,7 +57,13 @@ function DistanceMetrique(Zemission,Zreception,H0=H0,OmegaK0=OmegaK0,OmegaR0=Ome
     function fonction_a_integrer(x){
         return pow(E(x,OmegaR0,OmegaM0,OmegaLambda0),-0.5);
     }
-    return c/(H0*pow(Math.abs(OmegaK0),0.5))*Sk(pow(Math.abs(OmegaK0),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,1e7),OmegaK0)
+    return c/(H0*pow(Math.abs(OmegaK0),0.5))*Sk(pow(Math.abs(OmegaK0),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,1e6),OmegaK0)
 };
 
-
+//moyen de la combiner avec celle du dessus en detectant E ou F avec omegalambda et DE 
+function DistanceMetriqueDE(Zemission,Zreception,H0=H0,OmegaK0=OmegaK0,OmegaR0=OmegaR0,OmegaM0=OmegaM0,OmegaDE0=OmegaDE0){
+    function fonction_a_integrer(x){
+        return pow(fonction_F(x,OmegaK0,OmegaR0,OmegaM0,OmegaDE0),-0.5);
+    }
+    return c/(H0*pow(Math.abs(OmegaK0),0.5))*Sk(pow(Math.abs(OmegaK0),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,1e6),OmegaK0)
+};
