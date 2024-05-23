@@ -7,22 +7,13 @@ Ce fichier javascript a pour but de rassembler toutes les fonctions qui sont uti
 // Variables globales, utilisées un peu partout
 const AU = 149597870700; // en mètres
 
-let w0 = Number(document.getElementById("omega0").value) // sans unité
-let w1 = Number(document.getElementById("omega1").value) // sans unité
-
+let T0 = Number(document.getElementById("T0").value)
+let H0 = Number(document.getElementById("H0").value);
 let c = Number(document.getElementById("c_p").value);
 let h = Number(document.getElementById("h_p").value);
-let G = Number(document.getElementById("g_p").value);
+let G = Number(document.getElementById("G_p").value);
 let k = Number(document.getElementById("k_p").value);
-let T0 = document.getElementById("T0").value;
-let H0 = document.getElementById("H0").value;
 
-let Omegam0 = Omega_m(0)
-let Omegar0 = Omega_r(0)
-let Omegak0 = Omega_k(0)
-
-let OmegaDE0 = Omega_DE(0)
-let Omegal0 = Omega_l(0)
 
 /**
  * Fonction permettant de récupérer le nombre de jours par ans en fonction du type d'année sélectionné
@@ -191,6 +182,9 @@ function Omega_k(z) {
  * @return {number} Valeur de la fonction
  */
 function fonction_Y(x) {
+    let w0 = Number(document.getElementById("omega0").value) // sans unité
+    let w1 = Number(document.getElementById("omega1").value) // sans unité
+
     // On calcule les termes 1 à 1 par soucis de clareté
     let terme_1 = -3 * ( 1 + w0 + w1 ) * Math.log(x);
     let terme_2 = -3 * w1 * (1 - x)

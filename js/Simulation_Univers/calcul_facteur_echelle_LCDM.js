@@ -187,6 +187,7 @@ function graphique_facteur_echelle(solution) {
 }
 
 function affichage_site_LCDM() {
+    console.log("param utilisé dans affichage_site_LCDm", equa_diff_1_LCDM, equa_diff_2_LCDM, fonction_E)
     let donnee = calcul_facteur_echelle_LCDM(equa_diff_1_LCDM, equa_diff_2_LCDM, fonction_E)
     graphique_facteur_echelle(donnee)
 }
