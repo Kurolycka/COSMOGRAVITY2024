@@ -1,75 +1,7 @@
-/**
- * Fonction facilitant l'écriture des expression dans le cas du modlèle LCDM. On a fait la substitution u = 1 / (1 + x)
- * afin que les bornes d'intégrations soient finies
- * @param u {number} Paramètre de la fonction
- * @return {number} Valeur de la fonction
+/*
+Ce fichier est le javascript principal de la page constante cosmologique de la partie univers. Elle permet de calculer
+le facteur d'échelle dans le cas du modèle LCDM.
  */
-function fonction_E(u) {
-    let Omegam0 = Number(document.getElementById("omegam0").value);
-    let Omegal0 = Number(document.getElementById("omegalambda0").value);
-    let Omegar0 = Number(document.getElementById("resultat_omegar0").innerHTML);
-
-    // On calcule les terme 1 à 1 par soucis de clareté
-    let terme_1 = Omegar0 * Math.pow(u, -4);
-    let terme_2 = Omegam0 * Math.pow(u, -3);
-    let terme_3 = (1 - Omegam0 - Omegal0 - Omegar0) * Math.pow(u, -2);
-    return terme_1 + terme_2 + terme_3 + Omegal0;
-}
-
-/**
- * Première équation caractéristique du facteur d'échelle. La dérivée première de a à un temps t
- * @param a {number} La valeur de a au temps indiqué
- * @param t {number} La valeur du temps
- * @returns {number} La valeur de la dérivée de a en ce temps
- */
-function equa_diff_1_LCDM(t, a) {
-    // Déclaration des variables globales
-    let c = Number(document.getElementById("c_p").value);
-    let h = Number(document.getElementById("h_p").value);
-    let k = Number(document.getElementById("k_p").value);
-    let T0 = document.getElementById("T0").value;
-    let H0 = document.getElementById("H0").value;
-    let texte = o_recupereJson();
-    let H0parsec = calcul_H0parsec(H0);
-
-    // On récupère les valeurs des omégas
-    let Omegam0 = Number(document.getElementById("omegam0").value);
-    let Omegal0 = Number(document.getElementById("omegalambda0").value);
-    let Omegar0 = Number(calcul_Omegar(h, c, k, T0, H0parsec));
-    let Omegak0 = Number(document.getElementById("resultat_omegak0").innerHTML);
-
-    let a_carre = Math.pow(a, 2);
-
-    let temp = (Omegar0 / a_carre) + (Omegam0 / a) + Omegal0 * a_carre + Omegak0;
-    return Math.sqrt(temp);
-}
-
-/**
- * Deuxième équation caractéristique du facteur d'échelle. La dérivée seconde de a à un temps t
- * @param a {number} La valeur de a au temps indiqué
- * @param ap {number} La valeur de la dérivée de a au temps indiqué
- * @param t {number} La valeur du temps
- * @returns {number} La valeur de la dérivée seconde de a en ce temps
- */
-function equa_diff_2_LCDM(t, a, ap) {
-    // Déclaration des variables globales
-    let c = Number(document.getElementById("c_p").value);
-    let h = Number(document.getElementById("h_p").value);
-    let k = Number(document.getElementById("k_p").value);
-    let T0 = document.getElementById("T0").value;
-    let H0 = document.getElementById("H0").value;
-    let texte = o_recupereJson();
-    let H0parsec = calcul_H0parsec(H0);
-
-    // On récupère les valeurs des omégas
-    let Omegam0 = Number(document.getElementById("omegam0").value);
-    let Omegal0 = Number(document.getElementById("omegalambda0").value);
-    let Omegar0 = calcul_Omegar(h, c, k, T0, H0parsec);
-
-    let a_carre = a * a;
-    let a_cube = a * a * a;
-    return -(Omegar0 / a_cube) - 0.5 * (Omegam0 / a_carre) + Omegal0 * a;
-}
 
 /**
  * Fonction permettant de calculer l'âge de l'univers
@@ -232,7 +164,7 @@ function graphique_facteur_echelle(solution) {
 
     let apparence = {
         title: {
-            text: "Tracé du facteur facteur d'échelle",
+            text: "Tracé du facteur d'échelle",
             font: {
                 family: 'Arial black, sans-serif',
                 size: 16,
