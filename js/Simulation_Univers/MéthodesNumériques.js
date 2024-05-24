@@ -14,11 +14,12 @@
  * @return liste de 3 valeurs : [x_n+1, y_n+1, y'_n+1]
  */
 function RungeKuttaEDO2(pas, xn, yn, ypn, fonctionCarac) {
-
+ 
     let k1 = 0;
     let k2 = 0;
     let k3 = 0;
     let k4 = 0;
+
 
     let yn1 = 0;
     let ypn1 = 0;
@@ -36,6 +37,7 @@ function RungeKuttaEDO2(pas, xn, yn, ypn, fonctionCarac) {
     return [xn1, yn1, ypn1]
 }
 
+
 /**
  * Fonction qui permet de fusionner les solutions qui ont un pas négatif avec les solutions qui ont un pas positif
  * @param solutions_neg {[number[], number[]]} solution avec un pas négatif
@@ -50,6 +52,7 @@ function fusion_solutions(solutions_neg, solutions_pos) {
     return [solutions_neg[0].concat(solutions_pos[0]),
             solutions_neg[1].concat(solutions_pos[1])]
 }
+
 
 /**
  * Méthode d'intégration de simpson qui divise l'intervalle d'intégration en subdivision et interpole un polynôme
@@ -70,6 +73,7 @@ function simpson_composite(fonction, borne_inf, borne_sup, subdivisions=100) {
     }
     return (pas / 6) * integrale;
 }
+
 
 function secante(fonction, x0, x1, precision) {
     let xn = x0;
@@ -94,7 +98,5 @@ function secante(fonction, x0, x1, precision) {
         xn1 = xn2
         iteration = iteration + 1
     }
-
-
     return xn2
 }

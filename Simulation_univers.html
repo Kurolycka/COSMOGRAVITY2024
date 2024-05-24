@@ -31,10 +31,10 @@
 	<script src="./js/Langues/gestion_langues.js"></script>
 	<script src="./js/Simulation_Univers/Calculs_annexes/Calcu.js"></script>
 
-
-
-
-
+	<!-- pour le calcul invers de dm vers z de l'horizon des evenements -->
+	<script src="./js/Simulation_Univers/Calculs_annexes/bisection_root_finder.js"></script> 
+	<script src="./js/Simulation_Univers/Calculs_annexes/Adaptive_Simpson.js"></script> 
+	<script src="./js/Simulation_Univers/MéthodesNumériques.js"></script>
 
 	<!-- Script pour Latex en html -->
 	<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
@@ -215,6 +215,15 @@
 			<span id="txt_dureeeUniv" style="font-weight:bold;text-decoration: underline;"></span>
 			</br>
 			<span id="resultat_dureeuniv">res</span>
+			</br>
+			<span id="txt_distance_decalage_HorizonEvenement"style="font-weight:bold;text-decoration: underline;"></span>
+			</br>
+			<!-- partie Remy -->
+			<span id="DmHorizon_label">dm=</span>
+			<span id="resultat_DmHorizon"></span> Giga Années lumière
+			<br>
+			<span id="ZHorizon_label">z=</span>
+			<span id="resultat_ZHorizon"></span>
 		</center>
 		<table class="tg" style="display:none;">
 			<tr>

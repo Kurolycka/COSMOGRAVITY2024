@@ -479,6 +479,7 @@ function calcul() { // fonction principale de cosmogravity
         adetau3 = amax3; 
         zmax= (1-amax3)/amax3;
         dasurdtau = derivee_premiere(amax3,omegam0, omegalambda0, Or);
+
         agefinal= simpson_simple_degre2(fonction_integrale, Number(zmax), Number(omegam0), Number(omegalambda0), Number(Or))*1e-9;
         if(amin3===0) {
             agedebut=0;
@@ -519,6 +520,36 @@ function calcul() { // fonction principale de cosmogravity
             data_x.reverse();
             data_y.reverse();
         }
+
+        //partie Remy pour ajouter la distance et le decalage vers le z de l'horizon des evenements
+        function dasurdtauRemy(tau,a){  //fonction en double avec les précedentes mais pour verifier que tout marche independamment
+            return Math.sqrt(-Or/Math.pow(a,2)+omegam0/a+omegalambda0*Math.pow(a,2)+Number(omegak0));
+        };
+        function dasurdtausecondeRemy(tau, a, ap){
+            return -Or/Math.pow(a,3)-.5*(omegam0/Math.pow(a,2))+omegalambda0*a;
+        };
+
+        aRemy_neg=RungeKutta_D1_D2(-age/1e5,0,1,1,dasurdtauRemy,dasurdtausecondeRemy,0,5);
+        aRemy_pos=RungeKutta_D1_D2(age/1e5,0,1,1,dasurdtauRemy,dasurdtausecondeRemy,0,5);
+        aRemy=fusion_solutions(aRemy_neg,aRemy_pos);
+
+        valeur_temps_dmHorizon=aRemy[0].map(tau=>tau/H0engannee+age);
+        valeur_integrale_dmHorizon=aRemy[1].map(a => 1e9/a);  //vitesse lumiere par 1 Ga = 1e9 AL/Ga
+        
+        dm_horizon_particule_Ga=integraleTrapezes(valeur_temps_dmHorizon,valeur_integrale_dmHorizon,0,age)/1e9;
+        dm_horizon_particule_m=dm_horizon_particule_Ga*1e9*nbJoursParAn()*86400*c; 
+
+        dm_horizon_evenement_m=c/H0*3.086e22/1e3;
+        dm_horizon_evenement_Ga=c/H0*3.262e-3/1e3;
+
+        eps=1e-6;
+
+        z_negatif_inverse=false;
+        z_horizon = Number(bisection_method_dm(dm_horizon_evenement_m, omegam0, omegalambda0, Or, eps)); 
+
+        //modifier la fonction get_root_dm dans bisection_root_finder.js
+
+
     }
      // Fin du modele 3
 
@@ -529,17 +560,23 @@ function calcul() { // fonction principale de cosmogravity
     if(modele===0 || modele===1 ) {
         if (sessionStorage.getItem("LANGUE") === "fr") {
             document.getElementById("resultat_ageunivers_ga").innerHTML = "Pas de Big Bang";
+            document.getElementById("resultat_DmHorizon").innerHTML = "? (Pas de Big Bang)"
+            document.getElementById("resultat_ZHorizon").innerHTML = "? (Pas de Big Bang)"
             document.getElementById("resultat_ageunivers_s").innerHTML = "Pas de Big Bang";
             document.getElementById("resultat_bigcrunch").innerHTML = "Pas de Big Crunch";
             document.getElementById("resultat_dureeuniv").innerHTML = "&#8734;";
         } else {
             document.getElementById("resultat_ageunivers_ga").innerHTML = "No Big Bang";
             document.getElementById("resultat_ageunivers_s").innerHTML = "No Big Bang";
+            document.getElementById("resultat_DmHorizon").innerHTML = "? (No Big Bang)"
+            document.getElementById("resultat_ZHorizon").innerHTML = "? (No Big Bang)"
             document.getElementById("resultat_bigcrunch").innerHTML = "No Big Crunch";
             document.getElementById("resultat_dureeuniv").innerHTML = "&#8734;";
         } 
     }
+  
     if(modele===2) {
+
          //if(H0<0) {age_afficher=-tBC;}
         document.getElementById("resultat_ageunivers_ga").innerHTML = "" + age_afficher;
         document.getElementById("resultat_ageunivers_s").innerHTML = "" + age_sec_afficher;
@@ -564,6 +601,8 @@ function calcul() { // fonction principale de cosmogravity
         } 
         document.getElementById("resultat_ageunivers_ga").innerHTML = "" + age.toExponential(4);
         document.getElementById("resultat_ageunivers_s").innerHTML = "" + age_sec.toExponential(4);
+        document.getElementById("resultat_DmHorizon").innerHTML = dm_horizon_evenement_Ga.toExponential(4);
+        document.getElementById("resultat_ZHorizon").innerHTML = z_horizon.toExponential(4);
     }
 
     if(modele===4) {
@@ -982,14 +1021,13 @@ function enregistrer() {
 }
 
 
-
 function derivee_premiere(a,omegam0, omegalambda0, Or){
     return Math.pow(Or/Math.pow(a,2) + omegam0/a + omegalambda0*Math.pow(a,2) +1-omegalambda0-Or-omegam0 ,0.5);
 }
 
 
 function derivee_seconde_univers(adetau) {
-return     -Or / (Math.pow(adetau, 3)) - (0.5) * omegam0 / (Math.pow(adetau, 2)) + adetau * omegalambda0;
+    return     -Or / (Math.pow(adetau, 3)) - (0.5) * omegam0 / (Math.pow(adetau, 2)) + adetau * omegalambda0;
 }
 
 function rungekutta_univers(pas, adetau, dasurdtau) {

@@ -19,6 +19,8 @@ var z=0;
 var z_obs=0;
 var input=0;
 var compteurVitesseAvantLancement = 0;
+var distance_parcourue_totale=0; //Manon
+
 
 
 //puisqu'il faux initaliser data1 et data2 avant l'appel dans graphique_creation_pot
@@ -191,7 +193,14 @@ function trajectoire() {
 
 		element2=document.getElementById('traject_type2');
 		if(element2.value == "mobile") { 	
-			document.getElementById("joyDiv").style.visibility='visible'; }
+			document.getElementById("joyDiv").style.visibility='visible';
+			document.getElementById("nb_g").style.visibility='visible'; //Manon
+			document.getElementById("g_ressenti").style.visibility='visible'; //Manon
+		}else{
+			document.getElementById("g_ressenti").style.display='none'; //Manon
+			document.getElementById("nb_g").style.display='none'; //Manon
+
+		}
 
 		//empecher de passer d'observateur a mobile ou inversement pendant la simulation
 		document.getElementById('r3').disabled = true;
@@ -228,7 +237,6 @@ function trajectoire() {
 		temps_observateur = 0;
 		bool = true;
 		deltam_sur_m = 0;
-
 	
 
 		// permet de gérer les touches du clavier pour certaines actions
@@ -319,6 +327,13 @@ function trajectoire() {
 		
 		
 		if(joy.GetPhi()<0){
+
+			if (isNaN(vtot)){ //Manon
+				joy.GetPhi()=0; //Manon
+			}else{ //Manon
+
+			vitesse_précédente_nombre_g = vtot; //Manon
+
 			//while (deltam_sur_m < 0.5) { 					// tant que la réserve d'énergie est inférieur à 50%, on peut piloter
 				Delta_L=joy.GetPhi()*Math.log10(10+Math.abs(L))*Math.log10(10+Math.abs(vtot))*Math.log10(10+r_part)/Math.log10(Math.sqrt(1-(vtot/c)^2))*1e-3;
 				L=L+Delta_L ;
@@ -343,8 +358,17 @@ function trajectoire() {
 				
 				document.getElementById("E").innerHTML = E.toExponential(3);
 				document.getElementById("L").innerHTML = L.toExponential(3);
-				document.getElementById("decal").innerHTML = deltam_sur_m.toExponential(3);
+				document.getElementById("decal").innerHTML = deltam_sur_m.toExponential(3);}
+
 		}else if(joy.GetPhi()>0){
+
+			if (isNaN(vtot)){ //Manon
+				joy.GetPhi()=0; //Manon
+			}else{ //Manon
+
+
+				vitesse_précédente_nombre_g = vtot //Manon
+
 				Delta_L=joy.GetPhi()*Math.log10(10+Math.abs(L))*Math.log10(10+Math.abs(vtot))*Math.log10(10+r_part)/Math.log10(Math.sqrt(1-(vtot/c)^2))*1e-3;
 				L=L+Delta_L ;
 				Delta_E=(1-rs/r_part)*L*Delta_L/E/Math.pow(r_part,2) ;
@@ -374,7 +398,7 @@ function trajectoire() {
 			//}
 		}
 														
-		}, 50)	
+		}}, 50)	
 
 					}
 	
@@ -645,12 +669,14 @@ function animate() {
 				vtot=NaN;
 				vr_3_obs=NaN;
 				vp_3_obs=NaN;
+				distance_parcourue_totale=NaN;//Manon
 			}
 			else{
-				resulta=calculs.MK_vitess(E,L,a,r_part_obs,rs,A_part_obs,false); /// voir fichier fonctions.js
+				resulta=calculs.MK_vitess(E,L,a,r_part_obs,rs,false); /// voir fichier fonctions.js //Manon
 				vtot=resulta[0];
 				vr_3_obs=resulta[1]*Math.sign(A_part_obs);
 				vp_3_obs= resulta[2]; 
+				distance_parcourue_totale+=vtot*dtau; //Manon 
 			}
 			posX2 = scale_factor * r_part_obs * (Math.cos(phi_obs) / rmax) + (canvas.width / 2.);
 			posY2 = scale_factor * r_part_obs * (Math.sin(phi_obs) / rmax) + (canvas.height / 2.);
@@ -667,13 +693,20 @@ function animate() {
 				vtot=NaN;
 				vr_3_obs=NaN;
 				vp_3_obs=NaN;
+				distance_parcourue_totale=NaN; //Manon
 			}
 			else{
-				resulta=calculs.MK_vitess(E,L,a,r_part,rs,A_part,false); /// voir fichier fonctions.js
+				resulta=calculs.MK_vitess(E,L,a,r_part,rs,false); /// voir fichier fonctions.js //Manon
 				vtot=resulta[0];
 				//console.log(vtot)
 				vr_3=resulta[1]*Math.sign(A_part);
 				vp_3=resulta[2];
+
+				if(joy.GetPhi()!=0){ //Manon
+					nombre_de_g_calcul = (Math.abs(vtot-vitesse_précédente_nombre_g)/(dtau))/9.80665 //Manon
+				}
+
+				distance_parcourue_totale+=vtot*dtau; //Manon
 			}
 			posX1 = scale_factor * r_part * (Math.cos(phi) / rmax) + (canvas.width / 2.);
 			posY1 = scale_factor * r_part * (Math.sin(phi) / rmax) + (canvas.height / 2.);
@@ -723,7 +756,9 @@ function animate() {
 		majFondFixe22();
 		context22.beginPath();
 		context22.fillStyle = COULEUR_BLEU;
-		context22.arc(posX1, posY1 , 5, 0, Math.PI * 2);
+		if (r_part==0){context22.arc((canvas.width / 2.), (canvas.height / 2.) , 5, 0, Math.PI * 2);} //Manon
+		else{ //Manon
+		context22.arc(posX1, posY1 , 5, 0, Math.PI * 2);}//Manon
 		context22.lineWidth = "1";
 		context22.fill();
     }
@@ -774,11 +809,12 @@ function animate() {
 
 	if (element2.value != "mobile"){  // observateur
 	
-
-	if(r_part_obs >= rhp*1.00001)   {
-			temps_observateur += dtau;
+		temps_observateur += dtau;
 		document.getElementById("to").innerHTML = temps_observateur.toExponential(3);
-																																	
+		//ces deux lignes ont ete simplment sortie par Khaled de la condition 
+		//car le temps de l'observateur change dans tout les cas !
+	if(r_part_obs >= rhp*1.00001)   {
+																																
 			temps_particule += dtau*delta(r_part_obs)/( (Math.pow(r_part_obs,2)+Math.pow(a,2)+rs*Math.pow(a,2)/r_part_obs)*E - rs*a*L/r_part_obs );
 			document.getElementById("tp").innerHTML = temps_particule.toExponential(3);					 
 			document.getElementById("ga").innerHTML = fm.toExponential(3);
@@ -786,20 +822,22 @@ function animate() {
 			document.getElementById("vrk").innerHTML = vr_3_obs.toExponential(3);
 		    document.getElementById("vpk").innerHTML = vp_3_obs.toExponential(3);
 		    document.getElementById("v_tot").innerHTML = vtot.toExponential(3);
-
-				if(isNaN(vtot)){
-				document.getElementById("v_tot").innerHTML = "";
-				document.getElementById("vrk").innerHTML = "";
-		    	document.getElementById("vpk").innerHTML = "";
-				}
-				
-
-
+			document.getElementById("distance_parcourue").innerHTML = distance_parcourue_totale.toExponential(3); //Manon
 	
         }
 
+		if(isNaN(vtot)){ //Manon
+			var textou = o_recupereJson();
+			document.getElementById("v_tot").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie;
+			document.getElementById("vrk").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie;
+			document.getElementById("vpk").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie;
+			document.getElementById("distance_parcourue").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie; //Manon
+			}
+
 	}	
 	else{   // spationaute
+
+
 				
 		if (r_part>rs*1.00001){
 
@@ -814,7 +852,15 @@ function animate() {
 			if(r_part<=rhp && J!=0) {vp_3=1/0;}
 		    document.getElementById("v_tot").innerHTML = vtot.toExponential(3);
 			document.getElementById("vpk").innerHTML = vp_3.toExponential(3);
+			document.getElementById("distance_parcourue").innerHTML = distance_parcourue_totale.toExponential(3); //Manon
 
+			setInterval(function(){ //Manon
+				if(joy.GetPhi()!=0){ 
+					document.getElementById("g_ressenti").innerHTML = nombre_de_g_calcul.toExponential(3);}
+					else{
+					document.getElementById("g_ressenti").innerHTML = "N/A";
+					}
+				}, dtau); 
 			
 			
 		}else if (r_part>=rhp){ 
@@ -828,9 +874,10 @@ function animate() {
 				document.getElementById("r_par").innerHTML = r_part.toExponential(3);  
 				temps_observateur+=dtau*( (Math.pow(r_part,2)+Math.pow(a,2)+rs*Math.pow(a,2)/r_part)*E - rs*a*L/r_part )/delta(r_part);
 				document.getElementById("to").innerHTML = temps_observateur.toExponential(3);
+				document.getElementById("distance_parcourue").innerHTML = " "; //Manon
+
 				
 		}else{ 
-		
 		
 			if(r_part<=0){r_part=0;
 			document.getElementById("ga").innerHTML = 1/0;
@@ -842,6 +889,16 @@ function animate() {
 			document.getElementById("to").innerHTML = 1/0; 
 			peuxonrelancer=true;
 			}	
+
+			if(isNaN(vtot)){ //Manon
+				var textou = o_recupereJson();
+				document.getElementById("v_tot").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie;
+				document.getElementById("vrk").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie;
+		    	document.getElementById("vpk").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie;
+				document.getElementById("distance_parcourue").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie; //Manon
+				document.getElementById("joyDiv").style.display = 'none';
+
+				}
 			
 	}
     
@@ -1086,22 +1143,44 @@ function enregistrer(){
 				context3.arc(posX2, posY2, 5, 0, Math.PI * 2);
 				context3.lineWidth = "1";
 				context3.fill();
+
+				//Dessiner le logo en bas :
+				var logo = new Image() //ManonLogo
+				logo.src='Images/CosmoGravity_logo.png'; //ManonLogo
+				logo.onload = function() {
+				var largeurLogo = 100; //ManonLogo
+				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //ManonLogo
+				var x = canvas3.width - largeurLogo; // Position en x pour le coin inférieur droit
+				var y = canvas3.height - hauteurLogo; // Position en y pour le coin inférieur droit
+				context3.drawImage(logo,x,y, largeurLogo, hauteurLogo); //ManonLogo
+
 				canvasToImage(canvas3, {
 					name: nomFichier.trim(),
 					type: 'png'
 				});
-				majFondFixe3();
+				majFondFixe3();};
 			} else {
 				context3.beginPath();
 				context3.fillStyle = COULEUR_BLEU;
 				context3.arc(posX1, posY1, 5, 0, Math.PI * 2);
 				context3.lineWidth = "1";
 				context3.fill();
+
+				//Dessiner le logo en bas :
+				var logo = new Image() //ManonLogo
+				logo.src='Images/CosmoGravity_logo.png'; //ManonLogo
+				logo.onload = function() {
+				var largeurLogo = 100; //ManonLogo
+				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //ManonLogo
+				var x = canvas3.width - largeurLogo; // Position en x pour le coin inférieur droit
+				var y = canvas3.height - hauteurLogo; // Position en y pour le coin inférieur droit
+				context3.drawImage(logo,x,y, largeurLogo, hauteurLogo); //ManonLogo
+
 				canvasToImage(canvas3, {
 					name: nomFichier.trim(),
 					type: 'png'
 				});
-				majFondFixe3();
+				majFondFixe3();};
 			}
 
 		} else {
@@ -1380,3 +1459,4 @@ function foncPourVitAvantLancement(accelerer){
 	}
 	document.getElementById('nsimtxt').innerHTML= "ns="+ compteurVitesseAvantLancement.toString();
 }
+

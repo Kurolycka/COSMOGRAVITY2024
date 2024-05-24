@@ -14,6 +14,7 @@ function inverse(){
 	omegalambda0 = Number(document.getElementById("omegalambda0_annexes").value);
 	omegak0=(1-omegam0-omegalambda0-Or);
 	H0parsec = h0*1000/((au*(180*3600))/Math.PI*Math.pow(10, 6));
+	z_negatif_inverse = document.getElementById("z_negatif_check").checked;
 
 //definition du type d'annee
 	if(typeannee == "Sidérale"){
@@ -29,9 +30,8 @@ function inverse(){
 
 	//calcul de h0 par secondes et par gigaannees
 	H0parsec = h0*1000/((au*(180*3600))/Math.PI*Math.pow(10, 6));
-	H0parsec = H0parsec; // ?????
 	H0enannee = H0parsec*(3600*24*nbrjours);
-	H0engannee = H0enannee*Math.pow(10, 9);  console.log ("34 H0enannee",1/H0enannee);
+	H0engannee = H0enannee*Math.pow(10, 9);
 
 
 	Or = 0;
@@ -51,7 +51,7 @@ function inverse(){
 	}
 
 
-	  eps = 1e-6;    //tolÃ©rence d'erreur pour les intÃ©grales
+	  eps = 1e-6;    //tolérence d'erreur pour les intégrales
 
 	get_root_dm();
 	get_root_t();
@@ -69,15 +69,15 @@ function inverseMono(){
 	get_root_t();
 }
 
-//#######################################     GET_ROOT_DM fonction suprÃªme qui ordonne le calcul de "dm". rÃ©cupÃ¨re les paramÃ¨tres de la page HTML Calculs
+//#######################################     GET_ROOT_DM fonction suprême qui ordonne le calcul de "dm". récupère les paramètres de la page HTML Calculs
 
 
 function get_root_dm(){
-	var texte = o_recupereJson();
+	var texte = o_recupereJson();  //intégralité des textes du projet
 	// on cherche la plus grande valeur de dm  en supposant z=1e10
-	z_max=1e10
+	z_max=1e10;
 	eps=1e-6;
-	if (omegak0>0){ 
+	if (omegak0>0){ //valeur de dm en fonction de z dans la théorie
 		integ_1 = Math.sqrt( Math.abs(omegak0)) * simpson(0,z_max, fonction_dm, omegam0, Number(omegalambda0), Number(Or),eps);
 		dm_max=(c/(H0parsec*Math.sqrt( Math.abs(omegak0) ))) * Math.sin(integ_1);
 		}
@@ -88,13 +88,13 @@ function get_root_dm(){
 		integ_1 = Math.sqrt( Math.abs(omegak0)) * simpson(0, z_max, fonction_dm, omegam0, Number(omegalambda0), Number(Or),eps);
 		dm_max=(c/(H0parsec*Math.sqrt( Math.abs(omegak0) ))) * Math.sinh(integ_1);
 	}
-	//rÃ©cupÃ¨re les constants nÃ©cessaires pour les calculs
+	//récupère les constants nécessaires pour les calculs
 	dm = document.getElementById("dm_racine_dm").value;
 	
 	if(dm>=dm_max){
 		messagebox(texte.page_univers_calculs.erreur,texte.page_univers_calculs.dm_trop_grand + "\u0020(" + dm_max.toExponential(4) + "  m)");
 		z=NaN;
-		}else{
+	}else{
 		z = bisection_method_dm(dm, omegam0, omegalambda0, Or, eps);  
 	}
 	document.getElementById("z_racine_dm").innerHTML= z;
@@ -104,9 +104,9 @@ function get_root_dm(){
 
 
 /*                                                      ---------------------  CALCULS INVERSES POUR LE TEMPS  ------------------------------------            */
-//#######################################     GET_ROOT_T fonction suprÃªme qui ordonne le calcul inverse. rÃ©cupÃ¨re les paramÃ¨tres de la page HTML Calculs
+//#######################################     GET_ROOT_T fonction suprême qui ordonne le calcul inverse. récupère les paramètres de la page HTML Calculs
 function get_root_t(){// omega est omegalambda0 en cas de constante cosmo et omegeDE0 cas d'energie sombre de meme fonctiom_integral ==> fonctiom_integral_EN
-		var texte = o_recupereJson();
+	var texte = o_recupereJson();
 	eps=1e-6;
 	t_max=simpson_simple_degre2(fonction_integrale, 0, omegam0, Number(omegalambda0), Number(Or));
 	
@@ -136,26 +136,29 @@ function get_root_t(){// omega est omegalambda0 en cas de constante cosmo et ome
 }
 
 
-//#######################################     BISECTION_METHOD_DM prÃ©pare les variables et mÃ¨ne des vÃ©rifications nÃ©cessaires avant de lancer l'algorithme de dicothomie
+//#######################################     BISECTION_METHOD_DM prépare les variables et mène des vérifications nécessaires avant de lancer l'algorithme de dicothomie
 
 function bisection_method_dm (dm, omegam0, omegalambda0, Or, eps){
 	f_x = formule_z(omegak0);
-	za = 0;
-	zb = 10;
-	ex = 0.00001; //indicateur de tolÃ©rence d'erreur de l'interpolation/dichotomie
 
-	dm_za = f_x(za, omegam0, omegalambda0, Or, eps);
-	dm_zb = f_x(zb, omegam0, omegalambda0, Or, eps);
-	//vÃ©rification des valeurs permisent
-	//cette variable possÃ¨de 2 valeurs [nouveau_zb, contrainte] contrainte =0 ou 1. 0 pour absence de contrainte
+	za = 0;
 	reconditionneur = espacedefinie(omegam0, omegalambda0, Or);
-	zb = Number(reconditionneur[0])-0.0001;
+	if (z_negatif_inverse){
+		zb=-.999999999;
+	}else{
+		zb = Number(reconditionneur[0])-0.0001;
+	}
+
+	ex = 0.00001; //indicateur de tolérence d'erreur de l'interpolation/dichotomie
+
+	//vérification des valeurs permisent
+	//cette variable possède 2 valeurs [nouveau_zb, contrainte] contrainte =0 ou 1. 0 pour absence de contrainte
+
 	contrainte = Number(reconditionneur[1]);
 	dm_za = f_x(za, omegam0, omegalambda0, Or, eps);
 	dm_zb = f_x(zb, omegam0, omegalambda0, Or, eps);
-
 	if (Number(dm)===0){
-	  return 0;
+	  	return 0;
 	}
 
 	if (omegak0 <=0){
@@ -164,30 +167,36 @@ function bisection_method_dm (dm, omegam0, omegalambda0, Or, eps){
 			while (dm > dm_zb && limit<100){
 				zb = zb*10;
 				dm_zb = f_x(zb, omegam0, omegalambda0, Or, eps);
+				console.log(dm_zb);
 				limit+=1;
 			}
 			if (limit>=100){
 				return NaN;
 			}
 		}
-		//la fonction "fonction_dm" est monotone pour omegak <=0. Si dm est supÃ©rieur Ã  dm_zb et que zb est fixÃ© Ã  une valeur maximal permise alors aucune solution ne peut Ãªtre trouvÃ©
+		//la fonction "fonction_dm" est monotone pour omegak <=0. Si dm est supérieur à  dm_zb et que zb est fixé à  une valeur maximal permise alors aucune solution ne peut être trouvé
 		if (dm>dm_zb){
 			return NaN;
 		}
-		Z = dichotomie(za, zb, f_x, dm, ex);
+		if (z_negatif_inverse){
+			Z = dichotomie(zb, za, f_x, dm, ex);
+		}else{
+			Z = dichotomie(za, zb, f_x, dm, ex);
+		}
+		
 		return Z;
 	}
 	//la condition de else est omegak0 >0
 	else{
-		//amplitude A de la fonction composÃ©e de sin(integral)       Sk_sin_x
+		//amplitude A de la fonction composée de sin(integral)       Sk_sin_x
 		A = (c/(H0parsec*Math.sqrt( Math.abs(omegak0) )))
 		if (dm > A){
 			return NaN;
 		}
 		integB = Math.sqrt( Math.abs(omegak0)) * simpson(0, zb, fonction_dm, omegam0, Number(omegalambda0), Number(Or), eps);
-		//dans cette situation, sin(integrale) est montone sur l'intervalle [za; zb]
+		//dans cette situation, sin(integrale) est monotone sur l'intervalle [za; zb]
 		if (integB<Math.PI/2){
-			//on vÃ©rifie que dm n'est pas supÃ©rieur Ã  dm_zb car dm_zb< A   ici l'integral du dm_zb est dans [0;PI/2]
+			//on vérifie que dm n'est pas supérieur à  dm_zb car dm_zb< A   ici l'integral du dm_zb est dans [0;PI/2]
 			if (dm > dm_zb){
 				return NaN;
 			}
@@ -214,8 +223,8 @@ function bisection_method_dm (dm, omegam0, omegalambda0, Or, eps){
 }
 
 
-//########### ESPACE_DEFINIE fonction qui intervient pour vÃ©rifier si les paramÃ¨tres omegas posent des contraintes Ã  leur fonction associÃ©.
-//                    si cette fonction signale la prÃ©sence de rÃ©gions de valeurs interdites pour les intÃ©grales, elle dÃ©sactive l'application de
+//########### ESPACE_DEFINIE fonction qui intervient pour vérifier si les paramètres omegas posent des contraintes à  leur fonction associé.
+//                    si cette fonction signale la présence de régions de valeurs interdites pour les intégrales, elle désactive l'application de
 
 function espacedefinie(omegam0, omegalambda0, Or){
 
@@ -263,29 +272,29 @@ function espacedefinie(omegam0, omegalambda0, Or){
 	//ON CHERCHE LES RACINES DU POLYNÔME D'ORDRE 3  EN SUPPOSANT Or=0
 	
 	else{
-		//z_prime est la racine de la dÃ©rivÃ© de E(x)  (E'(x)) sur [0, infini). c'est donce l'extremum (minimum) de E(x) sur [0, infini)
+		//z_prime est la racine de la dérivé de E(x)  (E'(x)) sur [0, infini). c'est donce l'extremum (minimum) de E(x) sur [0, infini)
 
-		//on vÃ©rifie Ã  l'avance si E'(x) coupe l'axe des abscisses sur [0;infini)
+		//on vérifie à  l'avance si E'(x) coupe l'axe des abscisses sur [0;infini)
 		D_prime_za = derive_fonction_E(za,omegam0, omegalambda0, Or);
 
 		D_prime_zb = derive_fonction_E(zb,omegam0, omegalambda0, Or);
 
 		if (D_prime_za*D_prime_zb<0){
 			z_prime = Number(dichotomie(0, zb,derive_fonction_E,0,ex));
-			//si on a E(z_prime)>0 alors E(x) n'a pas de racines et donc aucune contrainte se manifÃ¨ste pour les intÃ©grales. On conserve zb
+			//si on a E(z_prime)>0 alors E(x) n'a pas de racines et donc aucune contrainte se manifèste pour les intégrales. On conserve zb
 			if (fonction_E(z_prime,omegam0, omegalambda0, Or)>0){
 
-				res = [zb,0];    //0 va Ãªtre un indicateur qu'on utilisera plus tard qui confirme l'absence des contraintes possibles.
+				res = [zb,0];    //0 va être un indicateur qu'on utilisera plus tard qui confirme l'absence des contraintes possibles.
 				return res;
 			}
 
-			//si on a E(z_prime)=0 alors E(x) possÃ¨de une racine. Une contrainte se manifÃ¨ste, zb->z_prime les intÃ©grales sont dÃ©finit sur [0, z_prime)
+			//si on a E(z_prime)=0 alors E(x) possède une racine. Une contrainte se manifèste, zb->z_prime les intégrales sont définit sur [0, z_prime)
 			else if(fonction_E(z_prime,omegam0, omegalambda0, Or)==0){
-				res = [z_prime, 1]; //1 va confirmer la prÃ©sence de contraintes
+				res = [z_prime, 1]; //1 va confirmer la présence de contraintes
 				return res;
 			}
 
-			////si on a E(z_prime)<0 alors E(x) possÃ¨de 2 racines. On prend la premiÃ¨re z_pr. intÃ©grales sont dÃ©finit sur [0, z_pr)
+			////si on a E(z_prime)<0 alors E(x) possède 2 racines. On prend la première z_pr. intégrales sont définit sur [0, z_pr)
 			else{
 				z_pr = Number(dichotomie(0, z_prime,fonction_E,0,ex));
 				res = [z_pr,1];
@@ -313,21 +322,22 @@ function espacedefinie(omegam0, omegalambda0, Or){
 
 
 
-//########### DICHOTOMIE     outil mathÃ©matique fondamental:   DICHOTOMIE  POUR "T"
+//########### DICHOTOMIE     outil mathématique fondamental:   DICHOTOMIE  POUR "T"
 
 function dichotomie(BornInf, BornSup, fonction, cible, ex){
     z_inf = BornInf;
     z_sup = BornSup;
-	eps=ex;
-    dm_z_inf = fonction(z_inf, omegam0, omegalambda0, Or, eps);
-    dm_z_sup = fonction(z_sup, omegam0, omegalambda0, Or, eps);
+    dm_z_inf = fonction(z_inf, omegam0, omegalambda0, Or, ex);
+    dm_z_sup = fonction(z_sup, omegam0, omegalambda0, Or, ex);
+	console.log(dm_z_inf);
+	console.log(dm_z_sup);
 
     max_iterations = 500;
     j = 0;
     while (j<500){
             zc = (z_inf+z_sup)/2.0;
 
-            dm_zc = fonction(zc, omegam0, omegalambda0, Or, eps);
+            dm_zc = fonction(zc, omegam0, omegalambda0, Or, ex);
             //alert("za : " + za + " dm_za: " + dm_za + " zb: " + zb + " dm_zb: " + dm_zb + " zc: " + zc+ " ex: " + ex);
             if (((z_sup-z_inf)/2)<ex){
                 if (Math.abs(zc/ex) < 100){
@@ -358,7 +368,7 @@ function dichotomie(BornInf, BornSup, fonction, cible, ex){
 
 
 
-//fonction dÃ©finit du produit de  l'intÃ©gral de la fonction "fonction_dm" avec abs(omegak0)^0.5   Ceci sert Ã  trouver le z correspondant a pi/2 ou pi pour cette fonction
+//fonction définit du produit de  l'intégral de la fonction "fonction_dm" avec abs(omegak0)^0.5   Ceci sert à  trouver le z correspondant a pi/2 ou pi pour cette fonction
 
 function Integral_dm(bornSup, omegam0, omegalambda0, Or, eps){
 	omegak0=(1-omegam0-omegalambda0-Or);
@@ -366,7 +376,7 @@ function Integral_dm(bornSup, omegam0, omegalambda0, Or, eps){
 }
 
 
-//formules pour dm basÃ© sur omegak0
+//formules pour dm basé sur omegak0
 function Sk_sin_x(bornSup, omegam0, omegalambda0, Or, eps){
 
     integ = Math.sqrt( Math.abs(omegak0)) * simpson(0, bornSup, fonction_dm, omegam0, Number(omegalambda0), Number(Or), eps);
@@ -409,7 +419,7 @@ function formule_z(omegak0){
 
 
 
-//########### DICHOTOMIE     outil mathÃ©matique fondamental:   DICHOTOMIE  POUR "T"   zc varie et le choix de la fonction_integrale dÃ©pend de la valeur z
+//########### DICHOTOMIE     outil mathématique fondamental:   DICHOTOMIE  POUR "T"   zc varie et le choix de la fonction_integrale dépend de la valeur z
 
 function dichotomie_L(BornInf, BornSup, cible, ex){
 	z_inf = BornInf;
@@ -465,7 +475,7 @@ function dichotomie_L(BornInf, BornSup, cible, ex){
 
 
 
-//#######################################     BISECTION_METHOD_T prÃ©pare les variables et mÃ¨ne des vÃ©rifications nÃ©cessaires avant de lancer l'algorithme de dicothomie
+//#######################################     BISECTION_METHOD_T prépare les variables et mène des vérifications nécessaires avant de lancer l'algorithme de dicothomie
 
 
 
@@ -474,7 +484,7 @@ function bisection_method_t (t, omegam0, omegalambda0, Or, eps){
 	omegak0=(1-omegam0-omegalambda0-Or);
 	var za = 0;
 	var zb = 1e6; //valeur par default
-	ext = 0.00001;//indicateur de tolÃ©rence d'erreur dichotomie temporelle
+	ext = 0.00001;//indicateur de tolérence d'erreur dichotomie temporelle
 	Eps = 1e-6;
 
 	initial_a = Number(zb);
@@ -546,8 +556,8 @@ function bisection_method_t (t, omegam0, omegalambda0, Or, eps){
 
 
 
-//########### ESPACE_DEFINIE fonction qui intervient pour vÃ©rifier si les paramÃ¨tres omegas posent des contraintes Ã  leur fonction associÃ©.
-//                    si cette fonction signale la prÃ©sence de rÃ©gions de valeurs interdites pour les intÃ©grales, elle dÃ©sactive l'application de
+//########### ESPACE_DEFINIE fonction qui intervient pour vérifier si les paramètres omegas posent des contraintes à  leur fonction associé.
+//                    si cette fonction signale la présence de régions de valeurs interdites pour les intégrales, elle désactive l'application de
 
 function espace_definie(omegam0, omegalambda0, Or){
 
@@ -594,22 +604,22 @@ function espace_definie(omegam0, omegalambda0, Or){
 		D_prime_za = derive_fonction_E(za,omegam0, omegalambda0, Or);
 		D_prime_zb = derive_fonction_E(zb,omegam0, omegalambda0, Or);
 		if (D_prime_za*D_prime_zb<0){
-			//z_prime est la racine de la dÃ©rivÃ© de E(x)  (E'(x)) sur [0, infini). c'est donce l'extremum (minimum) de E(x) sur [0, infini)
+			//z_prime est la racine de la dérivé de E(x)  (E'(x)) sur [0, infini). c'est donce l'extremum (minimum) de E(x) sur [0, infini)
 			z_prime = Number(dichotomie(0, zb,derive_fonction_E,0,ex))-0.001;
 
-			//si on a E(z_prime)>0 alors E(x) n'a pas de racines et donc aucune contrainte se manifÃ¨ste pour les intÃ©grales. On conserve zb
+			//si on a E(z_prime)>0 alors E(x) n'a pas de racines et donc aucune contrainte se manifèste pour les intégrales. On conserve zb
 			if (fonction_E(z_prime,omegam0, omegalambda0, Or)>0){
-				res = [za,0];    //0 va Ãªtre un indicateur qu'on utilisera plus tard qui confirme l'absence des contraintes possibles.
+				res = [za,0];    //0 va être un indicateur qu'on utilisera plus tard qui confirme l'absence des contraintes possibles.
 				return res;
 			}
 
-			//si on a E(z_prime)=0 alors E(x) possÃ¨de une racine. Une contrainte se manifÃ¨ste, zb->z_prime les intÃ©grales sont dÃ©finit sur [0, z_prime)
+			//si on a E(z_prime)=0 alors E(x) possède une racine. Une contrainte se manifèste, zb->z_prime les intégrales sont définit sur [0, z_prime)
 			else if(fonction_E(z_prime,omegam0, omegalambda0, Or)==0){
-				res = [z_prime, 1]; //1 va confirmer la prÃ©sence de contraintes
+				res = [z_prime, 1]; //1 va confirmer la présence de contraintes
 				return res;
 			}
 
-			////si on a E(z_prime)<0 alors E(x) possÃ¨de 2 racines. On prend la premiÃ¨re z_pr. intÃ©grales sont dÃ©finit sur [0, z_pr)
+			////si on a E(z_prime)<0 alors E(x) possède 2 racines. On prend la première z_pr. intégrales sont définit sur [0, z_pr)
 			else{
 				z_pr = Number(dichotomie(z_prime, zb,fonction_E,0,ex))-0.001;
 				res = [z_pr,1];
@@ -679,9 +689,9 @@ function cubic_root_searcher(){
 	var Ub = 5e10;
 	ex = 0.0000001;
 	eps=1e-6;
-	//z_prime est la racine de la dÃ©rivÃ© de F(U)  (F'(U)) sur [0, infini). c'est donce l'extremum (minimum) de F(x) sur [0, infini)
+	//z_prime est la racine de la dérivé de F(U)  (F'(U)) sur [0, infini). c'est donce l'extremum (minimum) de F(x) sur [0, infini)
 
-	//on vÃ©rifie Ã  l'avance si F'(U) coupe l'axe des abscisses sur [0;infini)
+	//on vérifie à  l'avance si F'(U) coupe l'axe des abscisses sur [0;infini)
 	Dev_Ua = derive_fonction_u(Ua);
 	Dev_Ub = derive_fonction_u(Ub);
 
@@ -702,12 +712,12 @@ function cubic_root_searcher(){
 			}
 		}
 
-		//si on a E(z_prime)=0 alors E(x) possÃ¨de une racine. Une contrainte se manifÃ¨ste, zb->z_prime les intÃ©grales sont dÃ©finit sur [0, z_prime)
+		//si on a E(z_prime)=0 alors E(x) possède une racine. Une contrainte se manifèste, zb->z_prime les intégrales sont définit sur [0, z_prime)
 		else if(fonction_u(extremum, omegam0, omegalambda0, Or)==0){
 			return extremum;
 		}
 
-		////si on a E(z_prime)<0 alors E(x) possÃ¨de 2 racines. On prend la premiÃ¨re z_pr. intÃ©grales sont dÃ©finit sur [0, z_pr)
+		////si on a E(z_prime)<0 alors E(x) possède 2 racines. On prend la première z_pr. intégrales sont définit sur [0, z_pr)
 		else{
 			u_root= Number(dichotomie(extremum, Ub,fonction_u,0,ex));
 			return u_root;
