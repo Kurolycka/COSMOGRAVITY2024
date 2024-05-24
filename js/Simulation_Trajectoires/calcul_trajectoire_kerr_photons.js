@@ -1122,6 +1122,92 @@ function creation_blocs(context){
 		context.stroke();
 		context.closePath();
 		context.closePath();
+
+
+		//la partie qui vient est ajouté par Khaled elle gere les infos bulles sur le graphe
+		var infobulle = document.createElement('div');
+		infobulle.id = 'infobulle_graphe';
+		infobulle.className = 'infobulle_graphe';
+		document.body.appendChild(infobulle);
+
+		var canvas4 = document.getElementById('myCanvas4');
+		var ctx = canvas4.getContext('2d');
+
+		// Dessiner un cercle
+		var circle_RHM = { x: posX3, y: posY3, radius: (rhm * scale_factor)/rmax };
+		var circle_RHP = { x: posX3, y: posY3, radius: (rhp* scale_factor)/rmax };
+		var circle_RS = { x: posX3, y: posY3, radius: (rs* scale_factor)/rmax };
+
+
+
+		ctx.fillStyle = 'rgba(0, 0, 0, 0)';  // Remplissage transparent
+		ctx.strokeStyle = 'rgba(0, 0, 0, 0)';  // Contour transparent
+		ctx.beginPath();
+		ctx.arc(circle_RHM.x, circle_RHM.y, circle_RHM.radius, 0, 2 * Math.PI);
+		ctx.arc(circle_RHP.x, circle_RHP.y, circle_RHP.radius, 0, 2 * Math.PI);
+		ctx.arc(circle_RS.x, circle_RS.y, circle_RS.radius, 0, 2 * Math.PI);
+		ctx.fill();
+		ctx.closePath();
+		// Vérifier si la souris est proche du bord du cercle
+		canvas4.addEventListener('mousemove', function(event) {
+			var rect = canvas4.getBoundingClientRect();
+			var mouseX = event.clientX - rect.left;
+			var mouseY = event.clientY - rect.top;
+
+			// Calculer la distance entre la souris et le centre du cercle
+			var dx_RHM= mouseX - circle_RHM.x;
+			var dy_RHM = mouseY - circle_RHM.y;
+
+			var dx_RHP= mouseX - circle_RHP.x;
+			var dy_RHP = mouseY - circle_RHP.y;
+
+			var dx_RS= mouseX - circle_RS.x;
+			var dy_RS = mouseY - circle_RS.y;
+
+			var distanceFromCenter_RHM = Math.sqrt(dx_RHM * dx_RHM + dy_RHM * dy_RHM);
+			var distanceFromCenter_RHP = Math.sqrt(dx_RHP * dx_RHP + dy_RHP * dy_RHP);
+			var distanceFromCenter_RS = Math.sqrt(dx_RS * dx_RS + dy_RS * dy_RS);
+
+
+			var onEdge_RHM = Math.abs(distanceFromCenter_RHM - circle_RHM.radius) <= 5;
+			var onEdge_RHP= Math.abs(distanceFromCenter_RHP - circle_RHP.radius) <= 5;
+			var onEdge_RS= Math.abs(distanceFromCenter_RS - circle_RS.radius) <= 5;
+
+
+
+
+			if (onEdge_RHM) {
+				infobulle.style.visibility = 'visible';
+				infobulle.style.left = event.clientX + 'px';
+				infobulle.style.top = "700" + 'px';//event.clientY + 'px';
+				var latex = 'Rh-';
+				infobulle.innerHTML = '\\(' + latex + '\\)';
+				MathJax.typeset();
+			} 
+			else if (onEdge_RHP) {
+				infobulle.style.visibility = 'visible';
+				infobulle.style.left = event.clientX + 'px';
+				infobulle.style.top = "700" + 'px';//event.clientY + 'px';
+				var latex = 'Rh+';
+				infobulle.innerHTML = '\\(' + latex + '\\)';
+				MathJax.typeset();
+			} 
+			
+			else if (onEdge_RS) {
+				infobulle.style.visibility = 'visible';
+				infobulle.style.left = event.clientX + 'px';
+				infobulle.style.top = "700" + 'px';//event.clientY + 'px';
+				var latex = 'rs';
+				infobulle.innerHTML = '\\(' + latex + '\\)';
+				MathJax.typeset();
+			} 
+			
+			
+			else {
+				infobulle.style.visibility = 'hidden';
+			}
+		});
+
 	}
 	context.fillStyle = 'white';
 
