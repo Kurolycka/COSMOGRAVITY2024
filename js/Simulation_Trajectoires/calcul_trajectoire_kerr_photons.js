@@ -498,12 +498,17 @@ function animate() {
 			r_part_obs = val_obs[0];
 			varphi_obs = c *dtau* ( rs*a*E/r_part_obs + (1-rs/r_part_obs)*L )/( (Math.pow(r_part_obs,2)+Math.pow(a,2)+rs*Math.pow(a,2)/r_part_obs)*E - rs*a*L/r_part_obs ); 
 			phi_obs=phi_obs+varphi_obs;
-			if(r_part_obs<rhp*1.001) { r_part_obs=rhp;}
+			if(r_part_obs<rhp) { r_part_obs=rhp;} //changé par Khaled pour arriver à rhp
+
+
 			A_part_obs = val_obs[1];
 			resulta=calculs.MK_vitess(E,L,a,r_part_obs,rs,true);
 			vtot=resulta[0];
 			vr_3_obs=resulta[1]*Math.sign(A_part_obs);
-			if(r_part_obs<rhp*1.0001) { vr_3_obs=0;}
+
+
+			if(r_part_obs<rhp) { vr_3_obs=0;}//changé par Khaled 
+			
 			vp_3_obs=resulta[2]; // r_part_obs*varphi_obs/dtau;
 			posX2 = scale_factor * r_part_obs * (Math.cos(phi_obs) / rmax) + (canvas.width / 2.);
 			posY2 = scale_factor * r_part_obs * (Math.sin(phi_obs) / rmax) + (canvas.height / 2.);
