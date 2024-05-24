@@ -105,7 +105,7 @@
 	    "t_trop_grand":"Time greater than the maximum value \r for this space-time",
 		"t_negatif":" should be a positif number(>0)",
 	   "dm_trop_grand":"Metric distance greater than the maximum value \r for this space-time",
-		"titre": "Adjunct computation",
+		"titre": "Cosmological Calculator",
 		"bouton_retour":"Back",
 		"bouton_tracer":"Plot",
 		"bouton_calcul":"Calculate",
@@ -235,6 +235,14 @@
 	"r3":"it is (by default) in a direction perpendicular to the plane of the orbit (and of the screen) and has a constant distance d at the same time >> rS and << H0/c²",
 	"ctreastre":"Initial distance of the projectile from the centre of the celestial body",
 	"rayonschwars":"Schwarzschild's radius",
+	"vitesse_orbite_circulaire":"Circular orbit speed for this r0 (ɸ₀ = 90°)",
+	"orbite_circulaire_stable":"stable",
+	"orbite_circulaire_instable":"unstable",
+	"rayon_orbite_circulaire_photon":"Initial distance of the projectile from the centre of the celestial body for a circular orbit (ɸ₀ = 90°)",
+	"rayon_orbite_circulaire_photon_kerr_prograde":"Initial distance of the projectile from the centre of the celestial body for a prograde circular orbit (ɸ₀ = 90°)",
+	"rayon_orbite_circulaire_photon_kerr_retrograde":"Initial distance of the projectile from the centre of the celestial body for a retrograde circular orbit (ɸ₀ = -90°)",
+	"vitesse_orbite_circulaire_kerr_prograde":"Prograde circular orbit velocity for this r0 (ɸ₀ = 90°)",
+	"vitesse_orbite_circulaire_kerr_retrograde":"Retrograde circular orbit velocity for this r0 (ɸ₀ = -90°)",
 	"diffderive":"Difference of r's second derivatives",
 	"massetxt":"Celestial body mass",
 	"txt_rphysique":"Physical radius of the celestial body",
@@ -289,7 +297,7 @@
 	"rayonHorzInfRayon":"Please, input a value of r0 higher than outer horizon Rh+ !",
 	"lancerInterdit":"Throw in physical radius is forbidden !",
 	"simuavertissement":"Warning",
-	"avertissement":"The simulations of the trajectories respect the velocity dynamics. When the initial conditions are chosen to make this dynamic too big, the calculation step becomes too big(the trajectory appears in dots) near the periaster and this creates mistakes in the rest of the trajectory. The plus and minus buttons are there to interactively adapt the calculation step for those excentric orbitals. <br> A too big of a modification on this 'speed' will alter the precision of the trajectory. <br><br> For the calculation of speeds, it is assumed that a fixed observer (following a geodesic) measures the speed of the mobile when it passes to its position. In the case of the Kerr metric when r is less than rs there can be no geodesic having the previous property so no observer of can remain fixed. So once rs exceeded, the calculation of speeds is not possible hence the 'undefined'.",
+	"avertissement":"The simulations of the trajectories respect the velocity dynamics. When the initial conditions are chosen to make this dynamic too big, the calculation step becomes too big(the trajectory appears in dots) near the periaster and this creates mistakes in the rest of the trajectory. The plus and minus buttons are there to interactively adapt the calculation step for those excentric orbitals. <br> A too big of a modification on this 'speed' will alter the precision of the trajectory. <br><br> For the calculation of speeds, it is assumed that a fixed observer (following a geodesic) measures the speed of the mobile when it passes to its position. In the case of the Kerr metric when r is less than rs there can be no geodesic having the previous property so no observer of can remain fixed. So once rs exceeded, the calculation of speeds is not possible hence the 'undefined'. <br><br> The sudden change in rotation of the trajectory of the mobile/photon at Rh+/Rh- is predicted in the theory.",
 	"message_enregistrer":"Plot before saving !",
 	"entrees":"Inputs :",
 	"horiz_ext_atteint":"Outer horizon is reached !",
@@ -313,6 +321,8 @@
 	"alerte_nomFichier": "File name is not valid",
 	"nombre_de_g": "g felt",
 	"nombre_g_infobulle": "Number of g felt by the pilot with 1g = 9.81m/s². Valid only for Newtonian mechanics.",
+	"dernier_g": "Last g",
+	"dernier_g_infobulle":"Last number of g ≠ 0 felt by the pilot with 1g = 9.81m/s². Valid only for Newtonian mechanics.",
 	"distance_metrique_parcourue":"D(m)",
 	"distance_metrique_parcourue_infobulle":"Metric distance traveled by the mobile since the initial moment."
 },
@@ -344,8 +354,12 @@
   },
 
   "page_trajectoire_photon_nonBar":{
-    "titre":"Trajectory of a photon with Schwarzschild metric <br/> (non baryonic case)"
+    "titre":"Trajectory of a photon with Schwarzschild metric <br/> (non baryonic case)",
+	"orbite_circulaire_exterieure":"The distance from the photon to the centre of the celestial object to obtain a circular orbit outside the celestial object (ɸ₀ = 90°).",
+	"orbite_circulaire_interieure":"The distance from the photon to the centre of the celestial object to obtain a circular orbit inside the celestial object (ɸ₀ = 90°)."
   },
+
+  
   "page_trajectoire_massive_kerr":{
     "titre":"Trajectory of a massive particle with Kerr metric",
     "moment_angulaire":"Angular momentum is bigger than maximum value \r",
