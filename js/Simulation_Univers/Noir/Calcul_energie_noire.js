@@ -2,11 +2,11 @@ function Lancer_calc() {
 	// ramène la page en haut (pour que les annotations du graphique se placent bien).
 	document.getElementById("ret").click();
 	chargement();
-	setTimeout(Calc, 100);
+	setTimeout(affichage_site_DE, 100);
 }
 
 function ajustePrecision(valeur) {
-	if (valeur != 0) {
+	if (valeur !== 0) {
 		valeur = parseFloat(valeur).toExponential(3);
 	} else {
 		valeur = 0;
@@ -33,11 +33,11 @@ function Calc() {
 	texte = o_recupereJson();
 
 	//on recupere le bon nombre de jour par an.
-	if (typeannee == "Sidérale") {
+	if (typeannee === "Sidérale") {
 		var nbrjours = 365.256363051;
-	} else if (typeannee == "Julienne") {
+	} else if (typeannee === "Julienne") {
 		var nbrjours = 365.25;
-	} else if (typeannee == "Tropique (2000)") {
+	} else if (typeannee === "Tropique (2000)") {
 		var nbrjours = 365.242190517;
 	} else {
 		var nbrjours = 365.2425;
@@ -138,13 +138,16 @@ function Calc() {
 
 
 	//on fait appel a la methode de rungekutta pour calculer les points de la courbe
-	amin = Number(document.getElementById("ami").value);  //if(amin>1) {amin=1;} 
-    amax = Number(document.getElementById("ama").value);  //if(amax<1) {amax=1;}
+	amin = Number(document.getElementById("ami").value);
+    amax = Number(document.getElementById("ama").value);
 	ymoinsrunge = [1, 1];
 	ymoinsrungederiv = [1, 1];
 	k = [0, 0, 0, 0];
 	j = [0, 0, 0, 0];
-	pas = age*5e-6;   if(modele==1){pas=1e-5;age=0;}
+	pas = age*5e-6;
+	if (modele===1) {
+		pas=1e-5;age=0;
+	}
 	m = 0;
 	yrunge = 1;
 	yrunge2 = 1;
@@ -167,7 +170,10 @@ function Calc() {
 
 	//on refait appel à rungekutta pour la deuxieme partie
 	i = 0;
-	pas = age*1e-5;   if(modele==1){pas=1e-5;}		// le pas à 1e-6 gènere trop de calcul
+	pas = age*1e-5;
+	if (modele===1) {
+		pas=1e-5;
+	}		// le pas à 1e-6 gènere trop de calcul
 	yrunge = 1;
 	ymoinsrunge = [1, 1];
 	ymoinsrungederiv = [1, 1];
@@ -181,50 +187,17 @@ function Calc() {
 		}
 		i = i + pas;
 	}
-		
-/*	if(amax<1){
-		eps =1e-10;
-		if (omegaDE0 > 1e6 || omegam0 > 1e6) {
-			eps = 0.0001;
-		}
-		initial_a = 0;
-		age_sec = simpson(0, 0.999999999999, cv_Enoire_temps_substitution, omegam0, Number(omegaDE0), Number(Or), eps);console.log("192  age_sec  modele ",age_sec,modele);
-		if(isNaN(age_sec)) {
-			modele=1;
-			age_afficher="NaN";  
-		} else {
-			age_sec = age_sec * (1. / H0parsec);
-			//on le passe en gigaannees
-			age = age_sec / ((3600 * 24 * nbrjours) * Math.pow(10, 9));
-			//on creer une variable limite en nombre de decimal pour l'affichage
-			age_afficher = Number(age).toExponential(3);
-			age_sec_afficher = Number(age_sec).toExponential(3);
-		}
-    
-	    ymoinsrunge = [0.1,0.1];
-	    ymoinsrungederiv = [1, 1];
-	    k = [0, 0, 0, 0];
-	    j = [0, 0, 0, 0];
-	    pas = age*5e-6;   if(modele==1){pas=1e-5;age=0;}
-	    m = 0;
-	    yrunge = 1;
-	    yrunge2 = 0.1;
-	    data_x = [];
-	    data_y = [];
-	    while (yrunge2 >= amin && yrunge2 <= amax) {
-		   yrunge2 = rungekutta_neg(m);
-		   ymoinsrunge[0] = ymoinsrunge[1];
-		   res = age + m / H0engannee;
-		   ymoinsrungederiv[0] = ymoinsrungederiv[1];
-		   if (yrunge2 > 0) {
-			data_x.push(age + m / H0engannee);
-			data_y.push(yrunge2);
-	 	}
-		m = m - pas;
-	}
-		
 
-	}*/
+	// On calcule les âges correspondant à a_min et a_max
+	z_min = (1 - amin) / amin
+	t_min = (1 / H0parsec) * simpson(0, zmin, cv_Enoire_temps, omegam0, Number(omegaDE0), Number(Or), eps)
+	t_min = t_min / ((3600 * 24 * nbrjours) * Math.pow(10, 9));
+	tau_min = H0engannee * (t_min - age)
+
+	z_max = (1 - amax) / amax
+	t_max = (1 / H0parsec) * simpson(0, zmax, cv_Enoire_temps, omegam0, Number(omegaDE0), Number(Or), eps)
+	t_max = t_max / ((3600 * 24 * nbrjours) * Math.pow(10, 9));
+	tau_max = H0engannee * (t_max - age)
 
 	//liste les differents cas pour afficher a l'utilisateur les informations
 	
@@ -250,7 +223,7 @@ function Calc() {
 		let temps_restant = (1 / H0parsec) * simpson(-.999999999999, 0, cv_Enoire_temps, omegam0, Number(omegaDE0), Number(Or), eps);
 		let temps_restant_Ga = temps_restant / ((3600 * 24 * nbrjours) * Math.pow(10, 9));  
 		
-		if (modele==1) {   
+		if (modele===1) {
 			modele = 10;   console.log("253 modele",modele);
 			let a_min = getMinTableau(data_y);  a0=a_min;
 			
@@ -297,8 +270,8 @@ function Calc() {
 	//on cree le graphique
 	graphique_creation_noir(big_rip_detection(yrunge),modele);
 	setTimeout(stop_spin, 300);
-	if(modele==1 ) {
-		if (sessionStorage.getItem("LANGUE") == "fr") {
+	if(modele===1 ) {
+		if (sessionStorage.getItem("LANGUE") === "fr") {
 			document.getElementById("resultat_ageunivers_ga").innerHTML = "Pas de Big Bang";
 			document.getElementById("resultat_ageunivers_s").innerHTML = "Pas de Big Bang"; 
 		} else {
@@ -415,7 +388,7 @@ function graphique_creation_noir(boolBigRip,modele) { //S Ajout d'un booléen po
 		tempsrestantGa=document.getElementById("resultat_ageunivers_ga").innerHTML
 		tempsrestantGa=tempsrestantGa.split(' ')
 		tempsrestantGa=parseFloat(tempsrestantGa[0])
-		if(modele==10) {dureeUnivJPC=dureeUniv-tempsrestantGa;}   
+		if(modele===10) {dureeUnivJPC=dureeUniv-tempsrestantGa;}
 
 
 		//Ci-dessous, création de l'asymptote du big rip à utiliser ultièrement dans le graphe.
@@ -435,7 +408,7 @@ function graphique_creation_noir(boolBigRip,modele) { //S Ajout d'un booléen po
 
 	}else {
 				 
-			if(modele==0 || modele==1) {dureeUniv = "∞" ;}
+			if(modele===0 || modele===1) {dureeUniv = "∞" ;}
 			
 			dureeUniv =document.getElementById("resultat_dureeuniv").innerHTML
 			dureeUniv = dureeUniv.split(' ') //S
@@ -471,7 +444,7 @@ function graphique_creation_noir(boolBigRip,modele) { //S Ajout d'un booléen po
 	omegam0 = ajustePrecision(omegam0);
 	h0 = ajustePrecision(h0);
 
-	if (document.getElementById("resultat_dureeuniv").innerHTML == "∞") {
+	if (document.getElementById("resultat_dureeuniv").innerHTML === "∞") {
 		dure_annee = "∞";
 	}
 

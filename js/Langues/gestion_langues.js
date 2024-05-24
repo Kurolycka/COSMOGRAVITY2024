@@ -34,7 +34,7 @@ function choixLangueEn() {
 function s_testLangueJson() {
   if (sessionStorage.getItem("LANGUE")) {
     var langue = sessionStorage.getItem("LANGUE");
-    if (langue == "fr") {
+    if (langue === "fr") {
       return PATH_JSON_FR;
     } else {
       return PATH_JSON_EN;
@@ -42,11 +42,11 @@ function s_testLangueJson() {
   } else {
     // recupere la langue du navigateur par defaut
     var userLang = navigator.language || navigator.userLanguage;
-    if (userLang == "fr" || userLang == "fr-FR" || userLang == "fr-fr") {
-      userLang == "fr";
+    if (userLang === "fr" || userLang === "fr-FR" || userLang === "fr-fr") {
+      userLang === "fr";
       return PATH_JSON_FR;
     } else {
-      userLang == "en"
+      userLang === "en"
       return PATH_JSON_EN;
     }
     sessionStorage.setItem("LANGUE", userLang);
