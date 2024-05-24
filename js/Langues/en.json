@@ -16,15 +16,22 @@
 		"encadrants":"<strong>The supervisory staff :</strong> Jean-Pierre Cordoni &amp; Henri Reboul (LUPM), Isabelle Mougenot (Espace Dev)",
 		"directeurs":"<strong>Directors : </strong>David Cassagne (LCC) &amp; Brahim Guizal (LCC) ",																														 
 		"remerciements":"<strong>Thanks to </strong> Éric Gourgoulhon (LUTH), Jean-Philippe Uzan (IAP), Cyril PITROU (IAP) and Alain RIAZUELO (IAP) for their advice.",
-		
 		"descriptif":"<strong> Application </strong>created in the framework of tutored projects of the Master 1 of Digital Physics of the University of Montpellier.",
 		"contact":"<strong>Contact:<br/></strong>",
 		"envoyer":"Send",
+		"version_2009":"<strong>Version 2009 :</strong><br/>  Karim Bammou, Brice Cervera, Gaëlle Daste",
+		"version_2013":"<strong>Version 2013 :</strong><br/>  Nicolas Boulay, Alexandra Grabon, Dwight Smite, El Hadj Modou Thiam",
+		"version_2014":"<strong>Version 2014 :</strong><br/>  Pierre Barbotin, Thomas Vicario, Damien Maurin",
+		"version_2015":"<strong>Version 2015 :</strong><br/>  Thibault Jarossay, Samir Loukyly, Franck Malet",
+		"version_2016":"<strong>Version 2016 :</strong><br/>  Anthony Gourdin, Tamatoa Mahuta, Hamza Alhousseini",
+		"version_2017":"<strong>Version 2017 :</strong><br/>  Aurélien Dentan, Ronan Cranny, Quentin Leroit",
+		"version_2018":"<strong>Version 2018 :</strong><br/>  Matthieu Carrère, Massimo Chanson, Léo Sénique",
 		"version_2019":"<strong>Version 2019 :</strong><br/>  Youssef Jeyar, Mahmoud Najah, Ivan Sproudé, Elie Faye, Estuardo Quand, with help of Matthieu Carrère",
 		"version_2020":"<strong>Version 2020 :</strong><br/>  Karim Hakim, Sanxi Padovani, Yuming Xiang, Badreddine Zaidi",
 		"version_2021":"<strong>Version 2021 :</strong><br/>  Younes Benamara, Quentin Gromoff, Akli Idoughi, Arthur Tourneix, Thomas Valette. (Developpment start of a V2 version and improvements to Trajectories and Universe, the dark energy simulation has been revised by J-P Cordoni)",
 		"version_2022":"<strong>Version 2022 :</strong><br/>  Joumana Badran, Enora Etoubleau, Fatima Idbaba, Omar Tada (version 2.2 revised and extended by J-P Cordoni)",
-		"version_2023":"<strong>Version 2023 :</strong><br/>  Latifa Benameur, Simon Blondeau, Mohamad Jouni, Clara Massat, Dhungara Nischal, Victor Sauvage  (version 2.3 revised and extended by J-P Cordoni)"
+		"version_2023":"<strong>Version 2023 :</strong><br/>  Latifa Benameur, Simon Blondeau, Mohamad Jouni, Clara Massat, Dhungara Nischal, Victor Sauvage  (version 2.3 revised and extended by J-P Cordoni)",
+		"version_2024":"<strong>Version 2024 :</strong><br/>  Adrien Toulouse, Khaled Madani, Manon Nolot, Rémy Dupont"
 	
 	},
 
@@ -282,7 +289,7 @@
 	"rayonHorzInfRayon":"Please, input a value of r0 higher than outer horizon Rh+ !",
 	"lancerInterdit":"Throw in physical radius is forbidden !",
 	"simuavertissement":"Warning",
-	"avertissement":"The simulations of the trajectories respect the velocity dynamics. When the initial conditions are chosen to make this dynamic too big, the calculation step becomes too big(the trajectory appears in dots) near the periaster and this creates mistakes in the rest of the trajectory. The plus and minus buttons are there to interactively adapt the calculation step for those excentric orbitals. <br> A too big of a modification on this 'speed' will alter the precision of the trajectory. <br> The acceleration experienced in g by the astronaut is not calculated.",
+	"avertissement":"The simulations of the trajectories respect the velocity dynamics. When the initial conditions are chosen to make this dynamic too big, the calculation step becomes too big(the trajectory appears in dots) near the periaster and this creates mistakes in the rest of the trajectory. The plus and minus buttons are there to interactively adapt the calculation step for those excentric orbitals. <br> A too big of a modification on this 'speed' will alter the precision of the trajectory. <br><br> For the calculation of speeds, it is assumed that a fixed observer (following a geodesic) measures the speed of the mobile when it passes to its position. In the case of the Kerr metric when r is less than rs there can be no geodesic having the previous property so no observer of can remain fixed. So once rs exceeded, the calculation of speeds is not possible hence the 'undefined'.",
 	"message_enregistrer":"Plot before saving !",
 	"entrees":"Inputs :",
 	"horiz_ext_atteint":"Outer horizon is reached !",
@@ -303,7 +310,11 @@
 	"gravSurface_BulleInfo":"Theoretical surface gravity when R=Rh+",
 	"vitesseuphilabeltau":"Angle of initial velocity of projectile",
 	"message_nomFichier": "Please enter the desired file name",
-	"alerte_nomFichier": "File name is not valid"
+	"alerte_nomFichier": "File name is not valid",
+	"nombre_de_g": "g felt",
+	"nombre_g_infobulle": "Number of g felt by the pilot with 1g = 9.81m/s². Valid only for Newtonian mechanics.",
+	"distance_metrique_parcourue":"D(m)",
+	"distance_metrique_parcourue_infobulle":"Metric distance traveled by the mobile since the initial moment."
 },
 
 "page_trajectoire_massive":{
@@ -337,12 +348,14 @@
   },
   "page_trajectoire_massive_kerr":{
     "titre":"Trajectory of a massive particle with Kerr metric",
-    "moment_angulaire":"Angular momentum is bigger than maximum value \r"
+    "moment_angulaire":"Angular momentum is bigger than maximum value \r",
+	"vitesse_pas_définie":"undefined"
   },
 
   "page_trajectoire_photon_kerr":{
     "titre":"Trajectory of a photon with Kerr metric",
-    "moment_angulaire":"Angular momentum is bigger than maximum value \r"
+    "moment_angulaire":"Angular momentum is bigger than maximum value \r",
+	"vitesse_pas_définie":"undefined"
   }
 
 }

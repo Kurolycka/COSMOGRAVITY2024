@@ -99,6 +99,14 @@ table{
   font-weight: bold;
 }
 
+#nb_g{
+  visibility:hidden
+}
+
+#g_ressenti{
+  visibility:hidden;
+}
+
 .axis path, .axis line {
   fill: none;
   stroke: grey;
