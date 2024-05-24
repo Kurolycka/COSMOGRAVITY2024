@@ -233,7 +233,7 @@
 		"r3":"il est (par défaut) dans une direction perpendiculaire au plan de l’orbite (et de l’écran) et a une distance d constante à la fois >> rS et << H0/c²",
 		"ctreastre":"Distance initiale du projectile au centre de l'astre",
 		"rayonschwars":"Rayon de Schwarzschild",
-		"vitesse_orbite_circulaire":"Vitesse de l'orbite circulaire pour ce r0",
+		"vitesse_orbite_circulaire":"Vitesse de l'orbite circulaire pour ce r0 (ɸ₀ = 90°)",
 		"orbite_circulaire_stable":"stable",
 		"orbite_circulaire_instable":"instable",
 		"rayon_orbite_circulaire_photon":"Distance initiale du projectile au centre de l'astre pour une orbite circulaire (ɸ₀ = 90°)",
@@ -357,7 +357,9 @@
 	},
 
 	"page_trajectoire_photon_nonBar":{
-		"titre":"Trajectoire d'un photon en métrique de Schwarzchild <br/> (cas non baryonique)"
+		"titre":"Trajectoire d'un photon en métrique de Schwarzchild <br/> (cas non baryonique)",
+		"orbite_circulaire_exterieure":"Distance nécessaire du photon au centre de l'astre pour obtenir une orbite circulaire à l'extérieur de l'astre (ɸ₀ = 90°).",
+		"orbite_circulaire_interieure":"Distance nécessaire du photon au centre de l'astre pour obtenir une orbite circulaire à l'intérieur de l'astre (ɸ₀ = 90°)."
 	},
 
 	"page_trajectoire_massive_kerr":{
