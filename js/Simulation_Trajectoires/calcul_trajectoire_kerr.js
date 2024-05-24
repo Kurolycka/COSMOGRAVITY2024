@@ -259,9 +259,13 @@ function trajectoire() {
 			document.getElementById("joyDiv").style.visibility='visible';
 			document.getElementById("nb_g").style.visibility='visible'; //Manon
 			document.getElementById("g_ressenti").style.visibility='visible'; //Manon
+			document.getElementById("dernier_g").style.visibility='visible'; //ManonV2
+			document.getElementById("dernier_g_res").style.visibility='visible'; //ManonV2
 		}else{
 			document.getElementById("g_ressenti").style.display='none'; //Manon
 			document.getElementById("nb_g").style.display='none'; //Manon
+			document.getElementById("dernier_g").style.display='none'; //ManonV2
+			document.getElementById("dernier_g_res").style.display='none'; //ManonV2
 
 		}
 
@@ -926,9 +930,10 @@ function animate() {
 
 			setInterval(function(){ //Manon
 				if(joy.GetPhi()!=0){ 
-					document.getElementById("g_ressenti").innerHTML = nombre_de_g_calcul.toExponential(3);}
+					document.getElementById("g_ressenti").innerHTML = nombre_de_g_calcul.toExponential(3);
+					document.getElementById("dernier_g_res").innerHTML = nombre_de_g_calcul.toExponential(3);}
 					else{
-					document.getElementById("g_ressenti").innerHTML = "N/A";
+					document.getElementById("g_ressenti").innerHTML = 0;//ManonV2
 					}
 				}, dtau); 
 			
