@@ -4,7 +4,7 @@
 const ORDRE_ARRONDI=4;
 const LUMIERE = 9460730472580800;  // une année lumière en mètres
 const LUMIERE_INV= 1/LUMIERE;
-const AU = 149597870700; // unite astronomique en mètres
+// const AU = 149597870700; // unite astronomique en mètres
 var dz1
 var dz2
 var Hz1enannee

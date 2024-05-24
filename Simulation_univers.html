@@ -31,6 +31,11 @@
 	<script src="./js/Langues/gestion_langues.js"></script>
 	<script src="./js/Simulation_Univers/Calculs_annexes/Calcu.js"></script>
 
+
+
+
+
+
 	<!-- Script pour Latex en html -->
 	<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
 	</script>
@@ -171,7 +176,7 @@
 			<!-- Valeurs par defaut -->
 			<!-- <input class="myButton" id="valeurs_types" type="button" OnClick="valeurs_types()" value="Modèles Monofluide"></input> -->
 			<input class="myButton" id="monofluide" type="button" OnClick="monofluide()" value="Modèles Monofluides"></input>
-			<input id="trace" class="myButton" type="button" onClick="update_omegar0_simu();update_omegak0_simu();lance_calc();ga('send', 'event', 'button', 'click', 'Tracer graphique univers');" value="Tracer"></input>
+			<input id="trace" class="myButton" type="button" onClick="update_omegar0_simu();update_omegak0_simu();lance_calc_LCDM();ga('send', 'event', 'button', 'click', 'Tracer graphique univers');" value="Tracer"></input>
 			<div id="gif" style="position:relative;display: inline-block;margin-left: 13px;"></div>
 		</div>
 	</div>
@@ -232,11 +237,6 @@
 	<div id="test">
 		<!-- GRAPHIQUE-->
 		<div id="graphique"></div>
-		<div style="display:none;" id="graphique_enr"></div>
-		<!-- Canvas -->
-		<div id="modele">
-			<canvas id="canvas" width="298" height="400"></canvas>
-		</div>
 	</div>
 	<div id="enregistrer">
 		<div>
@@ -272,7 +272,7 @@
 	</script>
 	<!--
 	Script pour tracer le graphique et le canvas(courbes) au chargement + Retracer du graphique si resize de la fenêtre + update du canvas (courbe) si clic dessus et tracer du graphique correspondant.
-	-->
+
 	<script type="text/javascript">
 		ANG = 0;
 		canvas = document.getElementById('canvas');
@@ -288,6 +288,7 @@
 		var myImg = document.getElementById("canvas");
 		myImg.onmousedown = GetCoordinates;
 	</script>
+	-->
 	<br/>
 	<!-- Scripts pour le menu et tracer graphique si appuyer sur entrer -->
 	<script src="js/Graphisme/Menu/nav.jquery.min.js"></script>
@@ -306,6 +307,11 @@
 		texteUnivers();
 		textesimuuniv();
 	</script>
+
+	<script src="./js/Simulation_Univers/MéthodesNumériques.js"></script>
+	<script src="js/Simulation_Univers/calcul_facteur_echelle_LCDM.js"></script>
+	<script src="js/Simulation_Univers/Fonctions_utiles.js"></script>
 </body>
+
 
 </html>
