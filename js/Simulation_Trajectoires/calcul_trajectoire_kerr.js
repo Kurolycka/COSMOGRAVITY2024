@@ -1379,6 +1379,8 @@ function tests_lancement(){
 // crée les différentes couches visuelles
 function creation_blocs(context){
 	context.lineWidth = "1";
+	var posX3 = (canvas.width / 2.0);
+	var posY3 = (canvas.height / 2.0);
 	if (((scale_factor * rs / rmax)) < 6) {
 		context.beginPath();
 		context.strokeStyle = COULEUR_RS;
@@ -1417,8 +1419,7 @@ function creation_blocs(context){
 		// tracé de RH- en bleue
 		context.strokeStyle = 'blue';
 		context.beginPath()
-		var posX3 = (canvas.width / 2.0);
-		var posY3 = (canvas.height / 2.0);
+		
 		context.setLineDash([5, 5]);
 
 		context.arc(posX3, posY3, (rhm * scale_factor)/rmax, 0, 2 * Math.PI);
