@@ -30,11 +30,11 @@ function calcul_ages(fonction, H0, a1, a2) {
  * @return Liste des abscisses ou la fonction a été calculée et liste des valeurs de la fonction.
  */
 function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifiant) {
-    let H0 = document.getElementById("H0").value;
     let texte = o_recupereJson();
-    let H0parsec = calcul_H0parsec(H0);
-    // On convertis H0 en GigaAnnée ^ -1
-    let H0parGAnnee = H0parsec * (365.25 * 24 * 3600 * 1e9)
+
+    let H0 = document.getElementById("H0").value;
+    let H0parGAnnee = H0_parSecondes(H0)
+    H0parGAnnee = H0_parGAnnees(H0)
 
     //on recupere les valeurs des variables
     let a_min = Number(document.getElementById("ami").value);
@@ -143,47 +143,6 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     console.log("Liste facteur :", facteur_echelle)
 
     return [taus, facteur_echelle]
-}
-
-/**
- * Fonction permettant de tracer le facteur d'échelle en fonction du temps dans le cas du modlèle LCDM.
- * @param solution {[number[], number[]]} Liste contenant la liste des temps et les valeurs du facteur d'échelle
- */
-function graphique_facteur_echelle(solution) {
-    let abscisse = solution[0];
-    let ordonnee = solution[1];
-
-    let donnee = [{
-        x: abscisse,
-        y: ordonnee,
-        type: "scatter", // Change 'line' to 'scatter'
-        mode: "lines", // Change 'line' to 'lines'
-        name: "Facteur d'échelle",
-        line: {color: 'purple'} // Change 'marker' to 'line' for line color
-    }];
-
-    let apparence = {
-        title: {
-            text: "Tracé du facteur d'échelle",
-            font: {
-                family: 'Arial black, sans-serif',
-                size: 16,
-                color: '#111111'
-            },
-            xref: 'paper',
-            x: 0.55
-        },
-        xaxis: {
-            title: "Temps en milliard d'année",
-            autorange: true
-        },
-        yaxis: {
-            title: "facteur d'échelle réduit",
-            autorange: true
-        }
-    };
-
-    Plotly.newPlot("graphique", donnee, apparence);
 }
 
 function affichage_site_LCDM() {

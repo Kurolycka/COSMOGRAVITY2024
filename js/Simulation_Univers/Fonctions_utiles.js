@@ -20,7 +20,7 @@ let k = Number(document.getElementById("k_p").value);
  * @return {number} Le nombre de jour par ans
  */
 function nbrJours() {
-    typeAnnee = document.getElementById("type_annee").value
+    typeAnnee = document.getElementById("typeannee").value
     switch (typeAnnee) {
         case 'Sidérale':
             return 365.256363051;
@@ -62,7 +62,7 @@ function H0_parGAnnees(H0) {
     // Conversion des secondes en GAnnées
     let nombreDeJours = nbrJours()
     let secondesParAns = nombreDeJours * 24 * 3600 * Math.pow(10, 9)
-    H0_convertis = H0_convertis / secondesParAns
+    H0_convertis = H0_convertis * secondesParAns
 
     return H0_convertis
 }
@@ -166,13 +166,38 @@ function Omega_DE(z) {
  */
 function Omega_k(z) {
     let omega_k;
-    omega_k = 1 - Omega_r(z) - Omega_l(z) - Omega_m(z)
+
+    if (document.getElementById("omegalambda0")) {
+        omega_k = 1 - Omega_r(z) - Omega_l(z) - Omega_m(z)
+    }
+
+    if (document.getElementById("omegaDE0")) {
+        omega_k = 1 - Omega_r(z) - Omega_DE(z) - Omega_m(z)
+    }
 
     if (document.getElementById("univ_plat").checked) {
         omega_k = 0
     }
 
     return omega_k
+}
+
+/**
+ * Fonction facilitant l'écriture des expression dans le cas du modlèle LCDM. On a fait la substitution u = 1 / (1 + x)
+ * afin que les bornes d'intégrations soient finies
+ * @param u {number} Paramètre de la fonction
+ * @return {number} Valeur de la fonction
+ */
+function fonction_E(u) {
+    let Omegam0 = Omega_m(0)
+    let Omegar0 = Omega_r(0)
+    let Omegal0 = Omega_l(0)
+
+    // On calcule les terme 1 à 1 par soucis de clareté
+    let terme_1 = Omegar0 * Math.pow(u, -4);
+    let terme_2 = Omegam0 * Math.pow(u, -3);
+    let terme_3 = (1 - Omegam0 - Omegal0 - Omegar0) * Math.pow(u, -2);
+    return terme_1 + terme_2 + terme_3 + Omegal0;
 }
 
 /**
@@ -200,45 +225,32 @@ function fonction_Y(x) {
  * @param w1 {number} Deuxième coefficient
  * @return {number} Valeur de la fonction
  */
-function derivee_fonction_Y(x, w0 = -1, w1 = 0) {
-    return -3 * (1 + w0 + w1) * fonction_Y(x)
+function derivee_fonction_Y(x) {
+    let w0 = Number(document.getElementById("omega0").value) // sans unité
+    let w1 = Number(document.getElementById("omega1").value) // sans unité
+
+    let terme_1 = - 3 * (1 + w0 + w1) * (1 / x)
+    let terme_2 = 3 * w1
+    return ( terme_1 + terme_2 ) * fonction_Y(x)
 }
 
 /**
- * Deuxième fonction facilitant l'écriture des expression dans le cas du modlèle DE.
- * @param x {number} Paramètre de la fonction
+ * Deuxième fonction facilitant l'écriture des expression dans le cas du modlèle DE. On a fait la substitution u = 1 / (1 + x)
+ * @param u {number} Paramètre de la fonction
  * @return {number} Valeur de la fonction
  */
-function fonction_F(x) {
+function fonction_F(u) {
     let Omegak0 = Omega_k(0)
     let Omegam0 = Omega_m(0)
     let Omegar0 = Omega_r(0)
     let OmegaDE0 = Omega_DE(0)
 
-    let terme_1 = Omegak0 * Math.pow(1 + x, 2)
-    let terme_2 = Omegam0 * Math.pow(1 + x, 3)
-    let terme_3 = Omegar0 * Math.pow(1 + x, 4)
-    let terme_4 = OmegaDE0 * fonction_Y(Math.pow(1 + x, -1))
+    let terme_1 = Omegak0 * Math.pow(u, -2)
+    let terme_2 = Omegam0 * Math.pow(u, -3)
+    let terme_3 = Omegar0 * Math.pow(u, -4)
+    let terme_4 = OmegaDE0 * fonction_Y(u)
 
     return terme_1 + terme_2 + terme_3 + terme_4
-}
-
-/**
- * Fonction facilitant l'écriture des expression dans le cas du modlèle LCDM. On a fait la substitution u = 1 / (1 + x)
- * afin que les bornes d'intégrations soient finies
- * @param u {number} Paramètre de la fonction
- * @return {number} Valeur de la fonction
- */
-function fonction_E(u) {
-    let Omegam0 = Omega_m(0)
-    let Omegar0 = Omega_r(0)
-    let Omegal0 = Omega_l(0)
-
-    // On calcule les terme 1 à 1 par soucis de clareté
-    let terme_1 = Omegar0 * Math.pow(u, -4);
-    let terme_2 = Omegam0 * Math.pow(u, -3);
-    let terme_3 = (1 - Omegam0 - Omegal0 - Omegar0) * Math.pow(u, -2);
-    return terme_1 + terme_2 + terme_3 + Omegal0;
 }
 
 /**
@@ -253,7 +265,7 @@ function equa_diff_1_LCDM(t, a) {
     let Omegar0 = Omega_r(0)
     let Omegal0 = Omega_l(0)
 
-    let a_carre = Math.pow(a, 2);
+    let a_carre = a * a;
     let terme_1 = (Omegar0 / a_carre)
     let terme_2 = (Omegam0 / a)
     let terme_3 = Omegal0 * a_carre
@@ -272,7 +284,7 @@ function equa_diff_1_LCDM(t, a) {
 function equa_diff_2_LCDM(t, a, ap) {
     let Omegam0 = Omega_m(0)
     let Omegar0 = Omega_r(0)
-    let Omegal0 = Omega_DE(0)
+    let Omegal0 = Omega_l(0)
 
     let a_carre = a * a;
     let a_cube = a * a * a;
@@ -369,6 +381,12 @@ function graphique_facteur_echelle(solution) {
         }
     };
 
-    Plotly.newPlot("graphique", donnee, apparence);
+    if (document.getElementById("graphique")) {
+        Plotly.newPlot("graphique", donnee, apparence);
+    }
+
+    if (document.getElementById("graphique_sombre")) {
+        Plotly.newPlot("graphique_sombre", donnee, apparence);
+    }
 }
 
