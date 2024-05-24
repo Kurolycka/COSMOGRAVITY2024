@@ -333,7 +333,6 @@
 	"page_trajectoire_massive":{
 		"titre":"Trajectoire d'un projectile en métrique de Schwarzchild",
 		"rayon_physique":"r<sub>physique</sub> (m) =",
-		"temps_acceleration_pilotage":"t<sub>acc</sub> (ms) =",
 		"particule_arretee":"Le projectile s'est posé sur la surface du corps céleste.",
 		"particule_ecrasee":"Le projectile s'est écrasé sur la surface du corps céleste.",
 		"particule_atteint_rh":"Le projectile a atteint Rh-.", 
@@ -341,8 +340,7 @@
 		"amortissement":"Coefficient d'amortissement : Rebond limité à vitesse d'impact < 300 m/s ",
 		"non_baryonique":"Masse et/ou mobile non baryonique(s)",
 		"titre2":"Masse et mobile baryoniques",
-		"commandes":"Liste des commandes au clavier : \n\n- Trajectoire Complète : touche a \n- Trajectoire Simple : touche z \n- Avec ou sans rebond : touche e \n- Stopper la simulation : touche q \n- Reset : touche s \n- Enregistrer : touche d \n- Recupérer les valeurs précédentes : touche f \n- Ralentir la simulation : touche w \n- Pause / Lecture : touche x \n- Accélérer la simulation : touche c",
-		"temps_acceleration_pilotage_infobulle":"Temps de réaction/ajustement de l'option de pilotage"
+		"commandes":"Liste des commandes au clavier : \n\n- Trajectoire Complète : touche a \n- Trajectoire Simple : touche z \n- Avec ou sans rebond : touche e \n- Stopper la simulation : touche q \n- Reset : touche s \n- Enregistrer : touche d \n- Recupérer les valeurs précédentes : touche f \n- Ralentir la simulation : touche w \n- Pause / Lecture : touche x \n- Accélérer la simulation : touche c"
 	},
 
 	"page_trajectoire_photon":{
