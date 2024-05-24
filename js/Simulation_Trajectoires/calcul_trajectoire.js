@@ -853,7 +853,7 @@ function trajectoire(compteur,mobile) {
     document.getElementById('bouton_pause').addEventListener('click', function() {
     	pausee(compteur,mobile,mobilefactor);
     }, false);
-	
+
 
 	if(blyo == 1 && element2.value == "mobile" ) {
 	setInterval(function(){
@@ -890,9 +890,7 @@ function trajectoire(compteur,mobile) {
 				document.getElementById("L"+compteur.toString()).innerHTML = mobile.L.toExponential(3);
 				document.getElementById("decal"+compteur.toString()).innerHTML = deltam_sur_m.toExponential(3);
 		}
-		}, 50); 
- 
-
+		}, 50); //Réactivité du système et pas du pilote 
 	}												  
 		
 
@@ -1466,7 +1464,7 @@ function animate(compteur,mobile,mobilefactor) {
 						document.getElementById("g_ressenti"+compteur.toString()).innerHTML = 0;}
 						clearInterval(intervalID);
 
-					}, 2000); 
+					}, 50); 
 			}
 			
 			//-------------------{Fin Manon}------------------------------------
