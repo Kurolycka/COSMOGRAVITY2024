@@ -232,7 +232,7 @@
 	"r3":"it is (by default) in a direction perpendicular to the plane of the orbit (and of the screen) and has a constant distance d at the same time >> rS and << H0/c²",
 	"ctreastre":"Initial distance of the projectile from the centre of the celestial body",
 	"rayonschwars":"Schwarzschild's radius",
-	"vitesse_orbite_circulaire":"Circular orbit speed for this r0",
+	"vitesse_orbite_circulaire":"Circular orbit speed for this r0 (ɸ₀ = 90°)",
 	"orbite_circulaire_stable":"stable",
 	"orbite_circulaire_instable":"unstable",
 	"rayon_orbite_circulaire_photon":"Initial distance of the projectile from the centre of the celestial body for a circular orbit (ɸ₀ = 90°)",
@@ -351,8 +351,12 @@
   },
 
   "page_trajectoire_photon_nonBar":{
-    "titre":"Trajectory of a photon with Schwarzschild metric <br/> (non baryonic case)"
+    "titre":"Trajectory of a photon with Schwarzschild metric <br/> (non baryonic case)",
+	"orbite_circulaire_exterieure":"The distance from the photon to the centre of the celestial object to obtain a circular orbit outside the celestial object (ɸ₀ = 90°).",
+	"orbite_circulaire_interieure":"The distance from the photon to the centre of the celestial object to obtain a circular orbit inside the celestial object (ɸ₀ = 90°)."
   },
+
+  
   "page_trajectoire_massive_kerr":{
     "titre":"Trajectory of a massive particle with Kerr metric",
     "moment_angulaire":"Angular momentum is bigger than maximum value \r",
