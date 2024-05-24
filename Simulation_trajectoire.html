@@ -172,8 +172,6 @@ ga('send', 'pageview');
 		<div>
 			<label id="labelnumberfusees" for="nombredefusees"></label> 
 			<input id="nombredefusees" value="1" type="text" size="5" onchange="supprHtml();genereHtml();save_nbfusees();updatenbredefusees();">
-			<label id="temps_acceleration_nb_g_txt" for="temps_acc_g_ressenti" style="display: none;"></label> <!--Manon-->
-			<input id="temps_acc_g_ressenti" value="50" type="text" size="10" style="display: none;" onchange="supprHtml();genereHtml();save_nbfusees();updatenbredefusees();"> <!--Manon-->
 			<span id="case">
 			<label id="labelgp" for="vr"></label>
 			<input id="toggle" type="checkbox"  checked>
@@ -305,8 +303,6 @@ ga('send', 'pageview');
     var btnSpationaute = document.getElementById("r4");
     var inputNbfusees = document.getElementById("nombredefusees");
 	var labelNbfusees = document.getElementById("labelnumberfusees");
-	var labelNbGTempsAcc = document.getElementById("temps_acceleration_nb_g_txt"); //Manon
-	var inputNbGTempsAcc = document.getElementById("temps_acc_g_ressenti"); //Manon
 
     // Ajouter des écouteurs d'événements pour les boutons
     btnObervateur.addEventListener("click", function() {
