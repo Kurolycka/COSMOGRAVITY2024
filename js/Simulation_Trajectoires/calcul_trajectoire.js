@@ -338,7 +338,8 @@ function genereHtml(){
 		<th id="decal_spect`+countt.toString()+`" title="" class="tg-aicv"></th>
 		<th id="v_total`+countt.toString()+`" title="" class="tg-aicv">   V<SUB>physique</SUB> (m.s<sup>-1</sup>) </th>
 		<th id="distance_metrique`+countt.toString()+`" title="" class="tg-aicv"></th> 
-		<th id="nb_g`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>`; //ManonGeneralisation
+		<th id="nb_g`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>
+		<th id="dernier_g`+countt.toString()+`" title="" class="tg-aicv" style="display: none;">testou</th>`; //ManonV2
 		
 
 		var newRow2=document.getElementById('tableauresultatsimu').insertRow();
@@ -353,7 +354,8 @@ function genereHtml(){
 		<td class="tg-3ozo" id="decal`+countt.toString()+`">res</td>
 		<td class="tg-3ozo" id="v_tot`+countt.toString()+`">res</td>
 		<td class="tg-3ozo" id="distance_parcourue`+countt.toString()+`">res</td>
-		<td class="tg-3ozo" id="g_ressenti`+countt.toString()+`" style="display: none;">N/A</td>`; //ManonGeneralisation
+		<td class="tg-3ozo" id="g_ressenti`+countt.toString()+`" style="display: none;">0</td>
+		<td class="tg-3ozo" id="dernier_g_res`+countt.toString()+`" style="display: none;">0</td>`; //ManonV2
 	}
 
 
@@ -424,6 +426,10 @@ function rendreVisibleNbG() {
 	// Sélectionne toutes les cellules dont l'ID commence par "g_ressenti" :
 	var gRessCells = document.querySelectorAll('[id^="g_ressenti"]');
 
+	var dernier_g_Cells = document.querySelectorAll('[id^="dernier_g"]');
+
+	var dernier_g_res_Cells = document.querySelectorAll('[id^="dernier_g_res"]');
+
     
     // Si element2.value est "mobile" et que y a que 1 mobile, rend les cellules visibles, sinon les cache
     if (element2.value == "mobile" && blyo==1) {
@@ -433,12 +439,24 @@ function rendreVisibleNbG() {
 		gRessCells.forEach(function(cell) {
             cell.style.display = ''; // Rend visible la cellule g_ressenti
         });
+		dernier_g_Cells.forEach(function(cell) {
+            cell.style.display = ''; // Rend visible la cellule derniger_g
+        });
+		dernier_g_res_Cells.forEach(function(cell) {
+            cell.style.display = ''; // Rend visible la cellule dernier_g_res
+        });
     } else {
         nbGCells.forEach(function(cell) {
             cell.style.display = 'none'; // Cache la cellule nb_g
         });
 		gRessCells.forEach(function(cell) {
             cell.style.display = 'none'; // Cache la cellule g_ressenti
+        });
+		dernier_g_Cells.forEach(function(cell) {
+            cell.style.display = 'none'; // Cache la cellule dernier_g
+        });
+		dernier_g_res_Cells.forEach(function(cell) {
+            cell.style.display = 'none'; // Cache la cellule dernier_g_res
         });
     }
 }
@@ -1438,13 +1456,14 @@ function animate(compteur,mobile,mobilefactor) {
 			//------------------------{Manon}----------------------------------
 
 
-			if(element2.value == "mobile" && blyo==1) { //ManonGeneralisation
+			if(element2.value == "mobile" && blyo==1) { //ManonV2
 
 				intervalID = setInterval(function(){
 					if(joy.GetPhi()!=0){ 
-						document.getElementById("g_ressenti"+compteur.toString()).innerHTML = nombre_de_g_calcul.toExponential(3);}
+						document.getElementById("g_ressenti"+compteur.toString()).innerHTML = nombre_de_g_calcul.toExponential(3);
+						document.getElementById("dernier_g_res"+compteur.toString()).innerHTML = nombre_de_g_calcul.toExponential(3);}
 					else{
-						document.getElementById("g_ressenti"+compteur.toString()).innerHTML = "N/A";}
+						document.getElementById("g_ressenti"+compteur.toString()).innerHTML = 0;}
 						clearInterval(intervalID);
 
 					}, 2000); 
@@ -1469,6 +1488,7 @@ function animate(compteur,mobile,mobilefactor) {
 			document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = "";
 			document.getElementById("g_ressenti"+compteur.toString()).innerHTML = ""; 	//Manon			 
 			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=1/0; //Manonbis
+			document.getElementById("g_ressenti"+compteur.toString()).innerHTML = 0; //ManonV2
 
 		}
 	}
