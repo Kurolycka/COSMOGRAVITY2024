@@ -134,7 +134,7 @@ function initialisation(){
 
 
 
-	r_stabilite = (-9*rs*Math.pow((L-a*E),2))/(Math.pow(a,2)*(Math.pow(E,2)-1)-Math.pow(L,2)); //ManonCirculaire
+	r_stabilite = (-3*rs*Math.pow((L-a*E),2))/(Math.pow(a,2)*(Math.pow(E,2)-1)-Math.pow(L,2)); //ManonCirculaire
 	vitesse_orbite_criculaire_prograde_bar_limite_stabilite = (c*Math.sqrt(2*rs*Math.pow(r_stabilite,5)*delta(r_stabilite))) / (2*Math.pow(r_stabilite,4) - 2*Math.pow(r_stabilite,3)*rs + a*Math.sqrt(2*rs*Math.pow(r_stabilite,5))); //ManonCirculaire
 	vitesse_orbite_criculaire_retrograde_bar_limite_stabilite = (c*Math.sqrt(2*rs*Math.pow(r_stabilite,5)*delta(r0))) / (2*Math.pow(r_stabilite,4) - 2*Math.pow(r_stabilite,3)*rs - a*Math.sqrt(2*rs*Math.pow(r_stabilite,5))); //ManonCirculaire
 
@@ -167,8 +167,19 @@ function initialisation(){
 		document.getElementById("circulaire_retrograde_res_bar").removeAttribute("title");
 	}
 
-	document.getElementById("circulaire_prograde_res_bar").innerHTML=vitesse_orbite_circulaire_prograde_bar.toExponential(4); //ManonCirculaire
-	document.getElementById("circulaire_retrograde_res_bar").innerHTML=vitesse_orbite_circulaire_retrograde_bar.toExponential(4); //ManonCirculaire
+
+	if (isNaN(E_prograde)){
+		document.getElementById("circulaire_prograde_res_bar").innerHTML=""; //ManonCirculaire
+	}else{
+		document.getElementById("circulaire_prograde_res_bar").innerHTML=vitesse_orbite_circulaire_prograde_bar.toExponential(4); //ManonCirculaire
+	}
+
+	if (isNaN(E_retrograde)){
+		document.getElementById("circulaire_retrograde_res_bar").innerHTML=""; //ManonCirculaire
+	}else{
+		document.getElementById("circulaire_retrograde_res_bar").innerHTML=vitesse_orbite_circulaire_retrograde_bar.toExponential(4); //ManonCirculaire
+	}
+	
 	
 	if (isNaN(rhp)){document.getElementById("rhp").innerHTML = 0;}
 	else {  document.getElementById("rhp").innerHTML = rhp.toExponential(3);}
