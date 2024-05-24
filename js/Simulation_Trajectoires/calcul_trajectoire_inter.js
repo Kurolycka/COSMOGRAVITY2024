@@ -266,8 +266,12 @@ function genereHtml(){
 			jstring += '<th class="tg-aicv">$E'+countt.toString()+'$</th>';
 		}
 
+		for (countt = 1; countt <= nbredefuseesgenere; countt +=1) {
+			jstring += '<th class="tg-aicv" id="vitesse_orb_circ_nonBar_massive'+countt.toString()+'" title="">$Vcirc'+countt.toString()+'(m/s)$</th>' //Manon
+		}
+
  
-             //pour katex il faux mettre un antislash devant le antislash
+        //pour katex il faux mettre un antislash devant le antislash
 		jstring +='<th class="tg-6l4m" id="rayonschwars" title="" >$rs=\\frac{2GM}{c^{2}}(m)$</th>';
 		jstring +='<th class="tg-6l4m" id="gravtxt" title="">$grav=\\frac{GM}{R^{2}}\\frac{1}{9.81}(g)$</th>';						
 		jstring +='<th class="tg-6l4m" id="vitesseLibéra" title="">$Vlib=c(\\frac{rs}{R})^{1/2}(m.s^{-1}) $</th>';
@@ -287,6 +291,11 @@ function genereHtml(){
 		for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
 			jstring += '<td class="tg-3ozo" id="E'+countt.toString()+'">0</td>';
 		}
+
+		for (countt=1; countt <= nbredefuseesgenere; countt +=1) {
+			jstring += '<td class="tg-3ozo" id="Vcirc_res'+countt.toString()+'">0</td>'; //Manon
+		}
+
 		jstring +='<td class="tg-3ozo" id="m">0</td>';
 		jstring +='<td class="tg-3ozo" id="g">0</td>';
 		jstring +='<td class="tg-3ozo" id="Vlib">0</td>';	
@@ -424,6 +433,8 @@ function rendreVisibleNbG() {
 // calcul en temps réel des E, L,...
 function initialisation(compteur){
 
+	texte=o_recupereJson();
+
 	c = 299792458;
 	G = 6.67385 * Math.pow(10, -11);
 	M = Number(document.getElementById("M").value);
@@ -458,6 +469,40 @@ function initialisation(compteur){
 	
 	deltam_sur_m = 0;
 
+	//Manon : ------------------------------------------
+
+	if (r0 >= r_phy){//Exterieur de l'astre
+		v_rotation = c* (Math.sqrt(rs/(2*(r0-rs))));
+
+		if (v_rotation>= (c/2)){ //ManonCirculaire
+			document.getElementById("Vcirc_res"+compteur.toString()).title=texte.pages_trajectoire.orbite_circulaire_instable;
+		}else{
+			document.getElementById("Vcirc_res"+compteur.toString()).title=texte.pages_trajectoire.orbite_circulaire_stable;
+		}
+
+	}else{//intérieur de l'astre
+		v_rotation = (c*r0*Math.sqrt(rs))/(Math.sqrt(3*Math.sqrt(1-rs/r_phy)*Math.sqrt(1-(Math.pow(r0,2)*rs)/Math.pow(r_phy,3))*Math.pow(r_phy,3) - Math.pow(r_phy,3) + Math.pow(r0,2)*rs));
+
+		beta_r0 = (3/2)*Math.sqrt(1-rs/r_phy) - (1/2)*Math.sqrt(1-(rs*Math.pow(r0,2))/(Math.pow(r_phy,3)));
+		alpha_r0 = 1 - (Math.pow(r0,2)*rs)/(Math.pow(r_phy,3));
+		alpha_r0_derivee= - (2*r0*rs)/(Math.pow(r_phy,3));
+		beta_r0_cube_derivee = - (3/4)*(alpha_r0_derivee/(Math.sqrt(alpha_r0)))*Math.pow(beta_r0,2);
+		derivee_seconde_potentiel = (Math.pow(c,2)/(1-(Math.pow(v_rotation,2))/(Math.pow(c,2))))*((3*rs)/Math.pow(r_phy,3))*(Math.sqrt(1-rs/r_phy))*((Math.pow(beta_r0,3)-r0*beta_r0_cube_derivee)/(Math.pow(beta_r0,4)))+(6/Math.pow(r0,2))*(Math.pow(v_rotation,2)/(1-(Math.pow(v_rotation,2))/(Math.pow(c,2))))-((2*Math.pow(c,2)*rs)/Math.pow(r_phy,3));
+
+		if (derivee_seconde_potentiel>=0){
+			document.getElementById("Vcirc_res"+compteur.toString()).title = texte.pages_trajectoire.orbite_circulaire_stable ;
+		}else{
+			document.getElementById("Vcirc_res"+compteur.toString()).title = texte.pages_trajectoire.orbite_circulaire_instable ;
+		}
+
+	}
+
+	//Manon : fin --------------------------------------------
+
+
+
+
+	document.getElementById("Vcirc_res"+compteur.toString()).innerHTML = v_rotation.toExponential(3);
 	document.getElementById("L"+compteur.toString()).innerHTML = L.toExponential(3);
 	document.getElementById("E"+compteur.toString()).innerHTML = E.toExponential(3);	
 	document.getElementById("m").innerHTML = rs.toExponential(3);
