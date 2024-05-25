@@ -36,8 +36,7 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
     let texte = o_recupereJson();
 
     let H0 = document.getElementById("H0").value;
-    let H0parGAnnee = H0_parSecondes(H0)
-    H0parGAnnee = H0_parGAnnees(H0)
+    let H0parGAnnee = H0_parGAnnees(H0)
 
     //on recupere les valeurs des variables
     let a_min = Number(document.getElementById("ami").value);
@@ -75,11 +74,12 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
         }
 
         // On calcule le pas qui sera utilisé
-        if ( (isNaN(tau_min) || isNaN(tau_max)) && !isNaN(t_0) && Math.abs(t_0) !== Infinity) {
+        if ( (isNaN(tau_min) || isNaN(tau_max)) && !isNaN(t_0) ) {
             console.log("Pas calculé avec t_0")
             pas = t_0 * 1e-3
         } else {
-            pas = 1e-2
+            console.log("Pas calculé grossèrement")
+            pas = 1e-3
         }
 
         if (!isNaN(tau_min) && !isNaN(tau_max)) {
@@ -103,7 +103,7 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
     let nombre_point = 0;
 
     // Résolution dans le sens négatif
-    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 2500) {
+    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 50/pas) {
         set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
         taus.push(set_solution[0])
         facteur_echelle.push(set_solution[1])
@@ -118,7 +118,7 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
     nombre_point = 0;
 
     // Résolution dans le sens positif
-    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 2500) {
+    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 50/pas) {
         set_solution = RungeKuttaEDO2(pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
         taus.push(set_solution[0])
         facteur_echelle.push(set_solution[1])
@@ -151,10 +151,21 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
     console.log("Liste temps :", taus)
     console.log("Liste facteur :", facteur_echelle)
 
-    return [taus, facteur_echelle]
+    return [[taus, facteur_echelle], t_0]
 }
 
 function affichage_site_DE() {
-    let donnee = calcul_facteur_echelle_DE(equa_diff_1_DE, equa_diff_2_DE, fonction_F, fonction_Y)
+    let equa_diff_1 = equa_diff_1_DE
+    let equa_diff_2 = equa_diff_2_DE
+    let fonction_1 = fonction_F
+    let fonction_2 = fonction_Y
+
+    let sorties = calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_1, fonction_2)
+    let donnee = sorties[0]
+
+    let age_univers = sorties[1]
+    let debutEtFin = debut_fin_univers(equa_diff_2, age_univers)
+    console.log("Timeline :", debutEtFin, age_univers)
+
     graphique_facteur_echelle(donnee)
 }

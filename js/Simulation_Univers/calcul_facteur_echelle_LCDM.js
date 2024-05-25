@@ -33,8 +33,7 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     let texte = o_recupereJson();
 
     let H0 = document.getElementById("H0").value;
-    let H0parGAnnee = H0_parSecondes(H0)
-    H0parGAnnee = H0_parGAnnees(H0)
+    let H0parGAnnee = H0_parGAnnees(H0)
 
     //on recupere les valeurs des variables
     let a_min = Number(document.getElementById("ami").value);
@@ -74,14 +73,15 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
         // On calcule le pas qui sera utilisé
         if ( (isNaN(tau_min) || isNaN(tau_max)) && !isNaN(t_0)) {
             console.log("Pas calculé avec t_0")
-            pas = t_0 * 1e-3
+            pas = t_0 * 1e-4
         } else {
-            pas = 1e-2
+            console.log("Pas calculé grossèrement")
+            pas = 1e-3
         }
 
         if (!isNaN(tau_min) && !isNaN(tau_max)) {
             console.log("Pas calculé avec tau_min - tau_max")
-            pas = Math.abs(tau_max - tau_min) * 1e-3
+            pas = Math.abs(tau_max - tau_min) * 1e-4
         }
 
         console.log("les taus :", t_min, t_0, t_max)
@@ -94,14 +94,17 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
 
     let set_solution = [params[0], params[1], params[2]];
     let pas = params[3];
+
     let taus = [set_solution[0]]
     let facteur_echelle = [set_solution[1]]
+    let nombre_point = 0;
 
     // Résolution dans le sens négatif
-    while (set_solution[1] >= a_min && set_solution[1] <= a_max) {
+    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 50/pas) {
         set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
         taus.push(set_solution[0])
         facteur_echelle.push(set_solution[1])
+        nombre_point = nombre_point + 1
         console.log(set_solution)
     }
 
@@ -109,12 +112,14 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     taus.reverse()
     facteur_echelle.reverse()
     set_solution = [params[0], params[1], params[2]];
+    nombre_point = 0;
 
     // Résolution dans le sens positif
-    while (set_solution[1] >= a_min && set_solution[1] <= a_max) {
+    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 50/pas) {
         set_solution = RungeKuttaEDO2(pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
         taus.push(set_solution[0])
         facteur_echelle.push(set_solution[1])
+        nombre_point = nombre_point + 1
         console.log(set_solution)
     }
 
@@ -134,19 +139,24 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
         taus[index] = taus[index] + t_0
     }
 
-    taus.pop()
-    facteur_echelle.pop()
-
-    taus.shift()
-    facteur_echelle.shift()
     console.log("Liste temps :", taus)
     console.log("Liste facteur :", facteur_echelle)
 
-    return [taus, facteur_echelle]
+    return [[taus, facteur_echelle], t_0]
 }
 
 function affichage_site_LCDM() {
-    console.log("param utilisé dans affichage_site_LCDm", equa_diff_1_LCDM, equa_diff_2_LCDM, fonction_E)
-    let donnee = calcul_facteur_echelle_LCDM(equa_diff_1_LCDM, equa_diff_2_LCDM, fonction_E)
+    let equa_diff_1 = equa_diff_1_LCDM
+    let equa_diff_2 = equa_diff_2_LCDM
+    let fonction = fonction_E
+
+    let sorties = calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction)
+    let donnee = sorties[0]
+
+    let age_univers = sorties[1]
+    let debutEtFin = debut_fin_univers(equa_diff_2, age_univers)
+    console.log("Timeline :", debutEtFin, age_univers)
+
+
     graphique_facteur_echelle(donnee)
 }

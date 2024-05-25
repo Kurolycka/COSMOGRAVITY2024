@@ -344,6 +344,86 @@ function equa_diff_2_DE(t, a, ap) {
 }
 
 /**
+ * Fonction permettant de déterminer si l'univers à un début ou une fin. Si ce n'est pas le cas, renvoie un string
+ * précisant pourquoi il n'y a pas de début/fin de l'univers
+ * @param equa_diff {function} Fonction caractéristique de l'EDO2 du modèle
+ * @param t_0 {number} Age actuel de l'univers
+ * @return Soit les temps de naissance/mort soit un string explicant pourquoi il n'y a pas de naissance/mort
+ */
+function debut_fin_univers(equa_diff, t_0) {
+    let set_solution = [0, 1 ,1]
+    let save_set_solution;
+    let pas = 1e-3
+    let pas_temps = pas / H0_parGAnnees(H0)
+    let nombre_point = 0
+
+    let naissance_univers;
+    let mort_univers;
+
+    // Recherche a = 0 dans le sens négatif
+    while (set_solution[1] >= 0 && nombre_point <= 10/pas) {
+        save_set_solution = set_solution
+        set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff)
+        nombre_point = nombre_point + 1
+        console.log("Solutions min :", set_solution)
+    }
+
+    if ( isNaN(set_solution[1]) || isNaN(set_solution[2]) ) {
+        set_solution = save_set_solution
+    }
+
+
+    if ( set_solution[1] > 1 && Math.abs(set_solution[1]) <= pas_temps * 1e11 ) {
+        naissance_univers = "Pas de naissance de l'univers"
+    }
+    else {
+        let age_debut = set_solution[0] / H0_parGAnnees(H0)
+        age_debut = age_debut + t_0
+        if (set_solution[1] <= 1) {
+            age_debut = 0
+            naissance_univers = age_debut + " (BigBang)"
+        }
+
+        if (set_solution[2] > pas_temps * 1e6) {
+            naissance_univers = age_debut + " (BigFall)"
+        }
+    }
+
+    // On réinitialise
+    set_solution = [0, 1, 1];
+    nombre_point = 0;
+
+    // Recherche a = 0 dans le sens positif
+    while (set_solution[1] >= 0 && nombre_point <= 10/pas) {
+        save_set_solution = set_solution
+        set_solution = RungeKuttaEDO2(pas, set_solution[0], set_solution[1], set_solution[2], equa_diff)
+        nombre_point = nombre_point + 1
+        console.log("Solutions pos :", set_solution)
+    }
+
+    if ( isNaN(set_solution[1]) || isNaN(set_solution[2]) ) {
+        set_solution = save_set_solution
+    }
+
+    if ( set_solution[1] > 1 && Math.abs(set_solution[1]) <= pas_temps * 1e11 ) {
+        mort_univers = "Pas de mort de l'univers"
+    }
+    else {
+        let age_fin = set_solution[0] / H0_parGAnnees(H0)
+        age_fin = age_fin + t_0
+        if (set_solution[1] <= 1) {
+            mort_univers = age_fin + " (BigCrunch)"
+        }
+
+        if (Math.abs(set_solution[1]) > pas_temps * 1e6) {
+            mort_univers = age_fin + " (BigRip)"
+        }
+    }
+
+    return [naissance_univers, mort_univers]
+}
+
+/**
  * Fonction permettant de tracer le facteur d'échelle en fonction du temps.
  * @param solution {[number[], number[]]} Liste contenant la liste des temps et les valeurs du facteur d'échelle
  */
