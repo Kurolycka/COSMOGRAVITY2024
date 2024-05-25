@@ -159,7 +159,7 @@ function genereHtml(){
 		newinput.setAttribute("value","5e3");
 		newinput.setAttribute("align","left");
 
-		newinput.setAttribute("maxlength","10");
+		newinput.setAttribute("maxlength","20");
 
 		newinput.setAttribute("type","text");
 
@@ -231,6 +231,15 @@ function genereHtml(){
         for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
             jstring += '<th class="tg-aicv">$E'+countt.toString()+'$</th>';
         }
+
+		for (countt=1; countt <= nbredefuseesgenere; countt +=1) {
+			jstring += '<th class="tg-aicv" id="rayon_orb_circ_ext_photon_nonBar'+countt.toString()+'" title="">$rcirc ext'+countt.toString()+'$</th>'; //Manon
+		}
+
+		for (countt=1; countt <= nbredefuseesgenere; countt +=1) {
+			jstring += '<th class="tg-aicv" id="rayon_orb_circ_int_photon_nonBar'+countt.toString()+'" title="">$rcirc int'+countt.toString()+'$</th>'; //Manon
+		}
+
     //pour katex il faux mettre un antislash devant le antislash 
         jstring +='<th class="tg-6l4m" id="rayonschwars"  title="" >$rs=\\frac{2GM}{c^{2}}(m)$</th>';
 		jstring +='<th class="tg-6l4m" id="gravtxt" title="">$grav=\\frac{GM}{R^{2}}\\frac{1}{9.81}(g)$</th>';
@@ -250,6 +259,14 @@ function genereHtml(){
 
         for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
             jstring += '<td class="tg-3ozo" id="E'+countt.toString()+'">0</td>';
+		}
+
+		for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
+            jstring += '<td class="tg-3ozo" id="r_circ_ext_res'+countt.toString()+'">0</td>'; //Manon
+		}
+
+		for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
+            jstring += '<td class="tg-3ozo" id="r_circ_int_res'+countt.toString()+'">0</td>'; //Manon
 		}
 
         jstring +='<td class="tg-3ozo" id="m">0</td>';
@@ -333,7 +350,6 @@ function genereHtml(){
 	texteTrajectoirePhotonNonBar(nbredefuseesgenere);
 	notationvitesseree1();
 	infobulleobservateurdistant();
-	textegravetetc();					
 	//pour le bon affichage du katex
 	renderMathInElement(document.body, {
 				// ...options...
@@ -345,6 +361,8 @@ function genereHtml(){
 }
 
 function initialisation(compteur){
+
+	var texte = o_recupereJson();
 
 	G = 6.6742 * Math.pow(10, -11);
 	M = Number(document.getElementById("M").value);
@@ -389,6 +407,27 @@ function initialisation(compteur){
 		E = Math.sqrt(Math.pow(beta(r0)/c,2)*(Math.pow(vr,2)/alpha(r0)+Math.pow(vphi,2)));
 	}
 
+	limite_haute = (3/2)*rs;
+	limite_basse = (9/8)*rs;
+
+	if (r_phy > limite_basse && r_phy < limite_haute){
+		r_circ_int = (1/3)*r_phy*((Math.sqrt(r_phy*(8*r_phy - 9*rs)))/(Math.sqrt(rs*(r_phy-rs))));
+		document.getElementById("r_circ_int_res"+compteur.toString()).innerHTML = r_circ_int.toExponential(10);
+		document.getElementById("r_circ_int_res"+compteur.toString()).title = texte.pages_trajectoire.orbite_circulaire_stable;
+	}else{
+		r_circ_int="";
+		document.getElementById("r_circ_int_res"+compteur.toString()).innerHTML = r_circ_int;
+		document.getElementById("r_circ_int_res"+compteur.toString()).removeAttribute("title");
+	}
+
+	r_circ_ext = (3/2)*rs;
+	if (r_circ_ext >= r_phy){
+		document.getElementById("r_circ_ext_res"+compteur.toString()).innerHTML = r_circ_ext.toExponential(10);
+		document.getElementById("r_circ_ext_res"+compteur.toString()).title = texte.pages_trajectoire.orbite_circulaire_instable;
+	}else{
+		document.getElementById("r_circ_ext_res"+compteur.toString()).innerHTML = "";
+		document.getElementById("r_circ_ext_res"+compteur.toString()).removeAttribute("title");
+	}
 
 	document.getElementById("L"+compteur.toString()).innerHTML = L.toExponential(3);
 	document.getElementById("E"+compteur.toString()).innerHTML = E.toExponential(3);
@@ -921,10 +960,6 @@ function animate(compteur,mobile,mobilefactor) {
 			mobile.positionspatio.posX1 = mobilefactor[compteur] * mobile.r_part * (Math.cos(mobile.phi) / rmax) + (canvas.width / 2.);
     		mobile.positionspatio.posY1 = mobilefactor[compteur] * mobile.r_part * (Math.sin(mobile.phi) / rmax) + (canvas.height / 2.);
 
-			if (mobile.r_part>r_phy){ //ManonGeneralisation
-				mobile.distance_parcourue_totale+=0; //ManonGeneralisation
-			}
-
 		}else{  // observateur
 			if(mobile.r_part_obs > r_phy) {   // observateur extérieur masse
 				val = rungekutta_externe_photon_obs(mobile.dtau, mobile.r_part_obs, mobile.A_part_obs,mobile.E,mobile.L);
@@ -939,7 +974,6 @@ function animate(compteur,mobile,mobilefactor) {
 				//alert(vr_1_obs);
 				vp_1_obs=resultat[2]; 
 
-				mobile.distance_parcourue_totale+=vtotal*mobile.dtau; //ManonGeneralisation
 		
 			}else{    // observateur intérieur masse
 						
@@ -967,7 +1001,6 @@ function animate(compteur,mobile,mobilefactor) {
 				vr_1_obs=vitess_phys[1]*Math.sign(mobile.A_part_obs);
 				vp_1_obs=vitess_phys[2];
 
-				mobile.distance_parcourue_totale+=vtotal*mobile.dtau; //ManonGeneralisation
 				
 			}  // FIN observateur intérieur masse
 			
