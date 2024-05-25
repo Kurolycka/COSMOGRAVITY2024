@@ -109,7 +109,6 @@ function get_root_t(){// omega est omegalambda0 en cas de constante cosmo et ome
 	var texte = o_recupereJson();
 	eps=1e-6;
 	t_max=simpson_simple_degre2(fonction_integrale, 0, omegam0, Number(omegalambda0), Number(Or));
-	
 
 	t_em = (document.getElementById("t_racine_em").value);
 	if(t_em <=0 ){
@@ -329,8 +328,6 @@ function dichotomie(BornInf, BornSup, fonction, cible, ex){
     z_sup = BornSup;
     dm_z_inf = fonction(z_inf, omegam0, omegalambda0, Or, ex);
     dm_z_sup = fonction(z_sup, omegam0, omegalambda0, Or, ex);
-	console.log(dm_z_inf);
-	console.log(dm_z_sup);
 
     max_iterations = 500;
     j = 0;
@@ -481,54 +478,51 @@ function dichotomie_L(BornInf, BornSup, cible, ex){
 
 function bisection_method_t (t, omegam0, omegalambda0, Or, eps){
 	if(t>1e4){
-	omegak0=(1-omegam0-omegalambda0-Or);
-	var za = 0;
-	var zb = 1e6; //valeur par default
-	ext = 0.00001;//indicateur de tolérence d'erreur dichotomie temporelle
-	Eps = 1e-6;
+		omegak0=(1-omegam0-omegalambda0-Or);
+		var za = 0;
+		var zb = 1e6; //valeur par default
+		ext = 0.00001;//indicateur de tolérence d'erreur dichotomie temporelle
+		Eps = 1e-6;
 
-	initial_a = Number(zb);
-
-	t_zb = simpson(0, 0.999999, cv_fonction_integrale, omegam0, Number(omegalambda0), Number(Or),eps);
-
-	initial_a = Number(za);
-	t_za = simpson(0, 0.999999, cv_fonction_integrale, omegam0, Number(omegalambda0), Number(Or),eps);
-	reconditionneur_t  = espace_definie(omegam0, omegalambda0, Or);
-	contrainte_t = Number(reconditionneur_t[1]);
-
-	//une contrainte se manifèste, za n'est plus égal à 0
-	if (contrainte_t==1){
-		za = reconditionneur_t[0]+0.01;
-		//il faut recalculer l'image de za à travers la bonne fonction du temps cosmique
+		initial_a = Number(zb);
+		t_zb = simpson(0, 0.999999, cv_fonction_integrale, omegam0, Number(omegalambda0), Number(Or),eps);
 		initial_a = Number(za);
-		t_za = simpson(0, 0.99999, cv_fonction_integrale, omegam0, Number(omegalambda0), Number(Or),eps);
-	}
+		t_za = simpson(0, 0.999999, cv_fonction_integrale, omegam0, Number(omegalambda0), Number(Or),eps);
+		reconditionneur_t  = espace_definie(omegam0, omegalambda0, Or);
+		contrainte_t = Number(reconditionneur_t[1]);
 
-	//Les integrales convergent. Ici uncalculable signale si le calcul inverse est impossible. Le code qui suit ajuste
-	//l'intervalle dans laquelle la solution peut se trouver
-	if (t>t_za || t==0 || t<0){
-
-		return NaN;        
-
-	}
-
-	else if(t<t_zb){
-		ind = 0;
-		while(t<t_zb && ind<100){
-			zb*=10;
-
-			initial_a = Number(zb);
-			t_zb = simpson(0, 0.99999, cv_fonction_integrale, omegam0, Number(omegalambda0), Number(Or),eps);
-			ind+=1;
-		}
-		if (ind==100){
-			return NaN;
+		//une contrainte se manifèste, za n'est plus égal à 0
+		if (contrainte_t==1){
+			za = reconditionneur_t[0]+0.01;
+			//il faut recalculer l'image de za à travers la bonne fonction du temps cosmique
+			initial_a = Number(za);
+			t_za = simpson(0, 0.99999, cv_fonction_integrale, omegam0, Number(omegalambda0), Number(Or),eps);
 		}
 
-	}
+		//Les integrales convergent. Ici uncalculable signale si le calcul inverse est impossible. Le code qui suit ajuste
+		//l'intervalle dans laquelle la solution peut se trouver
+		if (t>t_za || t==0 || t<0){
 
-	return dichotomie_L(za, zb, t, ext);}
-	else{
+			return NaN;        
+
+		}else if(t<t_zb){
+			ind = 0;
+			while(t<t_zb && ind<100){
+				zb*=10;
+
+				initial_a = Number(zb);
+				t_zb = simpson(0, 0.99999, cv_fonction_integrale, omegam0, Number(omegalambda0), Number(Or),eps);
+				ind+=1;
+			}
+			if (ind==100){
+				return NaN;
+			}
+
+		}
+
+		return dichotomie_L(za, zb, t, ext);
+
+	}else{
 		h0 = Number(document.getElementById("H0_annexes").value);  //  em km par seconde et par mégaparsec
 		typeannee = document.getElementById("typeannee").value;
 		switch (typeannee) {

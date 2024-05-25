@@ -167,7 +167,6 @@ ga('send', 'pageview');
 			<input id="r_phy" value="0" align="left" maxlength="10" type="text" size="10" onchange="verifnbr();initialisationGenerale(lenbdefusees)">
 		</span>
 
-	
 		</div>
 
 		<div>
@@ -303,17 +302,21 @@ ga('send', 'pageview');
 	var btnObervateur = document.getElementById("r3");
     var btnSpationaute = document.getElementById("r4");
     var inputNbfusees = document.getElementById("nombredefusees");
-	var labelNbfusees = document.getElementById("labelnumberfusees")
+	var labelNbfusees = document.getElementById("labelnumberfusees");
 
     // Ajouter des écouteurs d'événements pour les boutons
     btnObervateur.addEventListener("click", function() {
 		inputNbfusees.style.display = "inline"; // Afficher le input et le label de nbfusees si button observateur est cliqué 
 		labelNbfusees.style.display = "inline"; 
+		labelNbGTempsAcc.style.display="none"; //Manon
+		inputNbGTempsAcc.style.display="none"; //Manon
     });
 
     btnSpationaute.addEventListener("click", function() {
 		inputNbfusees.style.display = "none"; // Masquer le input et le label de nbfusees si button spationaute est cliqué 
 		labelNbfusees.style.display = "none";
+		labelNbGTempsAcc.style.display="inline"; //Manon
+		inputNbGTempsAcc.style.display="inline"; //Manon
     });
 
 	var lenbdefusees;

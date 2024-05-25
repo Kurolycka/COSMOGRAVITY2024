@@ -521,31 +521,26 @@ function calcul() { // fonction principale de cosmogravity
             data_y.reverse();
         }
 
-        //partie Remy pour ajouter la distance et le decalage vers le z de l'horizon des evenements
-        function dasurdtauRemy(tau,a){  //fonction en double avec les précedentes mais pour verifier que tout marche independamment
-            return Math.sqrt(-Or/Math.pow(a,2)+omegam0/a+omegalambda0*Math.pow(a,2)+Number(omegak0));
-        };
-        function dasurdtausecondeRemy(tau, a, ap){
-            return -Or/Math.pow(a,3)-.5*(omegam0/Math.pow(a,2))+omegalambda0*a;
-        };
+        //Remy 2024
+        //nouvelle théorie pour calcul des horizons cosmologiques
+        //pour trouver un z suffisament élevé pour être considéré à l'infini mais pas trop pour que l'integral se fasse sans voir besoin de 1 milliard de points
+        z_infini=0
+        while (Math.pow(E(z_infini,Number(Or),Number(omegam0),Number(omegalambda0)),-0.5)>1e-7){
+            z_infini=z_infini+1;
+        }
+        //formule 21 dans la théorie du 20/05/2024
+        dm_horizon_particule_mpc=DistanceMetrique(0,z_infini,H0*1e3,Number(omegak0),Number(Or),Number(omegam0),Number(omegalambda0));
+        dm_horizon_particule_m=pc_vers_m(dm_horizon_particule_mpc*1e6);    //passage du megaparsec au metre puis giga annee lumiere
+        dm_horizon_particule_Ga=m_vers_AL(dm_horizon_particule_m)/1e9 
 
-        aRemy_neg=RungeKutta_D1_D2(-age/1e5,0,1,1,dasurdtauRemy,dasurdtausecondeRemy,0,5);
-        aRemy_pos=RungeKutta_D1_D2(age/1e5,0,1,1,dasurdtauRemy,dasurdtausecondeRemy,0,5);
-        aRemy=fusion_solutions(aRemy_neg,aRemy_pos);
+        //formule 23 dans la théorie du 20/05/2024
+        dm_horizon_evenement_mpc=DistanceMetrique(-.99999,0,H0*1e3,Number(omegak0),Number(Or),Number(omegam0),Number(omegalambda0));
+        dm_horizon_evenement_m=pc_vers_m(dm_horizon_evenement_mpc*1e6);    //passage du megaparsec au metre puis giga annee lumiere
+        dm_horizon_evenement_Ga=m_vers_AL(dm_horizon_evenement_m)/1e9 
 
-        valeur_temps_dmHorizon=aRemy[0].map(tau=>tau/H0engannee+age);
-        valeur_integrale_dmHorizon=aRemy[1].map(a => 1e9/a);  //vitesse lumiere par 1 Ga = 1e9 AL/Ga
-        
-        dm_horizon_particule_Ga=integraleTrapezes(valeur_temps_dmHorizon,valeur_integrale_dmHorizon,0,age)/1e9;
-        dm_horizon_particule_m=dm_horizon_particule_Ga*1e9*nbJoursParAn()*86400*c; 
 
-        dm_horizon_evenement_m=c/H0*3.086e22/1e3;
-        dm_horizon_evenement_Ga=c/H0*3.262e-3/1e3;
 
-        eps=1e-6;
 
-        z_negatif_inverse=false;
-        z_horizon = Number(bisection_method_dm(dm_horizon_evenement_m, omegam0, omegalambda0, Or, eps)); 
 
         //modifier la fonction get_root_dm dans bisection_root_finder.js
 
@@ -560,19 +555,17 @@ function calcul() { // fonction principale de cosmogravity
     if(modele===0 || modele===1 ) {
         if (sessionStorage.getItem("LANGUE") === "fr") {
             document.getElementById("resultat_ageunivers_ga").innerHTML = "Pas de Big Bang";
-            document.getElementById("resultat_DmHorizon").innerHTML = "? (Pas de Big Bang)"
-            document.getElementById("resultat_ZHorizon").innerHTML = "? (Pas de Big Bang)"
             document.getElementById("resultat_ageunivers_s").innerHTML = "Pas de Big Bang";
             document.getElementById("resultat_bigcrunch").innerHTML = "Pas de Big Crunch";
             document.getElementById("resultat_dureeuniv").innerHTML = "&#8734;";
         } else {
             document.getElementById("resultat_ageunivers_ga").innerHTML = "No Big Bang";
             document.getElementById("resultat_ageunivers_s").innerHTML = "No Big Bang";
-            document.getElementById("resultat_DmHorizon").innerHTML = "? (No Big Bang)"
-            document.getElementById("resultat_ZHorizon").innerHTML = "? (No Big Bang)"
             document.getElementById("resultat_bigcrunch").innerHTML = "No Big Crunch";
             document.getElementById("resultat_dureeuniv").innerHTML = "&#8734;";
         } 
+        //pas d'horizon cosmologiques si l'univers n'est pas en expansion avec un big bang et sans big crunch (modele 3 uniquement)
+        document.getElementById("div_horizon_cosmologique").style.display="none";
     }
   
     if(modele===2) {
@@ -589,6 +582,8 @@ function calcul() { // fonction principale de cosmogravity
         total=Number(total).toExponential(4);
         document.getElementById("resultat_bigcrunch").innerHTML = texte.calculs_univers.tempsavtBC + tBC + " Ga = " + tBC_sec + " s";
         document.getElementById("resultat_dureeuniv").innerHTML = total + " Ga = " + total_sec + " s";
+        //pas d'horizon cosmologiques si l'univers n'est pas en expansion avec un big bang et sans big crunch (modele 3 uniquement)
+        document.getElementById("div_horizon_cosmologique").style.display="none";
     }
 
     if(modele===3 ) {
@@ -601,8 +596,13 @@ function calcul() { // fonction principale de cosmogravity
         } 
         document.getElementById("resultat_ageunivers_ga").innerHTML = "" + age.toExponential(4);
         document.getElementById("resultat_ageunivers_s").innerHTML = "" + age_sec.toExponential(4);
-        document.getElementById("resultat_DmHorizon").innerHTML = dm_horizon_evenement_Ga.toExponential(4);
-        document.getElementById("resultat_ZHorizon").innerHTML = z_horizon.toExponential(4);
+
+        document.getElementById("div_horizon_cosmologique").style.display="block";
+
+        document.getElementById("resultat_DmHorizonEvenement").innerHTML = dm_horizon_evenement_Ga.toExponential(4);
+        document.getElementById("resultat_ZHorizonEvenement").innerHTML = -1;
+        document.getElementById("resultat_DmHorizonParticule").innerHTML = dm_horizon_particule_Ga.toExponential(4);
+        document.getElementById("resultat_ZHorizonParticule").innerHTML = "∞";
     }
 
     if(modele===4) {
@@ -614,6 +614,8 @@ function calcul() { // fonction principale de cosmogravity
         total_sec = (total*nbJoursParAn()*86400).toExponential(4);
         document.getElementById("resultat_dureeuniv").innerHTML = (total*1e-9).toExponential(4) + " Ga = " + total_sec + " s";
         document.getElementById("resultat_bigcrunch").innerHTML = texte.calculs_univers.tempsavtBC + Math.abs(age_ans*1e-9).toExponential(4) + " Ga = " + Math.abs(tBB_sec).toExponential(4) + " s";
+        //pas d'horizon cosmologiques si l'univers n'est pas en expansion avec un big bang et sans big crunch (modele 3 uniquement)
+        document.getElementById("div_horizon_cosmologique").style.display="none";
     }  
 
     if(modele===5) {
@@ -627,11 +629,9 @@ function calcul() { // fonction principale de cosmogravity
             document.getElementById("resultat_dureeuniv").innerHTML = "&#8734;";
         }
         tBB_sec=age_ans*86400*nbJoursParAn();
-        document.getElementById("resultat_bigcrunch").innerHTML = texte.calculs_univers.tempsavtBC +
-            (age_ans*1e-9).toExponential(4) +
-            " Ga = " +
-            tBB_sec.toExponential(4) +
-            " s";
+        document.getElementById("resultat_bigcrunch").innerHTML = texte.calculs_univers.tempsavtBC +(age_ans*1e-9).toExponential(4) +" Ga = " +tBB_sec.toExponential(4) +" s";
+        //pas d'horizon cosmologiques si l'univers n'est pas en expansion avec un big bang et sans big crunch (modele 3 uniquement)
+        document.getElementById("div_horizon_cosmologique").style.display="none";
     }
  
     //on cree le graphique
