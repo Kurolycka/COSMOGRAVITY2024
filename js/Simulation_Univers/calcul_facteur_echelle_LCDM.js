@@ -73,7 +73,7 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
         // On calcule le pas qui sera utilisé
         if ( (isNaN(tau_min) || isNaN(tau_max)) && !isNaN(t_0)) {
             console.log("Pas calculé avec t_0")
-            pas = t_0 * 1e-4
+            pas = Math.abs(t_0) * 1e-4
         } else {
             console.log("Pas calculé grossèrement")
             pas = 1e-3
@@ -84,7 +84,7 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
             pas = Math.abs(tau_max - tau_min) * 1e-4
         }
 
-        console.log("les taus :", t_min, t_0, t_max)
+        console.log("les temps :", t_min, t_0, t_max)
 
         return [tau_init, a_init, ap_init, pas]
     }
@@ -100,7 +100,7 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     let nombre_point = 0;
 
     // Résolution dans le sens négatif
-    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 50/pas) {
+    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 10/Math.abs(pas)) {
         set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
         taus.push(set_solution[0])
         facteur_echelle.push(set_solution[1])
@@ -115,7 +115,7 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     nombre_point = 0;
 
     // Résolution dans le sens positif
-    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 50/pas) {
+    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 10/Math.abs(pas)) {
         set_solution = RungeKuttaEDO2(pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
         taus.push(set_solution[0])
         facteur_echelle.push(set_solution[1])
@@ -125,24 +125,29 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
 
     // On calcule le temps associé à l'instant présent et si il n'est pas définis on le met à zéro
     let t_0 = calcul_ages(fonction_simplifiant, H0parsec, 1e-8, 0.999999999);
+
     if (isNaN(t_0)) {
-        console.log("t0 est NaN")
+        console.log("t0 théorique est NaN")
         t_0 = 0
     } else {
         console.log("t0 n'est pas NaN")
-        t_0 = t_0 / (365.25 * 24 * 3600 * 1e9)
+        t_0 = t_0 / (nbrJours() * 24 * 3600 * 1e9)
     }
+
+    let debutEtFin = debut_fin_univers(equa_diff_2, t_0)
 
     // On transforme les taux en temps
     for (let index = 0; index < taus.length; index = index + 1) {
         taus[index] = taus[index] / H0parGAnnee
-        taus[index] = taus[index] + t_0
+        if (debutEtFin[2]) {
+            taus[index] = taus[index] + t_0
+        }
     }
 
     console.log("Liste temps :", taus)
     console.log("Liste facteur :", facteur_echelle)
 
-    return [[taus, facteur_echelle], t_0]
+    return [[taus, facteur_echelle], t_0, debutEtFin]
 }
 
 function affichage_site_LCDM() {
@@ -154,7 +159,7 @@ function affichage_site_LCDM() {
     let donnee = sorties[0]
 
     let age_univers = sorties[1]
-    let debutEtFin = debut_fin_univers(equa_diff_2, age_univers)
+    let debutEtFin = sorties[2]
     console.log("Timeline :", debutEtFin, age_univers)
 
 
