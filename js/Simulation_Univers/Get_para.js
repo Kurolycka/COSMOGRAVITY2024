@@ -321,7 +321,7 @@ function transfert_calcu(update1, choix) {
   document.getElementById("T0_annexes").value = sessionStorage.getItem("T0");
   document.getElementById("H0_annexes").value = sessionStorage.getItem("H0");
   document.getElementById("omegam0_annexes").value = sessionStorage.getItem("Om");
-  document.getElementById("resultat_omegar0_annexes").value = sessionStorage.getItem("Or");
+  document.getElementById("resultat_omegar0_annexes").value = sessionStorage.getItem("rfc");
   document.getElementById("resultat_omegak0_annexes").value = sessionStorage.getItem("Ok");
   document.getElementById("k_p").value = sessionStorage.getItem("k");
   document.getElementById("h_p").value = sessionStorage.getItem("h");

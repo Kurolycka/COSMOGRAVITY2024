@@ -102,7 +102,6 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
         set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
         taus.push(set_solution[0])
         facteur_echelle.push(set_solution[1])
-        console.log(set_solution)
     }
 
     // On inverse pour que les listes commencent avec le tau le plus petit puis on réinitialise les conditions initiales
@@ -115,7 +114,6 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
         set_solution = RungeKuttaEDO2(pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
         taus.push(set_solution[0])
         facteur_echelle.push(set_solution[1])
-        console.log(set_solution)
     }
 
     // On calcule le temps associé à l'instant présent et si il n'est pas définis on le met à zéro
@@ -149,4 +147,41 @@ function affichage_site_LCDM() {
     console.log("param utilisé dans affichage_site_LCDm", equa_diff_1_LCDM, equa_diff_2_LCDM, fonction_E)
     let donnee = calcul_facteur_echelle_LCDM(equa_diff_1_LCDM, equa_diff_2_LCDM, fonction_E)
     graphique_facteur_echelle(donnee)
+    //Remy 26/05/24
+    dm_horizon_particule_m=calcul_horizon_particule();
+    dm_horizon_particule_Ga=m_vers_AL(dm_horizon_particule_m)/1e9;
+    dm_horizon_evenement_m=calcul_horizon_evenements();
+    dm_horizon_evenement_Ga=m_vers_AL(dm_horizon_evenement_m)/1e9;
+    document.getElementById("resultat_DmHorizonEvenement").innerHTML = dm_horizon_evenement_Ga.toExponential(4);
+    document.getElementById("resultat_ZHorizonEvenement").innerHTML = -1;
+    document.getElementById("resultat_DmHorizonParticule").innerHTML = dm_horizon_particule_Ga.toExponential(4);
+    document.getElementById("resultat_ZHorizonParticule").innerHTML = "∞";
 }
+
+//Remy 26/05/24
+/** 
+ * Fonction qui renvoie la distance de l'horizon des particules cosmologiques (plus grande distance a laquelle on peut recevoir un signal emis à l'instant t)
+ * @param {*} z_emission par defaut = 0 décalage spectral du moment où le signal est émis
+ * @returns 
+ */
+function calcul_horizon_particule(z_emission=0){
+    //pour trouver un z suffisament élevé pour être considéré à l'infini mais pas trop pour que l'integral se fasse sans voir besoin de 1 milliard de points
+    z_infini=0
+    while (Math.pow(fonction_E(z_infini,true),-0.5)>1e-7){
+        z_infini=z_infini+1;
+    }
+    //formule 21 dans la théorie du 20/05/2024
+    return DistanceMetrique(z_emission,z_infini,H0_parSecondes(H0),Omega_k(0),Omega_r(0),Omega_m(0),Omega_l(0));
+};
+
+/**
+ * Fonction qui renvoie la distance de l'horizon des évenements cosmologiques (plus grande distance a laquelle on peut envoyer un signal emis à l'instant t)
+ * @param {*} z_reception par defaut = 0 décalage spectral du moment où le signal est reçu
+ * @returns 
+ */
+function calcul_horizon_evenements(z_reception=0){
+    //formule 23 dans la théorie du 20/05/2024
+    return DistanceMetrique(-.9999999,0,H0_parSecondes(H0),Omega_k(0),Omega_r(0),Omega_m(0),Omega_l(0));
+}
+
+

@@ -5,7 +5,7 @@ Ce fichier javascript a pour but de rassembler toutes les fonctions qui sont uti
 
 
 // Variables globales, utilisées un peu partout
-const AU = 149597870700; // en mètres
+//const AU = 149597870700; // en mètres
 
 let T0 = Number(document.getElementById("T0").value)
 let H0 = Number(document.getElementById("H0").value);
@@ -66,7 +66,6 @@ function H0_parGAnnees(H0) {
 
     return H0_convertis
 }
-
 
 /**
  * Fonction permettant de calculer Oméga_r en fonction du décalage spectral
@@ -186,17 +185,27 @@ function Omega_k(z) {
  * Fonction facilitant l'écriture des expression dans le cas du modlèle LCDM. On a fait la substitution u = 1 / (1 + x)
  * afin que les bornes d'intégrations soient finies
  * @param u {number} Paramètre de la fonction
+ * @param z_utilisé {Boolean} Pour choisir si le calcul se fait avec les a (false par defaut) ou z (true)
  * @return {number} Valeur de la fonction
  */
-function fonction_E(u) {
-    let Omegam0 = Omega_m(0)
-    let Omegar0 = Omega_r(0)
-    let Omegal0 = Omega_l(0)
+function fonction_E(u, z_utilisé=false) {
+    let Omegam0 = Omega_m(0);
+    let Omegar0 = Omega_r(0);
+    let Omegal0 = Omega_l(0);
+    let terme_1;
+    let terme_2;
+    let terme_3;
 
     // On calcule les terme 1 à 1 par soucis de clareté
-    let terme_1 = Omegar0 * Math.pow(u, -4);
-    let terme_2 = Omegam0 * Math.pow(u, -3);
-    let terme_3 = (1 - Omegam0 - Omegal0 - Omegar0) * Math.pow(u, -2);
+    if (z_utilisé){
+        terme_1 = Omegar0 * Math.pow(1+u, 4);
+        terme_2 = Omegam0 * Math.pow(1+u, 3);
+        terme_3 = (1 - Omegam0 - Omegal0 - Omegar0) * Math.pow(1+u, 2);
+    }else{
+        terme_1 = Omegar0 * Math.pow(u, -4);
+        terme_2 = Omegam0 * Math.pow(u, -3);
+        terme_3 = (1 - Omegam0 - Omegal0 - Omegar0) * Math.pow(u, -2);
+    };
     return terme_1 + terme_2 + terme_3 + Omegal0;
 }
 
@@ -237,6 +246,7 @@ function derivee_fonction_Y(x) {
 /**
  * Deuxième fonction facilitant l'écriture des expression dans le cas du modlèle DE. On a fait la substitution u = 1 / (1 + x)
  * @param u {number} Paramètre de la fonction
+ * @param z_utilisé {Boolean} Pour choisir si le calcul se fait avec les a (false par defaut) ou z (true)
  * @return {number} Valeur de la fonction
  */
 function fonction_F(u) {
@@ -244,12 +254,22 @@ function fonction_F(u) {
     let Omegam0 = Omega_m(0)
     let Omegar0 = Omega_r(0)
     let OmegaDE0 = Omega_DE(0)
+    let terme_1;
+    let terme_2;
+    let terme_3;
+    let terme_4;
 
-    let terme_1 = Omegak0 * Math.pow(u, -2)
-    let terme_2 = Omegam0 * Math.pow(u, -3)
-    let terme_3 = Omegar0 * Math.pow(u, -4)
-    let terme_4 = OmegaDE0 * fonction_Y(u)
-
+    if (z_utilisé){
+        terme_1 = Omegak0 * Math.pow(1+u, 2)
+        terme_2 = Omegam0 * Math.pow(1+u, 3)
+        terme_3 = Omegar0 * Math.pow(1+u, 4)
+        terme_4 = OmegaDE0 * fonction_Y(u)
+    }else{
+        terme_1 = Omegak0 * Math.pow(u, -2)
+        terme_2 = Omegam0 * Math.pow(u, -3)
+        terme_3 = Omegar0 * Math.pow(u, -4)
+        terme_4 = OmegaDE0 * fonction_Y(u)
+    };
     return terme_1 + terme_2 + terme_3 + terme_4
 }
 
@@ -389,4 +409,53 @@ function graphique_facteur_echelle(solution) {
         Plotly.newPlot("graphique_sombre", donnee, apparence);
     }
 }
+
+//Partie Remy
+/** renvoie la fonction Sk pour calculer les distances cosmologiques en fontion de la courbure de l'espace
+ * (Univers,simple,DarkEnergy et monofluide)
+ * @param {*} x Paramètre d'entré
+ * @param {*} OmegaK paramètre de densité de courbure
+ * @returns 
+ */
+function Sk(x,OmegaK){
+    if (OmegaK>0) { //si k=-1 alors omegaK positif
+        return Math.sinh(x);
+    }else if(OmegaK<0){//si k=1 alors omegaK négatif
+        return Math.sin(x);
+    }else{//si k=0 alors omegaK est nul
+        return x;
+    }
+};  
+
+/** renvoie la distance métrique entre un photon émis avec un Zemission et recu a une coordonné r avec un Zreception \
+ * pour avoir la distance d'un objet observé avec un certain décalge Zemission=0 \
+ * pour avoir l'horizon cosmologique des particules Zreception=infini \
+ * pour avoir l'horizon cosmologique des évenement Zemission=-1 (dans le futur) \
+ * (Univers,simple) \
+ * Si les omega et H0 sont définis dans la page pas besoin de les mettre en paramètre : DistanceMetrique(Zemission,Zreception)
+ * @param {*} Zemission décalage spectral au moment ou le photon est émis
+ * @param {*} Zreception décalage spectral au moment ou le photon est reçu
+ * @param {*} H0 
+ * @param {*} OmegaK0 
+ * @param {*} OmegaR0 
+ * @param {*} OmegaM0 
+ * @param {*} OmegaLambda0 
+ * @returns 
+ */
+function DistanceMetrique(Zemission,Zreception,H0,OmegaK0,OmegaR0,OmegaM0,OmegaLambda0){
+    function fonction_a_integrer(x){
+        return Math.pow(fonction_E(x,true),-0.5);
+    }
+    return c/(H0*Math.pow(Math.abs(OmegaK0),0.5))*Sk(Math.pow(Math.abs(OmegaK0),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,1e4),OmegaK0)
+};
+
+//moyen de la combiner avec celle du dessus en detectant E ou F avec omegalambda et DE 
+function DistanceMetriqueDE(Zemission,Zreception,H0,OmegaK0,OmegaR0,OmegaM0,OmegaDE0){
+    console.log(H0);
+    function fonction_a_integrer(x){
+        return Math.pow(fonction_F(x,true),-0.5);
+    }
+    return c/(H0*Math.pow(Math.abs(OmegaK0),0.5))*Sk(Math.pow(Math.abs(OmegaK0),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,1e4),OmegaK0)
+};
+
 
