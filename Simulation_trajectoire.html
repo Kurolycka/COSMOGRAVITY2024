@@ -179,6 +179,8 @@ ga('send', 'pageview');
 			</span>
 			<label id="label_temps_allumage" for="temps_allumage" style="display: none;"></label> <!--ManonV3-->
 			<input id="temps_allumage" value="50" type="text" size="5" style="display: none;"> <!--ManonV3-->
+			<label id="label_puissance_reacteur" for="puissance_reacteur" style="display: none;"></label> <!--ManonV3-->
+			<input id="puissance_reacteur" value="100" type="text" size="5" style="display: none;"> <!--ManonV3-->
 		</div>
 
 
@@ -310,6 +312,8 @@ ga('send', 'pageview');
 	var labelNbfusees = document.getElementById("labelnumberfusees");
 	var labelTempsAllumage = document.getElementById("label_temps_allumage"); //ManonV3
 	var inputTempsAllumage = document.getElementById("temps_allumage"); //ManonV3
+	var labelPuissanceReacteur = document.getElementById("label_puissance_reacteur"); //ManonV3
+	var inputPuissanceReacteur = document.getElementById("puissance_reacteur"); //ManonV3
 
     // Ajouter des écouteurs d'événements pour les boutons
     btnObervateur.addEventListener("click", function() {
@@ -317,6 +321,8 @@ ga('send', 'pageview');
 		labelNbfusees.style.display = "inline";
 		labelTempsAllumage.style.display = "none"; //ManonV3
 		inputTempsAllumage.style.display = "none"; //ManonV3
+		labelPuissancerReacteur.style.display = "none"; //ManonV3
+		inputPuissanceReacteur.style.display ="none"; //ManonV3
     });
 
     btnSpationaute.addEventListener("click", function() {
@@ -324,6 +330,8 @@ ga('send', 'pageview');
 		labelNbfusees.style.display = "none";
 		labelTempsAllumage.style.display = "inline"; //ManonV3
 		inputTempsAllumage.style.display = "inline"; //ManonV3
+		labelPuissanceReacteur.style.display = "inline"; //ManonV3
+		inputPuissanceReacteur.style.display = "inline"; //ManonV3
     });
 
 	var lenbdefusees;
