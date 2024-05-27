@@ -121,8 +121,8 @@ function calcu(path) {
 	t0 = Number(document.getElementById("T0").value);
 	h0 = Number(document.getElementById("H0").value);  //  em km par seconde et par mégaparsec
 	cosmo_const = Number(document.getElementById("lambda_cosmo_const").value);
-	omegam0 = Number(document.getElementById("omegam0_annexes").value);
-	omegalambda0 = Number(document.getElementById("omegalambda0_annexes").value);
+	omegam0 = Number(document.getElementById("omegam0").value);
+	omegalambda0 = Number(document.getElementById("omegalambda0").value);
 	omegalambda0 = omegalambda0.toExponential();
 	omegak0 = Number(document.getElementById("resultat_omegak0_annexes").innerHTML);
 	Ie = Number(document.getElementById("i_e").value);
@@ -1392,7 +1392,7 @@ function calcul_temps(abscissa){
 	zArr = [];
 	tempsArr=[];
 	temps_0=0;
-	h0 = Number(document.getElementById("H0_annexes").value); 
+	h0 = Number(document.getElementById("H0").value); 
 	if(h0<0) {temps_0=simpson_simple_degre2(fonction_integrale, 0, omegam0, Number(omegalambda0), Number(Or)); temps_0=-temps_0;}
 	
 	abscissa.forEach(i => {
@@ -1567,8 +1567,11 @@ function onlyOne(checkbox) {
 
 //Remy 27/05/2024
 function calcul_horizons_annexe(){
-
-
-	document.getElementById("resultat_dm_particule_t").value=1;
-	document.getElementById("resultat_dm_evenement_t").value=3;
+	let t_pour_horizon= Number(document.getElementById("t_pour_calcul_horizon").value);
+    let dm_horizon_particule_m=calcul_horizon_particule(t_pour_horizon);
+    let dm_horizon_particule_Ga=m_vers_AL(dm_horizon_particule_m)/1e9;
+    let dm_horizon_evenement_m=calcul_horizon_evenements(t_pour_horizon);
+    let dm_horizon_evenement_Ga=m_vers_AL(dm_horizon_evenement_m)/1e9;
+	document.getElementById("resultat_dm_particule_t").innerHTML=dm_horizon_particule_Ga.toExponential(4);
+	document.getElementById("resultat_dm_evenement_t").innerHTML=dm_horizon_evenement_Ga.toExponential(4);
 }

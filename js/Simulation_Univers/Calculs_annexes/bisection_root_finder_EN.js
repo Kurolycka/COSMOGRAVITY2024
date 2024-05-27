@@ -15,8 +15,8 @@ function inverse_EN(){
 	G = Number(document.getElementById("G_p").value);
 	h = Number(document.getElementById("h_p").value);
 	k = Number(document.getElementById("k_p").value);
-	h0 = Number(document.getElementById("H0_annexes").value);
-	omegam0 = Number(document.getElementById("omegam0_annexes").value);
+	h0 = Number(document.getElementById("H0").value);
+	omegam0 = Number(document.getElementById("omegam0").value);
 	omegaDE0 = Number(document.getElementById("omegaDE0_annexes").value);
 
 	omegak0=(1-omegam0-omegaDE0-Or);
@@ -405,7 +405,7 @@ function bisection_method_t_EN(t, omegam0, omegaDE0, Or, eps,w0,w1){
 
 	return dichotomie_L_EN(za, zb, t, ext);}
 	else{
-		h0 = Number(document.getElementById("H0_annexes").value);  //  em km par seconde et par mégaparsec
+		h0 = Number(document.getElementById("H0").value);  //  em km par seconde et par mégaparsec
 		typeannee = document.getElementById("typeannee").value;
 		switch (typeannee) {
 		case 'Sidérale':

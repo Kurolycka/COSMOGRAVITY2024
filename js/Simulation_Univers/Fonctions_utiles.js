@@ -7,7 +7,6 @@ Ce fichier javascript a pour but de rassembler toutes les fonctions qui sont uti
 // Variables globales, utilisées un peu partout
 AU = 149597870700; // en mètres
 
-console.log(document.getElementById("T0"));
 let T0 = Number(document.getElementById("T0").value)
 let H0 = Number(document.getElementById("H0").value);
 let c = Number(document.getElementById("c_p").value);
@@ -86,12 +85,20 @@ function Omega_r(z) {
         omega_r = ( Omega_r(0) * Math.pow(1 + z, 4) ) / fonction_E(z);
     }
 
-
-    if (document.getElementById("liste").options[0].selected) {
-        omega_r = omega_r * 1.6913
-    }
-    if (document.getElementById("liste").options[2].selected) {
-        omega_r = 0
+    if (document.getElementById("resultat_omegar0_annexes")===null){
+        if (document.getElementById("liste").options[0].selected) {
+            omega_r = omega_r * 1.6913
+        }
+        if (document.getElementById("liste").options[2].selected) {
+            omega_r = 0
+        }
+    }else{
+        if (document.getElementById("resultat_omegar0_annexes")==="Matière, Lambda, RFC et Neutrinos") {
+            omega_r = omega_r * 1.6913
+        }
+        if (document.getElementById("resultat_omegar0_annexes")==="Matière et Lambda") {
+            omega_r = 0
+        }
     }
 
     return omega_r
@@ -467,7 +474,7 @@ function DistanceMetriqueDE(Zemission,Zreception,H0,OmegaK0,OmegaR0,OmegaM0,Omeg
 function calcul_horizon_particule(z_emission=0){
     //pour trouver un z suffisament élevé pour être considéré à l'infini mais pas trop pour que l'integral se fasse sans voir besoin de 1 milliard de points
     z_infini=0
-    while (Math.pow(fonction_E(z_infini,true),-0.5)>1e-7){
+    while (Math.pow(fonction_E(z_infini,true),-0.5)>1e-6){
         z_infini=z_infini+1;
     }
     //formule 21 dans la théorie du 20/05/2024
@@ -481,7 +488,8 @@ function calcul_horizon_particule(z_emission=0){
  */
 function calcul_horizon_evenements(z_reception=0){
     //formule 23 dans la théorie du 20/05/2024
-    return DistanceMetrique(-.9999999,z_reception,H0_parSecondes(H0),Omega_k(0),Omega_r(0),Omega_m(0),Omega_l(0));
+    return DistanceMetrique(-.99999999,z_reception,H0_parSecondes(H0),Omega_k(0),Omega_r(0),Omega_m(0),Omega_l(0));
 }
+
 
 

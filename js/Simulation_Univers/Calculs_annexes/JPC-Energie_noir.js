@@ -87,9 +87,9 @@ function calc_energie_noire() {
   h = Number(document.getElementById("h_p").value);
   k = Number(document.getElementById("k_p").value);
   typeannee = document.getElementById("typeannee").value;
-  t0 = Number(document.getElementById("T0_annexes").value);
-  h0 = Number(document.getElementById("H0_annexes").value);
-  omegam0 = Number(document.getElementById("omegam0_annexes").value);
+  t0 = Number(document.getElementById("T0").value);
+  h0 = Number(document.getElementById("H0").value);
+  omegam0 = Number(document.getElementById("omegam0").value);
   omegaDE0 = Number(document.getElementById("omegaDE0_annexes").value);
   omegak0 = Number(document.getElementById("resultat_omegak0_annexes").innerHTML);
   Ie = Number(document.getElementById("i_e").value);
@@ -801,9 +801,9 @@ function Tracer(path) {
   h = Number(document.getElementById("h_p").value);
   k = Number(document.getElementById("k_p").value);
   typeannee = document.getElementById("typeannee").value;
-  t0 = Number(document.getElementById("T0_annexes").value);
-  h0 = Number(document.getElementById("H0_annexes").value);
-  omegam0 = Number(document.getElementById("omegam0_annexes").value);
+  t0 = Number(document.getElementById("T0").value);
+  h0 = Number(document.getElementById("H0").value);
+  omegam0 = Number(document.getElementById("omegam0").value);
   omegaDE0 = Number(document.getElementById("omegaDE0_annexes").value);
   omegak0 = Number(document.getElementById("resultat_omegak0_annexes").innerHTML);
   Ie = Number(document.getElementById("i_e").value);
@@ -1636,7 +1636,7 @@ function calcul_temps_EN(abscissa){
 	w0 = Number(document.getElementById("omega0_annexes").value);
 	w1 = Number(document.getElementById("omega1_annexes").value);
 
-	h0 = Number(document.getElementById("H0_annexes").value); 
+	h0 = Number(document.getElementById("H0").value); 
 	if(h0<0) {temps_0=simpson_simple_degre2_EN(fonction_integrale_EN, 0, omegam0, Number(omegaDE0), Number(Or),w0,w1); temps_0=-temps_0;}
 	
 	abscissa.forEach(i => {

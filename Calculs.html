@@ -373,16 +373,16 @@
                     <div style="display:flex">
                         <div style="padding:10px">
                             <label>t=</label>
-                            <input type="Number" value="0">
-                        </div>
-                        <div style="padding:10px">
-                            <label>d<sub>p</sub>=</label>
-                            <span id="resultat_dm_particule_t"></span> GAL
-                            <label>d<sub>e</sub>=</label>
-                            <span id="resultat_dm_evenement_t"></span> GAL
+                            <input id="t_pour_calcul_horizon" type="Number" value="0">
                         </div>
                         <div style="padding: 10px;">
                             <input type="button" value="Calcul" id="bouton_clacul_horizon_annexe" onclick="calcul_horizons_annexe()">
+                        </div>
+                        <div style="padding:10px">
+                            <label>d<sub>e</sub>=</label>
+                            <span id="resultat_dm_evenement_t"></span> GAL
+                            <label>d<sub>p</sub>=</label>
+                            <span id="resultat_dm_particule_t"></span> GAL
                         </div>
                     </div>
                 </div>
@@ -410,15 +410,15 @@
                         </div>
 
                         <div>
-                            <label for="omegam0_annexes">Ω<sub>m<sub>0</sub></sub> =</label>
-                            <output id="omegam0_annexes" style="color:blue" onchange="update_omegar0_calc();" value="0.6" type="text">3.0890e-1</output>
+                            <label for="omegam0">Ω<sub>m<sub>0</sub></sub> =</label>
+                            <output id="omegam0" style="color:blue" onchange="update_omegar0_calc();" value="0.6" type="text">3.0890e-1</output>
                         </div>
 
 
 
                         <div>
-                            <label for="omegalambda0_annexes">Ω<sub>Λ0</sub> =</label>
-                            <output id="omegalambda0_annexes" style="color:blue" onchange="update_omegak0_calc();" value="0.5" type="text">6.9110e-1</output>
+                            <label for="omegalambda0">Ω<sub>Λ0</sub> =</label>
+                            <output id="omegalambda0" style="color:blue" onchange="update_omegak0_calc();" value="0.5" type="text">6.9110e-1</output>
                         </div>
                         <br>
 
@@ -1006,6 +1006,8 @@
             calculs = 0;
             texteUniversCalculs();
         </script>
+        <script src="js/functions/fonction_utilitaire.js"></script>
+        <script src="js/Simulation_Univers/MéthodesNumériques.js"></script>
         <script src="js/Simulation_Univers/Fonctions_utiles.js"></script>
     </body>
 </html>
