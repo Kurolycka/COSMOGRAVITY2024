@@ -23,6 +23,8 @@ function save_schwarshild_massif(nbrderockets) {
 	reb = document.getElementById("reb").value;
 	traject_type = document.getElementById("traject_type").value;
 	traject_type2 = document.getElementById("traject_type2").value;
+	temps_allumage = document.getElementById("temps_allumage").value; //ManonV3
+
 	var graph_check = true;
 	if (document.getElementById("toggle").checked == false) {
 		graph_check = false;
@@ -48,6 +50,7 @@ function save_schwarshild_massif(nbrderockets) {
 	sessionStorage.setItem("traject_type", traject_type);
 	sessionStorage.setItem("traject_type2", traject_type2);
 	sessionStorage.setItem("graph_check", graph_check);
+	sessionStorage.setItem("temps_allumage", temps_allumage); //ManonV3
 
 }
 
@@ -78,6 +81,7 @@ function load_schwarshild_massif() {
 		document.getElementById("reb").value = sessionStorage.getItem("reb");
 		document.getElementById("traject_type").value = sessionStorage.getItem("traject_type");
 		document.getElementById("traject_type2").value = sessionStorage.getItem("traject_type2");
+		document.getElementById("temps_allumage").value = sessionStorage.getItem("temps_allumage"); //ManonV3
 		var graph_check = sessionStorage.getItem("graph_check");
 		if (graph_check == "false") {
 			document.getElementById("toggle").checked = false;
@@ -101,16 +105,22 @@ function load_schwarshild_massif() {
 
 		var inputNbfusees = document.getElementById("nombredefusees"); //manon
 		var labelNbfusees = document.getElementById("labelnumberfusees"); //manon
+		var labelTempsAllumage = document.getElementById("label_temps_allumage"); //ManonV3
+		var inputTempsAllumage = document.getElementById("temps_allumage"); //ManonV3
 
 		if (document.getElementById("traject_type2").value == "observateur") {
 			pressionBouttonObservateur();
 			inputNbfusees.style.display = "inline"; //manon
 			labelNbfusees.style.display = "inline"; //manon
+			labelTempsAllumage.style.display ="none"; //ManonV3
+			inputTempsAllumage.style.display = "none"; //ManonV3
 		} 
 		else if (document.getElementById("traject_type2").value == "mobile") {
 			pressionBouttonMobile();
 			inputNbfusees.style.display = "none"; //manon
 			labelNbfusees.style.display = "none"; //manon
+			labelTempsAllumage.style.display = "inline"; //ManonV3
+			inputTempsAllumage.style.display = "inline"; //ManonV3
 
 		}
 

@@ -177,6 +177,8 @@ ga('send', 'pageview');
 			<label id="labelgp" for="vr"></label>
 			<input id="toggle" type="checkbox"  checked>
 			</span>
+			<label id="label_temps_allumage" for="temps_allumage" style="display: none;"></label> <!--ManonV3-->
+			<input id="temps_allumage" value="50" type="text" size="5" style="display: none;"> <!--ManonV3-->
 		</div>
 
 
@@ -294,7 +296,8 @@ ga('send', 'pageview');
 	init_rebond();
 	genereHtml();
 	initialisationGenerale(1);
-		function updatenbredefusees(){
+		
+	function updatenbredefusees(){
 		var nbredefuseesupdatenbr = Number(document.getElementById("nombredefusees").value);	
 		lenbdefusees = nbredefuseesupdatenbr;
 		initialisationGenerale(nbredefuseesupdatenbr);
@@ -305,18 +308,22 @@ ga('send', 'pageview');
     var btnSpationaute = document.getElementById("r4");
     var inputNbfusees = document.getElementById("nombredefusees");
 	var labelNbfusees = document.getElementById("labelnumberfusees");
-	var inputPositionPieds = document.getElementById("position_pieds_res");
-	var labelPositionPieds = document.getElementById("label_position_pieds");
+	var labelTempsAllumage = document.getElementById("label_temps_allumage"); //ManonV3
+	var inputTempsAllumage = document.getElementById("temps_allumage"); //ManonV3
 
     // Ajouter des écouteurs d'événements pour les boutons
     btnObervateur.addEventListener("click", function() {
 		inputNbfusees.style.display = "inline"; // Afficher le input et le label de nbfusees si button observateur est cliqué 
-		labelNbfusees.style.display = "inline"; 
+		labelNbfusees.style.display = "inline";
+		labelTempsAllumage.style.display = "none"; //ManonV3
+		inputTempsAllumage.style.display = "none"; //ManonV3
     });
 
     btnSpationaute.addEventListener("click", function() {
 		inputNbfusees.style.display = "none"; // Masquer le input et le label de nbfusees si button spationaute est cliqué 
 		labelNbfusees.style.display = "none";
+		labelTempsAllumage.style.display = "inline"; //ManonV3
+		inputTempsAllumage.style.display = "inline"; //ManonV3
     });
 
 	var lenbdefusees;

@@ -607,6 +607,8 @@ function texteTrajectoireMassive(nbrderockets) {
   document.getElementById("rebondd").innerHTML = texte.page_trajectoire_massive.rebond;
   document.getElementById("r3").innerHTML = texte.pages_trajectoire.observateur;
   document.getElementById("r4").innerHTML = texte.pages_trajectoire.mobile; 
+  document.getElementById("label_temps_allumage").innerHTML = texte.pages_trajectoire.temps_allumage_label; //ManonV3
+  document.getElementById("label_temps_allumage").title= texte.pages_trajectoire.temps_allumage_infobulle; //ManonV3
   //document.getElementById("boutton_prézoom").innerHTML = texte.pages_trajectoire.boutton_prézoom;
   document.getElementById("boutton_recup").innerHTML = texte.pages_trajectoire.boutton_recup;
   document.getElementById("amortissement").innerHTML = texte.page_trajectoire_massive.amortissement;

@@ -326,7 +326,9 @@
 		"dernier_g": "Dernier g",
 		"dernier_g_infobulle":"Dernier nombre de g ≠ 0 ressenti par le pilote avec 1g = 9.81m/s². Valable seulement pour la mécanique Newtonienne.",
 		"distance_metrique_parcourue":"D(m)",
-		"distance_metrique_parcourue_infobulle":"Distance métrique parcourue par le mobile depuis l'instant initial."
+		"distance_metrique_parcourue_infobulle":"Distance métrique parcourue par le mobile depuis l'instant initial.",
+		"temps_allumage_label":"T<sub>allumage</sub> (ms) =",
+		"temps_allumage_infobulle":"Temps d'allumage du réacteur lorsqu'on clique sur V\u1D69+ ou V\u1D69- ."
 
 	},
 
