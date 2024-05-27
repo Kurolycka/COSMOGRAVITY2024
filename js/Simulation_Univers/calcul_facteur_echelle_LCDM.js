@@ -139,6 +139,7 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     // On transforme les taux en temps
     for (let index = 0; index < taus.length; index = index + 1) {
         taus[index] = taus[index] / H0parGAnnee
+
         if (debutEtFin[2]) {
             taus[index] = taus[index] + t_0
         }

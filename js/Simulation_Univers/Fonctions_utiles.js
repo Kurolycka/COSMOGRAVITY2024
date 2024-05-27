@@ -351,11 +351,13 @@ function equa_diff_2_DE(t, a, ap) {
  * @return Soit les temps de naissance/mort soit un string explicant pourquoi il n'y a pas de naissance/mort
  */
 function debut_fin_univers(equa_diff, t_0) {
+    let H0 = Number(document.getElementById("H0").value);
+    console.log(H0, t_0)
 
     // Déclaration des variables et des valeurs retournée
     let set_solution = [0, 1 ,1]
     let save_set_solution;
-    let pas = 1e-3
+    let pas = 1e-4 * H0 / Math.abs(H0)
     let limite_derivee = 1e11
     let nombre_point = 0
 
@@ -364,7 +366,6 @@ function debut_fin_univers(equa_diff, t_0) {
     let age_debut;
     let age_fin;
 
-    t_0 = Math.abs(t_0)
 
     // Recherche a = 0 / da/dtau = Infinity dans le sens négatif
     while (set_solution[1] >= 0 && Math.abs(set_solution[2]) <= limite_derivee && nombre_point <= 10/Math.abs(pas)) {
@@ -401,32 +402,20 @@ function debut_fin_univers(equa_diff, t_0) {
             Dit que l'univers a commencé avec un BigFall
     */
     if ( set_solution[1] > 1 && Math.abs(set_solution[2]) <= limite_derivee ) {
-        if (H0 > 0) {
-            naissance_univers = "Pas de naissance de l'univers"
-        } else {
-            mort_univers = "Pas de mort de l'univers"
-        }
+        naissance_univers = "Pas de naissance de l'univers"
     }
     else {
         age_debut = set_solution[0] / H0_parGAnnees(H0)
-        age_debut = age_debut + t_0
+        if (t_0 > 0) {
+            age_debut = age_debut + t_0
+        }
 
         if (set_solution[1] <= 1) {
-            if (H0 > 0) {
-                naissance_univers = age_debut.toExponential(4) + " (BigBang)"
-            } else {
-                mort_univers = age_debut.toExponential(4) + " (BigCrunch)"
-                age_fin = age_debut
-            }
+            naissance_univers = age_debut.toExponential(4) + " (BigBang)"
         }
 
         if (Math.abs(set_solution[2]) > limite_derivee) {
-            if (H0 > 0) {
-                naissance_univers = age_debut.toExponential(4) + " (BigFall)"
-            } else {
-                mort_univers = age_debut.toExponential(4) + " (BigRip)"
-                age_fin = age_debut
-            }
+            naissance_univers = age_debut.toExponential(4) + " (BigFall)"
         }
     }
 
@@ -442,7 +431,6 @@ function debut_fin_univers(equa_diff, t_0) {
     }
 
     if ( isNaN(set_solution[1]) || isNaN(set_solution[2]) ) {
-        console.log("Le set de solution saved a été utilisé")
         set_solution = save_set_solution
     }
     console.log(set_solution)
@@ -468,32 +456,19 @@ function debut_fin_univers(equa_diff, t_0) {
             Dit que l'univers se finit avec un BigRip
     */
     if ( set_solution[1] > 1 && Math.abs(set_solution[2]) <= limite_derivee ) {
-        if (H0 > 0) {
-            mort_univers = "Pas de mort de l'univers"
-        } else {
-            naissance_univers = "Pas de naissance de l'univers"
-        }
+        mort_univers = "Pas de mort de l'univers"
     }
     else {
         age_fin = set_solution[0] / H0_parGAnnees(H0)
-        age_fin = age_fin + t_0
-
+        if (t_0 > 0) {
+            age_fin = age_fin + t_0
+        }
         if (set_solution[1] <= 1) {
-            if (H0 > 0) {
-                mort_univers = age_fin.toExponential(4) + " (BigCrunch)"
-            } else {
-                naissance_univers = age_fin.toExponential(4) + " (Bigang)"
-                age_debut = age_fin
-            }
+            mort_univers = age_fin.toExponential(4) + " (BigCrunch)"
         }
 
         if (Math.abs(set_solution[2]) > limite_derivee) {
-            if (H0 > 0) {
-                mort_univers = age_fin.toExponential(4) + " (BigRip)"
-            } else {
-                naissance_univers = age_fin.toExponential(4) + " (BigFall)"
-                age_debut = age_fin
-            }
+            mort_univers = age_fin.toExponential(4) + " (BigRip)"
         }
     }
 
