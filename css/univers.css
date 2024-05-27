@@ -11,3 +11,12 @@
     left: 0;
     right: 0;
 }
+
+.fenetre_tracer{
+    position: absolute;
+    bottom:15px;
+}
+.parametre_numerique{
+    float: right;
+    padding-right: 10%;
+}

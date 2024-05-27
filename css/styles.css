@@ -49,14 +49,14 @@ body {
     cursor: pointer;
 }
 
-#leftPanel.collapsed,
-#rightPanel.collapsed {
+#leftPanel.ferme,
+#rightPanel.ferme {
     width: 50px;
 }
 
 
-#leftPanel.collapsed .content,
-#rightPanel.collapsed .content {
+#leftPanel.ferme .content,
+#rightPanel.ferme .content {
     opacity: 0;
     pointer-events: none;
 }
@@ -92,4 +92,26 @@ body {
     padding-left: 20px;
     height: 90%;
     width: 100%;
+}
+.bouton{
+    background-color: #8d0999de;
+    border: 1px solid #f5f5f5;
+    border-radius: 7px;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 9px 23px;
+    
+}
+.bouton:hover{
+    background-color: #740565;
+}
+.bouton:active{
+    box-shadow: inset 0px 0px 5px #ffffff;
+}
+.valeur_numerique_entree{
+    width: 100px;
+}
+.parametre_entree{
+    padding-bottom: 10px;
 }
