@@ -854,18 +854,30 @@ function trajectoire(compteur,mobile) {
     	pausee(compteur,mobile,mobilefactor);
     }, false);
 
+	var temps_allumage_reacteur = Number(document.getElementById("temps_allumage").value); //ManonV3
+	var puissance_reacteur = Number(document.getElementById("puissance_reacteur").value); //ManonV3
+	var puissance_reacteur = puissance_reacteur*Math.pow(10,-3); //Remettre en secondes ManonV3
+
 
 	if(blyo == 1 && element2.value == "mobile" ) {
 	setInterval(function(){
 		if(joy.GetPhi()<0){ 
 
+
 				vitesse_précédente_nombre_g = vtotal //Manon
 
-				Delta_L=joy.GetPhi()*1e-2*Math.log10(10+Math.abs(mobile.L))*Math.log10(10+Math.abs(vtotal))*Math.log10(10+mobile.r_part)/Math.log10(Math.sqrt(1-(vtotal/c)^2));     
+				Delta_E_sur_E = joy.GetPhi()*(puissance_reacteur*temps_allumage_reacteur)/Math.pow(c,2); //ManonV3
+				Delta_L_sur_L = Delta_E_sur_E; //ManonV3
+
+				mobile.L = mobile.L + mobile.L*Delta_L_sur_L; //ManonV3
+				mobile.E = mobile.E + mobile.E*Delta_E_sur_E //ManonV3
+				deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E); //ManonV3
+
+				/*Delta_L=joy.GetPhi()*1e-2*Math.log10(10+Math.abs(mobile.L))*Math.log10(10+Math.abs(vtotal))*Math.log10(10+mobile.r_part)/Math.log10(Math.sqrt(1-(vtotal/c)^2));     
 				mobile.L=mobile.L+Delta_L ;
 				Delta_E=(1-rs/mobile.r_part)*mobile.L*Delta_L/mobile.E/Math.pow(mobile.r_part,2);
 				mobile.E=mobile.E+Delta_E; 
-				deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/mobile.E);
+				deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/mobile.E);*/
 						
 				
 				document.getElementById("E"+compteur.toString()).innerHTML = mobile.E.toExponential(3);
@@ -875,16 +887,19 @@ function trajectoire(compteur,mobile) {
 		}else if(joy.GetPhi()>0){ 
 
 				vitesse_précédente_nombre_g = vtotal //Manon
+
+				Delta_E_sur_E = joy.GetPhi()*(puissance_reacteur*temps_allumage_reacteur)/Math.pow(c,2); //ManonV3
+				Delta_L_sur_L = Delta_E_sur_E; //ManonV3
+
+				mobile.L = mobile.L + mobile.L*Delta_L_sur_L; //ManonV3
+				mobile.E_tot = mobile.E + mobile.E*Delta_E_sur_E //ManonV3
+				deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E); //ManonV3
 				
-				Delta_L=joy.GetPhi()*1e-2*Math.log10(10+Math.abs(mobile.L))*Math.log10(10+Math.abs(vtotal))*Math.log10(10+mobile.r_part)/Math.log10(Math.sqrt(1-(vtotal/c)^2));     
+				/*Delta_L=joy.GetPhi()*1e-2*Math.log10(10+Math.abs(mobile.L))*Math.log10(10+Math.abs(vtotal))*Math.log10(10+mobile.r_part)/Math.log10(Math.sqrt(1-(vtotal/c)^2));     
 				mobile.L=mobile.L+Delta_L ;
 				Delta_E=(1-rs/mobile.r_part)*mobile.L*Delta_L/mobile.E/Math.pow(mobile.r_part,2) ;
 				mobile.E=mobile.E+Delta_E; 
-				deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/mobile.E);
-				
-			
-				
-				
+				deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/mobile.E);*/
 				
 				document.getElementById("E"+compteur.toString()).innerHTML = mobile.E.toExponential(3);
 				document.getElementById("L"+compteur.toString()).innerHTML = mobile.L.toExponential(3);
@@ -1146,9 +1161,14 @@ function animate(compteur,mobile,mobilefactor) {
 		}
 		else{   // spationaute
 
-   
+			var temps_allumage_reacteur = Number(document.getElementById("temps_allumage").value); //ManonV3
 
-			val = rungekutta(mobile.L,mobile.dtau, mobile.r_part, mobile.A_part);
+			if (joy.GetPhi()!=0 && blyo==1){//ManonV3
+				val = rungekutta(mobile.L, temps_allumage_reacteur, mobile.r_part, mobile.A_part); //ManonV3
+			}else{
+				val = rungekutta(mobile.L,mobile.dtau, mobile.r_part, mobile.A_part); //ManonV3
+			}
+
 			mobile.r_part = val[0];
 			mobile.A_part = val[1]; 		// dr/dtau
 			resultat=calculs.MSC_Ex_vitess(mobile.E,mobile.L,mobile.r_part,rs,false); /// voir fichier fonctions.js
@@ -1167,7 +1187,7 @@ function animate(compteur,mobile,mobilefactor) {
 			}
 
 			if(joy.GetPhi()!=0 && blyo==1){ //Manon
-				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_précédente_nombre_g)/(mobile.dtau*(1-rs/mobile.r_part)/mobile.E))/9.80665 //Manon
+				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_précédente_nombre_g)/temps_allumage_reacteur)/9.80665 //ManonV3
 				nombre_de_g_calcul_memo = nombre_de_g_calcul;
 			}else{
 				nombre_de_g_calcul_memo = 0;
@@ -1557,8 +1577,9 @@ function potentiel_Schwarzchild_massif(L, r) {
 }
 
 function derivee_seconde_Schwarzchild_massif(L, r) {
-	return Math.pow(c, 2)/(2*Math.pow(r, 4)) *  (-rs*Math.pow(r,2) + Math.pow(L, 2)*(2*r-3*rs));
+		return Math.pow(c, 2)/(2*Math.pow(r, 4)) *  (-rs*Math.pow(r,2) + Math.pow(L, 2)*(2*r-3*rs));
 }
+
 
 function rungekutta(L, h, r, A) {
 	k = [0, 0, 0, 0];
