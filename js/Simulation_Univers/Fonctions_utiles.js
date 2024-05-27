@@ -5,8 +5,9 @@ Ce fichier javascript a pour but de rassembler toutes les fonctions qui sont uti
 
 
 // Variables globales, utilisées un peu partout
-//const AU = 149597870700; // en mètres
+AU = 149597870700; // en mètres
 
+console.log(document.getElementById("T0"));
 let T0 = Number(document.getElementById("T0").value)
 let H0 = Number(document.getElementById("H0").value);
 let c = Number(document.getElementById("c_p").value);
@@ -249,7 +250,7 @@ function derivee_fonction_Y(x) {
  * @param z_utilisé {Boolean} Pour choisir si le calcul se fait avec les a (false par defaut) ou z (true)
  * @return {number} Valeur de la fonction
  */
-function fonction_F(u) {
+function fonction_F(u,z_utilisé) {
     let Omegak0 = Omega_k(0)
     let Omegam0 = Omega_m(0)
     let Omegar0 = Omega_r(0)
@@ -451,11 +452,36 @@ function DistanceMetrique(Zemission,Zreception,H0,OmegaK0,OmegaR0,OmegaM0,OmegaL
 
 //moyen de la combiner avec celle du dessus en detectant E ou F avec omegalambda et DE 
 function DistanceMetriqueDE(Zemission,Zreception,H0,OmegaK0,OmegaR0,OmegaM0,OmegaDE0){
-    console.log(H0);
     function fonction_a_integrer(x){
         return Math.pow(fonction_F(x,true),-0.5);
     }
     return c/(H0*Math.pow(Math.abs(OmegaK0),0.5))*Sk(Math.pow(Math.abs(OmegaK0),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,1e4),OmegaK0)
 };
+
+//Remy 26/05/24
+/** 
+ * Fonction qui renvoie la distance de l'horizon des particules cosmologiques (plus grande distance a laquelle on peut recevoir un signal emis à l'instant t)
+ * @param {*} z_emission par defaut = 0 décalage spectral du moment où le signal est émis
+ * @returns 
+ */
+function calcul_horizon_particule(z_emission=0){
+    //pour trouver un z suffisament élevé pour être considéré à l'infini mais pas trop pour que l'integral se fasse sans voir besoin de 1 milliard de points
+    z_infini=0
+    while (Math.pow(fonction_E(z_infini,true),-0.5)>1e-7){
+        z_infini=z_infini+1;
+    }
+    //formule 21 dans la théorie du 20/05/2024
+    return DistanceMetrique(z_emission,z_infini,H0_parSecondes(H0),Omega_k(0),Omega_r(0),Omega_m(0),Omega_l(0));
+};
+
+/**
+ * Fonction qui renvoie la distance de l'horizon des évenements cosmologiques (plus grande distance a laquelle on peut envoyer un signal emis à l'instant t)
+ * @param {*} z_reception par defaut = 0 décalage spectral du moment où le signal est reçu
+ * @returns 
+ */
+function calcul_horizon_evenements(z_reception=0){
+    //formule 23 dans la théorie du 20/05/2024
+    return DistanceMetrique(-.9999999,z_reception,H0_parSecondes(H0),Omega_k(0),Omega_r(0),Omega_m(0),Omega_l(0));
+}
 
 

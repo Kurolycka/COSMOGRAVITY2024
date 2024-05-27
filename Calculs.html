@@ -249,7 +249,7 @@
                 </div>
 
 
-                <div class="border">
+                <div id="generateur_graphique"class="border">
 
                     <!-- Generateur des graphiques -->
                         <div>
@@ -361,8 +361,31 @@
                             
                         </div>
                     </div>
-            </div>
+            
+            
+                </div>
 
+                <div id="calcul_horizon" class="border">
+                    <div>
+                        <span id="titre_calcul_horizon" style="font-weight:bold;font-size:18px">Calcul horizons cosmologiques à un temps t</span>
+                    </div>
+                    <br>
+                    <div style="display:flex">
+                        <div style="padding:10px">
+                            <label>t=</label>
+                            <input type="Number" value="0">
+                        </div>
+                        <div style="padding:10px">
+                            <label>d<sub>p</sub>=</label>
+                            <span id="resultat_dm_particule_t"></span> GAL
+                            <label>d<sub>e</sub>=</label>
+                            <span id="resultat_dm_evenement_t"></span> GAL
+                        </div>
+                        <div style="padding: 10px;">
+                            <input type="button" value="Calcul" id="bouton_clacul_horizon_annexe" onclick="calcul_horizons_annexe()">
+                        </div>
+                    </div>
+                </div>
 
                 
             </div>
@@ -376,14 +399,14 @@
                     <div class="generalParameter">
                         <span id="txt_parametres" style="font-weight:bold">Les paramètres cosmologiques :</span>
                         <div>
-                            <label for="T0_annexes">T<sub>0</sub> =</label>
-                            <output id="T0_annexes" style="color:blue" onchange="update_omegar0_calc();" type="text">2.7255</output><span style="font-size:smaller">  K</span>
+                            <label for="T0">T<sub>0</sub> =</label>
+                            <output id="T0" style="color:blue" onchange="update_omegar0_calc();" type="text">2.7255</output><span style="font-size:smaller">  K</span>
                         </div>
                         <span id="txt_parametres" style="font-weight:bold"></span>
 
                         <div>
-                            <label for="H0_annexes">H<sub>0</sub> =</label>
-                            <output id="H0_annexes" style="color:blue" onchange="update_omegar0_calc();" type="text">67.74</output><span style="font-size:smaller">  km.s<sup>-1</sup>.Mpc<sup>-1</sup></span>
+                            <label for="H0">H<sub>0</sub> =</label>
+                            <output id="H0" style="color:blue" onchange="update_omegar0_calc();" type="text">67.74</output><span style="font-size:smaller">  km.s<sup>-1</sup>.Mpc<sup>-1</sup></span>
                         </div>
 
                         <div>
@@ -983,6 +1006,6 @@
             calculs = 0;
             texteUniversCalculs();
         </script>
-
+        <script src="js/Simulation_Univers/Fonctions_utiles.js"></script>
     </body>
 </html>

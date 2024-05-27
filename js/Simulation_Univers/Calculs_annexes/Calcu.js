@@ -4,11 +4,11 @@
 const ORDRE_ARRONDI=4;
 const LUMIERE = 9460730472580800;  // une année lumière en mètres
 const LUMIERE_INV= 1/LUMIERE;
-// const AU = 149597870700; // unite astronomique en mètres
+AU = 149597870700; // unite astronomique en mètres
 var dz1
 var dz2
 var Hz1enannee
-var Hz2enannee
+var Hz2enannees
 
 function messagebox(titre,message){
     Swal.fire({
@@ -118,8 +118,8 @@ function calcu(path) {
 	G = Number(document.getElementById("G_p").value);
 	h = Number(document.getElementById("h_p").value);
 	k = Number(document.getElementById("k_p").value);
-	t0 = Number(document.getElementById("T0_annexes").value);
-	h0 = Number(document.getElementById("H0_annexes").value);  //  em km par seconde et par mégaparsec
+	t0 = Number(document.getElementById("T0").value);
+	h0 = Number(document.getElementById("H0").value);  //  em km par seconde et par mégaparsec
 	cosmo_const = Number(document.getElementById("lambda_cosmo_const").value);
 	omegam0 = Number(document.getElementById("omegam0_annexes").value);
 	omegalambda0 = Number(document.getElementById("omegalambda0_annexes").value);
@@ -1562,4 +1562,13 @@ function onlyOne(checkbox) {
 		window.document.getElementById("theta").value = "";
 		window.document.getElementById("diametrekpc").value = "";
 	})
+}
+
+
+//Remy 27/05/2024
+function calcul_horizons_annexe(){
+
+
+	document.getElementById("resultat_dm_particule_t").value=1;
+	document.getElementById("resultat_dm_evenement_t").value=3;
 }

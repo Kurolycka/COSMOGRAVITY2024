@@ -158,30 +158,3 @@ function affichage_site_LCDM() {
     document.getElementById("resultat_ZHorizonParticule").innerHTML = "∞";
 }
 
-//Remy 26/05/24
-/** 
- * Fonction qui renvoie la distance de l'horizon des particules cosmologiques (plus grande distance a laquelle on peut recevoir un signal emis à l'instant t)
- * @param {*} z_emission par defaut = 0 décalage spectral du moment où le signal est émis
- * @returns 
- */
-function calcul_horizon_particule(z_emission=0){
-    //pour trouver un z suffisament élevé pour être considéré à l'infini mais pas trop pour que l'integral se fasse sans voir besoin de 1 milliard de points
-    z_infini=0
-    while (Math.pow(fonction_E(z_infini,true),-0.5)>1e-7){
-        z_infini=z_infini+1;
-    }
-    //formule 21 dans la théorie du 20/05/2024
-    return DistanceMetrique(z_emission,z_infini,H0_parSecondes(H0),Omega_k(0),Omega_r(0),Omega_m(0),Omega_l(0));
-};
-
-/**
- * Fonction qui renvoie la distance de l'horizon des évenements cosmologiques (plus grande distance a laquelle on peut envoyer un signal emis à l'instant t)
- * @param {*} z_reception par defaut = 0 décalage spectral du moment où le signal est reçu
- * @returns 
- */
-function calcul_horizon_evenements(z_reception=0){
-    //formule 23 dans la théorie du 20/05/2024
-    return DistanceMetrique(-.9999999,0,H0_parSecondes(H0),Omega_k(0),Omega_r(0),Omega_m(0),Omega_l(0));
-}
-
-
