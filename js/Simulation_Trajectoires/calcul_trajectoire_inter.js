@@ -7,7 +7,6 @@ const DIAMETRE_PART = 1;
 var nzoom=0;
 var facteurDeMalheur;
 var fact_defaut;
-var temps_observateur_distant=0;
 
 // liste de couleurs en hexa
 const COULEUR_NOIR = '#2F2D2B';
@@ -40,6 +39,61 @@ var maximum;
 var cle;
 var fuseecompteur;
 var listejsonfusees={};
+
+//-----------------------------------------------------------KHALED--------------------------------------------------
+//ceci est une fonction que j'ai trouvé sur StackOverflow de ce brave monsieur Nisse Engström
+//je l'ai adapté avec l'aide de chatGPT pour avoir une class de Timer
+//puis j'ai fait de sorte que ça remplace setinterval et ça marche 1000x mieux
+
+class Timer {
+    constructor(funct, delayMs, times) {
+        if (times === undefined) times = -1;
+        if (delayMs === undefined) delayMs = 10;
+
+        this.funct = funct;
+        this.times = times;
+        this.timesCount = 0;
+        this.ticks = (delayMs / 10) | 0;
+        this.count = 0;
+        Timer.instances.push(this);
+    }
+
+    tick() {
+        if (this.count >= this.ticks) {
+            this.funct();
+            this.count = 0;
+            if (this.times > -1) {
+                this.timesCount++;
+                if (this.timesCount >= this.times) {
+                    this.stop();
+                }
+            }
+        }
+        this.count++;
+    }
+
+    stop() {
+        const index = Timer.instances.indexOf(this);
+        Timer.instances.splice(index, 1);
+    }
+}
+
+Timer.instances = [];
+Timer.paused = false;
+
+
+Timer.ontick = function () {
+    if (!Timer.paused) {
+        for (const instance of Timer.instances) {
+            instance.tick();
+        }
+    }
+};
+
+window.setInterval(Timer.ontick, 1);
+//-----------------------------------------------------------KHALED--------------------------------------------------
+
+
 
 //Fonction pour arrondir l'échelle:
 function testnum(a){
@@ -93,7 +147,9 @@ function lancerDeFusees(fuseecompteur){
 	for (compteur = 1; compteur <= fuseecompteur; compteur += 1) {		
 		trajectoire(compteur,listejsonfusees[compteur]);
 	}
-
+	
+	document.getElementById("pause/resume").addEventListener("click", function() {
+        pausee()}); //ajouté Là par Khaled car le fonctionnement du button à ete changé
 }
 
 function supprHtml(){
@@ -785,8 +841,8 @@ function trajectoire(compteur,mobile) {
 
 		temps_particule = 0;
 		mobile["temps_particule"]=temps_particule;
-		temps_observateur = 0;
-		mobile["temps_observateur"]=temps_observateur;//mobile.temps_observateur
+		temps_observateur_distant= 0;
+		mobile["temps_observateur_distant"]=temps_observateur_distant;//mobile.temps_observateur
 
 
 		// permet de gérer les touches du clavier pour certaines actions
@@ -840,8 +896,9 @@ function trajectoire(compteur,mobile) {
 		// les dtau1 et 2 permettent de contenir le dtau pour obtenir une simulation hors controle
 		// à voir, l'utilisation du settimeout à la place de setinterval. Ca permettrait de remplacer le 10/6 par une variable dt_simu pouvant être modifiée à la place du pas dtau utilisé dans rungekutta
 		// lorsqu'on est dans le setinterval, il est impossible ce modifier ce 10/6 par une variable qu'on pourrait incrémenter. Il utilise la valeur initiale avant l'entrée dans setinterval
-	
-		mobile.myInterval = setInterval(animate.bind(null,compteur,mobile,mobilefactor), 10 / 6);
+		
+		new Timer(() => animate(compteur,mobile,mobilefactor), 1, -1); //Khaled 
+		//mobile.myInterval = setInterval(animate.bind(null,compteur,mobile,mobilefactor), 10 / 6);
 
 		Dtau1 = 1e8 * mobile.dtau ;
 		mobile["Dtau1"]=Dtau1;//mobile.Dtau1
@@ -1093,11 +1150,11 @@ function trajectoire(compteur,mobile) {
 
 		}, false);*/
 		}else {
-			mobile.myInterval = setInterval(animate.bind(null,compteur,mobile,mobilefactor), 10 / 6);
+			new Timer(() => animate(compteur,mobile,mobilefactor), 1, -1); //Khaled au lieu de setinterval
+
 		
   	}  // fin du if(pause....
-	  document.getElementById("pause/resume").addEventListener("click", function() {
-        pausee(compteur,mobile,mobilefactor);}); 
+	
 	// apres start on affiche le bouton pause/resume avec la fonction pausee
 	document.getElementById('start').style.display = "none";
 	document.getElementById('pause/resume').style.display ="inline-block";
@@ -1354,14 +1411,14 @@ function animate(compteur,mobile,mobilefactor) {
 
 		if (element2.value != "mobile"){  //observateur
 			if(mobile.r_part_obs >= r_phy){
-				temps_observateur_distant+=mobile.dtau;
+				mobile.temps_observateur_distant+=mobile.dtau;
 				mobile.temps_particule += mobile.dtau*(1-rs/mobile.r_part_obs)/mobile.E;
 				document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3);
 				document.getElementById("ga"+compteur.toString()).innerHTML = fm.toExponential(3);
 				document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part_obs.toExponential(3); 
 				document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML =vr_1_obs .toExponential(3);
 				document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_1_obs.toExponential(3); 
-				document.getElementById("to"+compteur.toString()).innerHTML = temps_observateur_distant.toExponential(3);
+				document.getElementById("to"+compteur.toString()).innerHTML = mobile.temps_observateur_distant.toExponential(3);
 				document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(3); 
 				z_obs=((1-(vtotal/c)**2)**(-1/2))*(1-rs/mobile.r_part_obs)**(-1/2)-1;
 				document.getElementById("decal"+compteur.toString()).innerHTML=z_obs.toExponential(3);
@@ -1372,14 +1429,14 @@ function animate(compteur,mobile,mobilefactor) {
 				
 				
 			
-				temps_observateur_distant+=mobile.dtau;
+				mobile.temps_observateur_distant+=mobile.dtau;
 				mobile.temps_particule += mobile.dtau*Math.pow(beta(mobile.r_part_obs),2)/mobile.E;
 				document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3);
 				document.getElementById("ga"+compteur.toString()).innerHTML = fm.toExponential(3);
 				document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part_obs.toExponential(3);
 				document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_1_obs.toExponential(3);
 				document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_1_obs.toExponential(3); 
-				document.getElementById("to"+compteur.toString()).innerHTML = temps_observateur_distant.toExponential(3);
+				document.getElementById("to"+compteur.toString()).innerHTML = mobile.temps_observateur_distant.toExponential(3);
 				document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(3);
 				z_obs=((1-(vtotal/c)**2)**(-1/2))*1/beta(mobile.r_part_obs)-1;
 				document.getElementById("decal"+compteur.toString()).innerHTML=z_obs.toExponential(3);
@@ -1389,14 +1446,14 @@ function animate(compteur,mobile,mobilefactor) {
 		}		//  spationaute
 		else{
 			if (mobile.r_part>= r_phy){
-				temps_observateur_distant+=mobile.dtau;
+				mobile.temps_observateur_distant+=mobile.dtau;
 				mobile.temps_particule+=mobile.dtau*(1-rs/mobile.r_part)/mobile.E;
 				document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3); 
 				document.getElementById("ga"+compteur.toString()).innerHTML = fm.toExponential(3);
 				document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part.toExponential(3);
 				document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_1.toExponential(3);
 				document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_1.toExponential(3);
-				document.getElementById("to"+compteur.toString()).innerHTML = temps_observateur_distant.toExponential(3);
+				document.getElementById("to"+compteur.toString()).innerHTML = mobile.temps_observateur_distant.toExponential(3);
 			
 				document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(3);
 				document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation
@@ -1630,28 +1687,28 @@ function calcul_rmax(L,E,vr,r0,rmax1ou2){
 }
 
 // Fonction bouton pause
-function pausee(compteur,mobile,mobilefactor) {
-
-	
-	if (! mobile.pause) {
-		mobile.pause = true;
+//cette fonction a ete changé par Khaled en ajoutant la variable qui pause la Timer créé en haut
+function pausee() {
+    if (!Timer.paused) {
+		Timer.paused = true;  
+		mobile.pause = true; //je laisse cette variable comme ça pour l'intant pour ne pas changer la structure du code
 		document.getElementById("pau").src = "Images/lecture.png";
 		document.getElementById("pau").title = texte.pages_trajectoire.bouton_lecture;
-		document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_enpause;
-		document.getElementById("pause/resume").innerHTML =texte.pages_trajectoire.bouton_resume;
-		document.getElementById("to"+compteur.toString()).innerHTML = temps_observateur_distant.toExponential(3);
-		clearInterval(mobile.myInterval);
-	}
-	else if(mobile.peuxonrelancer ) {
+        document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_enpause;
+        document.getElementById("pause/resume").innerHTML =texte.pages_trajectoire.bouton_resume;
+		//clearInterval(mobile.myInterval);
+	} 
+    else if(mobile.peuxonrelancer) {
+		    Timer.paused = false;
 			mobile.pause = false;
-			document.getElementById("pause/resume").innerHTML = texte.pages_trajectoire.bouton_pause;
+            document.getElementById("pause/resume").innerHTML = texte.pages_trajectoire.bouton_pause;
 			document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_encours;
 			document.getElementById("pau").title = texte.pages_trajectoire.bouton_pause;
 			document.getElementById("pau").src = "Images/pause.png";
-			mobile.myInterval = setInterval(animate.bind(null,compteur,mobile,mobilefactor), 10/6);
-    	
+		}
 	}
-}
+
+
 
 // permet de gérer les touches du clavier pour certaines actions
 function clavierEvenement() {
