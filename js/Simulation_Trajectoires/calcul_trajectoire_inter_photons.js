@@ -931,6 +931,13 @@ function animate(compteur,mobile,mobilefactor) {
 				vtotal=resultat[0];
 				vr_1=resultat[1]*Math.sign(mobile.A_part);
 				vp_1=resultat[2];  
+
+				if (isNaN(vr_1)){
+					vr_1=0;
+					vtotal=c;
+				}
+
+				
 			}else {  // spationaute intérieur masse
 			
 			
@@ -956,6 +963,7 @@ function animate(compteur,mobile,mobilefactor) {
 				vtotal=vitess_phys[0];
 				vr_1=vitess_phys[1]*Math.sign(mobile.A_part);
 				vp_1=vitess_phys[2];  
+
 			}
 			mobile.positionspatio.posX1 = mobilefactor[compteur] * mobile.r_part * (Math.cos(mobile.phi) / rmax) + (canvas.width / 2.);
     		mobile.positionspatio.posY1 = mobilefactor[compteur] * mobile.r_part * (Math.sin(mobile.phi) / rmax) + (canvas.height / 2.);
@@ -970,7 +978,7 @@ function animate(compteur,mobile,mobilefactor) {
 				mobile.phi_obs=mobile.phi_obs+varphi_obs;
 				resultat=calculs.MSC_Ex_vitess(mobile.E,mobile.L,mobile.r_part_obs,rs,true); //voir fonctions.js
 				vtotal=resultat[0];
-				vr_1_obs=resultat[1]*Math.sign(mobile.A_part_obs);
+				//vr_1_obs=resultat[1]*Math.sign(mobile.A_part_obs);
 				//alert(vr_1_obs);
 				vp_1_obs=resultat[2]; 
 
@@ -1092,7 +1100,7 @@ function animate(compteur,mobile,mobilefactor) {
 			document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3); 
 			document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part.toExponential(3);
 			document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_1.toExponential(3);
-			document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_1.toExponential(3);
+			document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_1.toExponential(8);
 			document.getElementById("to"+compteur.toString()).innerHTML = temps_observateur_distant.toExponential(3);
 		    document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(8); 	
 			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation		

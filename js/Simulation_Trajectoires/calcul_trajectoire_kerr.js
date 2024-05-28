@@ -392,6 +392,9 @@ function trajectoire() {
 			document.getElementById('DivClignotantePilot').style.color = "red";
 		} 
 		
+		var temps_allumage_reacteur = Number(document.getElementById("temps_allumage").value); //ManonV3
+		var puissance_reacteur = Number(document.getElementById("puissance_reacteur").value); //ManonV3
+		var puissance_reacteur = puissance_reacteur*Math.pow(10,-3); //Remettre en secondes ManonV3
 		
 		if(joy.GetPhi()<0){
 
@@ -401,31 +404,23 @@ function trajectoire() {
 
 			vitesse_précédente_nombre_g = vtot; //Manon
 
-			//while (deltam_sur_m < 0.5) { 					// tant que la réserve d'énergie est inférieur à 50%, on peut piloter
-				Delta_L=joy.GetPhi()*Math.log10(10+Math.abs(L))*Math.log10(10+Math.abs(vtot))*Math.log10(10+r_part)/Math.log10(Math.sqrt(1-(vtot/c)^2))*1e-3;
-				L=L+Delta_L ;
-				Delta_E=(1-rs/r_part)*L*Delta_L/E/Math.pow(r_part,2);
-				E=E+Delta_E; 
-				deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/E);
-				
-/*	data1 = []; 
-	data2 = []; 
-	$('#grsvg_2').empty();   //resize();
-	
-	dr = 0.6*r_part/ 50;
-	
-	for (r = 0.7*r_part; r < 1.3*r_part; r += dr) {										   
-     V = Vr_mob(r);
-      data1.push({date: r, close: V });
-    }
-    V = Vr_mob(r_part);
-    data2.push({date: r_part, close: V });
-    graphique_creation_pot(); */
+			Delta_E_sur_E = joy.GetPhi()*(puissance_reacteur*temps_allumage_reacteur)/Math.pow(c,2); //ManonV3
+			Delta_L_sur_L = Delta_E_sur_E; //ManonV3
 
+			L = L + L*Delta_L_sur_L; //ManonV3
+			E = E + E*Delta_E_sur_E //ManonV3
+			deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E)/Math.pow(c,2); //ManonV3
+
+			/*Delta_L=joy.GetPhi()*Math.log10(10+Math.abs(L))*Math.log10(10+Math.abs(vtot))*Math.log10(10+r_part)/Math.log10(Math.sqrt(1-(vtot/c)^2))*1e-3;
+			L=L+Delta_L ;
+			Delta_E=(1-rs/r_part)*L*Delta_L/E/Math.pow(r_part,2);
+			E=E+Delta_E; 
+			deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/E);*/
 				
-				document.getElementById("E").innerHTML = E.toExponential(3);
-				document.getElementById("L").innerHTML = L.toExponential(3);
-				document.getElementById("decal").innerHTML = deltam_sur_m.toExponential(3);}
+			
+			document.getElementById("E").innerHTML = E.toExponential(3);
+			document.getElementById("L").innerHTML = L.toExponential(3);
+			document.getElementById("decal").innerHTML = deltam_sur_m.toExponential(3);}
 
 		}else if(joy.GetPhi()>0){
 
@@ -434,35 +429,26 @@ function trajectoire() {
 			}else{ //Manon
 
 
-				vitesse_précédente_nombre_g = vtot //Manon
+			vitesse_précédente_nombre_g = vtot //Manon
 
-				Delta_L=joy.GetPhi()*Math.log10(10+Math.abs(L))*Math.log10(10+Math.abs(vtot))*Math.log10(10+r_part)/Math.log10(Math.sqrt(1-(vtot/c)^2))*1e-3;
-				L=L+Delta_L ;
-				Delta_E=(1-rs/r_part)*L*Delta_L/E/Math.pow(r_part,2) ;
-				E=E+Delta_E; 
-				deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/E);
-														  
+			Delta_E_sur_E = joy.GetPhi()*(puissance_reacteur*temps_allumage_reacteur)/Math.pow(c,2); //ManonV3
+			Delta_L_sur_L = Delta_E_sur_E; //ManonV3
 
-	 
-/*	$('#grsvg_2').empty(); 
-	data1 = []; 
-	data2 = [];	//resize();
-	
-	dr = 0.6*r_part/ 50;
-	
-	for (r = 0.7*r_part; r < 1.3*r_part; r += dr) {										   
-     V = Vr_mob(r);
-      data1.push({date: r, close: V });
-    }
-    V = Vr_mob(r_part);
-    data2.push({date: r_part, close: V });
-    graphique_creation_pot();*/
+			mobile.L = mobile.L + mobile.L*Delta_L_sur_L; //ManonV3
+			mobile.E_tot = mobile.E + mobile.E*Delta_E_sur_E //ManonV3
+			deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E)/Math.pow(c,2); //ManonV3
 
+			/*Delta_L=joy.GetPhi()*Math.log10(10+Math.abs(L))*Math.log10(10+Math.abs(vtot))*Math.log10(10+r_part)/Math.log10(Math.sqrt(1-(vtot/c)^2))*1e-3;
+			L=L+Delta_L ;
+			Delta_E=(1-rs/r_part)*L*Delta_L/E/Math.pow(r_part,2) ;
+			E=E+Delta_E; 
+			deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/E);*/
+														
 	
-				document.getElementById("E").innerHTML = E.toExponential(3);
-				document.getElementById("L").innerHTML = L.toExponential(3);
-				document.getElementById("decal").innerHTML = deltam_sur_m.toExponential(3);
-			//}
+			document.getElementById("E").innerHTML = E.toExponential(3);
+			document.getElementById("L").innerHTML = L.toExponential(3);
+			document.getElementById("decal").innerHTML = deltam_sur_m.toExponential(3);
+			
 		}
 														
 		}}, 50)	
@@ -751,7 +737,15 @@ function animate() {
 			
 		}	
 		else{
-			val = rungekutta(dtau, r_part, A_part);
+
+			var temps_allumage_reacteur = Number(document.getElementById("temps_allumage").value); //ManonV3
+
+			if (joy.GetPhi()!=0){//ManonV3
+				val = rungekutta(temps_allumage_reacteur, r_part, A_part); //ManonV3
+			}else{
+				val = rungekutta(dtau, r_part, A_part); //ManonV3
+			}
+
 			r_part = val[0];
 			A_part = val[1];
 			varphi = c *dtau* ( rs*a*E/r_part + (1-rs/r_part)*L )/delta(r_part);
@@ -771,7 +765,10 @@ function animate() {
 				vp_3=resulta[2];
 
 				if(joy.GetPhi()!=0){ //Manon
-					nombre_de_g_calcul = (Math.abs(vtot-vitesse_précédente_nombre_g)/(dtau))/9.80665 //Manon
+					nombre_de_g_calcul = (Math.abs(vtot-vitesse_précédente_nombre_g)/(temps_allumage_reacteur))/9.80665 //ManonV3
+					nombre_de_g_calcul_memo = nombre_de_g_calcul;
+				}else{
+					nombre_de_g_calcul_memo = 0;
 				}
 
 				distance_parcourue_totale+=vtot*dtau; //ManonCorrection
@@ -928,14 +925,10 @@ function animate() {
 			document.getElementById("vpk").innerHTML = vp_3.toExponential(3);
 			document.getElementById("distance_parcourue").innerHTML = distance_parcourue_totale.toExponential(3); //Manon
 
-			setInterval(function(){ //Manon
-				if(joy.GetPhi()!=0){ 
-					document.getElementById("g_ressenti").innerHTML = nombre_de_g_calcul.toExponential(3);
-					document.getElementById("dernier_g_res").innerHTML = nombre_de_g_calcul.toExponential(3);}
-					else{
-					document.getElementById("g_ressenti").innerHTML = 0;//ManonV2
-					}
-				}, dtau); 
+			if(element2.value == "mobile") { //ManonV3
+				document.getElementById("g_ressenti").innerHTML = nombre_de_g_calcul_memo.toExponential(3); //ManonV3
+				document.getElementById("dernier_g_res").innerHTML = nombre_de_g_calcul.toExponential(3);
+			}
 			
 			
 		}else if (r_part>=rhp){ 
@@ -999,6 +992,22 @@ function animate() {
 			document.getElementById('DivClignotante').style.color = "blue";
 		}
     }
+
+	//  Gestion de la diode Nombre de g ressenti - ManonV3
+	if (element2.value == "mobile"){
+		if (nombre_de_g_calcul_memo <= 4) {
+			document.getElementById('DivClignotanteNbG').innerHTML = " <img src='./Images/diodever.gif' height='14px' />";
+			document.getElementById('DivClignotanteNbG').style.color = "green";
+		} 
+		else if (4 < nombre_de_g_calcul_memo && nombre_de_g_calcul_memo <= 9) {
+			document.getElementById('DivClignotanteNbG').innerHTML = " <img src='./Images/diodejaune.gif' height='14px' />";
+			document.getElementById('DivClignotanteNbG').style.color = "yellow";
+		} 
+		else if (nombre_de_g_calcul_memo > 9) {
+			document.getElementById('DivClignotanteNbG').innerHTML = " <img src='./Images/dioderouge.gif' height='14px' />";
+			document.getElementById('DivClignotanteNbG').style.color = "red";
+		} 
+	}
 	
 
 

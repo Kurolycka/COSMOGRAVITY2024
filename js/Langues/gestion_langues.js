@@ -709,6 +709,10 @@ function texteTrajectoireMassiveNonBar(nbrderockets) {
   document.getElementById("r2").innerHTML = texte.pages_trajectoire.trajectoire_simple;
   document.getElementById("r3").innerHTML = texte.pages_trajectoire.observateur;
   document.getElementById("r4").innerHTML = texte.pages_trajectoire.mobile; 
+  document.getElementById("label_temps_allumage").innerHTML = texte.pages_trajectoire.temps_allumage_label; //ManonV3
+  document.getElementById("label_temps_allumage").title= texte.pages_trajectoire.temps_allumage_infobulle; //ManonV3
+  document.getElementById("label_puissance_reacteur").innerHTML = texte.pages_trajectoire.puissance_reacteur_label; //ManonV3
+  document.getElementById("label_puissance_reacteur").title = texte.pages_trajectoire.puissance_reacteur_infobulle; //ManonV3
   //document.getElementById("boutton_prézoom").innerHTML = texte.pages_trajectoire.boutton_prézoom;
   document.getElementById("boutton_recup").innerHTML = texte.pages_trajectoire.boutton_recup;
   
@@ -721,13 +725,14 @@ function texteTrajectoireMassiveNonBar(nbrderockets) {
        	document.getElementById("v_tot"+count.toString()+"").innerHTML = texte.pages_trajectoire.vtotal;
 		 document.getElementById("decal_spect"+count.toString()+"").innerHTML = texte.pages_trajectoire.decal_spect+"&nbsp;<span id='DivClignotantePilot"+count.toString()+"'></span>";
 		document.getElementById("decal_spect"+count.toString()).title = texte.pages_trajectoire.decalageSpec_EnergyReserve;
-    document.getElementById("nb_g"+count.toString()+"").innerHTML = texte.pages_trajectoire.nombre_de_g;//Manon
+    document.getElementById("nb_g"+count.toString()+"").innerHTML = texte.pages_trajectoire.nombre_de_g+"&nbsp;<span id='DivClignotanteNbG"+count.toString()+"'></span>"; //ManonV3
     document.getElementById("dernier_g"+count.toString()+"").innerHTML = texte.pages_trajectoire.dernier_g;//ManonV2
     document.getElementById("nb_g"+count.toString()).title = texte.pages_trajectoire.nombre_g_infobulle; //Manon
     document.getElementById("dernier_g"+count.toString()).title = texte.pages_trajectoire.dernier_g_infobulle; //Manon
     document.getElementById("distance_metrique"+count.toString()+"").innerHTML = texte.pages_trajectoire.distance_metrique_parcourue;//ManonGeneralisation
     document.getElementById("distance_metrique"+count.toString()).title = texte.pages_trajectoire.distance_metrique_parcourue_infobulle; //ManonGeneralisation
     document.getElementById("vitesse_orb_circ_nonBar_massive"+count.toString()+"").title=texte.pages_trajectoire.vitesse_orbite_circulaire;
+
 	}
 }
 
@@ -781,10 +786,14 @@ function texteTrajectoireMassiveKerr() {
   document.getElementById("r2").innerHTML = texte.pages_trajectoire.trajectoire_simple;
   document.getElementById("r3").innerHTML = texte.pages_trajectoire.observateur;
   document.getElementById("r4").innerHTML = texte.pages_trajectoire.mobile; 
+  document.getElementById("label_temps_allumage").innerHTML = texte.pages_trajectoire.temps_allumage_label; //ManonV3
+  document.getElementById("label_temps_allumage").title= texte.pages_trajectoire.temps_allumage_infobulle; //ManonV3
+  document.getElementById("label_puissance_reacteur").innerHTML = texte.pages_trajectoire.puissance_reacteur_label; //ManonV3
+  document.getElementById("label_puissance_reacteur").title = texte.pages_trajectoire.puissance_reacteur_infobulle; //ManonV3
   //document.getElementById("boutton_prézoom").innerHTML = texte.pages_trajectoire.boutton_prézoom;
   document.getElementById("temps_ecoule").innerHTML = texte.pages_trajectoire.temps_ecoule;
   document.getElementById("acceleration").innerHTML = texte.pages_trajectoire.acceleration;
-  document.getElementById("nb_g").innerHTML = texte.pages_trajectoire.nombre_de_g; //ManonV2
+  document.getElementById("nb_g").innerHTML = texte.pages_trajectoire.nombre_de_g+"&nbsp;<span id='DivClignotanteNbG'></span>"; //ManonV3
   document.getElementById("dernier_g").innerHTML = texte.pages_trajectoire.dernier_g;//ManonV2
   document.getElementById("distance_metrique").innerHTML = texte.pages_trajectoire.distance_metrique_parcourue;//ManonGeneralisation
   document.getElementById("temps_obs").innerHTML = texte.pages_trajectoire.temps_obs;

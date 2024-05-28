@@ -339,7 +339,8 @@ function genereHtml(){
 		<th id="v_total`+countt.toString()+`" title="" class="tg-aicv">   V<SUB>physique</SUB> (m.s<sup>-1</sup>) </th>
 		<th id="distance_metrique`+countt.toString()+`" title="" class="tg-aicv"></th> 
 		<th id="nb_g`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>
-		<th id="dernier_g`+countt.toString()+`" title="" class="tg-aicv" style="display: none;">testou</th>`; //ManonV2
+		<th id="dernier_g`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>
+		<th id ="puissance_consommee_label`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>`; //ManonV3
 		
 
 		var newRow2=document.getElementById('tableauresultatsimu').insertRow();
@@ -355,7 +356,8 @@ function genereHtml(){
 		<td class="tg-3ozo" id="v_tot`+countt.toString()+`">res</td>
 		<td class="tg-3ozo" id="distance_parcourue`+countt.toString()+`">res</td>
 		<td class="tg-3ozo" id="g_ressenti`+countt.toString()+`" style="display: none;">0</td>
-		<td class="tg-3ozo" id="dernier_g_res`+countt.toString()+`" style="display: none;">0</td>`; //ManonV2
+		<td class="tg-3ozo" id="dernier_g_res`+countt.toString()+`" style="display: none;">0</td>
+		<td class="tg-3ozo" id="puissance_consommee`+countt.toString()+`" style="display: none;">0</td>`; //ManonV3
 	}
 
 
@@ -429,6 +431,10 @@ function rendreVisibleNbG() {
 	var dernier_g_Cells = document.querySelectorAll('[id^="dernier_g"]');
 
 	var dernier_g_res_Cells = document.querySelectorAll('[id^="dernier_g_res"]');
+
+	var puissance_consommee_label_Cells = document.querySelectorAll('[id^="puissance_consommee_label"]'); //ManonV3
+
+	var puissance_consommee_Cells = document.querySelectorAll('[id^="puissance_consommee"]'); //ManonV3
 
     
     // Si element2.value est "mobile" et que y a que 1 mobile, rend les cellules visibles, sinon les cache
@@ -871,7 +877,7 @@ function trajectoire(compteur,mobile) {
 
 				mobile.L = mobile.L + mobile.L*Delta_L_sur_L; //ManonV3
 				mobile.E = mobile.E + mobile.E*Delta_E_sur_E //ManonV3
-				deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E); //ManonV3
+				deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E)/Math.pow(c,2); //ManonV3
 
 				/*Delta_L=joy.GetPhi()*1e-2*Math.log10(10+Math.abs(mobile.L))*Math.log10(10+Math.abs(vtotal))*Math.log10(10+mobile.r_part)/Math.log10(Math.sqrt(1-(vtotal/c)^2));     
 				mobile.L=mobile.L+Delta_L ;
@@ -893,7 +899,7 @@ function trajectoire(compteur,mobile) {
 
 				mobile.L = mobile.L + mobile.L*Delta_L_sur_L; //ManonV3
 				mobile.E_tot = mobile.E + mobile.E*Delta_E_sur_E //ManonV3
-				deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E); //ManonV3
+				deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E)/Math.pow(c,2); //ManonV3
 				
 				/*Delta_L=joy.GetPhi()*1e-2*Math.log10(10+Math.abs(mobile.L))*Math.log10(10+Math.abs(vtotal))*Math.log10(10+mobile.r_part)/Math.log10(Math.sqrt(1-(vtotal/c)^2));     
 				mobile.L=mobile.L+Delta_L ;
@@ -1478,7 +1484,7 @@ function animate(compteur,mobile,mobilefactor) {
 
 
 			if(element2.value == "mobile" && blyo==1) { //ManonV2
-				document.getElementById("g_ressenti"+compteur.toString()).innerHTML = nombre_de_g_calcul_memo.toExponential(3);
+				document.getElementById("g_ressenti"+compteur.toString()).innerHTML = nombre_de_g_calcul_memo.toExponential(3); //ManonV3
 				document.getElementById("dernier_g_res"+compteur.toString()).innerHTML = nombre_de_g_calcul.toExponential(3);
 			}
 			
@@ -1539,7 +1545,7 @@ if (element2.value == "mobile"){
 	} 
 }	
 
-//  Gestion de la diode Nombre de g ressenti
+//  Gestion de la diode Nombre de g ressenti - ManonV3
 if (element2.value == "mobile"){
 	if (nombre_de_g_calcul_memo <= 4) {
 		document.getElementById('DivClignotanteNbG'+compteur.toString()).innerHTML = " <img src='./Images/diodever.gif' height='14px' />";
