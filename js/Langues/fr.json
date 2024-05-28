@@ -330,7 +330,8 @@
 		"temps_allumage_label":"T<sub>allumage</sub> (ms) =",
 		"temps_allumage_infobulle":"Temps d'allumage du réacteur lorsqu'on clique sur V\u1D69+ ou V\u1D69- .",
 		"puissance_reacteur_label":"P (W/kg) =",
-		"puissance_reacteur_infobulle":"Puissance du réacteur par unité de masse."
+		"puissance_reacteur_infobulle":"Puissance du réacteur par unité de masse.",
+		"puissance_consommee_label":"P<sub>consommée</sub> (W/kg)"
 
 	},
 

@@ -393,8 +393,8 @@ function trajectoire() {
 		} 
 		
 		var temps_allumage_reacteur = Number(document.getElementById("temps_allumage").value); //ManonV3
+		temps_allumage_reacteur = temps_allumage_reacteur*Math.pow(10,-3); //Remettre en secondes
 		var puissance_reacteur = Number(document.getElementById("puissance_reacteur").value); //ManonV3
-		var puissance_reacteur = puissance_reacteur*Math.pow(10,-3); //Remettre en secondes ManonV3
 		
 		if(joy.GetPhi()<0){
 
@@ -409,7 +409,7 @@ function trajectoire() {
 
 			L = L + L*Delta_L_sur_L; //ManonV3
 			E = E + E*Delta_E_sur_E //ManonV3
-			deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E)/Math.pow(c,2); //ManonV3
+			deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E)*Math.pow(c,2); //ManonV3
 
 			/*Delta_L=joy.GetPhi()*Math.log10(10+Math.abs(L))*Math.log10(10+Math.abs(vtot))*Math.log10(10+r_part)/Math.log10(Math.sqrt(1-(vtot/c)^2))*1e-3;
 			L=L+Delta_L ;
@@ -436,7 +436,7 @@ function trajectoire() {
 
 			mobile.L = mobile.L + mobile.L*Delta_L_sur_L; //ManonV3
 			mobile.E_tot = mobile.E + mobile.E*Delta_E_sur_E //ManonV3
-			deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E)/Math.pow(c,2); //ManonV3
+			deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E)*Math.pow(c,2); //ManonV3
 
 			/*Delta_L=joy.GetPhi()*Math.log10(10+Math.abs(L))*Math.log10(10+Math.abs(vtot))*Math.log10(10+r_part)/Math.log10(Math.sqrt(1-(vtot/c)^2))*1e-3;
 			L=L+Delta_L ;

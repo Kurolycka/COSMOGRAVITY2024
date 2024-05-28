@@ -852,8 +852,8 @@ function trajectoire(compteur,mobile) {
 		}, false);
 
 		var temps_allumage_reacteur = Number(document.getElementById("temps_allumage").value); //ManonV3
+		temps_allumage_reacteur = temps_allumage_reacteur*Math.pow(10,-3); //Remettre en secondes
 		var puissance_reacteur = Number(document.getElementById("puissance_reacteur").value); //ManonV3
-		var puissance_reacteur = puissance_reacteur*Math.pow(10,-3); //Remettre en secondes ManonV3
 
 		if(blyo == 1 && element2.value == "mobile") {
 			setInterval(function(){
@@ -867,7 +867,7 @@ function trajectoire(compteur,mobile) {
 
 						mobile.L = mobile.L + mobile.L*Delta_L_sur_L; //ManonV3
 						mobile.E = mobile.E + mobile.E*Delta_E_sur_E //ManonV3
-						deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E)/Math.pow(c,2); //ManonV3
+						deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E)*Math.pow(c,2); //ManonV3
 
 						/*Delta_L=-(joy.GetPhi()/5)/((1e-10)*mobile.r0/rs)*mobile.E;
 						mobile.L=mobile.L+Delta_L ;
@@ -891,7 +891,7 @@ function trajectoire(compteur,mobile) {
 		
 						mobile.L = mobile.L + mobile.L*Delta_L_sur_L; //ManonV3
 						mobile.E_tot = mobile.E + mobile.E*Delta_E_sur_E //ManonV3
-						deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E)/Math.pow(c,2); //ManonV3
+						deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E)*Math.pow(c,2); //ManonV3
 
 
 						/*Delta_L=-(joy.GetPhi()/5)/((1e-10)*mobile.r0/rs)*mobile.E;

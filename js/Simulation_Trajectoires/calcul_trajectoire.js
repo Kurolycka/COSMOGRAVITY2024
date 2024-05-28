@@ -451,6 +451,12 @@ function rendreVisibleNbG() {
 		dernier_g_res_Cells.forEach(function(cell) {
             cell.style.display = ''; // Rend visible la cellule dernier_g_res
         });
+		puissance_consommee_label_Cells.forEach(function(cell) {
+            cell.style.display = ''; // Rend visible la cellule dernier_g_res
+        });
+		puissance_consommee_Cells.forEach(function(cell) {
+            cell.style.display = ''; // Rend visible la cellule dernier_g_res
+        });
     } else {
         nbGCells.forEach(function(cell) {
             cell.style.display = 'none'; // Cache la cellule nb_g
@@ -462,6 +468,12 @@ function rendreVisibleNbG() {
             cell.style.display = 'none'; // Cache la cellule dernier_g
         });
 		dernier_g_res_Cells.forEach(function(cell) {
+            cell.style.display = 'none'; // Cache la cellule dernier_g_res
+        });
+		puissance_consommee_Cells.forEach(function(cell) {
+            cell.style.display = 'none'; // Cache la cellule dernier_g_res
+        });
+		puissance_consommee_label_Cells.forEach(function(cell) {
             cell.style.display = 'none'; // Cache la cellule dernier_g_res
         });
     }
@@ -506,6 +518,7 @@ function initialisation(compteur){
 	L = vphi * r0 / c;
 	
 	deltam_sur_m = 0;
+	puissance_consommee_calcul=0; //ManonV3
 
 	v_rotation = c*Math.sqrt(rs/(2*(r0-rs))); //ManonCirculaire
 
@@ -861,9 +874,10 @@ function trajectoire(compteur,mobile) {
     }, false);
 
 	var temps_allumage_reacteur = Number(document.getElementById("temps_allumage").value); //ManonV3
+	temps_allumage_reacteur = temps_allumage_reacteur*Math.pow(10,-3) //Remettre en secondes ManonV3
 	var puissance_reacteur = Number(document.getElementById("puissance_reacteur").value); //ManonV3
-	var puissance_reacteur = puissance_reacteur*Math.pow(10,-3); //Remettre en secondes ManonV3
 
+	var temps_total_reacteur =0;
 
 	if(blyo == 1 && element2.value == "mobile" ) {
 	setInterval(function(){
@@ -877,7 +891,9 @@ function trajectoire(compteur,mobile) {
 
 				mobile.L = mobile.L + mobile.L*Delta_L_sur_L; //ManonV3
 				mobile.E = mobile.E + mobile.E*Delta_E_sur_E //ManonV3
-				deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E)/Math.pow(c,2); //ManonV3
+				deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E)*Math.pow(c,2); //ManonV3 Réellement divisé par c au carré et pas multiplié ???
+				temps_total_reacteur = Math.abs(joy.GetPhi()*temps_allumage_reacteur);
+				puissance_consommee_calcul = deltam_sur_m/temps_total_reacteur;
 
 				/*Delta_L=joy.GetPhi()*1e-2*Math.log10(10+Math.abs(mobile.L))*Math.log10(10+Math.abs(vtotal))*Math.log10(10+mobile.r_part)/Math.log10(Math.sqrt(1-(vtotal/c)^2));     
 				mobile.L=mobile.L+Delta_L ;
@@ -889,6 +905,7 @@ function trajectoire(compteur,mobile) {
 				document.getElementById("E"+compteur.toString()).innerHTML = mobile.E.toExponential(3);
 				document.getElementById("L"+compteur.toString()).innerHTML = mobile.L.toExponential(3);
 				document.getElementById("decal"+compteur.toString()).innerHTML = deltam_sur_m.toExponential(3);
+				document.getElementById("puissance_consommee"+compteur.toString()).innerHTML = puissance_consommee_calcul.toExponential(3);
 			 
 		}else if(joy.GetPhi()>0){ 
 
@@ -899,7 +916,9 @@ function trajectoire(compteur,mobile) {
 
 				mobile.L = mobile.L + mobile.L*Delta_L_sur_L; //ManonV3
 				mobile.E_tot = mobile.E + mobile.E*Delta_E_sur_E //ManonV3
-				deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E)/Math.pow(c,2); //ManonV3
+				deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E)*Math.pow(c,2); //ManonV3
+				temps_total_reacteur = Math.abs(joy.GetPhi()*temps_allumage_reacteur);
+				puissance_consommee_calcul = deltam_sur_m/temps_total_reacteur;
 				
 				/*Delta_L=joy.GetPhi()*1e-2*Math.log10(10+Math.abs(mobile.L))*Math.log10(10+Math.abs(vtotal))*Math.log10(10+mobile.r_part)/Math.log10(Math.sqrt(1-(vtotal/c)^2));     
 				mobile.L=mobile.L+Delta_L ;
@@ -910,6 +929,7 @@ function trajectoire(compteur,mobile) {
 				document.getElementById("E"+compteur.toString()).innerHTML = mobile.E.toExponential(3);
 				document.getElementById("L"+compteur.toString()).innerHTML = mobile.L.toExponential(3);
 				document.getElementById("decal"+compteur.toString()).innerHTML = deltam_sur_m.toExponential(3);
+				document.getElementById("puissance_consommee"+compteur.toString()).innerHTML = puissance_consommee_calcul.toExponential(3);
 		}
 		}, 50); //Réactivité du système et pas du pilote 
 	}												  
