@@ -42,8 +42,6 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
     let a_min = Number(document.getElementById("ami").value);
     let a_max = Number(document.getElementById("ama").value);
 
-    let debutEtFin;
-
     /**
      * Fonction qui permet de :
      *      - Redéfinir les conditions initiales
@@ -105,7 +103,7 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
     let nombre_point = 0;
 
     // Résolution dans le sens négatif
-    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 10/pas) {
+    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 10/Math.abs(pas)) {
         set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
         taus.push(set_solution[0])
         facteur_echelle.push(set_solution[1])
@@ -120,7 +118,7 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
     nombre_point = 0;
 
     // Résolution dans le sens positif
-    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 10/pas) {
+    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 10/Math.abs(pas)) {
         set_solution = RungeKuttaEDO2(pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
         taus.push(set_solution[0])
         facteur_echelle.push(set_solution[1])
@@ -133,22 +131,15 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
 
     if (isNaN(t_0) || Math.abs(t_0) === Infinity) {
         console.log("t0 théorique est NaN")
-
-        if (debutEtFin[2]) {
-            t_0 = Math.abs(debutEtFin[2])
-        } else {
-            t_0 = 0
-        }
+        t_0 = 0
     } else {
         console.log("t0 n'est pas NaN")
         t_0 = t_0 / (nbrJours() * 24 * 3600 * 1e9)
     }
 
-    // On transforme les taus en temps
-    for (let index = 0; index < taus.length; index = index + 1) {
-        taus[index] = taus[index] / H0parGAnnee
-        taus[index] = taus[index] + t_0
-    }
+    let debutEtFin = debut_fin_univers(equa_diff_2, t_0)
+
+    taus = tauEnTemps(taus, debutEtFin[2])
 
     taus.pop()
     facteur_echelle.pop()
@@ -174,6 +165,7 @@ function affichage_site_DE() {
     let age_univers = sorties[1]
     let debutEtFin = sorties[2]
     console.log("Timeline :", debutEtFin, age_univers)
+    console.log("Omega DE/k/m/r :", Omega_DE(0), Omega_k(0), Omega_m(0), Omega_r(0))
 
     graphique_facteur_echelle(donnee)
 }

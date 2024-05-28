@@ -136,14 +136,13 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
 
     let debutEtFin = debut_fin_univers(equa_diff_2, t_0)
 
-    // On transforme les taux en temps
-    for (let index = 0; index < taus.length; index = index + 1) {
-        taus[index] = taus[index] / H0parGAnnee
+    taus = tauEnTemps(taus, debutEtFin[2])
 
-        if (debutEtFin[2]) {
-            taus[index] = taus[index] + t_0
-        }
-    }
+    taus.pop()
+    facteur_echelle.pop()
+
+    taus.shift()
+    facteur_echelle.shift()
 
     console.log("Liste temps :", taus)
     console.log("Liste facteur :", facteur_echelle)

@@ -352,13 +352,12 @@ function equa_diff_2_DE(t, a, ap) {
  */
 function debut_fin_univers(equa_diff, t_0) {
     let H0 = Number(document.getElementById("H0").value);
-    console.log(H0, t_0)
 
     // Déclaration des variables et des valeurs retournée
     let set_solution = [0, 1 ,1]
     let save_set_solution;
     let pas = 1e-4 * H0 / Math.abs(H0)
-    let limite_derivee = 1e11
+    let limite_derivee = 1e13
     let nombre_point = 0
 
     let naissance_univers;
@@ -383,7 +382,7 @@ function debut_fin_univers(equa_diff, t_0) {
 
     /*
     Si :
-        la valeur de tau est plus grande que 1 (arbitraire)
+        la valeur de a est plus grande que 1 (arbitraire)
         et
         la valeur de da/dtau est 10^11 fois plus grande que le pas
     on :
@@ -406,16 +405,13 @@ function debut_fin_univers(equa_diff, t_0) {
     }
     else {
         age_debut = set_solution[0] / H0_parGAnnees(H0)
-        if (t_0 > 0) {
-            age_debut = age_debut + t_0
-        }
 
         if (set_solution[1] <= 1) {
-            naissance_univers = age_debut.toExponential(4) + " (BigBang)"
+            naissance_univers = "L'univers est né il y a " + Math.abs(age_debut).toExponential(4) + " Milliard d'année (BigBang)"
         }
 
         if (Math.abs(set_solution[2]) > limite_derivee) {
-            naissance_univers = age_debut.toExponential(4) + " (BigFall)"
+            naissance_univers = "L'univers est né il y a " + Math.abs(age_debut).toExponential(4) + " Milliard d'année (BigFall)"
         }
     }
 
@@ -437,7 +433,7 @@ function debut_fin_univers(equa_diff, t_0) {
 
     /*
     Si :
-        la valeur de tau est plus grande que 1 (arbitraire)
+        la valeur de a est plus grande que 1 (arbitraire)
         et
         la valeur de da/dtau est 10^11 fois plus grande que le pas
     on :
@@ -460,19 +456,40 @@ function debut_fin_univers(equa_diff, t_0) {
     }
     else {
         age_fin = set_solution[0] / H0_parGAnnees(H0)
-        if (t_0 > 0) {
-            age_fin = age_fin + t_0
-        }
+
         if (set_solution[1] <= 1) {
-            mort_univers = age_fin.toExponential(4) + " (BigCrunch)"
+            mort_univers = "L'univers va mourir dans " + Math.abs(age_fin).toExponential(4) + " Milliard d'année (BigCrunch)"
         }
 
         if (Math.abs(set_solution[2]) > limite_derivee) {
-            mort_univers = age_fin.toExponential(4) + " (BigRip)"
+            mort_univers = "L'univers va mourir dans " + Math.abs(age_fin).toExponential(4) + " Milliard d'année (BigRip)"
         }
     }
 
     return [naissance_univers, mort_univers, age_debut, age_fin]
+}
+
+/**
+ * Fonction permettant de transformer les taux en temps
+ * @param listeTaus {[number]} Liste des taux sous forme de nombre
+ * @param t_debut {number} age de naissance de l'univers
+ * @param t_fin {number} age de mort de l'univers
+ * @param t_0 {number} age théorique actuel de l'univers
+ * @return La liste des temps
+ */
+function tauEnTemps(listeTaus, t_debut) {
+    let H0 = Number(document.getElementById("H0").value);
+    let H0parGAnnee = H0_parGAnnees(H0);
+
+    for (let index = 0; index < listeTaus.length; index = index + 1) {
+        listeTaus[index] = listeTaus[index] / H0parGAnnee
+
+        if (t_debut) {
+            listeTaus[index] = listeTaus[index] + Math.abs(t_debut)
+        }
+    }
+
+    return listeTaus
 }
 
 /**
