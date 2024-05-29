@@ -271,7 +271,7 @@ function fonction_F(u,z_utilisé) {
         terme_1 = Omegak0 * Math.pow(1+u, 2)
         terme_2 = Omegam0 * Math.pow(1+u, 3)
         terme_3 = Omegar0 * Math.pow(1+u, 4)
-        terme_4 = OmegaDE0 * fonction_Y(u)
+        terme_4 = OmegaDE0 * fonction_Y(Math.pow(1+u, -1))
     }else{
         terme_1 = Omegak0 * Math.pow(u, -2)
         terme_2 = Omegam0 * Math.pow(u, -3)

@@ -17,7 +17,7 @@ function inverse_EN(){
 	k = Number(document.getElementById("k_p").value);
 	h0 = Number(document.getElementById("H0").value);
 	omegam0 = Number(document.getElementById("omegam0").value);
-	omegaDE0 = Number(document.getElementById("omegaDE0_annexes").value);
+	omegaDE0 = Number(document.getElementById("omegaDE0").value);
 
 	omegak0=(1-omegam0-omegaDE0-Or);
 	H0parsec = h0*1000/((au*(180*3600))/Math.PI*Math.pow(10, 6));
@@ -73,8 +73,8 @@ function get_root_dm_EN(){//Enoire === 1sursqrtF ==fonction_dm_EN
 	// on cherche la plus grande valeur de dm  en supposant z=1e10
 	z_max=1e10
 	eps=1e-6;	
-	let w0 = Number(document.getElementById("omega0_annexes").value);
-	let w1 = Number(document.getElementById("omega1_annexes").value);
+	let w0 = Number(document.getElementById("omega0").value);
+	let w1 = Number(document.getElementById("omega1").value);
    
 	if (omegak0>0){ 
 		integ_1 = Math.sqrt( Math.abs(omegak0)) * simpson_EN(0,z_max, fonction_dm_EN, omegam0, Number(omegaDE0), Number(Or),eps,w0,w1);
@@ -107,8 +107,8 @@ function bisection_method_dm_EN (dm, omegam0, omegaDE0, Or, eps){
 	za = 0;
 	zb = 10;
 	ex = 0.00001; //indicateur de tolÃ©rence d'erreur de l'interpolation/dichotomie
-	let w0 = Number(document.getElementById("omega0_annexes").value);
-	let w1 = Number(document.getElementById("omega1_annexes").value);
+	let w0 = Number(document.getElementById("omega0").value);
+	let w1 = Number(document.getElementById("omega1").value);
    
 	dm_za = f_x(za, omegam0, omegaDE0, Or, eps,w0,w1);
 	dm_zb = f_x(zb, omegam0, omegaDE0, Or, eps,w0,w1);
@@ -323,8 +323,8 @@ function dichotomie_EN(BornInf, BornSup, fonction, cible, ex,w0,w1){
 function get_root_t_EN(){//  en cas de constante cosmo et cas d'energie sombre de meme fonctiom_integral ==> fonctiom_integral_EN
     var texte = o_recupereJson();
 eps=1e-6;
-w0 = Number(document.getElementById("omega0_annexes").value);
-w1 = Number(document.getElementById("omega1_annexes").value);
+w0 = Number(document.getElementById("omega0").value);
+w1 = Number(document.getElementById("omega1").value);
 
 t_max=simpson_simple_degre2_EN(fonction_integrale_EN, 0, omegam0, Number(omegaDE0), Number(Or),w0,w1);
 
@@ -612,8 +612,8 @@ function fonction_F(x, omegam0, omegaDE0, Or,w0,w1){
 
 function fonction_integrale_EN(x, omegam0, omegaDE0, Or,w0,w1) {
 	
-	//let w0 = Number(document.getElementById("omega0_annexes").value);
-	//let w1 = Number(document.getElementById("omega1_annexes").value);
+	//let w0 = Number(document.getElementById("omega0").value);
+	//let w1 = Number(document.getElementById("omega1").value);
    
 	let omegak0 = 1 - Or - omegam0 - omegaDE0;
 	return (1 / (H0enannee * (1.0 + x))) * Math.pow(omegaDE0 *  Math.exp(-3 * (1 + w0 + w1) * Math.log(1/(1 + x)) - 3 * w1 * (1 - 1/(1 + x))) + omegak0 * (Math.pow((1 + x), 2)) + omegam0 * (Math.pow((1 + x), 3)) + Or * (Math.pow((1 + x), 4)) ,(-1.0 / 2));
@@ -627,8 +627,8 @@ function cv_fonction_integrale_EN(l, omegam0, omegaDE0, Or,w0,w1) {
 
 function fonction_dm_EN(x, omegam0, omegaDE0, Or,w0,w1) { // c'est bizarre mais c'est F(x)^-1/2
 	
-	//let w0 = Number(document.getElementById("omega0_annexes").value);
-	//let w1 = Number(document.getElementById("omega1_annexes").value);
+	//let w0 = Number(document.getElementById("omega0").value);
+	//let w1 = Number(document.getElementById("omega1").value);
 	let omegak0 = 1 - Or - omegam0 - omegaDE0;
 
 	return Math.pow(omegaDE0 *  Math.exp(-3 * (1 + w0 + w1) * Math.log(1/(1 + x)) - 3 * w1 * (1 - 1/(1 + x))) + omegak0 * (Math.pow((1 + x), 2)) + omegam0 * (Math.pow((1 + x), 3)) + Or * (Math.pow((1 + x), 4)) ,(-1.0 / 2));
@@ -636,8 +636,8 @@ function fonction_dm_EN(x, omegam0, omegaDE0, Or,w0,w1) { // c'est bizarre mais 
   
 
 function derive_fonction_F(x, omegam0, omegaDE0, Or,w0,w1){
-	//let w0 = Number(document.getElementById("omega0_annexes").value);
-	//let w1 = Number(document.getElementById("omega1_annexes").value);
+	//let w0 = Number(document.getElementById("omega0").value);
+	//let w1 = Number(document.getElementById("omega1").value);
    
 	let omegak0 = 1 - Or - omegam0 - omegaDE0;
   return omegaDE0 * (Math.exp(-3 * (1 + w0 + w1) * Math.log(1/(1 + x)) - 3 * w1 * (1 - 1/(1 + x)))*(x+1)*(3*(1+w0+w1)-3*w1*(x+1))) +2* omegak0 * (1 + x) + 3*omegam0 * (Math.pow((1 + x), 2)) + 4*Or * (Math.pow((1 + x), 3));

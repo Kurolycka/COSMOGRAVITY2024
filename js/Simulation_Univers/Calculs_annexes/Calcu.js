@@ -543,9 +543,6 @@ function calcu(path) {
 		
 		
 		if(d_checkbox.checked) {
-			
-
-			
 			document.getElementById("graph_container_log_d_z").style.display = "contents"; //display graph
 			plot_title = "Échelle log d<sub>m</sub>  d<sub>L</sub>  d<sub>a</sub>  d<sub>LT</sub>"
 			plot_type = 'log'
@@ -1307,8 +1304,8 @@ function calculDeDs(abscissa) {
 	var integ_1;
 
 
-		abscissa.forEach(i => {   
-		
+	abscissa.forEach(i => {   
+		console.log(i);
 		// calcul de la distance mètrique 
 
 		if (omegak0>0){
@@ -1568,6 +1565,7 @@ function onlyOne(checkbox) {
 //Remy 27/05/2024
 function calcul_horizons_annexe(){
 	let t_pour_horizon= Number(document.getElementById("t_pour_calcul_horizon").value);
+	tempsEmission = simpson_simple_degre2(fonction_integrale, Number(z1), omegam0, Number(omegalambda0), Number(Or));
     let dm_horizon_particule_m=calcul_horizon_particule(t_pour_horizon);
     let dm_horizon_particule_Ga=m_vers_AL(dm_horizon_particule_m)/1e9;
     let dm_horizon_evenement_m=calcul_horizon_evenements(t_pour_horizon);

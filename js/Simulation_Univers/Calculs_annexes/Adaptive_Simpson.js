@@ -76,8 +76,8 @@ function F(x, omegam0, omegaDE0, Or) {
 
 function Y(x) {
   
-	w0 = Number(document.getElementById("omega0_annexes").value);
-	w1 = Number(document.getElementById("omega1_annexes").value);
+	w0 = Number(document.getElementById("omega0").value);
+	w1 = Number(document.getElementById("omega1").value);
 
 
 	return Math.exp(-3 * (1 + w0 + w1) * Math.log(x) - 3 * w1 * (1 - x));
@@ -86,8 +86,8 @@ function Y(x) {
 /*function derive_fonction_F(x, omegam0, omegaDE0, Or){
 	let omegak0 = 1 - Or - omegam0 - omegaDE0;
   
-	w0 = Number(document.getElementById("omega0_annexes").value);
-	w1 = Number(document.getElementById("omega1_annexes").value);
+	w0 = Number(document.getElementById("omega0").value);
+	w1 = Number(document.getElementById("omega1").value);
 
   return omegaDE0 * (Y(1/(1 + x))*(x+1)*(3*(1+w0+w1)-3*w1*(x+1))) +2* omegak0 * (1 + x) + 3*omegam0 * (Math.pow((1 + x), 2)) + 4*Or * (Math.pow((1 + x), 3));
 

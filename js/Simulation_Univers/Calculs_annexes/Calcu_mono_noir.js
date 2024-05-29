@@ -52,7 +52,7 @@ function calcu() {
   t0 = Number(document.getElementById("T0").value);
   h0 = Number(document.getElementById("H0").value);
   omegam0 = Number(document.getElementById("omegam0").value);
-  omegaDE0 = Number(document.getElementById("omegaDE0_annexes").value);
+  omegaDE0 = Number(document.getElementById("omegaDE0").value);
   omegak0 = Number(document.getElementById("resultat_omegak0_annexes").value);
   Or = Number(document.getElementById("resultat_omegar0_annexes").value);
   nbrjours = nbJoursParAn();

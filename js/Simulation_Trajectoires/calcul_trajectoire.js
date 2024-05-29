@@ -1189,7 +1189,6 @@ function animate(compteur,mobile,mobilefactor) {
 		mobile["context22"].fill();
 	}
     // Gestion du rebond
-
 	if(element2.value != "mobile"){
 		if (mobile.r_part_obs <= r_phy ) {
 		if (mobile.Rebond != 1 && isrebond == 1 && r_phy > 0) {

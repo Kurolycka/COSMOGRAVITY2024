@@ -90,7 +90,7 @@ function calc_energie_noire() {
   t0 = Number(document.getElementById("T0").value);
   h0 = Number(document.getElementById("H0").value);
   omegam0 = Number(document.getElementById("omegam0").value);
-  omegaDE0 = Number(document.getElementById("omegaDE0_annexes").value);
+  omegaDE0 = Number(document.getElementById("omegaDE0").value);
   omegak0 = Number(document.getElementById("resultat_omegak0_annexes").innerHTML);
   Ie = Number(document.getElementById("i_e").value);
   
@@ -98,8 +98,8 @@ function calc_energie_noire() {
   document.getElementById("tempsReception_alert").innerHTML = "";
   
   //Energie Noire
-  w0 = Number(document.getElementById("omega0_annexes").value);
-  w1 = Number(document.getElementById("omega1_annexes").value);
+  w0 = Number(document.getElementById("omega0").value);
+  w1 = Number(document.getElementById("omega1").value);
 
 
   //création d'une liste qui va prendre les résultats des calculs avant qu'elles soient arrondis
@@ -252,43 +252,43 @@ avertissement();
     }
   // formule analytique pour les cas hors Lambda et Matiere pour les z>1e12
     else if(Or!=0 && (z1>=1e12 && z2>=1e12) ){
-      agebetween=(1/(2*Math.pow(Or,0.5)*H0enannee))*(Math.pow(1+Number(z2),-2)
+    agebetween=(1/(2*Math.pow(Or,0.5)*H0enannee))*(Math.pow(1+Number(z2),-2)
         -Math.pow(1+Number(z1),-2));
     }
   // autres cas
     else{
-      agebetween=tempsReception-tempsEmission;
+    	agebetween=tempsReception-tempsEmission;
     }
 
     agebetween_sec=agebetween*H0enannee/H0parsec;
 
 // z1
-  Tz1 = t0 * (1 + Number(z1));
-  Tz1 = Tz1.toExponential(8);
-  Omz1 = omegam0 * Math.pow(1 + Number(z1), 3) / fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1);
-  Omz1 = Omz1.toExponential(8);
-  Olz1 = omegaDE0 * Ya(Number(z1))*(1/(1+z1))	/ fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1);
-  Olz1 = Olz1.toExponential(8);
-  Orz1 = Or * Math.pow(1 + Number(z1), 4) / fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1);
-  Orz1 = Orz1.toExponential(8);
-  Okz1 = omegak0 * Math.pow(1 + Number(z1), 2) / fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1);
-  Okz1 = Okz1.toExponential(8);
-  Hz1 = h0 * Math.pow(fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1),0.5);
-  Hz1 = Hz1.toExponential(8);
+	Tz1 = t0 * (1 + Number(z1));
+	Tz1 = Tz1.toExponential(8);
+	Omz1 = omegam0 * Math.pow(1 + Number(z1), 3) / fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1);
+	Omz1 = Omz1.toExponential(8);
+	Olz1 = omegaDE0 * Ya(Number(z1))*(1/(1+z1))	/ fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1);
+	Olz1 = Olz1.toExponential(8);
+	Orz1 = Or * Math.pow(1 + Number(z1), 4) / fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1);
+	Orz1 = Orz1.toExponential(8);
+	Okz1 = omegak0 * Math.pow(1 + Number(z1), 2) / fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1);
+	Okz1 = Okz1.toExponential(8);
+	Hz1 = h0 * Math.pow(fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1),0.5);
+	Hz1 = Hz1.toExponential(8);
 
 //z2
-  Tz2 = t0 * (1 + Number(z2));
-  Tz2 = Tz2.toExponential(8);
-  Omz2 = omegam0 * Math.pow(1 + Number(z2), 3) / fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1);
-  Omz2 = Omz2.toExponential(8);
-  Olz2 = omegaDE0 * Ya(Number(z1))*(1/(1+z2))	/ fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1);
-  Olz2 = Olz2.toExponential(8);
-  Orz2 = Or * Math.pow(1 + Number(z2), 4) / fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1);
-  Orz2 = Orz2.toExponential(8);
-  Okz2 = omegak0 * Math.pow(1 + Number(z2), 2) / fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1);
-  Okz2 = Okz2.toExponential(8);
-  Hz2 = h0 * Math.pow(fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1), 0.5);
-  Hz2 = Hz2.toExponential(8);
+	Tz2 = t0 * (1 + Number(z2));
+	Tz2 = Tz2.toExponential(8);
+	Omz2 = omegam0 * Math.pow(1 + Number(z2), 3) / fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1);
+	Omz2 = Omz2.toExponential(8);
+	Olz2 = omegaDE0 * Ya(Number(z1))*(1/(1+z2))	/ fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1);
+	Olz2 = Olz2.toExponential(8);
+	Orz2 = Or * Math.pow(1 + Number(z2), 4) / fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1);
+	Orz2 = Orz2.toExponential(8);
+	Okz2 = omegak0 * Math.pow(1 + Number(z2), 2) / fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1);
+	Okz2 = Okz2.toExponential(8);
+	Hz2 = h0 * Math.pow(fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1), 0.5);
+	Hz2 = Hz2.toExponential(8);
 
    //calcul de la distance du diametre apparent et distance lumiere(dm et photometrie)
   dda = dm1 / (1 + Number(z1));
@@ -556,16 +556,16 @@ function cv_Enoire_temps(l, omegam0, omegaDE0, Or) {
 // Ya(x)
 
 function Ya_a(x) {
-  w0 = Number(document.getElementById("omega0_annexes").value);
-  w1 = Number(document.getElementById("omega1_annexes").value);
+  w0 = Number(document.getElementById("omega0").value);
+  w1 = Number(document.getElementById("omega1").value);
 
 
   return Math.exp(-3 * (w1 + w0 + 1) * Math.log(x) - (3 * w1 * (1 - x)));
 }
 
 function Ya(x) {    
-  w0 = Number(document.getElementById("omega0_annexes").value);
-  w1 = Number(document.getElementById("omega1_annexes").value);
+  w0 = Number(document.getElementById("omega0").value);
+  w1 = Number(document.getElementById("omega1").value);
 
   return Math.exp(-3 * (w1 + w0 + 1) * Math.log(1 / (1 + x)) - (3 * w1 * (1 - (1 / (1 + x)))));
 }
@@ -811,7 +811,7 @@ function Tracer(path) {
   t0 = Number(document.getElementById("T0").value);
   h0 = Number(document.getElementById("H0").value);
   omegam0 = Number(document.getElementById("omegam0").value);
-  omegaDE0 = Number(document.getElementById("omegaDE0_annexes").value);
+  omegaDE0 = Number(document.getElementById("omegaDE0").value);
   omegak0 = Number(document.getElementById("resultat_omegak0_annexes").innerHTML);
   Ie = Number(document.getElementById("i_e").value);
   
@@ -819,8 +819,8 @@ function Tracer(path) {
   document.getElementById("tempsReception_alert").innerHTML = "";
 
     //Energie Noire
-	w0 = Number(document.getElementById("omega0_annexes").value);
-	w1 = Number(document.getElementById("omega1_annexes").value);
+	w0 = Number(document.getElementById("omega0").value);
+	w1 = Number(document.getElementById("omega1").value);
   
 	//recuperation des valeurs
   pas = Number(document.getElementById("pas_pour_z").value);
@@ -1339,7 +1339,7 @@ function Tracer(path) {
 
 				type: 'scatter',
 
-				name: '<b>Ω<sub>DE</sub><b>'
+				name: '<b>Ω<sub>DEN</sub><b>'
 			},
 			{
 				x: val_abscissa[1],
@@ -1519,8 +1519,8 @@ function calculDeDs_EN(abscissa) {
 	var min_graph;
 	var integ_1;
 
-	w0 = Number(document.getElementById("omega0_annexes").value);
-	w1 = Number(document.getElementById("omega1_annexes").value);
+	w0 = Number(document.getElementById("omega0").value);
+	w1 = Number(document.getElementById("omega1").value);
 
 
 		abscissa.forEach(i => {   
@@ -1640,8 +1640,8 @@ function calcul_temps_EN(abscissa){
 	zArr = [];
 	tempsArr=[];
 	temps_0=0;
-	w0 = Number(document.getElementById("omega0_annexes").value);
-	w1 = Number(document.getElementById("omega1_annexes").value);
+	w0 = Number(document.getElementById("omega0").value);
+	w1 = Number(document.getElementById("omega1").value);
 
 	h0 = Number(document.getElementById("H0").value); 
 	if(h0<0) {temps_0=simpson_simple_degre2_EN(fonction_integrale_EN, 0, omegam0, Number(omegaDE0), Number(Or),w0,w1); temps_0=-temps_0;}
@@ -1759,30 +1759,32 @@ function calcul_omegas_EN(abscissa){
     olArr = [];
     orArr = [];
     okArr = [];
-	w0 = Number(document.getElementById("omega0_annexes").value);
-	w1 = Number(document.getElementById("omega1_annexes").value);
+	w0 = Number(document.getElementById("omega0").value);
+	w1 = Number(document.getElementById("omega1").value);
 
     abscissa.forEach(i => {
 
-        Omz = omegam0 * Math.pow(1 + Number(i), 3) / fonction_E(Number(i), omegam0, Number(omegaDE0), Or,w0,w1);
+        Omz = omegam0 * Math.pow(1 + Number(i), 3) / fonction_F(Number(i), true);
         Omz = Omz.toExponential(8);
         omArr.push(Omz);
 
-        Olz = Number(omegaDE0) / fonction_E(Number(i), omegam0, Number(omegaDE0), Or,w0,w1);
-
+		if (document.getElementById("omegade_normalise").checked){
+			Olz = Number(omegaDE0) * fonction_Y(1/(1+i)) / fonction_F(Number(i),true);
+		}else{
+			Olz=Number(omegaDE0/fonction_F(Number(i),true));
+		};
         Olz = Olz.toExponential(8); 
         olArr.push(Olz);
 
-        Orz = Or * Math.pow(1 + Number(i), 4) / fonction_E(Number(i), omegam0, Number(omegaDE0), Or,w0,w1);
+        Orz = Or * Math.pow(1 + Number(Number(i)), 4) / fonction_F(Number(i), true);
         Orz = Orz.toExponential(8);
         orArr.push(Orz);
 
-        Okz = omegak0 * Math.pow(1 + Number(i), 2) / fonction_E(Number(i), omegam0, Number(omegaDE0), Or,w0,w1);
+        Okz = omegak0 * Math.pow(1 + Number(i), 2) / fonction_F(Number(i), true);
         Okz = Okz.toExponential(8);
         okArr.push(Okz);
         
         zArr.push(i);
-        
     });
 
     return [omArr,olArr,orArr,okArr,zArr];

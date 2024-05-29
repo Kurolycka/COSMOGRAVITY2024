@@ -339,9 +339,9 @@ function transfert_calcu(update1, choix) {
     document.getElementById("omegalambda0").value = sessionStorage.getItem("Ol");
     document.getElementById("lambda_cosmo_const").value = sessionStorage.getItem("const_cosmo");
   } else {
-    document.getElementById("omegaDE0_annexes").value = sessionStorage.getItem("Ol");
-    document.getElementById("omega0_annexes").value = sessionStorage.getItem("w0");
-    document.getElementById("omega1_annexes").value = sessionStorage.getItem("w1");
+    document.getElementById("omegaDE0").value = sessionStorage.getItem("Ol");
+    document.getElementById("omega0").value = sessionStorage.getItem("w0");
+    document.getElementById("omega1").value = sessionStorage.getItem("w1");
   }
   // si la case univers plat est cochée alors on renvoie la case cochée
   var univPlat = sessionStorage.getItem("univ_plat");
@@ -466,9 +466,9 @@ function afficheValeurs_calcul_mono() {
 function afficheValeurs_calcul_mono_noire() {
   document.getElementById("affichage").innerHTML = "&Omega;<sub>m0</sub> = " + document.getElementById("omegam0").value +
     " ; " + "&Omega;<sub>r0</sub> = " + document.getElementById("resultat_omegar0_annexes").value + "<br/>" +
-    "&Omega;<sub>DE0</sub> = " + document.getElementById("omegaDE0_annexes").value + " ; " + "&Omega;<sub>k0</sub> = " +
+    "&Omega;<sub>DE0</sub> = " + document.getElementById("omegaDE0").value + " ; " + "&Omega;<sub>k0</sub> = " +
     document.getElementById("resultat_omegak0_annexes").value + "<br/>" + "H<sub>0</sub> = " + document.getElementById("H0").value + " km.s<sup>-1</sup>.Mpc<sup>-1</sup>" +
-    "<br/>w<sub>0</sub> = " + document.getElementById("omega0_annexes").value + " ; w<sub>1</sub> = " + document.getElementById("omega1_annexes").value +
+    "<br/>w<sub>0</sub> = " + document.getElementById("omega0").value + " ; w<sub>1</sub> = " + document.getElementById("omega1").value +
     "<br/>T<sub>0</sub> = " + document.getElementById("T0").value + " K";
 }
 

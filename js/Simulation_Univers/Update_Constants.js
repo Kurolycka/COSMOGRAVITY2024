@@ -39,7 +39,7 @@ function update_rho(path){
 	
 	
 	if(path==1){
-		omegaDE0 = Number(document.getElementById("omegaDE0_annexes").value);
+		omegaDE0 = Number(document.getElementById("omegaDE0").value);
 		rho_lambda = omegaDE0 *3 * Math.pow(h0*1e3,2) / Math.pow(3.085677581*1e22,2)/ (8 * pi() * G); 
 		rho_lambda = rho_lambda.toExponential(4);
 		document.getElementById("rholambda").innerHTML = rho_lambda;
@@ -403,7 +403,7 @@ function update_omegar0_calc_noir(){
 function update_omegak0_calc_noir(){
 	omegam0 = Number(document.getElementById("omegam0").value);
 	Or= Number(document.getElementById("Orr").innerHTML);
-	omegaDE0 =Number(document.getElementById("omegaDE0_annexes").value);
+	omegaDE0 =Number(document.getElementById("omegaDE0").value);
 
 	omegak0 = 1 - Or - omegam0 - omegaDE0;
 	// verfie si univers plat coché
@@ -411,11 +411,11 @@ function update_omegak0_calc_noir(){
 		omegak0=0;
 		la = 1 - Or - omegam0;
 		la = la.toExponential(4);
-		document.getElementById("omegaDE0_annexes").value = la;
+		document.getElementById("omegaDE0").value = la;
 	}
 	else{
 		omegaDE0 = omegaDE0.toExponential(4);
-		document.getElementById("omegaDE0_annexes").value = omegaDE0;
+		document.getElementById("omegaDE0").value = omegaDE0;
 	}
 	omegak0= omegak0.toExponential(4);
 	document.getElementById("resultat_omegak0_annexes").innerHTML = omegak0;
@@ -431,7 +431,7 @@ function Omegak0_plat_calc_noir(){
 	omegaDE0= 1- Or -omegam0;
 	omegaDE0 = omegaDE0.toExponential(4);
 	document.getElementById("resultat_omegak0_annexes").innerHTML = 0;
-	document.getElementById("omegaDE0_annexes").value = omegaDE0;
+	document.getElementById("omegaDE0").value = omegaDE0;
 	}
 }
 
