@@ -17,6 +17,9 @@ var calculs = calculs || (function() {
          * @param {*} ref choix du réferentiel
          * @returns 
          */
+
+        //dans ce qui suit si vous trouvez des math.abs , c'est Khaled qui les a mit pour eviter que 
+        //les termes dans les racines soient negatifs mais c'est le cas photon-externe-sch qui posait pb au debut
         MSC_Ex_vitess : function (E,L,r,rs,photon) {
             var vtot=0;
             dt=E/(1-(rs/r)); //dt/dtau ou dt/dlambda pour photon
@@ -24,11 +27,11 @@ var calculs = calculs || (function() {
             vphi=  r*dphi/dt*Math.sqrt(1/(1-rs/r));
             if(photon){ // calcule photon
                 dr=E**2-(1-rs/r)*((L/r)**2);   //dr=(c/E)**2*(1-rs/r)**2*(E**2-(1-rs/r)*((L/r)**2));
-                vr=c/E*Math.sqrt(dr);    //vr=Math.sqrt(dr/((1-rs/r)**2));
+                vr=c/E*Math.sqrt(Math.abs(dr));    //vr=Math.sqrt(dr/((1-rs/r)**2));
             }
             else{ // calcul particule
                 dr=E**2-(1-rs/r)*(1+(L/r)**2);  //dr=(c/E)**2*(1-rs/r)**2*(E**2-(1-rs/r)*(1+(L/r)**2));
-                vr=c/E*Math.sqrt(dr);   //vr=Math.sqrt(dr)/(1-rs/r);
+                vr=c/E*Math.sqrt(Math.abs(dr));   //vr=Math.sqrt(dr)/(1-rs/r);
 				
             }
             vtot=Math.sqrt(vphi**2+vr**2);  
@@ -49,15 +52,15 @@ var calculs = calculs || (function() {
         
         MSC_In_vitess : function(E,L,r,rs,ra,photon){
             alpha_=1-((r**2)*rs)/(ra**3); /// alpha pour la métrique de Schawr interne
-            beta_=(3/2)*Math.sqrt(1-rs/ra)-(1/2)*Math.sqrt(alpha_);/// beta pour la métrique de Schawr interne
-            vphi=Math.sqrt((r**2/beta_**2)*(c*L*beta_**2/(E*r**2))**2);
+            beta_=(3/2)*Math.sqrt(Math.abs(1-rs/ra))-(1/2)*Math.sqrt(Math.abs(alpha_));/// beta pour la métrique de Schawr interne
+            vphi=Math.sqrt(Math.abs((r**2/beta_**2)*(c*L*beta_**2/(E*r**2))**2));
             if(photon){
                 dr=((c/E)**2)*alpha_*(beta_**4)*((E/beta_)**2-(L/r)**2);
-                vr=Math.sqrt(dr/(alpha_*beta_**2));
+                vr=Math.sqrt(Math.abs(dr/(alpha_*beta_**2)));
             }
             else{
                 dr=((c/E)**2)*alpha_*(beta_**4)*((E/beta_)**2-(L/r)**2-1);
-                vr=Math.sqrt(dr/(alpha_*beta_**2));
+                vr=Math.sqrt(Math.abs(dr/(alpha_*beta_**2)));
             }
             vtot=Math.sqrt(vphi**2+vr**2);
 
