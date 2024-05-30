@@ -418,6 +418,25 @@ function graphique_facteur_echelle(solution) {
     }
 }
 
+/**
+ * Fonction permettant de calculer l'âge de l'univers
+ * @param fonction {function} La fonction qui permet de simplifier l'écriture des relations,
+ * ne doit dépendre que d'une variable
+ * @param H0 {number} taux d'expansion actuel
+ * @param a1 {number}
+ * @param a2 {number}
+ * @return {number} âge de l'univers.
+ */
+function calcul_ages(fonction, H0, a1, a2) {
+    function integrande(u) {
+        let terme_1 = Math.pow(u, -1)
+        let terme_2 = Math.sqrt(fonction(u))
+
+        return terme_1 * Math.pow(terme_2 , -1);
+    }
+    return (1 / H0) * simpson_composite(integrande, a1, a2, 100);
+}
+
 //Partie Remy
 /** renvoie la fonction Sk pour calculer les distances cosmologiques en fontion de la courbure de l'espace
  * (Univers,simple,DarkEnergy et monofluide)
@@ -454,7 +473,7 @@ function DistanceMetrique(Zemission,Zreception,H0,OmegaK0,OmegaR0,OmegaM0,OmegaL
     function fonction_a_integrer(x){
         return Math.pow(fonction_E(x,true),-0.5);
     }
-    return c/(H0*Math.pow(Math.abs(OmegaK0),0.5))*Sk(Math.pow(Math.abs(OmegaK0),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,1e4),OmegaK0)
+    return c/(H0*Math.pow(Math.abs(OmegaK0),0.5))*Sk(Math.pow(Math.abs(OmegaK0),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,1e3),OmegaK0)
 };
 
 //moyen de la combiner avec celle du dessus en detectant E ou F avec omegalambda et DE 
@@ -462,7 +481,7 @@ function DistanceMetriqueDE(Zemission,Zreception,H0,OmegaK0,OmegaR0,OmegaM0,Omeg
     function fonction_a_integrer(x){
         return Math.pow(fonction_F(x,true),-0.5);
     }
-    return c/(H0*Math.pow(Math.abs(OmegaK0),0.5))*Sk(Math.pow(Math.abs(OmegaK0),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,1e4),OmegaK0)
+    return c/(H0*Math.pow(Math.abs(OmegaK0),0.5))*Sk(Math.pow(Math.abs(OmegaK0),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,1e3),OmegaK0)
 };
 
 //Remy 26/05/24
@@ -490,6 +509,3 @@ function calcul_horizon_evenements(z_reception=0){
     //formule 23 dans la théorie du 20/05/2024
     return DistanceMetrique(-.99999999,z_reception,H0_parSecondes(H0),Omega_k(0),Omega_r(0),Omega_m(0),Omega_l(0));
 }
-
-
-

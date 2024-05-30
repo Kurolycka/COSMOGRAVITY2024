@@ -1,7 +1,7 @@
 const PATH_JSON_FR = "./js/Langues/fr.json";
 const PATH_JSON_EN = "./js/Langues/en.json";
 
-const PATH_UNIV_THEORIE_FR = "./theorie/20240303-theorie_univers-FR.pdf";
+const PATH_UNIV_THEORIE_FR = "./theorie/theorie_univers_FR.pdf";
 const PATH_UNIV_THEORIE_EN = "./theorie/theorie_univers_EN.pdf";
 
 const PATH_TRAJ_THEO_FR = "./theorie/theorie_trajectoires_FR.pdf";

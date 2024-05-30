@@ -528,8 +528,6 @@ function calcu(path) {
 			return messagebox(texte.page_univers_calculs.message_zmax_incorrect,"zmax >-1");}
 		
 	    if (path == 1 && modele==0) {
-			
-								
 		if (sessionStorage.getItem("LANGUE") == "fr") {frtitle="al";
 		}else{frtitle="ly";} 
 	
@@ -573,7 +571,6 @@ function calcu(path) {
 		text:'T<sub>0</sub>: '+t0.toExponential(3)+'   H<sub>0</sub>:'+h0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+omegam0.toExponential(3)+'   \Ω<sub>Λ0</sub>:  '+omegalambda0+'   \Ω<sub>r0</sub>: ' +Or+'  \Ω<sub>k0</sub>:   '+omegak0.toExponential(3),
 		showarrow: false}];
 		let val_graph = calculDeDs(abscissa_d);
-
 
 
 		if(d_checkbox.checked && axeAbscicceEnZPlus1){	//gère le cas du décalage des absicces pour que tout tienne sur le graph quand on utilise l'échelle log
@@ -885,13 +882,7 @@ function calcu(path) {
 
 		}
 
-
-		var val_abscissa = calcul_temps(abscissa_d);
-
-		if(!(d_checkbox.checked)){
-			abscissa_d = (obtenir_linearScale_pour_t(val_abscissa[0],val_abscissa[1],pas,omegam0,omegalambda0,Or,H0enannee))//A SUPPRIMER
-			val_abscissa = calcul_temps(abscissa_d)
-		}
+		var val_abscissa = new_calcul_temps(abscissa_d);
 
 		let val_graph = calculDeDs(abscissa_d);
 		let annots =  [{xref: 'paper',
@@ -956,7 +947,7 @@ function calcu(path) {
 
 				type : "scatter",
 
-				title: frtitle,
+				title: "ly",  //attnetion titre temporaire
 				titlefont:{family:"Time New Roman, sans-serif",size:16,color:"#111111"},
 				showline: true
 			},
@@ -1285,7 +1276,7 @@ function linear_scale(zmin, zmax, nb_pts) {
 }
 
 
-
+//!partie tracer graphique
 function calculDeDs(abscissa) {
 	Eps = Number(0.001);  //0.00001
 //	var pas = (zmax - zmin)/dt;	
@@ -1299,32 +1290,13 @@ function calculDeDs(abscissa) {
 	var dmArr = [];
 	var dlt;
 	var dltArr = [];
-	var max_graph;
-	var min_graph;
-	var integ_1;
-
 
 	abscissa.forEach(i => {   
-		console.log(i);
 		// calcul de la distance mètrique 
-
-		if (omegak0>0){
-		integ_1 = Math.sqrt( Math.abs(omegak0)) * simpson(0, Number(i), fonction_dm, omegam0, Number(omegalambda0), Number(Or),Eps);  // sans unité
-		dm1=(c/(H0parsec*Math.sqrt( Math.abs(omegak0) ))) * Math.sin(integ_1);  // distance mètrique en mètres
-		}
-		else if (omegak0==0){
-		dm1=(c/(H0parsec) * simpson(0, Number(i), fonction_dm, omegam0, Number(omegalambda0), Number(Or),Eps));
-		}
-		else{
-		integ_1 = Math.sqrt( Math.abs(omegak0)) * simpson(0, Number(i), fonction_dm, omegam0, Number(omegalambda0), Number(Or),Eps);
-		dm1=(c/(H0parsec*Math.sqrt( Math.abs(omegak0) ))) * Math.sinh(integ_1) ;
-		}
-
+		dm1=DistanceMetrique(0,i,Number(H0parsec),Number(omegak0),Number(Or),Number(omegam0),Number(omegalambda0));		
 
 		//  temps en secondes
-		temps = simpson_simple_degre2(fonction_integrale, Number(i), omegam0, Number(omegalambda0), Number(Or));
-		temps = temps * H0enannee / H0parsec;
-
+		temps = calcul_ages(fonction_E,H0parsec,.0000001,1/(1+i));
 		dlt = temps * c;
 		dlt = dlt * LUMIERE_INV;
 
@@ -1346,7 +1318,6 @@ function calculDeDs(abscissa) {
 
 		zArr.push(i); 
 	});
-
 	return [dlArr,daArr,dmArr,zArr,dltArr];
 }
 
@@ -1384,7 +1355,6 @@ function calcul_omegas(abscissa){
 }
 
 
-
 function calcul_temps(abscissa){
 	zArr = [];
 	tempsArr=[];
@@ -1416,6 +1386,15 @@ function calcul_temps(abscissa){
 	return [zArr,tempsArr];
 }
 
+function new_calcul_temps(abscissa){
+	zArr=[];
+	tempsArr=[];
+	abscissa.forEach(i => {
+		tempsArr.push(calcul_ages(fonction_E,H0enannee,0.000000001,1/(1+i)));
+		zArr.push(i)
+	});
+	return [zArr,tempsArr];
+};
 
 function obtenir_linearScale_pour_t(zArr,tArr,pas,omegam0,omegalambda0,Or,H0enannee){// Fonction utilisant la dérivé première et seconde de t(z) (Soit fonction intégrable et sa première dérivé) : fait pour ne marcher qu'ici
 	tArr.sort(function(a, b){return a-b}); // Linéairement décroissante? ( t(z))

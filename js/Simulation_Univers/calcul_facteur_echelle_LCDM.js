@@ -3,24 +3,6 @@ Ce fichier est le javascript principal de la page constante cosmologique de la p
 le facteur d'échelle dans le cas du modèle LCDM.
  */
 
-/**
- * Fonction permettant de calculer l'âge de l'univers
- * @param fonction {function} La fonction qui permet de simplifier l'écriture des relations,
- * ne doit dépendre que d'une variable
- * @param H0 {number} taux d'expansion actuel
- * @param a1 {number}
- * @param a2 {number}
- * @return {number} âge de l'univers.
- */
-function calcul_ages(fonction, H0, a1, a2) {
-    function integrande(u) {
-        let terme_1 = Math.pow(u, -1)
-        let terme_2 = Math.sqrt(fonction(u))
-
-        return terme_1 * Math.pow(terme_2 , -1);
-    }
-    return (1 / H0) * simpson_composite(integrande, a1, a2, 100);
-}
 
 /**
  * Fonction permettant de calculer le facteur d'échelle en fonction du temps
@@ -139,6 +121,8 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     facteur_echelle.shift()
     console.log("Liste temps :", taus)
     console.log("Liste facteur :", facteur_echelle)
+
+    setTimeout(stop_spin, 300);
 
     return [taus, facteur_echelle]
 }
