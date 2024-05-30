@@ -357,7 +357,7 @@ function debut_fin_univers(equa_diff, t_0) {
     let set_solution = [0, 1 ,1]
     let save_set_solution;
     let pas = 1e-4 * H0 / Math.abs(H0)
-    let limite_derivee = 1e13
+    let limite_derivee = Math.abs(1000 / pas)
     let nombre_point = 0
 
     let naissance_univers;
@@ -367,7 +367,7 @@ function debut_fin_univers(equa_diff, t_0) {
 
 
     // Recherche a = 0 / da/dtau = Infinity dans le sens négatif
-    while (set_solution[1] >= 0 && Math.abs(set_solution[2]) <= limite_derivee && nombre_point <= 10/Math.abs(pas)) {
+    while (set_solution[1] >= 0 && Math.abs(set_solution[2]) <= limite_derivee && nombre_point <= 5/Math.abs(pas)) {
         save_set_solution = set_solution
         set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff)
         nombre_point = nombre_point + 1
@@ -420,7 +420,7 @@ function debut_fin_univers(equa_diff, t_0) {
     nombre_point = 0;
 
     // Recherche a = 0 / da/dtau = Infinity dans le sens positif
-    while (set_solution[1] >= 0 && Math.abs(set_solution[2]) <= limite_derivee && nombre_point <= 10/Math.abs(pas)) {
+    while (set_solution[1] >= 0 && Math.abs(set_solution[2]) <= limite_derivee && nombre_point <= 5/Math.abs(pas)) {
         save_set_solution = set_solution
         set_solution = RungeKuttaEDO2(pas, set_solution[0], set_solution[1], set_solution[2], equa_diff)
         nombre_point = nombre_point + 1
@@ -495,19 +495,78 @@ function tauEnTemps(listeTaus, t_debut) {
 /**
  * Fonction permettant de tracer le facteur d'échelle en fonction du temps.
  * @param solution {[number[], number[]]} Liste contenant la liste des temps et les valeurs du facteur d'échelle
+ * @param t_debut
+ * @param t_fin
  */
-function graphique_facteur_echelle(solution) {
+function graphique_facteur_echelle(solution, t_debut, t_fin) {
     let abscisse = solution[0];
     let ordonnee = solution[1];
+
+    // Pour corriger l'erreur numérique
+    if (t_debut && abscisse[0] < 0) {
+        let offset = Math.abs(abscisse[0]);
+        for (let index = 0; index < abscisse.length; index++) {
+            abscisse[index] = abscisse[index] + offset;
+        }
+    }
+
+    if (t_debut && ordonnee[0] < 0.5) {
+        console.log("correction ordonné gauche")
+        ordonnee[0] = 0
+    }
+
+    if (t_fin && ordonnee[ordonnee.length - 1] < 0.5) {
+        console.log("correction ordonné droite")
+        ordonnee[ordonnee.length - 1] = 0
+    }
+
+    let max = ordonnee.reduce((a, b) => Math.max(a, b), -Infinity);
+    let min = ordonnee.reduce((a, b) => Math.min(a, b), +Infinity);
+
+
 
     let donnee = [{
         x: abscisse,
         y: ordonnee,
-        type: "scatter", // Change 'line' to 'scatter'
-        mode: "lines", // Change 'line' to 'lines'
+        type: "scatter",
+        mode: "lines",
         name: "Facteur d'échelle",
-        line: {color: 'purple'} // Change 'marker' to 'line' for line color
+        line: { color: 'purple' }
     }];
+
+    if (t_debut) {
+        donnee.push({
+            type: 'line',
+            x:[0, 0],
+            y:[min, max],
+            line: {
+                color: "black",
+                simplify: false,
+                shape: 'linear',
+                dash: 'dash'
+            },
+        });
+    }
+
+    if (t_fin) {
+        let x_assymptote;
+        if (t_fin && t_debut) {
+            x_assymptote = Math.abs(Math.abs(t_fin) + Math.abs(t_debut))
+        } else {
+            x_assymptote = t_fin
+        }
+        donnee.push({
+            type: 'line',
+            x:[x_assymptote, x_assymptote],
+            y:[min, max],
+            line: {
+                color: "black",
+                simplify: false,
+                shape: 'linear',
+                dash: 'dash'
+            },
+        });
+    }
 
     let apparence = {
         title: {
@@ -521,21 +580,21 @@ function graphique_facteur_echelle(solution) {
             x: 0.55
         },
         xaxis: {
-            title: "Temps en milliard d'année",
-            autorange: true
+            title: "Temps en milliard d'années",
         },
         yaxis: {
             title: "facteur d'échelle réduit",
-            autorange: true
-        }
+        },
+        showlegend: false,
     };
 
     if (document.getElementById("graphique")) {
-        Plotly.newPlot("graphique", donnee, apparence);
+        Plotly.newPlot("graphique", [donnee], apparence);
     }
 
     if (document.getElementById("graphique_sombre")) {
         Plotly.newPlot("graphique_sombre", donnee, apparence);
     }
 }
+
 

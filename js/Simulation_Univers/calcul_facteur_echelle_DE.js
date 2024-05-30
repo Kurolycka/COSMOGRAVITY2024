@@ -105,8 +105,10 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
     // Résolution dans le sens négatif
     while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 10/Math.abs(pas)) {
         set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
-        taus.push(set_solution[0])
-        facteur_echelle.push(set_solution[1])
+        if (set_solution[1] >= a_min && set_solution[1] <= a_max) {
+            taus.push(set_solution[0])
+            facteur_echelle.push(set_solution[1])
+        }
         nombre_point = nombre_point + 1
         console.log(set_solution, nombre_point)
     }
@@ -120,8 +122,10 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
     // Résolution dans le sens positif
     while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 10/Math.abs(pas)) {
         set_solution = RungeKuttaEDO2(pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
-        taus.push(set_solution[0])
-        facteur_echelle.push(set_solution[1])
+        if (set_solution[1] >= a_min && set_solution[1] <= a_max) {
+            taus.push(set_solution[0])
+            facteur_echelle.push(set_solution[1])
+        }
         nombre_point = nombre_point + 1
         console.log(set_solution, nombre_point)
     }
@@ -141,11 +145,6 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
 
     taus = tauEnTemps(taus, debutEtFin[2])
 
-    taus.pop()
-    facteur_echelle.pop()
-
-    taus.shift()
-    facteur_echelle.shift()
 
     console.log("Liste temps :", taus)
     console.log("Liste facteur :", facteur_echelle)
@@ -167,5 +166,5 @@ function affichage_site_DE() {
     console.log("Timeline :", debutEtFin, age_univers)
     console.log("Omega DE/k/m/r :", Omega_DE(0), Omega_k(0), Omega_m(0), Omega_r(0))
 
-    graphique_facteur_echelle(donnee)
+    graphique_facteur_echelle(donnee, debutEtFin[2], debutEtFin[3])
 }
