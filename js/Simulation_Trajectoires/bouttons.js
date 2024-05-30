@@ -1,4 +1,4 @@
-/* Fichier pour rasemble les fonctions de bouttons des different fichiers trajectoires 
+/* Fichier pour rassembler les fonctions de bouttons des différents fichiers trajectoires 
 
 
 #Ouvre une nouvelle fenetre htlm
@@ -15,8 +15,8 @@
 /// test  d'une nouvelle foncion Zoom
 
 
-/*Pour que les foncions puisse étre appeller dans les fichier js il faut créer une variable avec le nom du dossier
-les  fonction sont ensuite coder dans des return
+/*Pour que les foncions puissent être appellées dans les fichier js il faut créer une variable avec le nom du dossier
+les  fonctions sont ensuite codées dans des return
 */
 
 
@@ -27,7 +27,7 @@ var bouttons = bouttons || (function(){
 
 		/// Cette fonction gére les zoom sur les diffentes simulution trajectoirs
 		zoom: function(zoomtype,mobile,canvas,mobilefactor,compteur) {
-				factor=mobilefactor[compteur];
+				factor=mobilefactor[compteur];8
 				if(zoomtype){factor*= 1.2;} //(==true) (: true pour zoom +
 				else{factor/= 1.2;} // fasle pour Zoom moin -
 				mobile.positionspatio.posX1 = factor* mobile.r_part * (Math.cos(mobile.phi) / mobile.rmax) + (canvas.width / 2);

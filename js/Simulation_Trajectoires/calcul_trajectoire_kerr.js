@@ -49,14 +49,6 @@ const COULEUR_RS = COULEUR_BLEU;
 const COULEUR_RH = COULEUR_GRIS_FONCE;
 const COULEUR_ERGOS = COULEUR_JAUNE;
 
-function testnum(a){
-	for (var i = -30; i < 30; i++) {
-		resu=a/(10**i);
-		if (resu >=1 && resu <=10){
-			z=i; return z;
-		}
-	}
-}
 
 function pressionBouttonObservateur2() {
 	if (document.getElementById("r3").className == "myButton2") {
@@ -1017,14 +1009,6 @@ function animate() {
 
 }    // fin fonction animate
 
- // Fonction pour garder les dernieres valeurs de vr et vphi au moment du pause.  
-function testvaleur(x) {
-	if (isNaN(x)) {
-		return 'Not a Number!';
-	}
-	return x ;
-}
-
 
 // Expression du potentiel divisé par c^2
 function Vr_mob(r) {
@@ -1200,16 +1184,6 @@ function rafraichir() {
 }
 
 
-
-function siTrajectoireSimple() {
-	if (element.value == 'simple') {
-		majFondFixe();
-		// Tracé du Rayon de Schwarzchild.
-		creation_blocs(context);
-		diametre_particule = DIAMETRE_PART*2;
-	}
-}
-
 function enregistrer(){
 	// ces 2 fonctions sont issues des biblios saveSvgAsPng.js et canvas-to-image.js
 	var texte = o_recupereJson();
@@ -1275,31 +1249,9 @@ function enregistrer(){
 	}
 }
 
-
-
-function traceEstAbsent(){
-	document.getElementById('trace_present').value="0";
-}
-
-function siTrajectoireComplete() {
-	if (element.value == 'complete') {
-		diametre_particule = DIAMETRE_PART;
-	}
-}
-
 function choixTrajectoire() {
 	siTrajectoireSimple();
 	siTrajectoireComplete();
-}
-
-function estUnMobile(){
-	var x = window.matchMedia("(max-width: 960px)")
-	if(x.matches){
-		document.getElementById("bouton_info").style.visibility='hidden';
-	}
-	else{
-		document.getElementById("bouton_info").style.visibility='visible';
-	}
 }
 
 function commandes(){
@@ -1488,26 +1440,6 @@ function MAJGraphePotentiel(){
 	graphique_creation_pot();
 }
 
-
-
-function boutonAvantLancement(){
-//Gestion de l'accélération/décélération de la simu
-document.getElementById("panneau_mobile").style.visibility='visible';
-
-// Gestion des bouttons Zoom moins
-document.getElementById("panneau_mobile2").style.visibility='visible';
-
-
-document.getElementById('moinszoom').addEventListener('click',foncPourZoomMoinsAvantLancement, false);
-
-document.getElementById('pluszoom').addEventListener('click',foncPourZoomPlusAvantLancement, false);
-
-document.getElementById('plusvite').addEventListener('click',foncPourVitAvantLancement,false);
-document.getElementById('plusvite').myParam = true
-document.getElementById('moinsvite').addEventListener('click',foncPourVitAvantLancement,false);
-document.getElementById('moinsvite').myParam = false
-}
-
 function foncPourZoomPlusAvantLancement(){
 	
 		input +=1
@@ -1519,15 +1451,5 @@ function foncPourZoomMoinsAvantLancement(){
 	
 		input -= 1
 		document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString();
-}
-
-function foncPourVitAvantLancement(accelerer){
-	if(accelerer.currentTarget.myParam){
-		compteurVitesseAvantLancement += 1;
-	}
-	else{
-		compteurVitesseAvantLancement -= 1
-	}
-	document.getElementById('nsimtxt').innerHTML= "ns="+ compteurVitesseAvantLancement.toString();
 }
 

@@ -42,34 +42,6 @@ var cle;
 var fuseecompteur;
 var listejsonfusees={};
 
-//Fonction pour arrondir l'échelle:
-function testnum(a){
-	for (var i = -30; i < 30; i++) {
-		resu=a/(10**i);
-		if (resu >=1 && resu <=10){
-    		z=i; 
-			return z;
-		}
-	}
-}
-
-// Fonction pour garder les dernieres valeurs de vr et vphi au moment du pause.
-function testvaleur(x) {
-	if (isNaN(x)){
-		return 'Not a Number!';
-	}
-	return x ;
-}
-
-
-
-function generateurCouleur(){
-	redd=Math.floor(Math.random() * 255); 
-	greenn=Math.floor(Math.random() * 255); 
-	bluee=Math.floor(Math.random() * 255); 
-	return [redd,greenn,bluee];
-}
-
 function initialisationGenerale(fuseecompteur){
     G = 6.67385 * Math.pow(10, -11);
     M = Number(document.getElementById("M").value);
@@ -1345,15 +1317,6 @@ function rafraichir() {
 	window.location.reload();
 	element2.value="observateur";}
 
-function siTrajectoireSimple() {
-	if (element.value == 'simple') {
-		majFondFixe();
-		// Tracé du Rayon de Schwarzchild,...
-		creation_blocs(context);
-		diametre_particule = DIAMETRE_PART*2;
-	}
-}
-
 
 // -------------------------------------{fonction enregistrer}--------------------------------------------
 
@@ -1396,17 +1359,6 @@ function enregistrer() {
 	}
 }
 
-
-function traceEstAbsent(){
-	document.getElementById('trace_present').value="0";
-}
-
-function siTrajectoireComplete() {
-	if (element.value == 'complete') {
-		diametre_particule = DIAMETRE_PART;
-	}
-}
-
 function choixTrajectoire(compteur,context,mobile,mobilefactor,rmaxjson,r0ou2) {
 	if (element.value == 'simple') {
 		majFondFixe();
@@ -1418,16 +1370,6 @@ function choixTrajectoire(compteur,context,mobile,mobilefactor,rmaxjson,r0ou2) {
 		diametre_particule = DIAMETRE_PART;
 	}
 
-}
-
-function estUnMobile(){
-	var x = window.matchMedia("(max-width: 960px)")
-	if(x.matches){
-		document.getElementById("bouton_info").style.visibility='hidden';
-	}
-	else{
-		document.getElementById("bouton_info").style.visibility='visible';
-	}
 }
 
 function commandes(){
@@ -1692,23 +1634,6 @@ function canvasAvantLancement(){
 
 
 }
-function boutonAvantLancement(){
-//Gestion de l'accélération/décélération de la simu
-document.getElementById("panneau_mobile").style.visibility='visible';
-
-// Gestion des bouttons Zoom moins
-document.getElementById("panneau_mobile2").style.visibility='visible';
-
-
-document.getElementById('moinszoom').addEventListener('click',foncPourZoomMoinsAvantLancement, false);
-
-document.getElementById('pluszoom').addEventListener('click',foncPourZoomPlusAvantLancement, false);
-
-document.getElementById('plusvite').addEventListener('click',foncPourVitAvantLancement,false);
-document.getElementById('plusvite').myParam = true
-document.getElementById('moinsvite').addEventListener('click',foncPourVitAvantLancement,false);
-document.getElementById('moinsvite').myParam = false
-}
 
 function foncPourZoomPlusAvantLancement(){
 	
@@ -1726,16 +1651,6 @@ function foncPourZoomMoinsAvantLancement(){
 		nzoom-=1;
 		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
 
-}
-
-function foncPourVitAvantLancement(accelerer){
-	if(accelerer.currentTarget.myParam){
-		compteurVitesseAvantLancement += 1
-	}
-	else{
-		compteurVitesseAvantLancement -= 1
-	}
-	document.getElementById('nsimtxt').innerHTML= "ns="+ compteurVitesseAvantLancement.toString();
 }
 
 
