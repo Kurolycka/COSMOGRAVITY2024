@@ -802,7 +802,7 @@ function calcu(path) {
 		yanchor: 'bottom',
 		text: 'T<sub>0</sub>: '+t0.toExponential(3)+'   H<sub>0</sub>:'+h0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+omegam0.toExponential(3)+'   \Ω<sub>Λ0</sub>:  '+omegalambda0+'   \Ω<sub>r0</sub>: ' +Or+'  \Ω<sub>k0</sub>:   '+omegak0.toExponential(3),
 		showarrow: false}] ;
-		let val_graph = calcul_temps(abscissa_t);
+		let val_graph = new_calcul_temps(abscissa_t);
 
 		if(t_checkbox.checked && axeAbscicceEnZPlus1){	//gère le cas du décalage des absicces pour que tout tienne sur le graph quand on utilise l'échelle log
 			for(i=0;i<val_graph[0].length;i++){//Dans val_graph[0] se trouve les z, les abscicces pour le tracé des graphes, on le décale ici
@@ -878,8 +878,6 @@ function calcu(path) {
 			plot_type = 'scatter'
 
 			var abscissa_d = linear_scale(zmin, zmax, pas);
-
-
 		}
 
 		var val_abscissa = new_calcul_temps(abscissa_d);
@@ -981,12 +979,7 @@ function calcu(path) {
 		}
 	
 
-		var val_abscissa = calcul_temps(abscissa_omega);
-
-		if(!(omega_checkbox.checked)){
-			abscissa_omega = (obtenir_linearScale_pour_t(val_abscissa[0],val_abscissa[1],pas,omegam0,omegalambda0,Or,H0enannee))//A SUPPRIMER
-			val_abscissa = calcul_temps(abscissa_omega)
-		}
+		var val_abscissa = new_calcul_temps(abscissa_omega);
 
 		let val_graph = calcul_omegas(abscissa_omega);
 		let annots = [{xref: 'paper',
@@ -1071,100 +1064,112 @@ function calcu(path) {
 		
 
 	}
-	else if(path == 6 && modele == 0){ //S modele=0 quand l'univers à un âge déf. (un bool serait préférable... ou au moins un nom de variable explicite :))
-		//Il faut vraiment réduire tout ça à une seule checkbox ... la redondance du code pour chaque cas de figure rend le tout illisible( ou bien usage fonction, je sais pas?)
-	
-			if (sessionStorage.getItem("LANGUE") == "fr") {frtemp="t(a)";
-		}else{frtemp="t(y)";} 
-	
-		t_checkbox = document.getElementById("t_checkbox");				
-		if(t_checkbox.checked) {
-			document.getElementById("graph_container_log_z").style.display = "contents"; //display graph
-			plot_title = "Échelle log z(t)"
-			plot_type = 'log'
+else if(path == 6 && modele == 0){ //S modele=0 quand l'univers à un âge déf. (un bool serait préférable... ou au moins un nom de variable explicite :))
+	//Il faut vraiment réduire tout ça à une seule checkbox ... la redondance du code pour chaque cas de figure rend le tout illisible( ou bien usage fonction, je sais pas?)
 
-			var abscissa_z = log_scale(zmin, zmax, pas);
+	if (sessionStorage.getItem("LANGUE") == "fr") {frtemp="t(a)";
+	}else{frtemp="t(y)";} 
 
-		}
-		else{
-			document.getElementById("graph_container_z").style.display = "contents"; //display graph
-			plot_title = "z(t)"
-			plot_type = 'scatter'
+	t_checkbox = document.getElementById("t_checkbox");				
+	if(t_checkbox.checked) {
+		document.getElementById("graph_container_log_z").style.display = "contents"; //display graph
+		plot_title = "Échelle log z(t)"
+		plot_type = 'log'
 
-			var abscissa_z = linear_scale(zmin, zmax, pas);
-		} 
-
-		let val_graph = calcul_temps(abscissa_z);
-		if(!(t_checkbox.checked)){
-			abscissa_z = obtenir_linearScale_pour_t(val_graph[0],val_graph[1],pas,omegam0,omegalambda0,Or,H0enannee)
-			val_graph = calcul_temps(abscissa_z)	
-		}
-
-		let annots = [{xref: 'paper',
-		yref: 'paper',
-		x: 0.725,
-		xanchor: 'right',
-		y: 1,
-		yanchor: 'bottom',
-		text: 'T<sub>0</sub>: '+t0.toExponential(3)+'   H<sub>0</sub>:'+h0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+omegam0.toExponential(3)+'   \Ω<sub>Λ0</sub>:  '+omegalambda0+'   \Ω<sub>r0</sub>: ' +Or+'  \Ω<sub>k0</sub>:   '+omegak0.toExponential(3),
-		showarrow: false}] ;
-
-		let data = [
-			{
-				x: val_graph[1],
-				y: val_graph[0],
-
-				type: 'scatter',
-
-				line: {
-					simplify: false
-				},
-				name: 'z(t)'
-			}
-		];
-		let layout = {  width: 1325 , height:450 , 
-
-			title: "z(t)",
-			titlefont:{family:"Time New Roman, sans-serif",size:20,color:"#111111"},
-			xaxis: {
-
-				type : plot_type,
-
-				autorange: true,
-				title: frtemp,
-				titlefont:{family:"Time New Roman, sans-serif",size:16,color:"#111111"},
-				showline: true
-			},
-
-			yaxis: {
-				type : "scatter",
-				autorange: true,
-				title: 'z',titlefont:{family:"Time New Roman, sans-serif",size:16,color:"#111111"},
-				showline: true
-			},
-
-			newshape: {
-			line: {
-					width: 6
-				},
-			},
-
-			annotations: annots,
-		};
-
-		if(t_checkbox.checked) {
-			graphique_creation("graphique_log_z", ['graphique_log_z', data, layout, {displaylogo: false}]);
-		}
-		else{
-			graphique_creation("graphique_z", ['graphique_z', data, layout, {displaylogo: false}]);
-		}
-
-
-
-
-
+		var abscissa_z = log_scale(zmin, zmax, pas);
 
 	}
+	else{
+		document.getElementById("graph_container_z").style.display = "contents"; //display graph
+		plot_title = "z(t)"
+		plot_type = 'scatter'
+
+		var abscissa_z = linear_scale(zmin, zmax, pas);
+	} 
+
+	let val_graph = new_calcul_temps(abscissa_z);
+	/*
+	if(!(t_checkbox.checked)){
+		abscissa_z = obtenir_linearScale_pour_t(val_graph[0],val_graph[1],pas,omegam0,omegalambda0,Or,H0enannee)
+		val_graph = new_calcul_temps(abscissa_z)	
+	}*/
+
+	let amin=1/(1+zmax);
+	let amax=1/(1+zmin);
+	let res = calcul_facteur_echelle_LCDM(amin,amax,equa_diff_1_LCDM, equa_diff_2_LCDM, fonction_E);
+	let ordonnee =res[1].map((x) => 1/(1+x))
+	ordonnee=ordonnee.reverse();
+	let abscisse=res[0].reverse()
+
+
+
+	let annots = [{xref: 'paper',
+	yref: 'paper',
+	x: 0.725,
+	xanchor: 'right',
+	y: 1,
+	yanchor: 'bottom',
+	text: 'T<sub>0</sub>: '+t0.toExponential(3)+'   H<sub>0</sub>:'+h0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+omegam0.toExponential(3)+'   \Ω<sub>Λ0</sub>:  '+omegalambda0+'   \Ω<sub>r0</sub>: ' +Or+'  \Ω<sub>k0</sub>:   '+omegak0.toExponential(3),
+	showarrow: false}] ;
+
+	let data = [
+		{
+			x: abscisse,
+			y: ordonnee,
+
+			type: 'scatter',
+
+			line: {
+				simplify: false
+			},
+			name: 'z(t)'
+		}
+	];
+	let layout = {  width: 1325 , height:450 , 
+
+		title: "z(t)",
+		titlefont:{family:"Time New Roman, sans-serif",size:20,color:"#111111"},
+		xaxis: {
+
+			type : plot_type,
+
+			autorange: true,
+			title: frtemp,
+			titlefont:{family:"Time New Roman, sans-serif",size:16,color:"#111111"},
+			showline: true
+		},
+
+		yaxis: {
+			type : "scatter",
+			autorange: true,
+			title: 'z',titlefont:{family:"Time New Roman, sans-serif",size:16,color:"#111111"},
+			showline: true
+		},
+
+		newshape: {
+		line: {
+				width: 6
+			},
+		},
+
+		annotations: annots,
+	};
+
+	if(t_checkbox.checked) {
+		graphique_creation("graphique_log_z", ['graphique_log_z', data, layout, {displaylogo: false}]);
+	}
+	else{
+		graphique_creation("graphique_z", ['graphique_z', data, layout, {displaylogo: false}]);
+	}
+
+
+
+
+
+
+}
+
+
 	time_affiche2 = document.getElementById("resul_tps2");
 	// Temps calcul
 	fin = new Date().getTime() - deb;
@@ -1386,6 +1391,7 @@ function calcul_temps(abscissa){
 	return [zArr,tempsArr];
 }
 
+//Remy 28/05/2024
 function new_calcul_temps(abscissa){
 	zArr=[];
 	tempsArr=[];
@@ -1444,7 +1450,6 @@ function obtenir_linearScale_pour_t(zArr,tArr,pas,omegam0,omegalambda0,Or,H0enan
 	//Ci-dessous, on emploieune bisection
 
 	for(k = 0; k < localisationDes_tArrLinear_surSegmentReduit.length;k++){
-		//console.log("\n")
 		if(localisationDes_tArrLinear_surSegmentReduit[k] != undefined){ //vérifie juste qu'il y a bien des t à trouver sur le segment de z considéré
 			
 			

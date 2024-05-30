@@ -11,16 +11,13 @@ le facteur d'échelle dans le cas du modèle LCDM.
  * @param fonction_simplifiant Fonction qui permet de simplifier l'écriture des expression dans le modèle LCDM
  * @return Liste des abscisses ou la fonction a été calculée et liste des valeurs de la fonction.
  */
-function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifiant) {
+function calcul_facteur_echelle_LCDM(a_min,a_max,equa_diff_1, equa_diff_2, fonction_simplifiant) {
     let texte = o_recupereJson();
 
     let H0 = document.getElementById("H0").value;
     let H0parGAnnee = H0_parSecondes(H0)
     H0parGAnnee = H0_parGAnnees(H0)
 
-    //on recupere les valeurs des variables
-    let a_min = Number(document.getElementById("ami").value);
-    let a_max = Number(document.getElementById("ama").value);
 
     /**
      * Fonction qui permet de :
@@ -123,13 +120,15 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     console.log("Liste facteur :", facteur_echelle)
 
     setTimeout(stop_spin, 300);
-
     return [taus, facteur_echelle]
 }
 
 function affichage_site_LCDM() {
     console.log("param utilisé dans affichage_site_LCDm", equa_diff_1_LCDM, equa_diff_2_LCDM, fonction_E)
-    let donnee = calcul_facteur_echelle_LCDM(equa_diff_1_LCDM, equa_diff_2_LCDM, fonction_E)
+    //on recupere les valeurs des variables
+    let a_min = Number(document.getElementById("ami").value);
+    let a_max = Number(document.getElementById("ama").value);
+    let donnee = calcul_facteur_echelle_LCDM(a_min,a_max,equa_diff_1_LCDM, equa_diff_2_LCDM, fonction_E)
     graphique_facteur_echelle(donnee)
     //Remy 26/05/24
     dm_horizon_particule_m=calcul_horizon_particule();
