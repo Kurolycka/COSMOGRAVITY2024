@@ -3,15 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Grille CSS avec grid-area</title>
-
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-
     <link rel="stylesheet" href="CSS/styleUnivers.css">
-
+    <title>Grille CSS avec grid-area</title>
 </head>
 <body>
 <div class="grillePrincipale">
@@ -68,6 +61,23 @@
                 <span>∅</span>
             </div>
 
+            <div class="paramètre w">
+                <div>
+                    <label for="w0">
+                        <img id="infoW" src="./Images/icone_info.png" alt="" width="20" height="20">
+                        w<sub>0</sub> =
+                    </label>
+                    <input id="w0" type="number" value="-1" step="0.1">
+                </div>
+
+                <div>
+                    <label for="w1" style="horiz-align: left">
+                        w<sub>1</sub> =
+                    </label>
+                    <input id="w1" type="number" value="0" step="0.1">
+                </div>
+            </div>
+
             <div class="paramètre">
                 <label id="label_optionsOmégar0" for="optionsOmégar0">
                     <img id="infoOmégaR0" src="./Images/icone_info.png" alt="" width="20" height="20">
@@ -121,7 +131,7 @@
     <!--Fenêtre graphe-->
     <div class="Graphe" style="position: relative;">
         <div class="boiteGraphe">
-            <div id="headGraphiqueLCDM"></div>
+            <div id="headGraphiqueDE"></div>
 
             <div>
                 <img style="position: absolute; top: 10px; right: 10px; width: 50px; height: 50px; cursor: pointer;"
@@ -209,7 +219,7 @@
 <script src="./JavaScript/Global/Langues/gestion_langues.js"></script>
 <script>
     choixLangueFr();
-    texte_univers_LCDM();
+    texte_univers_DE();
 </script>
 </body>
 </html>
