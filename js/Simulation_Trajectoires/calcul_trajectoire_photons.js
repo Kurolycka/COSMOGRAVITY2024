@@ -50,7 +50,6 @@ ifUneFois=true // booleen qui permet plus bas d'utiliser la condition if une seu
 ifUneFois2=true
 ifUneFois3=true 
 
-
 //-----------------------------------------------------------KHALED--------------------------------------------------
 //ceci est une fonction que j'ai trouvé sur StackOverflow de ce brave monsieur Nisse Engström
 //je l'ai adapté avec l'aide de chatGPT pour avoir une class de Timer
@@ -103,40 +102,6 @@ Timer.ontick = function () {
 
 window.setInterval(Timer.ontick, 1);
 //-----------------------------------------------------------KHALED--------------------------------------------------
-
-
-
-
-
-
-
-
-// -------------------------------------{fonction testnum}--------------------------------------------
-
-function testnum(a){
-	for (var i = -30; i < 30; i++) {
-		resu=a/(10**i);
-		if (resu >=1 && resu <=10){ z=i; return z; }
-	}
-}
-
-// -------------------------------------{fonction testvaleur}--------------------------------------------
-
-function testvaleur(x) {
-    if (isNaN(x)) {
-        return 'Not a Number!';
-    }
-    return x ;}			   
-
-
-// -------------------------------------{fonction generateCouleur}--------------------------------------------
-
-function generateurCouleur(){
-	redd=Math.floor(Math.random() * 255); 
-	greenn=Math.floor(Math.random() * 255); 
-	bluee=Math.floor(Math.random() * 255); 
-	return [redd,greenn,bluee];
-}
 
 // -------------------------------------{fonction initialisationGenerale}-------------------------------------------
 
@@ -1071,13 +1036,6 @@ function animate(compteur,mobile,mobilefactor) {
       mobile.r_part=0;
     }
 
-    function testvaleur(x) {
-		if (isNaN(x)) {
-			return 'Not a Number!';
-		}
-		return x ;
-	} 
-
 
  //  Les différents "temps" et autres valeurs à afficher
 	if (element2.value != "mobile"){  //observateur
@@ -1141,6 +1099,7 @@ function animate(compteur,mobile,mobilefactor) {
 	if(mobile.r_part > rs*1.00001) {
 		mobile.temps_observateur_distant+=mobile.dtau; 
 	}else{
+
 		mobile.temps_observateur_distant=1/0;	} 
 		document.getElementById("to"+compteur.toString()).innerHTML = mobile.temps_observateur_distant.toExponential(3);}
 	
@@ -1379,31 +1338,6 @@ function enregistrer() {
 	}
 }
 
-// -------------------------------------{fonction siTrajectoireSimple}--------------------------------------------
-
-function siTrajectoireSimple() {
-	if (element.value == 'simple') {
-		majFondFixe();
-		// Tracé du Rayon de Schwarzchild.
-		creation_blocs(context);
-		diametre_particule = DIAMETRE_PART*2;
-	}
-}
-
-// -------------------------------------{fonction traceEstAbsent}--------------------------------------------
-
-function traceEstAbsent(){
-	document.getElementById('trace_present').value="0";
-}
-
-// -------------------------------------{fonction siTrajectoireComplete}--------------------------------------------
-
-function siTrajectoireComplete() {
-	if (element.value == 'complete') {
-		diametre_particule = DIAMETRE_PART;
-	}
-}
-
 // -------------------------------------{fonction choixTrajectoire}--------------------------------------------
 
 function choixTrajectoire(compteur,context,mobile,mobilefactor,rmaxjson,r0ou2) {
@@ -1415,18 +1349,6 @@ function choixTrajectoire(compteur,context,mobile,mobilefactor,rmaxjson,r0ou2) {
 	}
 	else if (element.value == 'complete') {
 		diametre_particule = DIAMETRE_PART;
-	}
-}
-
-// -------------------------------------{fonction estUnMobile}--------------------------------------------
-
-function estUnMobile(){
-	var x = window.matchMedia("(max-width: 960px)")
-	if(x.matches){
-		document.getElementById("bouton_info").style.visibility='hidden';
-	}
-	else{
-		document.getElementById("bouton_info").style.visibility='visible';
 	}
 }
 
@@ -1709,26 +1631,6 @@ function canvasAvantLancement(){
 
 }
 
-// -------------------------------------{fonction boutonAvantLancement}--------------------------------------------
-
-function boutonAvantLancement(){
-//Gestion de l'accélération/décélération de la simu
-document.getElementById("panneau_mobile").style.visibility='visible';
-
-// Gestion des bouttons Zoom moins
-document.getElementById("panneau_mobile2").style.visibility='visible';
-
-
-document.getElementById('moinszoom').addEventListener('click',foncPourZoomMoinsAvantLancement, false);
-
-document.getElementById('pluszoom').addEventListener('click',foncPourZoomPlusAvantLancement, false);
-
-document.getElementById('plusvite').addEventListener('click',foncPourVitAvantLancement,false);
-document.getElementById('plusvite').myParam = true
-document.getElementById('moinsvite').addEventListener('click',foncPourVitAvantLancement,false);
-document.getElementById('moinsvite').myParam = false
-}
-
 // -------------------------------------{fonction foncPourZoomPlusAvantLancement}--------------------------------------------
 
 function foncPourZoomPlusAvantLancement(){
@@ -1748,18 +1650,6 @@ function foncPourZoomMoinsAvantLancement(){
 		nzoom-=1;
 		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
 		canvasAvantLancement();
-}
-
-// -------------------------------------{fonction foncPourVitAvantLancement}--------------------------------------------
-
-function foncPourVitAvantLancement(accelerer){
-	if(accelerer.currentTarget.myParam){
-		compteurVitesseAvantLancement += 1
-	}
-	else{
-		compteurVitesseAvantLancement -= 1
-	}
-	document.getElementById('nsimtxt').innerHTML= "ns="+ compteurVitesseAvantLancement.toString();
 }
 
 // -------------------------------------{fonction MAJGraphePotentiel}--------------------------------------------

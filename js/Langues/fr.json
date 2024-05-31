@@ -74,6 +74,7 @@
 		"tempsBigBang":"Temps depuis le Big Bang",
 		"temps_BF": "Temps depuis le Big Fall",
 		"dureeUnivers":"Durée de l'univers",
+		"DistanceDecalageHorizon":"Distance metrique et décalage z de l'horizon des évenements",
 		"simuavertissement":"Avertissement",
 		"avertissement":"La simulation Univers avec ses calculs annexes permet de choisir les valeurs d'une dizaine de paramètres (en comptant celles des constantes fondamentales). Le code actuel n'est évidemment pas robuste sur tout le domaine accessible de cet espace à 10 dimensions.   Nous espérons que les résultats sont exacts dans un voisinage 'prudent' du modèle standard, des valeurs usuelles des observables (z, thêta) et des constantes fondamentales. Nous pensons qu'ils le sont encore pour des univers très différents du nôtre mais il est évident que le risque d'échec de la simulation (temps de calcul excessif sur le processeur de l'utilisateur) ou, pire, de résultat inexact augmente lorsque l'on s'aventure très loin du modèle standard. L'option 'mono-fluides', avec son formalisme analytique, permet d'aller plus fiablement explorer les extrêmes. Près des 'séparatrices' entre types d'univers différents (avec ou sans Big Bang, avec ou sans Big Crunch), un avertissement automatique est normalement affiché.",
 		"message_nomFichier": "Veuillez saisir le nom de fichier désiré",
@@ -329,7 +330,12 @@
 		"dernier_g": "Dernier g",
 		"dernier_g_infobulle":"Dernier nombre de g ≠ 0 ressenti par le pilote avec 1g = 9.81m/s². Valable seulement pour la mécanique Newtonienne.",
 		"distance_metrique_parcourue":"D(m)",
-		"distance_metrique_parcourue_infobulle":"Distance métrique parcourue par le mobile depuis l'instant initial."
+		"distance_metrique_parcourue_infobulle":"Distance métrique parcourue par le mobile depuis l'instant initial.",
+		"temps_allumage_label":"T<sub>allumage</sub> (ms) =",
+		"temps_allumage_infobulle":"Temps d'allumage du réacteur lorsqu'on clique sur V\u1D69+ ou V\u1D69- .",
+		"puissance_reacteur_label":"P (W/kg) =",
+		"puissance_reacteur_infobulle":"Puissance du réacteur par unité de masse.",
+		"puissance_consommee_label":"P<sub>consommée</sub> (W/kg)"
 
 	},
 

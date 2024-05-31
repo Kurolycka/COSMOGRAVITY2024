@@ -395,6 +395,7 @@ function texteUnivers() {
   document.getElementById("txt_sorties").innerHTML = texte.page_univers_general.sorties;
   document.getElementById("txt_tempsBB").innerHTML = texte.page_univers_general.tempsBigBang;
   document.getElementById("txt_dureeeUniv").innerHTML = texte.page_univers_general.dureeUnivers;
+  document.getElementById("txt_distance_decalage_HorizonEvenement").innerHTML = texte.page_univers_general.DistanceDecalageHorizon;
   document.getElementById("txt_univplat").innerHTML = texte.page_univers.univers_plat;
   document.getElementById("txt_MLRFCN").innerHTML = texte.page_univers.matierelambdaRFCNeu;
   document.getElementById("txt_MLRFC").innerHTML = texte.page_univers.matierelambdaRFC;
@@ -610,6 +611,10 @@ function texteTrajectoireMassive(nbrderockets) {
   document.getElementById("rebondd").innerHTML = texte.page_trajectoire_massive.rebond;
   document.getElementById("r3").innerHTML = texte.pages_trajectoire.observateur;
   document.getElementById("r4").innerHTML = texte.pages_trajectoire.mobile; 
+  document.getElementById("label_temps_allumage").innerHTML = texte.pages_trajectoire.temps_allumage_label; //ManonV3
+  document.getElementById("label_temps_allumage").title= texte.pages_trajectoire.temps_allumage_infobulle; //ManonV3
+  document.getElementById("label_puissance_reacteur").innerHTML = texte.pages_trajectoire.puissance_reacteur_label; //ManonV3
+  document.getElementById("label_puissance_reacteur").title = texte.pages_trajectoire.puissance_reacteur_infobulle; //ManonV3
   //document.getElementById("boutton_prézoom").innerHTML = texte.pages_trajectoire.boutton_prézoom;
   document.getElementById("boutton_recup").innerHTML = texte.pages_trajectoire.boutton_recup;
   document.getElementById("amortissement").innerHTML = texte.page_trajectoire_massive.amortissement;
@@ -620,12 +625,13 @@ function texteTrajectoireMassive(nbrderockets) {
  		document.getElementById("decal_spect"+count.toString()+"").innerHTML = texte.pages_trajectoire.decal_spect+"&nbsp;<span id='DivClignotantePilot"+count.toString()+"'></span>";
 		document.getElementById("decal_spect"+count.toString()).title = texte.pages_trajectoire.decalageSpec_EnergyReserve;
 		document.getElementById("v_tot"+count.toString()+"").innerHTML = texte.pages_trajectoire.vtotal;
-    document.getElementById("nb_g"+count.toString()+"").innerHTML = texte.pages_trajectoire.nombre_de_g;//Manon
+    document.getElementById("nb_g"+count.toString()+"").innerHTML = texte.pages_trajectoire.nombre_de_g+"&nbsp;<span id='DivClignotanteNbG"+count.toString()+"'></span>"; //ManonV3
     document.getElementById("dernier_g"+count.toString()+"").innerHTML = texte.pages_trajectoire.dernier_g;//ManonV2
     document.getElementById("nb_g"+count.toString()).title = texte.pages_trajectoire.nombre_g_infobulle; //Manon
     document.getElementById("dernier_g"+count.toString()).title = texte.pages_trajectoire.dernier_g_infobulle; //ManonV2
     document.getElementById("distance_metrique"+count.toString()+"").innerHTML = texte.pages_trajectoire.distance_metrique_parcourue;//Manonbis
     document.getElementById("distance_metrique"+count.toString()).title = texte.pages_trajectoire.distance_metrique_parcourue_infobulle; //Manonbis
+    document.getElementById("puissance_consommee_label"+count.toString()).innerHTML = texte.pages_trajectoire.puissance_consommee_label; //ManonV3
 
     document.getElementById("vitesse_orb_circ"+count.toString()+"").title = texte.pages_trajectoire.vitesse_orbite_circulaire;//Manon
 
@@ -708,6 +714,10 @@ function texteTrajectoireMassiveNonBar(nbrderockets) {
   document.getElementById("r2").innerHTML = texte.pages_trajectoire.trajectoire_simple;
   document.getElementById("r3").innerHTML = texte.pages_trajectoire.observateur;
   document.getElementById("r4").innerHTML = texte.pages_trajectoire.mobile; 
+  document.getElementById("label_temps_allumage").innerHTML = texte.pages_trajectoire.temps_allumage_label; //ManonV3
+  document.getElementById("label_temps_allumage").title= texte.pages_trajectoire.temps_allumage_infobulle; //ManonV3
+  document.getElementById("label_puissance_reacteur").innerHTML = texte.pages_trajectoire.puissance_reacteur_label; //ManonV3
+  document.getElementById("label_puissance_reacteur").title = texte.pages_trajectoire.puissance_reacteur_infobulle; //ManonV3
   //document.getElementById("boutton_prézoom").innerHTML = texte.pages_trajectoire.boutton_prézoom;
   document.getElementById("boutton_recup").innerHTML = texte.pages_trajectoire.boutton_recup;
   
@@ -720,7 +730,7 @@ function texteTrajectoireMassiveNonBar(nbrderockets) {
        	document.getElementById("v_tot"+count.toString()+"").innerHTML = texte.pages_trajectoire.vtotal;
 		 document.getElementById("decal_spect"+count.toString()+"").innerHTML = texte.pages_trajectoire.decal_spect+"&nbsp;<span id='DivClignotantePilot"+count.toString()+"'></span>";
 		document.getElementById("decal_spect"+count.toString()).title = texte.pages_trajectoire.decalageSpec_EnergyReserve;
-    document.getElementById("nb_g"+count.toString()+"").innerHTML = texte.pages_trajectoire.nombre_de_g;//Manon
+    document.getElementById("nb_g"+count.toString()+"").innerHTML = texte.pages_trajectoire.nombre_de_g+"&nbsp;<span id='DivClignotanteNbG"+count.toString()+"'></span>"; //ManonV3
     document.getElementById("dernier_g"+count.toString()+"").innerHTML = texte.pages_trajectoire.dernier_g;//ManonV2
     document.getElementById("nb_g"+count.toString()).title = texte.pages_trajectoire.nombre_g_infobulle; //Manon
     document.getElementById("dernier_g"+count.toString()).title = texte.pages_trajectoire.dernier_g_infobulle; //Manon
@@ -780,10 +790,14 @@ function texteTrajectoireMassiveKerr() {
   document.getElementById("r2").innerHTML = texte.pages_trajectoire.trajectoire_simple;
   document.getElementById("r3").innerHTML = texte.pages_trajectoire.observateur;
   document.getElementById("r4").innerHTML = texte.pages_trajectoire.mobile; 
+  document.getElementById("label_temps_allumage").innerHTML = texte.pages_trajectoire.temps_allumage_label; //ManonV3
+  document.getElementById("label_temps_allumage").title= texte.pages_trajectoire.temps_allumage_infobulle; //ManonV3
+  document.getElementById("label_puissance_reacteur").innerHTML = texte.pages_trajectoire.puissance_reacteur_label; //ManonV3
+  document.getElementById("label_puissance_reacteur").title = texte.pages_trajectoire.puissance_reacteur_infobulle; //ManonV3
   //document.getElementById("boutton_prézoom").innerHTML = texte.pages_trajectoire.boutton_prézoom;
   document.getElementById("temps_ecoule").innerHTML = texte.pages_trajectoire.temps_ecoule;
   document.getElementById("acceleration").innerHTML = texte.pages_trajectoire.acceleration;
-  document.getElementById("nb_g").innerHTML = texte.pages_trajectoire.nombre_de_g; //ManonV2
+  document.getElementById("nb_g").innerHTML = texte.pages_trajectoire.nombre_de_g+"&nbsp;<span id='DivClignotanteNbG'></span>"; //ManonV3
   document.getElementById("dernier_g").innerHTML = texte.pages_trajectoire.dernier_g;//ManonV2
   document.getElementById("distance_metrique").innerHTML = texte.pages_trajectoire.distance_metrique_parcourue;//ManonGeneralisation
   document.getElementById("temps_obs").innerHTML = texte.pages_trajectoire.temps_obs;

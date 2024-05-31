@@ -57,6 +57,7 @@
 	<script src="./js/Langues/gestion_langues.js"></script>
 	<script src="./js/Simulation_Trajectoires/Get_para.js"></script>
 	<script src="./js/Simulation_Trajectoires/pilotage.js"></script> 
+	<script src="./js/Simulation_Trajectoires/fonctions_utilitaires_trajectoires.js"></script>
 
 	<script type="text/javascript">
 		pause = true;
@@ -178,11 +179,20 @@
 				<label  id="theta_label" title="" for="teta"> &#632;<sub>0</sub>° = </label>
 				<input id="teta" value="90" maxlength="10" type="text" size="10" onChange="verifnbr();initialisation()">
 			</span>
+
+	</div>
+
+		<div>
 		
             <span id="case">
                 <label  id="labelgp" for="teta"></label>
                 <input id="toggle" type="checkbox"  checked>
             </span>
+			<label id="label_temps_allumage" for="temps_allumage" style="display: none;"></label> <!--ManonV3-->
+			<input id="temps_allumage" value="50" type="text" size="5" style="display: none;"> <!--ManonV3-->
+			<label id="label_puissance_reacteur" for="puissance_reacteur" style="display: none;"></label> <!--ManonV3-->
+			<input id="puissance_reacteur" value="100" type="text" size="5" style="display: none;"> <!--ManonV3-->
+
   		</div>
 
         <div id="radio_button">
@@ -358,6 +368,30 @@
     notationvitesseree2kerr();
     infobulleobservateurdistant();
     peuxonrelancer=true;
+
+	var btnObervateur = document.getElementById("r3"); //ManonV3
+    var btnSpationaute = document.getElementById("r4"); //ManonV3
+	var labelTempsAllumage = document.getElementById("label_temps_allumage"); //ManonV3
+	var inputTempsAllumage = document.getElementById("temps_allumage"); //ManonV3
+	var labelPuissanceReacteur = document.getElementById("label_puissance_reacteur"); //ManonV3
+	var inputPuissanceReacteur = document.getElementById("puissance_reacteur"); //ManonV3
+
+	// Ajouter des écouteurs d'événements pour les boutons
+    btnObervateur.addEventListener("click", function() {
+		labelTempsAllumage.style.display = "none"; //ManonV3
+		inputTempsAllumage.style.display = "none"; //ManonV3
+		labelPuissanceReacteur.style.display = "none"; //ManonV3
+		inputPuissanceReacteur.style.display ="none"; //ManonV3
+    });
+
+    btnSpationaute.addEventListener("click", function() {
+		labelTempsAllumage.style.display = "inline"; //ManonV3
+		inputTempsAllumage.style.display = "inline"; //ManonV3
+		labelPuissanceReacteur.style.display = "inline"; //ManonV3
+		inputPuissanceReacteur.style.display = "inline"; //ManonV3
+    });
+
+
 </script>
 
 <script type="text/javascript">

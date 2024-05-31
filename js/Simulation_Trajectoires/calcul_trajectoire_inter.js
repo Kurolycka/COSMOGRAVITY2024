@@ -93,35 +93,6 @@ Timer.ontick = function () {
 window.setInterval(Timer.ontick, 1);
 //-----------------------------------------------------------KHALED--------------------------------------------------
 
-
-
-//Fonction pour arrondir l'échelle:
-function testnum(a){
-	for (var i = -30; i < 30; i++) {
-		resu=a/(10**i);
-		if (resu >=1 && resu <=10){
-			z=i; 
-			return z;
-		}
-	}
-}
-
-// Fonction pour garder les dernieres valeurs de vr et vphi au moment du pause.
-function testvaleur(x) {
-	if (isNaN(x)) {
-		return 'Not a Number!';
-	}
-	return x ;
-}
-
-//genere couleur aleatoirement
-function generateurCouleur(){
-	redd=Math.floor(Math.random() * 255); 
-	greenn=Math.floor(Math.random() * 255); 
-	bluee=Math.floor(Math.random() * 255); 
-	return [redd,greenn,bluee];
-}
-
 function initialisationGenerale(fuseecompteur){
 	c = 299792458;
 	G = 6.67385 * Math.pow(10, -11);
@@ -908,6 +879,10 @@ function trajectoire(compteur,mobile) {
 			pausee(compteur,mobile,mobilefactor);
 		}, false);
 
+		var temps_allumage_reacteur = Number(document.getElementById("temps_allumage").value); //ManonV3
+		temps_allumage_reacteur = temps_allumage_reacteur*Math.pow(10,-3); //Remettre en secondes
+		var puissance_reacteur = Number(document.getElementById("puissance_reacteur").value); //ManonV3
+
 		if(blyo == 1 && element2.value == "mobile") {
 			setInterval(function(){
 				
@@ -915,11 +890,18 @@ function trajectoire(compteur,mobile) {
 
 						vitesse_précédente_nombre_g = vtotal //ManonGeneralisation
 
-						Delta_L=-(joy.GetPhi()/5)/((1e-10)*mobile.r0/rs)*mobile.E;
+						Delta_E_sur_E = joy.GetPhi()*(puissance_reacteur*temps_allumage_reacteur)/Math.pow(c,2); //ManonV3
+						Delta_L_sur_L = Delta_E_sur_E; //ManonV3
+
+						mobile.L = mobile.L + mobile.L*Delta_L_sur_L; //ManonV3
+						mobile.E = mobile.E + mobile.E*Delta_E_sur_E //ManonV3
+						deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E)*Math.pow(c,2); //ManonV3
+
+						/*Delta_L=-(joy.GetPhi()/5)/((1e-10)*mobile.r0/rs)*mobile.E;
 						mobile.L=mobile.L+Delta_L ;
 						Delta_E=(1-rs/mobile.r_part)*mobile.L*Delta_L/mobile.E/Math.pow(mobile.r_part,2);
 						mobile.E=mobile.E+Delta_E; 
-						deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/mobile.E);
+						deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/mobile.E);*/
 						
 					
 						document.getElementById("E"+compteur.toString()).innerHTML = mobile.E.toExponential(3);
@@ -932,11 +914,19 @@ function trajectoire(compteur,mobile) {
 
 						vitesse_précédente_nombre_g = vtotal //ManonGeneralisation
 
-						Delta_L=-(joy.GetPhi()/5)/((1e-10)*mobile.r0/rs)*mobile.E;
+						Delta_E_sur_E = joy.GetPhi()*(puissance_reacteur*temps_allumage_reacteur)/Math.pow(c,2); //ManonV3
+						Delta_L_sur_L = Delta_E_sur_E; //ManonV3
+		
+						mobile.L = mobile.L + mobile.L*Delta_L_sur_L; //ManonV3
+						mobile.E_tot = mobile.E + mobile.E*Delta_E_sur_E //ManonV3
+						deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E)*Math.pow(c,2); //ManonV3
+
+
+						/*Delta_L=-(joy.GetPhi()/5)/((1e-10)*mobile.r0/rs)*mobile.E;
 						mobile.L=mobile.L+Delta_L ;
 						Delta_E=(1-rs/mobile.r_part)*mobile.L*Delta_L/mobile.E/Math.pow(mobile.r_part,2) ;
 						mobile.E=mobile.E+Delta_E; 
-						deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/mobile.E);
+						deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/mobile.E);*/
 						
 
 						document.getElementById("E"+compteur.toString()).innerHTML = mobile.E.toExponential(3);
@@ -1180,12 +1170,20 @@ function animate(compteur,mobile,mobilefactor) {
 	
 	if (mobile.r0 != 0.0) {
 
-	if(element2.value == "mobile"){  // spationaute 
+	if(element2.value == "mobile"){ // spationaute
+		
+		var temps_allumage_reacteur = Number(document.getElementById("temps_allumage").value); //ManonV3 
 		
 		if(mobile.r_part >= r_phy) {  // spationaute extérieur masse
 
-		
-			val = rungekutta_externe_massif(mobile.dtau, mobile.r_part, mobile.A_part,mobile.L);
+	
+
+			if (joy.GetPhi()!=0 && blyo==1){//ManonV3
+				val=rungekutta_externe_massif(temps_allumage_reacteur, mobile.r_part, mobile.A_part, mobile.L);
+			}else{
+				val = rungekutta_externe_massif(mobile.dtau, mobile.r_part, mobile.A_part,mobile.L);
+			}
+
 			mobile.r_part = val[0];
 			mobile.A_part = val[1];
 			varphi = c * mobile.L * mobile.dtau / Math.pow(mobile.r_part, 2);
@@ -1198,16 +1196,22 @@ function animate(compteur,mobile,mobilefactor) {
 			vtotal=Math.sqrt(vr_1*vr_1 + vp_1*vp_1) ;
 
 			if(joy.GetPhi()!=0 && blyo==1){ //ManonGeneralisation
-				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_précédente_nombre_g)/mobile.dtau)/9.80665 //Manon
+				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_précédente_nombre_g)/temps_allumage_reacteur)/9.80665 //Manon
+				nombre_de_g_calcul_memo = nombre_de_g_calcul; //ManonV3
+			}else{
+				nombre_de_g_calcul_memo = 0; //ManonV3
 			}
 
 			mobile.distance_parcourue_totale+=vtotal*(mobile.dtau*(1-rs/mobile.r_part)/mobile.E); //ManonCorrection
 		
 		}else {	// spationaute intérieur masse	
 		
+			if (joy.GetPhi()!=0 && blyo==1){//ManonV3
+				val=rungekutta_interne_massif(temps_allumage_reacteur, mobile.r_part, mobile.A_part, mobile.E, mobile.L);
+			}else{
+				val = rungekutta_interne_massif(mobile.dtau, mobile.r_part, mobile.A_part,mobile.E,mobile.L);
+			}
 
-		
-			val = rungekutta_interne_massif(mobile.dtau, mobile.r_part, mobile.A_part,mobile.E,mobile.L);
 			mobile.r_part = val[0];
 			mobile.A_part = val[1];
 			varphi = c * mobile.L * mobile.dtau / Math.pow(mobile.r_part, 2);
@@ -1233,7 +1237,11 @@ function animate(compteur,mobile,mobilefactor) {
 
 			if(joy.GetPhi()!=0 && blyo==1){ //Manon
 				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_précédente_nombre_g)/(mobile.dtau*(1-rs/mobile.r_part)/mobile.E))/9.80665 //Manon
+				nombre_de_g_calcul_memo = nombre_de_g_calcul; //ManonV3
+			}else{
+				nombre_de_g_calcul_memo = 0; //ManonV3
 			}
+
 
 			mobile.distance_parcourue_totale+=vtotal*(mobile.dtau*Math.pow(beta(mobile.r_part),2)/mobile.E); //ManonCorrection
 
@@ -1461,15 +1469,9 @@ function animate(compteur,mobile,mobilefactor) {
 
 				//------------------------{Manon}----------------------------------
 
-				if(element2.value == "mobile" && blyo==1 && mobile.r_part>rs) { //ManonV2
-					setInterval(function(){
-						if(joy.GetPhi()!=0){ 
-							document.getElementById("g_ressenti"+compteur.toString()).innerHTML = nombre_de_g_calcul.toExponential(3);
-							document.getElementById("dernier_g_res"+compteur.toString()).innerHTML = nombre_de_g_calcul.toExponential(3);}
-						else{
-							document.getElementById("g_ressenti"+compteur.toString()).innerHTML = 0;}
-
-					}, mobile.dtau*(1-rs/mobile.r_part)/mobile.E); 
+				if (element2.value=="mobile" && blyo==1){//ManonV3
+					document.getElementById("g_ressenti"+compteur.toString()).innerHTML = nombre_de_g_calcul_memo.toExponential(3); //ManonV3
+					document.getElementById("dernier_g_res"+compteur.toString()).innerHTML = nombre_de_g_calcul.toExponential(3);
 				}
 			
 				//-------------------{Fin Manon}------------------------------------
@@ -1490,15 +1492,9 @@ function animate(compteur,mobile,mobilefactor) {
 				
 				//------------------------{Manon}----------------------------------
 
-				if(element2.value == "mobile" && blyo==1 && mobile.r_part>rs) { //ManonV2
-					setInterval(function(){
-						if(joy.GetPhi()!=0){ 
-							document.getElementById("g_ressenti"+compteur.toString()).innerHTML = nombre_de_g_calcul.toExponential(3);
-							document.getElementById("dernier_g_res"+compteur.toString()).innerHTML = nombre_de_g_calcul.toExponential(3);}
-						else{
-							document.getElementById("g_ressenti"+compteur.toString()).innerHTML = 0;}
-
-					}, 50); 
+				if (element2.value=="mobile" && blyo==1){//ManonV3
+					document.getElementById("g_ressenti"+compteur.toString()).innerHTML = nombre_de_g_calcul_memo.toExponential(3); //ManonV3
+					document.getElementById("dernier_g_res"+compteur.toString()).innerHTML = nombre_de_g_calcul.toExponential(3);
 				}
 			
 				//-------------------{Fin Manon}------------------------------------
@@ -1541,6 +1537,26 @@ if (element2.value == "mobile"){
 		document.getElementById('DivClignotantePilot'+compteur.toString()).style.color = "red";
 	} 
 }
+
+
+//  Gestion de la diode Nombre de g ressenti - ManonV3
+if (element2.value == "mobile"){
+	if (nombre_de_g_calcul_memo <= 4) {
+		document.getElementById('DivClignotanteNbG'+compteur.toString()).innerHTML = " <img src='./Images/diodever.gif' height='14px' />";
+		document.getElementById('DivClignotanteNbG'+compteur.toString()).style.color = "green";
+	} 
+	else if (4 < nombre_de_g_calcul_memo && nombre_de_g_calcul_memo <= 9) {
+		document.getElementById('DivClignotanteNbG'+compteur.toString()).innerHTML = " <img src='./Images/diodejaune.gif' height='14px' />";
+		document.getElementById('DivClignotanteNbG'+compteur.toString()).style.color = "yellow";
+	} 
+	else if (nombre_de_g_calcul_memo > 9) {
+		document.getElementById('DivClignotanteNbG'+compteur.toString()).innerHTML = " <img src='./Images/dioderouge.gif' height='14px' />";
+		document.getElementById('DivClignotanteNbG'+compteur.toString()).style.color = "red";
+	} 
+}
+
+
+
 
   }   // fin r0 #0
 
@@ -1756,14 +1772,6 @@ function rafraichir() {
 	element2.value="observateur";
 }
 
-function siTrajectoireSimple() {
-	if (element.value == 'simple') {
-		majFondFixe();
-		// Tracé du Rayon de Schwarzchild,...
-		creation_blocs(context);
-		diametre_particule = DIAMETRE_PART*2;
-	}
-}
 
 // -------------------------------------{fonction enregistrer}--------------------------------------------
 
@@ -1809,17 +1817,6 @@ function enregistrer() {
 	}
 }}
 
-
-function traceEstAbsent(){
-	document.getElementById('trace_present').value="0";
-}
-
-function siTrajectoireComplete() {
-	if (element.value == 'complete') {
-		diametre_particule = DIAMETRE_PART;
-	}
-}
-
 function choixTrajectoire(compteur,context,mobile,mobilefactor,rmaxjson,r0ou2) {
 	if (element.value == 'simple') {
 		majFondFixe();
@@ -1831,16 +1828,6 @@ function choixTrajectoire(compteur,context,mobile,mobilefactor,rmaxjson,r0ou2) {
 		diametre_particule = DIAMETRE_PART;
 	}
 
-}
-
-function estUnMobile(){
-	var x = window.matchMedia("(max-width: 960px)")
-	if(x.matches){
-		document.getElementById("bouton_info").style.visibility='hidden';
-	}
-	else{
-		document.getElementById("bouton_info").style.visibility='visible';
-	}
 }
 
 function commandes(){
@@ -2103,24 +2090,6 @@ function canvasAvantLancement(){
 
 }
 
-function boutonAvantLancement(){
-//Gestion de l'accélération/décélération de la simu
-document.getElementById("panneau_mobile").style.visibility='visible';
-
-// Gestion des bouttons Zoom moins
-document.getElementById("panneau_mobile2").style.visibility='visible';
-
-
-document.getElementById('moinszoom').addEventListener('click',foncPourZoomMoinsAvantLancement, false);
-
-document.getElementById('pluszoom').addEventListener('click',foncPourZoomPlusAvantLancement, false);
-
-document.getElementById('plusvite').addEventListener('click',foncPourVitAvantLancement,false);
-document.getElementById('plusvite').myParam = true
-document.getElementById('moinsvite').addEventListener('click',foncPourVitAvantLancement,false);
-document.getElementById('moinsvite').myParam = false
-}
-
 function foncPourZoomPlusAvantLancement(){
 	
 		factGlobalAvecClef = factGlobalAvecClef*1.2;
@@ -2136,16 +2105,6 @@ function foncPourZoomMoinsAvantLancement(){
 		nzoom-=1;
 		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
 		canvasAvantLancement();
-}
-
-function foncPourVitAvantLancement(accelerer){
-	if(accelerer.currentTarget.myParam){
-		compteurVitesseAvantLancement += 1
-	}
-	else{
-		compteurVitesseAvantLancement -= 1
-	}
-	document.getElementById('nsimtxt').innerHTML= "ns="+ compteurVitesseAvantLancement.toString();
 }
 
 function MAJGraphePotentiel(data1,data2,compteur,mobile){

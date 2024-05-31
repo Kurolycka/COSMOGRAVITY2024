@@ -60,6 +60,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <script src="./js/Simulation_Trajectoires/agrandit.js"></script>
 <script src="./js/Simulation_Trajectoires/joy.js"></script>  
 <script src="./js/Simulation_Trajectoires/pilotage.js"></script> 
+<script src="./js/Simulation_Trajectoires/fonctions_utilitaires_trajectoires.js"></script>
 
 
 
@@ -97,7 +98,8 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
 </head>
 
 <body>
-<!-- Script Google Analytics -->
+
+	<!-- Script Google Analytics -->
 <script>
 (function(i, s, o, g, r, a, m) {
   i['GoogleAnalyticsObject'] = r;
@@ -176,7 +178,12 @@ ga('send', 'pageview');
 			<label id="labelgp" for="vr"></label>
 			<input id="toggle" type="checkbox"  checked>
 			</span>
+			<label id="label_temps_allumage" for="temps_allumage" style="display: none;"></label> <!--ManonV3-->
+			<input id="temps_allumage" value="50" type="text" size="5" style="display: none;"> <!--ManonV3-->
+			<label id="label_puissance_reacteur" for="puissance_reacteur" style="display: none;"></label> <!--ManonV3-->
+			<input id="puissance_reacteur" value="100" type="text" size="5" style="display: none;"> <!--ManonV3-->
 		</div>
+
 
 		<div id="radio_button">
 			<button id="r1" type="button" name="traj" class="myButton" value="complete" onclick="document.getElementById('traject_type').value = this.value;pressionBouttonTrajectoireComplete()"></button>
@@ -292,7 +299,8 @@ ga('send', 'pageview');
 	init_rebond();
 	genereHtml();
 	initialisationGenerale(1);
-		function updatenbredefusees(){
+		
+	function updatenbredefusees(){
 		var nbredefuseesupdatenbr = Number(document.getElementById("nombredefusees").value);	
 		lenbdefusees = nbredefuseesupdatenbr;
 		initialisationGenerale(nbredefuseesupdatenbr);
@@ -303,20 +311,28 @@ ga('send', 'pageview');
     var btnSpationaute = document.getElementById("r4");
     var inputNbfusees = document.getElementById("nombredefusees");
 	var labelNbfusees = document.getElementById("labelnumberfusees");
+	var labelTempsAllumage = document.getElementById("label_temps_allumage"); //ManonV3
+	var inputTempsAllumage = document.getElementById("temps_allumage"); //ManonV3
+	var labelPuissanceReacteur = document.getElementById("label_puissance_reacteur"); //ManonV3
+	var inputPuissanceReacteur = document.getElementById("puissance_reacteur"); //ManonV3
 
     // Ajouter des écouteurs d'événements pour les boutons
     btnObervateur.addEventListener("click", function() {
 		inputNbfusees.style.display = "inline"; // Afficher le input et le label de nbfusees si button observateur est cliqué 
-		labelNbfusees.style.display = "inline"; 
-		labelNbGTempsAcc.style.display="none"; //Manon
-		inputNbGTempsAcc.style.display="none"; //Manon
+		labelNbfusees.style.display = "inline";
+		labelTempsAllumage.style.display = "none"; //ManonV3
+		inputTempsAllumage.style.display = "none"; //ManonV3
+		labelPuissanceReacteur.style.display = "none"; //ManonV3
+		inputPuissanceReacteur.style.display ="none"; //ManonV3
     });
 
     btnSpationaute.addEventListener("click", function() {
 		inputNbfusees.style.display = "none"; // Masquer le input et le label de nbfusees si button spationaute est cliqué 
 		labelNbfusees.style.display = "none";
-		labelNbGTempsAcc.style.display="inline"; //Manon
-		inputNbGTempsAcc.style.display="inline"; //Manon
+		labelTempsAllumage.style.display = "inline"; //ManonV3
+		inputTempsAllumage.style.display = "inline"; //ManonV3
+		labelPuissanceReacteur.style.display = "inline"; //ManonV3
+		inputPuissanceReacteur.style.display = "inline"; //ManonV3
     });
 
 	var lenbdefusees;

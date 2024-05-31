@@ -11,15 +11,14 @@
  *      - De la dérivée de la fonction inconnue
  * Dans cet ordre, pas plus pas moins.
  * déterminer, de sa dérivée première et de son paramètre, pas plus pas moins.
+
  * @return liste de 3 valeurs : [x_n+1, y_n+1, y'_n+1]
  */
 function RungeKuttaEDO2(pas, xn, yn, ypn, fonctionCarac) {
- 
     let k1 = 0;
     let k2 = 0;
     let k3 = 0;
     let k4 = 0;
-
 
     let yn1 = 0;
     let ypn1 = 0;
@@ -53,7 +52,6 @@ function fusion_solutions(solutions_neg, solutions_pos) {
             solutions_neg[1].concat(solutions_pos[1])]
 }
 
-
 /**
  * Méthode d'intégration de simpson qui divise l'intervalle d'intégration en subdivision et interpole un polynôme
  * dans chacune de ces subdivisions.
@@ -73,7 +71,6 @@ function simpson_composite(fonction, borne_inf, borne_sup, subdivisions=100) {
     }
     return (pas / 6) * integrale;
 }
-
 
 function secante(fonction, x0, x1, precision) {
     let xn = x0;
@@ -99,4 +96,5 @@ function secante(fonction, x0, x1, precision) {
         iteration = iteration + 1
     }
     return xn2
+
 }

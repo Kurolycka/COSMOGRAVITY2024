@@ -96,39 +96,6 @@ window.setInterval(Timer.ontick, 1);
 //-----------------------------------------------------------KHALED--------------------------------------------------
 
 
-
-
-
-
-
-//Fonction pour arrondir l'échelle:
-function testnum(a){
-	for (var i = -30; i < 30; i++) {
-		resu=a/(10**i);
-		if (resu >=1 && resu <=10){
-    		z=i; 
-			return z;
-		}
-	}
-}
-
-// Fonction pour garder les dernieres valeurs de vr et vphi au moment du pause.
-function testvaleur(x) {
-	if (isNaN(x)){
-		return 'Not a Number!';
-	}
-	return x ;
-}
-
-
-
-function generateurCouleur(){
-	redd=Math.floor(Math.random() * 255); 
-	greenn=Math.floor(Math.random() * 255); 
-	bluee=Math.floor(Math.random() * 255); 
-	return [redd,greenn,bluee];
-}
-
 function initialisationGenerale(fuseecompteur){
     G = 6.67385 * Math.pow(10, -11);
     M = Number(document.getElementById("M").value);
@@ -992,6 +959,13 @@ function animate(compteur,mobile,mobilefactor) {
 				vtotal=resultat[0];
 				vr_1=resultat[1]*Math.sign(mobile.A_part);
 				vp_1=resultat[2];  
+
+				if (isNaN(vr_1)){
+					vr_1=0;
+					vtotal=c;
+				}
+
+				
 			}else {  // spationaute intérieur masse
 			
 			
@@ -1017,6 +991,7 @@ function animate(compteur,mobile,mobilefactor) {
 				vtotal=vitess_phys[0];
 				vr_1=vitess_phys[1]*Math.sign(mobile.A_part);
 				vp_1=vitess_phys[2];  
+
 			}
 			mobile.positionspatio.posX1 = mobilefactor[compteur] * mobile.r_part * (Math.cos(mobile.phi) / rmax) + (canvas.width / 2.);
     		mobile.positionspatio.posY1 = mobilefactor[compteur] * mobile.r_part * (Math.sin(mobile.phi) / rmax) + (canvas.height / 2.);
@@ -1031,7 +1006,7 @@ function animate(compteur,mobile,mobilefactor) {
 				mobile.phi_obs=mobile.phi_obs+varphi_obs;
 				resultat=calculs.MSC_Ex_vitess(mobile.E,mobile.L,mobile.r_part_obs,rs,true); //voir fonctions.js
 				vtotal=resultat[0];
-				vr_1_obs=resultat[1]*Math.sign(mobile.A_part_obs);
+				//vr_1_obs=resultat[1]*Math.sign(mobile.A_part_obs);
 				//alert(vr_1_obs);
 				vp_1_obs=resultat[2]; 
 
@@ -1153,7 +1128,7 @@ function animate(compteur,mobile,mobilefactor) {
 			document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3); 
 			document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part.toExponential(3);
 			document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_1.toExponential(3);
-			document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_1.toExponential(3);
+			document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_1.toExponential(8);
 			document.getElementById("to"+compteur.toString()).innerHTML = mobile.temps_observateur_distant.toExponential(3);
 		    document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(8); 	
 			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation		
@@ -1397,15 +1372,6 @@ function rafraichir() {
 	window.location.reload();
 	element2.value="observateur";}
 
-function siTrajectoireSimple() {
-	if (element.value == 'simple') {
-		majFondFixe();
-		// Tracé du Rayon de Schwarzchild,...
-		creation_blocs(context);
-		diametre_particule = DIAMETRE_PART*2;
-	}
-}
-
 
 // -------------------------------------{fonction enregistrer}--------------------------------------------
 
@@ -1448,17 +1414,6 @@ function enregistrer() {
 	}
 }
 
-
-function traceEstAbsent(){
-	document.getElementById('trace_present').value="0";
-}
-
-function siTrajectoireComplete() {
-	if (element.value == 'complete') {
-		diametre_particule = DIAMETRE_PART;
-	}
-}
-
 function choixTrajectoire(compteur,context,mobile,mobilefactor,rmaxjson,r0ou2) {
 	if (element.value == 'simple') {
 		majFondFixe();
@@ -1470,16 +1425,6 @@ function choixTrajectoire(compteur,context,mobile,mobilefactor,rmaxjson,r0ou2) {
 		diametre_particule = DIAMETRE_PART;
 	}
 
-}
-
-function estUnMobile(){
-	var x = window.matchMedia("(max-width: 960px)")
-	if(x.matches){
-		document.getElementById("bouton_info").style.visibility='hidden';
-	}
-	else{
-		document.getElementById("bouton_info").style.visibility='visible';
-	}
 }
 
 function commandes(){
@@ -1744,23 +1689,6 @@ function canvasAvantLancement(){
 
 
 }
-function boutonAvantLancement(){
-//Gestion de l'accélération/décélération de la simu
-document.getElementById("panneau_mobile").style.visibility='visible';
-
-// Gestion des bouttons Zoom moins
-document.getElementById("panneau_mobile2").style.visibility='visible';
-
-
-document.getElementById('moinszoom').addEventListener('click',foncPourZoomMoinsAvantLancement, false);
-
-document.getElementById('pluszoom').addEventListener('click',foncPourZoomPlusAvantLancement, false);
-
-document.getElementById('plusvite').addEventListener('click',foncPourVitAvantLancement,false);
-document.getElementById('plusvite').myParam = true
-document.getElementById('moinsvite').addEventListener('click',foncPourVitAvantLancement,false);
-document.getElementById('moinsvite').myParam = false
-}
 
 function foncPourZoomPlusAvantLancement(){
 	
@@ -1778,16 +1706,6 @@ function foncPourZoomMoinsAvantLancement(){
 		nzoom-=1;
 		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
 
-}
-
-function foncPourVitAvantLancement(accelerer){
-	if(accelerer.currentTarget.myParam){
-		compteurVitesseAvantLancement += 1
-	}
-	else{
-		compteurVitesseAvantLancement -= 1
-	}
-	document.getElementById('nsimtxt').innerHTML= "ns="+ compteurVitesseAvantLancement.toString();
 }
 
 
