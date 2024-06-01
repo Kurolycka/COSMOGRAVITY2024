@@ -38,11 +38,13 @@ body{
     }
 
 .grillePrincipale {
+    /*
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
     grid-template-rows: 1fr;
     grid-template-areas: "Entree Graphe Sortie";
-    gap: 10px;
+    gap: 10px;*/
+    display: flex;
     padding: 0; /* Supprime le padding autour de la grille */
     margin: 0; /* Supprime les marges autour de la grille */
     height: 100vh; /* Optionnel : Assurez-vous que la grille occupe toute la hauteur de la fenêtre */
@@ -51,6 +53,7 @@ body{
 }
 
 .Entree {
+    width:25%;
     grid-area: Entree;
     display: grid;
     grid-auto-columns: 1fr;
@@ -112,6 +115,7 @@ body{
 
 
 .Graphe {
+    width: 50%;
     grid-area: Graphe;
     display: grid;
     grid-auto-columns: 1fr;
@@ -137,6 +141,7 @@ body{
     }
 
 .Sortie {
+    width: 25%;
     grid-area: Sortie;
     display: grid;
     grid-auto-columns: 1fr;
