@@ -122,7 +122,7 @@ function initialisation(){
 	else { document.getElementById("rhm").innerHTML = rhm.toExponential(3);;}
 
 	document.getElementById("gravS").innerHTML = gravSurface.toExponential(3);
-	boutonAvantLancement(false);
+	boutonAvantLancement();
 
 }
 
@@ -203,7 +203,7 @@ function trajectoire() {
 		bool = true;
 		confirme = false;
 		// permet de gérer les touches du clavier pour certaines actions
-		clavierEvenement(false);
+		clavierEvenement();
 
     /* ----- */
 
@@ -350,9 +350,9 @@ function trajectoire() {
 
 
 
-	document.getElementById('moinszoom').removeEventListener('click',function(){foncPourZoomMoinsAvantLancement(false)}, false);
+	document.getElementById('moinszoom').removeEventListener('click',foncPourZoomMoinsAvantLancement, false);
 
-	document.getElementById('pluszoom').removeEventListener('click',function(){foncPourZoomPlusAvantLancement(false)}, false);
+	document.getElementById('pluszoom').removeEventListener('click',foncPourZoomPlusAvantLancement, false);
 
 	document.getElementById('moinszoom').addEventListener('click', function() {
         scale_factor /= 1.2;
@@ -480,7 +480,7 @@ function animate() {
     onestarrete=0;
     estUnMobile();
     element = document.getElementById('traject_type');
-    choixTrajectoire(null, context, null, null, null, false);
+    choixTrajectoire(null,context,null,null,null,false);
     element2=document.getElementById('traject_type2');
 
     if (r0 != 0.0) {
@@ -1208,4 +1208,19 @@ function CubicSolve(a, b, c, d){
 	return roots;
 }
 
+
+	
+	function foncPourZoomPlusAvantLancement(){
+		
+			input +=1
+			document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString();
+		
+	}
+	
+	function foncPourZoomMoinsAvantLancement(){
+		
+			input -= 1
+			document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString();
+	}
+	
 	

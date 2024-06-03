@@ -75,6 +75,7 @@ function generateurCouleur(){
 	return [redd,greenn,bluee];
 }
 
+
 //----------------------------------------------------{calculs}----------------------------------------------------
 
 
@@ -186,7 +187,6 @@ var calculs = calculs || (function() {
 
 })()
 
-
 //----------------------------------------------------{arret}----------------------------------------------------
 
 /**
@@ -224,6 +224,7 @@ function htmlDecode(input) {
 	var doc = new DOMParser().parseFromString(input, "text/html");
 	return doc.documentElement.textContent;
 }
+
 
 //----------------------------------------------------{rendreVisibleNbG}----------------------------------------------------
 
@@ -291,82 +292,6 @@ function rendreVisibleNbG() {
     }
 }
 
-//----------------------------------------------------{foncPourVitAvantLancement}----------------------------------------------------
-
-/**
- * Fonction qui permet de voir avant le lancement si l'utilisateur souhaite accélérer ou décélérer la simulation.
- * En fonction l'affichage de ns est modifié.
- * @param {*} accelerer 
- */
-function foncPourVitAvantLancement(accelerer){
-	if(accelerer.currentTarget.myParam){
-		compteurVitesseAvantLancement += 1
-	}
-	else{
-		compteurVitesseAvantLancement -= 1
-	}
-	document.getElementById('nsimtxt').innerHTML= "ns="+ compteurVitesseAvantLancement.toString();
-}
-
-//----------------------------------------------------{foncPourZoomMoinsAvantLancement}----------------------------------------------------
-
-/**
- * Fonction qui permet de dézoomer le graphe avant que la simulation ne démarre.
- * @param {boolean} SCH : indique si je suis dans le cas de la métrique de Schwarzschild ou si false dans la métrique de Kerr.
- */
-function foncPourZoomMoinsAvantLancement(SCH){
-    if (SCH){
-        factGlobalAvecClef = factGlobalAvecClef/1.2;
-        nzoom-=1;
-        document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
-        canvasAvantLancement();
-    }else{
-        input -= 1
-        document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString();
-    }
-}
-
-//----------------------------------------------------{foncPourZoomPlusAvantLancement}----------------------------------------------------
-
-function foncPourZoomPlusAvantLancement(SCH){
-	if (SCH){
-        factGlobalAvecClef = factGlobalAvecClef*1.2;
-        nzoom+=1;
-        document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
-        canvasAvantLancement();
-    }else{
-        input +=1
-		document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString();
-    }
-}
-
-//----------------------------------------------------{boutonAvantLancement}----------------------------------------------------
-
-/**
- * Fonction qui gère et initialise les différents boutons de la simulation avant le début de cette simulation (comme les boutons pour accélérer et zoomer par exemple).
- * @param {boolean} SCH : indique si je suis dans le cas de la métrique de Schwarzschild ou si false dans la métrique de Kerr.
- */
-function boutonAvantLancement(SCH){
-    //Gestion de l'accélération/décélération de la simu
-    document.getElementById("panneau_mobile").style.visibility='visible';
-    
-    // Gestion des bouttons Zoom moins
-    document.getElementById("panneau_mobile2").style.visibility='visible';
-    
-    if(SCH){
-        document.getElementById('moinszoom').addEventListener('click',function(){foncPourZoomMoinsAvantLancement(true)}, false);
-        document.getElementById('pluszoom').addEventListener('click',function(){foncPourZoomPlusAvantLancement(true)}, false);
-    }else{
-        document.getElementById('moinszoom').addEventListener('click',function(){foncPourZoomMoinsAvantLancement(false)}, false);
-        document.getElementById('pluszoom').addEventListener('click',function(){foncPourZoomPlusAvantLancement(false)}, false);
-    }
-
-    document.getElementById('plusvite').addEventListener('click',foncPourVitAvantLancement,false);
-    document.getElementById('plusvite').myParam = true
-    document.getElementById('moinsvite').addEventListener('click',foncPourVitAvantLancement,false);
-    document.getElementById('moinsvite').myParam = false
-}
-
 //----------------------------------------------------{clavierEvenement}----------------------------------------------------
 
 /**
@@ -431,3 +356,39 @@ function choixTrajectoire(compteur,context,mobilefactor,rmaxjson,r0ou2, SCH) {
     }
 }
 
+//----------------------------------------------------{foncPourVitAvantLancement}----------------------------------------------------
+
+/**
+ * Fonction qui permet de voir avant le lancement si l'utilisateur souhaite accélérer ou décélérer la simulation.
+ * En fonction l'affichage de ns est modifié.
+ * @param {*} accelerer 
+ */
+function foncPourVitAvantLancement(accelerer){
+	if(accelerer.currentTarget.myParam){
+		compteurVitesseAvantLancement += 1
+	}
+	else{
+		compteurVitesseAvantLancement -= 1
+	}
+	document.getElementById('nsimtxt').innerHTML= "ns="+ compteurVitesseAvantLancement.toString();
+}
+
+//----------------------------------------------------{boutonAvantLancement}----------------------------------------------------
+
+/**
+ * Fonction qui gère et initialise les différents boutons de la simulation avant le début de cette simulation (comme les boutons pour accélérer et zoomer par exemple).
+ */
+function boutonAvantLancement(){
+    //Gestion de l'accélération/décélération de la simu
+    document.getElementById("panneau_mobile").style.visibility='visible';
+    
+    // Gestion des bouttons Zoom moins
+    document.getElementById("panneau_mobile2").style.visibility='visible';
+    
+    document.getElementById('moinszoom').addEventListener('click',foncPourZoomMoinsAvantLancement, false);
+    document.getElementById('pluszoom').addEventListener('click',foncPourZoomPlusAvantLancement, false);
+    document.getElementById('plusvite').addEventListener('click',foncPourVitAvantLancement,false);
+    document.getElementById('plusvite').myParam = true
+    document.getElementById('moinsvite').addEventListener('click',foncPourVitAvantLancement,false);
+    document.getElementById('moinsvite').myParam = false
+}

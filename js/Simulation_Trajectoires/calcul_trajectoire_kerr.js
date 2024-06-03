@@ -196,7 +196,7 @@ function initialisation(){
 		return;
 	} 
 
-	boutonAvantLancement(false);
+	boutonAvantLancement();
 
 }  // fin fonction initialisation
 
@@ -299,7 +299,7 @@ function trajectoire() {
 	
 
 		// permet de gérer les touches du clavier pour certaines actions
-		clavierEvenement(false);
+		clavierEvenement();
 
 		scale_factor = 280;  
 		//dtau=r0*1e7/(Math.sqrt(vrobs*vrobs+vphiobs*vphiobs)+1e-20);
@@ -525,9 +525,9 @@ function trajectoire() {
 	}
 
 	// Gestion des boutons Zoom 
-	document.getElementById('moinszoom').removeEventListener('click',function(){foncPourZoomMoinsAvantLancement(false)}, false);
+	document.getElementById('moinszoom').removeEventListener('click',foncPourZoomMoinsAvantLancement, false);
 
-	document.getElementById('pluszoom').removeEventListener('click',function(){foncPourZoomPlusAvantLancement(false)}, false);
+	document.getElementById('pluszoom').removeEventListener('click',foncPourZoomPlusAvantLancement, false);
 
 		document.getElementById('moinszoom').addEventListener('click', function() {
 			scale_factor /= 1.2;
@@ -695,7 +695,7 @@ function animate() {
 	onestarrete=0;
 	estUnMobile();
 	element = document.getElementById('traject_type');
-	choixTrajectoire(null, context, null, null, null, false);
+	choixTrajectoire(null,context,null,null,null,false);
 
 	element2=document.getElementById('traject_type2');
 
@@ -1485,3 +1485,18 @@ function MAJGraphePotentiel(){
 	$('#grsvg_2').empty();   //<----------------------JPC
 	graphique_creation_pot();
 }
+
+
+function foncPourZoomPlusAvantLancement(){
+	
+		input +=1
+		document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString();
+		
+}
+
+function foncPourZoomMoinsAvantLancement(){
+	
+		input -= 1
+		document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString();
+}
+

@@ -504,7 +504,7 @@ function initialisation(compteur){
 		document.getElementById("Vlib").innerHTML=Vlib.toExponential(3);
 	}
 	else{document.getElementById("Vlib").innerHTML=" ";}
-    boutonAvantLancement(true);
+    boutonAvantLancement();
 	canvasAvantLancement();
 	return mobile;
 }  // fin fonction initialisation
@@ -674,7 +674,7 @@ function trajectoire(compteur,mobile) {
     mobile["temps_observateur_distant"]=temps_observateur_distant;//mobile.temps_observateur
 
     // permet de gérer les touches du clavier pour certaines actions
-    clavierEvenement(true);	
+    clavierEvenement();	
 	element2=document.getElementById('traject_type2');
 	
 		dtau=rmax/c*1e-2;
@@ -785,9 +785,9 @@ function trajectoire(compteur,mobile) {
 	//On supprime dans un premier temps les eventListener lié au canvas avant lancement
 
 	
-	document.getElementById('moinszoom').removeEventListener('click',function(){foncPourZoomMoinsAvantLancement(true)}, false);
+	document.getElementById('moinszoom').removeEventListener('click',foncPourZoomMoinsAvantLancement, false);
 
-	document.getElementById('pluszoom').removeEventListener('click',function(){foncPourZoomPlusAvantLancement(true)}, false);
+	document.getElementById('pluszoom').removeEventListener('click',foncPourZoomPlusAvantLancement, false);
 
     document.getElementById('moinszoom').addEventListener('click', function() {
         var retour=bouttons.zoom(false,mobile,canvas,mobilefactor,compteur); 
@@ -933,7 +933,7 @@ function animate(compteur,mobile,mobilefactor) {
 	// on vérifie le type de trajectoire sélectionné
 	estUnMobile();
 	element = document.getElementById('traject_type');
-	choixTrajectoire(compteur,context,mobilefactor,rmaxjson,maximum, true);
+	choixTrajectoire(compteur,context,mobilefactor,rmaxjson,maximum,true);
 	element2=document.getElementById('traject_type2');
    
   	if (mobile.r0 != 0.0) {
@@ -1321,7 +1321,6 @@ function pausee() {
 		}
 	}
 
-
 function rafraichir2(context,mobilefactor,rmaxjson,r0ou2,compteur) {
 majFondFixe();
 creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur);
@@ -1636,13 +1635,27 @@ function canvasAvantLancement(){
 
 }
 
-//----------------------------------------------------{Recuperation}----------------------------------------------------
+function foncPourZoomPlusAvantLancement(){
+	
+		factGlobalAvecClef = factGlobalAvecClef*1.2	;
+		canvasAvantLancement();
+		nzoom+=1;
+		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
 
-function recuperation(){ //ManonV4
-    if (document.getElementById('trace_present').value != "1") {
-        load_schwarshild_photon_nonBar();
-        initialisationGenerale(lenbdefusees);
-    }
 }
 
+function foncPourZoomMoinsAvantLancement(){
+	
+		factGlobalAvecClef = factGlobalAvecClef/1.2;
+		canvasAvantLancement();
+		nzoom-=1;
+		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
 
+}
+
+function recuperation(lenbdefusees){
+	if(document.getElementById('trace_present').value!="1"){
+		load_schwarshild_photon_nonBar();
+		initialisationGenerale(lenbdefusees);
+	}
+}

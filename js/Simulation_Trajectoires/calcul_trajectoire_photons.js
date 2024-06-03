@@ -489,7 +489,7 @@ function initialisation(compteur){
 		vr2i = phi0*180/Math.PI;
 	}
 
-	boutonAvantLancement(true);
+	boutonAvantLancement();
 	canvasAvantLancement();
 
   	return mobile;
@@ -658,7 +658,7 @@ function trajectoire(compteur,mobile) {
     mobile["temps_observateur_distant"]=temps_observateur_distant;//mobile.temps_observateur
 
     // permet de gérer les touches du clavier pour certaines actions
-    clavierEvenement(true);
+    clavierEvenement();
 	element2=document.getElementById('traject_type2');
 
 	
@@ -793,9 +793,9 @@ function trajectoire(compteur,mobile) {
     // Gestion des bouttons Zoom moins
 	//On supprime dans un premier temps les eventListener lié au canvas avant lancement
 
-	document.getElementById('moinszoom').removeEventListener('click',function(){foncPourZoomMoinsAvantLancement(true)}, false);
+	document.getElementById('moinszoom').removeEventListener('click',foncPourZoomMoinsAvantLancement, false);
 
-	document.getElementById('pluszoom').removeEventListener('click',function(){foncPourZoomPlusAvantLancement(true)}, false);
+	document.getElementById('pluszoom').removeEventListener('click',foncPourZoomPlusAvantLancement, false);
 
 
     document.getElementById('moinszoom').addEventListener('click', function() {
@@ -902,7 +902,7 @@ function animate(compteur,mobile,mobilefactor) {
 	mobilefactor[compteur] = factGlobalAvecClef
 	estUnMobile();
 	element = document.getElementById('traject_type');
-	choixTrajectoire(compteur,context,mobilefactor,rmaxjson,maximum, true);
+	choixTrajectoire(compteur,context,mobilefactor,rmaxjson,maximum,true);
 	var isrebond = document.getElementById("boutton_ammorti").value;
 	element2=document.getElementById('traject_type2');													 
 
@@ -1234,7 +1234,6 @@ function pausee() {
 			document.getElementById("pau").src = "Images/pause.png";
 		}
 	}
-
 
 
 // -------------------------------------{fonction rafraichir2}--------------------------------------------
@@ -1570,6 +1569,27 @@ function canvasAvantLancement(){
 
 }
 
+// -------------------------------------{fonction foncPourZoomPlusAvantLancement}--------------------------------------------
+
+function foncPourZoomPlusAvantLancement(){
+	
+		factGlobalAvecClef = factGlobalAvecClef*1.2;
+		nzoom+=1;
+		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
+		canvasAvantLancement();
+	
+}
+
+// -------------------------------------{fonction foncPourZoomMoinsAvantLancement}--------------------------------------------
+
+function foncPourZoomMoinsAvantLancement(){
+	
+		factGlobalAvecClef = factGlobalAvecClef/1.2;
+		nzoom-=1;
+		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
+		canvasAvantLancement();
+}
+
 // -------------------------------------{fonction MAJGraphePotentiel}--------------------------------------------
 
 function MAJGraphePotentiel(data1,data2,compteur,mobile){
@@ -1583,11 +1603,9 @@ function MAJGraphePotentiel(data1,data2,compteur,mobile){
 
 }
 
-// -------------------------------------{recuperation}--------------------------------------------
-
-function recuperation(){ //ManonV4
-    if (document.getElementById('trace_present').value != "1") {
-        load_schwarshild_photon();
-        initialisationGenerale(lenbdefusees);
-    }
+function recuperation(lenbdefusees){
+	if(document.getElementById('trace_present').value!="1"){
+		load_schwarshild_photon();
+		initialisationGenerale(lenbdefusees);
+	}
 }
