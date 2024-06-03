@@ -131,9 +131,9 @@ function affichage_site_LCDM() {
     let donnee = calcul_facteur_echelle_LCDM(a_min,a_max,equa_diff_1_LCDM, equa_diff_2_LCDM, fonction_E)
     graphique_facteur_echelle(donnee)
     //Remy 26/05/24
-    dm_horizon_particule_m=calcul_horizon_particule();
+    dm_horizon_particule_m=calcul_horizon_particule(fonction_E);
     dm_horizon_particule_Ga=m_vers_AL(dm_horizon_particule_m)/1e9;
-    dm_horizon_evenement_m=calcul_horizon_evenements();
+    dm_horizon_evenement_m=calcul_horizon_evenements(fonction_E);
     dm_horizon_evenement_Ga=m_vers_AL(dm_horizon_evenement_m)/1e9;
     document.getElementById("resultat_DmHorizonEvenement").innerHTML = dm_horizon_evenement_Ga.toExponential(4);
     document.getElementById("resultat_ZHorizonEvenement").innerHTML = -1;

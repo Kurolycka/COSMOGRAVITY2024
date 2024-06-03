@@ -226,6 +226,7 @@
             <input id="boutonCalculInverse" type="button" onclick="inverse_EN();ga('send', 'event', 'button', 'click', 'Calcul Annexe Inverse');"  value="Calcul"></input> <!--;-->
         </div>
 
+        
     </div>
 
 
@@ -350,8 +351,29 @@
                     </div>
                 </div>
         </div>
-</div>
     </div>
+    <div id="calcul_horizon" class="border">
+        <div>
+            <span id="titre_calcul_horizon" style="font-weight:bold;font-size:18px">Calcul horizons cosmologiques à un temps t</span>
+        </div>
+        <br>
+        <div style="display:flex">
+            <div style="padding:10px">
+                <label>t=</label>
+                <input id="t_pour_calcul_horizon" type="Number" value="0">
+            </div>
+            <div style="padding: 10px;">
+                <input type="button" value="Calcul" id="bouton_clacul_horizon_annexe" onclick="calcul_horizons_annexe_noire()">
+            </div>
+            <div style="padding:10px">
+                <label>d<sub>e</sub>=</label>
+                <span id="resultat_dm_evenement_t"></span> GAL
+                <label>d<sub>p</sub>=</label>
+                <span id="resultat_dm_particule_t"></span> GAL
+            </div>
+        </div>
+    </div>
+</div>
 
 
     <div id="box1"><!--</div>tabs-1"> -->
@@ -947,6 +969,7 @@
     texteUniversCalculs();
     texteUniversCalculsNoire();
     </script>
+    <script src="js/functions/fonction_utilitaire.js"></script>
     <script src="js/Simulation_Univers/MéthodesNumériques.js"></script>
     <script src="js/Simulation_Univers/Fonctions_utiles.js"></script>
 

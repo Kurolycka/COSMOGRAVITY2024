@@ -1299,7 +1299,7 @@ function calculDeDs(abscissa) {
 
 	abscissa.forEach(i => {   
 		// calcul de la distance mètrique 
-		dm1=DistanceMetrique(0,i,Number(H0parsec),Number(omegak0),Number(Or),Number(omegam0),Number(omegalambda0));		
+		dm1=DistanceMetrique(fonction_E,0,i,Number(H0parsec),Number(omegak0),Number(Or),Number(omegam0),Number(omegalambda0));		
 
 		//  temps en secondes
 		temps = calcul_ages(fonction_E,H0parsec,.0000001,1/(1+i));
@@ -1550,11 +1550,15 @@ function onlyOne(checkbox) {
 //Remy 27/05/2024
 function calcul_horizons_annexe(){
 	let t_pour_horizon= Number(document.getElementById("t_pour_calcul_horizon").value);
-	tempsEmission = simpson_simple_degre2(fonction_integrale, Number(z1), omegam0, Number(omegalambda0), Number(Or));
-    let dm_horizon_particule_m=calcul_horizon_particule(t_pour_horizon);
-    let dm_horizon_particule_Ga=m_vers_AL(dm_horizon_particule_m)/1e9;
-    let dm_horizon_evenement_m=calcul_horizon_evenements(t_pour_horizon);
-    let dm_horizon_evenement_Ga=m_vers_AL(dm_horizon_evenement_m)/1e9;
-	document.getElementById("resultat_dm_particule_t").innerHTML=dm_horizon_particule_Ga.toExponential(4);
-	document.getElementById("resultat_dm_evenement_t").innerHTML=dm_horizon_evenement_Ga.toExponential(4);
+	if (t_pour_horizon<=0){
+		document.getElementById("resultat_dm_particule_t").innerHTML=NaN;
+		document.getElementById("resultat_dm_evenement_t").innerHTML=NaN;
+	}else{
+		z_pour_horizon=calcul_t_inverse(t_pour_horizon,fonction_E);
+		let dm_horizon_particule_m=calcul_horizon_particule(fonction_E,z_pour_horizon);
+		let dm_horizon_particule_Ga=m_vers_AL(dm_horizon_particule_m)/1e9;
+		let dm_horizon_evenement_m=calcul_horizon_evenements(fonction_E,z_pour_horizon);
+		let dm_horizon_evenement_Ga=m_vers_AL(dm_horizon_evenement_m)/1e9;
+		document.getElementById("resultat_dm_particule_t").innerHTML=dm_horizon_particule_Ga.toExponential(4);
+		document.getElementById("resultat_dm_evenement_t").innerHTML=dm_horizon_evenement_Ga.toExponential(4);}
 }

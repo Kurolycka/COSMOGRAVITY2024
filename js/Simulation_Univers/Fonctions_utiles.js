@@ -469,20 +469,20 @@ function Sk(x,OmegaK){
  * @param {*} OmegaLambda0 
  * @returns 
  */
-function DistanceMetrique(Zemission,Zreception,H0,OmegaK0,OmegaR0,OmegaM0,OmegaLambda0){
+function DistanceMetrique(fonction,Zemission,Zreception,H0,OmegaK0){
     function fonction_a_integrer(x){
-        return Math.pow(fonction_E(x,true),-0.5);
+        return Math.pow(fonction(x,true),-0.5);
     }
     return c/(H0*Math.pow(Math.abs(OmegaK0),0.5))*Sk(Math.pow(Math.abs(OmegaK0),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,1e3),OmegaK0)
 };
 
-//moyen de la combiner avec celle du dessus en detectant E ou F avec omegalambda et DE 
-function DistanceMetriqueDE(Zemission,Zreception,H0,OmegaK0,OmegaR0,OmegaM0,OmegaDE0){
+function DistanceMetriquea(fonction,a_emission,a_reception,H0,OmegaK0){
     function fonction_a_integrer(x){
-        return Math.pow(fonction_F(x,true),-0.5);
+        return Math.pow(fonction(x),-0.5);
     }
-    return c/(H0*Math.pow(Math.abs(OmegaK0),0.5))*Sk(Math.pow(Math.abs(OmegaK0),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,1e3),OmegaK0)
-};
+    return c/(H0*Math.pow(Math.abs(OmegaK0),0.5))*Sk(Math.pow(Math.abs(OmegaK0),0.5)*simpson_composite(fonction_a_integrer,a_emission,a_reception,1e4),OmegaK0)
+}
+
 
 //Remy 26/05/24
 /** 
@@ -490,14 +490,15 @@ function DistanceMetriqueDE(Zemission,Zreception,H0,OmegaK0,OmegaR0,OmegaM0,Omeg
  * @param {*} z_emission par defaut = 0 décalage spectral du moment où le signal est émis
  * @returns 
  */
-function calcul_horizon_particule(z_emission=0){
-    //pour trouver un z suffisament élevé pour être considéré à l'infini mais pas trop pour que l'integral se fasse sans voir besoin de 1 milliard de points
-    z_infini=0
-    while (Math.pow(fonction_E(z_infini,true),-0.5)>1e-6){
-        z_infini=z_infini+1;
+function calcul_horizon_particule(fonction,z_emission=0){
+    let z_infini;
+    if (z_emission===0){
+        z_infini=1e3;
+    }else{
+        z_infini=z_emission*1e5;
     }
     //formule 21 dans la théorie du 20/05/2024
-    return DistanceMetrique(z_emission,z_infini,H0_parSecondes(H0),Omega_k(0),Omega_r(0),Omega_m(0),Omega_l(0));
+    return DistanceMetrique(fonction,z_emission,z_infini,H0_parSecondes(H0),Omega_k(0));
 };
 
 /**
@@ -505,9 +506,9 @@ function calcul_horizon_particule(z_emission=0){
  * @param {*} z_reception par defaut = 0 décalage spectral du moment où le signal est reçu
  * @returns 
  */
-function calcul_horizon_evenements(z_reception=0){
+function calcul_horizon_evenements(fonction,z_reception=0){
     //formule 23 dans la théorie du 20/05/2024
-    return DistanceMetrique(-.99999999,z_reception,H0_parSecondes(H0),Omega_k(0),Omega_r(0),Omega_m(0),Omega_l(0));
+    return DistanceMetrique(fonction,-1,z_reception,H0_parSecondes(H0),Omega_k(0));
 }
 
 
@@ -518,7 +519,6 @@ function calcul_t_inverse(temps,fonction){
 		return calcul_ages(fonction,H0enannee,1e-15,x);
 	}
 	age_univers=a_dichotomer(1);
-	console.log(age_univers);
 	
 	if (age_univers>=temps){
 		a_t=Dichotomie_Remy(a_dichotomer,temps,1e-15,1,temps*1e-12);

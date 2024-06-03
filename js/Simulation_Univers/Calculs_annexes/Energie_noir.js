@@ -1790,27 +1790,13 @@ function calcul_omegas_EN(abscissa){
     return [omArr,olArr,orArr,okArr,zArr];
 }
 
-/*
-
-function fonction_integrale_EN(x, omegam0, omegaDE0, Or) {
-	//let omegak0 = 1 - Or - omegam0 - omegaDE0;
-	return (1 / (H0enannee * (1.0 + x))) * Math.pow(omegaDE0 *  Math.exp(-3 * (1 + w0 + w1) * Math.log(1/(1 + x)) - 3 * w1 * (1 - 1/(1 + x))) + omegak0 * (Math.pow((1 + x), 2)) + omegam0 * (Math.pow((1 + x), 3)) + Or * (Math.pow((1 + x), 4)) ,(-1.0 / 2));
-  }
-
-function cv_fonction_integrale_EN(l, omegam0, omegalambda0, Or) {
-	x = initial_a + l / (1 - l);
-	return fonction_integrale_EN(x, omegam0, omegalambda0, Or) * 1 / Math.pow(1 - l, 2);
-  }
-  
-
-function fonction_dm_EN(x, omegam0, omegaDE0, Or) { // c'est bizarre mais c'est F(x)^-1/2
-	return Math.pow(omegaDE0 *  Math.exp(-3 * (1 + w0 + w1) * Math.log(1/(1 + x)) - 3 * w1 * (1 - 1/(1 + x))) + omegak0 * (Math.pow((1 + x), 2)) + omegam0 * (Math.pow((1 + x), 3)) + Or * (Math.pow((1 + x), 4)) ,(-1.0 / 2));
-  }
-  
-
-function derive_fonction_F(x, omegam0, omegaDE0, Or){
-	let omegak0 = 1 - Or - omegam0 - omegaDE0;
-  return omegaDE0 * (Math.exp(-3 * (1 + w0 + w1) * Math.log(1/(1 + x)) - 3 * w1 * (1 - 1/(1 + x)))*(x+1)*(3*(1+w0+w1)-3*w1*(x+1))) +2* omegak0 * (1 + x) + 3*omegam0 * (Math.pow((1 + x), 2)) + 4*Or * (Math.pow((1 + x), 3));
-
+//Remy 27/05/2024
+function calcul_horizons_annexe_noire(){
+	let t_pour_horizon= Number(document.getElementById("t_pour_calcul_horizon").value);
+    let dm_horizon_particule_m=calcul_horizon_particule(fonction_F,t_pour_horizon);
+    let dm_horizon_particule_Ga=m_vers_AL(dm_horizon_particule_m)/1e9;
+    let dm_horizon_evenement_m=calcul_horizon_evenements(fonction_F,t_pour_horizon);
+    let dm_horizon_evenement_Ga=m_vers_AL(dm_horizon_evenement_m)/1e9;
+	document.getElementById("resultat_dm_particule_t").innerHTML=dm_horizon_particule_Ga.toExponential(4);
+	document.getElementById("resultat_dm_evenement_t").innerHTML=dm_horizon_evenement_Ga.toExponential(4);
 }
-*/
