@@ -196,7 +196,7 @@ function initialisation(){
 		return;
 	} 
 
-	boutonAvantLancement();
+	boutonAvantLancement(false);
 
 }  // fin fonction initialisation
 
@@ -299,7 +299,7 @@ function trajectoire() {
 	
 
 		// permet de gérer les touches du clavier pour certaines actions
-		clavierEvenement();
+		clavierEvenement(false);
 
 		scale_factor = 280;  
 		//dtau=r0*1e7/(Math.sqrt(vrobs*vrobs+vphiobs*vphiobs)+1e-20);
@@ -525,9 +525,9 @@ function trajectoire() {
 	}
 
 	// Gestion des boutons Zoom 
-	document.getElementById('moinszoom').removeEventListener('click',foncPourZoomMoinsAvantLancement, false);
+	document.getElementById('moinszoom').removeEventListener('click',function(){foncPourZoomMoinsAvantLancement(false)}, false);
 
-	document.getElementById('pluszoom').removeEventListener('click',foncPourZoomPlusAvantLancement, false);
+	document.getElementById('pluszoom').removeEventListener('click',function(){foncPourZoomPlusAvantLancement(false)}, false);
 
 		document.getElementById('moinszoom').addEventListener('click', function() {
 			scale_factor /= 1.2;
@@ -624,9 +624,7 @@ function trajectoire() {
 	
     V = Vr_obs(r_part_obs);
     data2.push({date: r_part_obs, close: V }); 
-    graphique_creation_pot();
-	
-	
+
 	 }else{  //  spationaute
 	 
 
@@ -638,10 +636,10 @@ function trajectoire() {
     }
     V = Vr_mob(r_part);
     data2.push({date: r_part, close: V });  
-    graphique_creation_pot();
-	
+  
 	 }
-	 	
+	 graphique_creation_pot(0,data1,data2,null,null);
+	
 	},300);	
 	
 	
@@ -771,19 +769,19 @@ function animate() {
 		}
 	
 
-
+	data2 = []; //khaled a modifié cette partie pour graphe de potentiel
 	if (element2.value != "mobile"){	
 		V = Vr_obs(r_part_obs);
-		data2 = [];
 		data2.push({date: r_part_obs, close: V });
-		update_graphique_2();
+		
 	}
 	else{
 		V = Vr_mob(r_part);
-		data2 = [];
-		data2.push({date: r_part, close: V });
-		update_graphique_2();		
-	}									
+		data2.push({date: r_part, close: V });	
+	}
+	
+	update_graphique_2(null,data2,null) ;
+
 	if(r_part<=0){ r_part=0;}				   
  					
 
@@ -1142,43 +1140,6 @@ function pausee() {
 	}
 }
 
-// permet de gérer les touches du clavier pour certaines actions
-function clavierEvenement(){
-	$(document).keyup(function(event) { // the event variable contains the key pressed
-	if(event.which == 65) { // touche a
-		$('#r1').click();
-	}
-	if(event.which == 90) { // touche z
-		$('#r2').click();
-	}
-	if(event.which == 81) { // touche q
-										
-		$('#start').click();
-	}
-	if(event.which == 83) { // touche s
-		$('#clear').click();
-	}
-	if(event.which == 68) { // touche d
-		$('#boutton_enregis').click();
-	}
-	if(event.which == 70) { // touche f
-		$('#boutton_recup').click();
-	}
-	if(event.which == 87) { // touche w
-		$('#moinsvite').click();
-	}
-	if(event.which == 88) { // touche x
-		$('#pau').click();
-	}
-	if(event.which == 67) { // touche c
-		$('#plusvi').click();
-	}
-	if(event.which == 80) { // touche p
-		arretkerr();
-	}
-	});
-}
-
 function rafraichir() {
 	window.location.reload();
 	element2.value="observateur";
@@ -1527,18 +1488,3 @@ function MAJGraphePotentiel(){
 	$('#grsvg_2').empty();   //<----------------------JPC
 	graphique_creation_pot();
 }
-
-
-function foncPourZoomPlusAvantLancement(){
-	
-		input +=1
-		document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString();
-		
-}
-
-function foncPourZoomMoinsAvantLancement(){
-	
-		input -= 1
-		document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString();
-}
-

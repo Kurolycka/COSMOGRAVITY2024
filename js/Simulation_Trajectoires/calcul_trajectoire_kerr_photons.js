@@ -122,7 +122,7 @@ function initialisation(){
 	else { document.getElementById("rhm").innerHTML = rhm.toExponential(3);;}
 
 	document.getElementById("gravS").innerHTML = gravSurface.toExponential(3);
-	boutonAvantLancement();
+	boutonAvantLancement(false);
 
 }
 
@@ -203,7 +203,7 @@ function trajectoire() {
 		bool = true;
 		confirme = false;
 		// permet de gérer les touches du clavier pour certaines actions
-		clavierEvenement();
+		clavierEvenement(false);
 
     /* ----- */
 
@@ -350,9 +350,9 @@ function trajectoire() {
 
 
 
-	document.getElementById('moinszoom').removeEventListener('click',foncPourZoomMoinsAvantLancement, false);
+	document.getElementById('moinszoom').removeEventListener('click',function(){foncPourZoomMoinsAvantLancement(false)}, false);
 
-	document.getElementById('pluszoom').removeEventListener('click',foncPourZoomPlusAvantLancement, false);
+	document.getElementById('pluszoom').removeEventListener('click',function(){foncPourZoomPlusAvantLancement(false)}, false);
 
 	document.getElementById('moinszoom').addEventListener('click', function() {
         scale_factor /= 1.2;
@@ -442,7 +442,7 @@ function trajectoire() {
 
 		V = Vr_obs(r_part_obs);
 		data2.push({date: r_part_obs,close: V});
-		graphique_creation_pot();  
+		
 	
 	}else{  // spationaute
 		
@@ -454,10 +454,12 @@ function trajectoire() {
 		}
 		V = Vr_mob(r_part);
 		data2.push({date: r_part,close: V}); 
-		graphique_creation_pot();
-	} 
-	   },300);	 
 		
+	} 
+ 	graphique_creation_pot(0,data1,data2,null,null); 	
+
+    },300);	 
+	
 
    } else {															 
     
@@ -533,19 +535,18 @@ function animate() {
 			}
 
 		}
-
+		data2 = []; //khaled a modifié cette partie pour graphe de potentiel
         if (element2.value != "mobile"){	
 			V = Vr_obs(r_part_obs);
-			data2 = [];
+			
 			data2.push({date: r_part_obs, close: V });
-			update_graphique_2();
+			
         }
 		else{
 			V = Vr_mob(r_part);
-			data2 = [];
 			data2.push({date: r_part, close: V });
-			update_graphique_2();		
         }									
+		update_graphique_2(null,data2,null); 
 
         if(r_part<=0){ r_part=0;}				   
                         
@@ -803,40 +804,6 @@ function pausee() {
 			myInterval = setInterval(animate, 1000 / 300);
 		}
 	}
-}
-
-// permet de gérer les touches du clavier pour certaines actions
-function clavierEvenement(){
-	$(document).keyup(function(event) { // the event variable contains the key pressed
-		if(event.which == 65) { // touche a
-			$('#r1').click();
-		}
-		if(event.which == 90) { // touche z
-			$('#r2').click();
-		}
-									
-		if(event.which == 81) { // touche q
-			$('#start').click();
-		}
-		if(event.which == 83) { // touche s
-			$('#clear').click();
-		}
-		if(event.which == 68) { // touche d
-			$('#boutton_enregis').click();
-		}
-		if(event.which == 70) { // touche f
-			$('#boutton_recup').click();
-		}
-		if(event.which == 87) { // touche w
-			$('#moinsvite').click();
-		}
-		if(event.which == 88) { // touche x
-			$('#pau').click();
-		}
-		if(event.which == 67) { // touche c
-			$('#plusvi').click();
-		}
-	});
 }
 
 function rafraichir() {
@@ -1247,19 +1214,4 @@ function CubicSolve(a, b, c, d){
 	return roots;
 }
 
-
-	
-	function foncPourZoomPlusAvantLancement(){
-		
-			input +=1
-			document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString();
-		
-	}
-	
-	function foncPourZoomMoinsAvantLancement(){
-		
-			input -= 1
-			document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString();
-	}
-	
 	

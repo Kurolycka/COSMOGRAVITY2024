@@ -309,7 +309,7 @@
 	"decal_spect": "Spectral shift / Energy expended",
 	"v_total" :"Speed(m/s)",
 	"r0egale0": "r0 is positif",
-	"commandes_horsSchwarMassif":"Keyboard : \n\n- Complete trajectory : key a \n- Simple trajectory : key z\n- Stop the calculate : key q \n- Reset : key s \n- Save : key d \n- Last values : key f \n- Slow down : key w \n- Pause / Read : key x \n- Speed up : key c",
+	"commandes_horsSchwarMassif":"Keyboard : \n\n- Complete trajectory : key a \n- Simple trajectory : key z\n- Reset : key s \n- Save : key d \n- Slow down : key w \n- Pause / Read : key x \n- Speed up : key c",
 	"theta_label":"Angle of initial velocity of projectile",
 	"philabel":"Angle of the initial position of the projectile",
 	"TempTN":"Hawking radiation temperature",
@@ -343,7 +343,7 @@
 	"rebond":"Bounce",
 	"amortissement":"Shock absorption : the bounce is limited to an impact speed of",
 	"non_baryonique":"Nonbaryonic mass and or particle",													 
-	"commandes":"Keyboard : \n\n- Complete trajectory : key a \n- Simple trajectory : key z \n- With or without rebbond : key e \n- Stop the calculate : key q \n- Reset : key s \n- Save : key d \n- Last values : key f \n- Slow down : key w \n- Pause / Read : key x \n- Speed up : key c"
+	"commandes":"Keyboard : \n\n- Complete trajectory : key a \n- Simple trajectory : key z \n- With or without rebbond : key e \n- Reset : key s \n- Save : key d \n- Slow down : key w \n- Pause / Read : key x \n- Speed up : key c"
 },
 
 "page_trajectoire_photon":{

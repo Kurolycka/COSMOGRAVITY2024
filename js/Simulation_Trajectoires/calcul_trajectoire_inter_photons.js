@@ -156,13 +156,6 @@ function supprHtml(){
 
 }
 
-
-//Fonction htmlDecode écrite par Comrade Programmer#7608, ce qui résout le problème d'affichage. 
-function htmlDecode(input) {
-	var doc = new DOMParser().parseFromString(input, "text/html");
- 	return doc.documentElement.textContent;
-}
-
 function genereHtml(){
 	var nbredefuseesgenere = Number(document.getElementById("nombredefusees").value);
 	lenbdefusees = nbredefuseesgenere;
@@ -511,7 +504,7 @@ function initialisation(compteur){
 		document.getElementById("Vlib").innerHTML=Vlib.toExponential(3);
 	}
 	else{document.getElementById("Vlib").innerHTML=" ";}
-    boutonAvantLancement();
+    boutonAvantLancement(true);
 	canvasAvantLancement();
 	return mobile;
 }  // fin fonction initialisation
@@ -681,7 +674,7 @@ function trajectoire(compteur,mobile) {
     mobile["temps_observateur_distant"]=temps_observateur_distant;//mobile.temps_observateur
 
     // permet de gérer les touches du clavier pour certaines actions
-    clavierEvenement();	
+    clavierEvenement(true);	
 	element2=document.getElementById('traject_type2');
 	
 		dtau=rmax/c*1e-2;
@@ -792,9 +785,9 @@ function trajectoire(compteur,mobile) {
 	//On supprime dans un premier temps les eventListener lié au canvas avant lancement
 
 	
-	document.getElementById('moinszoom').removeEventListener('click',foncPourZoomMoinsAvantLancement, false);
+	document.getElementById('moinszoom').removeEventListener('click',function(){foncPourZoomMoinsAvantLancement(true)}, false);
 
-	document.getElementById('pluszoom').removeEventListener('click',foncPourZoomPlusAvantLancement, false);
+	document.getElementById('pluszoom').removeEventListener('click',function(){foncPourZoomPlusAvantLancement(true)}, false);
 
     document.getElementById('moinszoom').addEventListener('click', function() {
         var retour=bouttons.zoom(false,mobile,canvas,mobilefactor,compteur); 
@@ -1329,42 +1322,6 @@ function pausee() {
 	}
 
 
-// permet de gérer les touches du clavier pour certaines actions
-function clavierEvenement() {
-	$(document).keyup(function(event) { // the event variable contains the key pressed
-	if (event.which == 65) { // touche a
-		$('#r1').click();
-	}
-	if (event.which == 90) { // touche z
-		$('#r2').click();
-	}
-	if (event.which == 69) { // touche e
-		$('#rebondd').click();
-	}
-	if (event.which == 81) { // touche q
-		$('#start').click();
-	}
-	if (event.which == 83) { // touche s
-		$('#clear').click();
-	}
-	if (event.which == 68) { // touche d
-		$('#boutton_enregis').click();
-	}
-	if (event.which == 70) { // touche f
-		$('#boutton_recup').click();
-	}
-	if (event.which == 87) { // touche w
-		$('#moinsvite').click();
-	}
-	if (event.which == 88) { // touche x
-		$('#pau').click();
-	}
-	if (event.which == 67) { // touche c
-		$('#plusvi').click();
-	}
-  });
-}
-
 function rafraichir2(context,mobilefactor,rmaxjson,r0ou2,compteur) {
 majFondFixe();
 creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur);
@@ -1692,22 +1649,13 @@ function canvasAvantLancement(){
 
 }
 
-function foncPourZoomPlusAvantLancement(){
-	
-		factGlobalAvecClef = factGlobalAvecClef*1.2	;
-		canvasAvantLancement();
-		nzoom+=1;
-		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
+//----------------------------------------------------{Recuperation}----------------------------------------------------
 
-}
-
-function foncPourZoomMoinsAvantLancement(){
-	
-		factGlobalAvecClef = factGlobalAvecClef/1.2;
-		canvasAvantLancement();
-		nzoom-=1;
-		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
-
+function recuperation(){ //ManonV4
+    if (document.getElementById('trace_present').value != "1") {
+        load_schwarshild_photon_nonBar();
+        initialisationGenerale(lenbdefusees);
+    }
 }
 
 

@@ -71,6 +71,8 @@ expl6.src='./Images/explose/expl6.png';
 var c = 299792458;
 var G = 6.67385 * Math.pow(10, -11);
 
+//----------------------------------------------------{Timer}----------------------------------------------------
+
 //-----------------------------------------------------------KHALED--------------------------------------------------
 //ceci est une fonction que j'ai trouvé sur StackOverflow de ce brave monsieur Nisse Engström
 //je l'ai adapté avec l'aide de chatGPT pour avoir une class de Timer
@@ -124,6 +126,7 @@ Timer.ontick = function () {
 window.setInterval(Timer.ontick, 1);
 //-----------------------------------------------------------KHALED--------------------------------------------------
 
+//----------------------------------------------------{initialisationGenerale}----------------------------------------------------
 
 function initialisationGenerale(fuseecompteur){
     c = 299792458;
@@ -139,6 +142,8 @@ function initialisationGenerale(fuseecompteur){
   
 }
 
+//----------------------------------------------------{lancerDeFusees}----------------------------------------------------
+
 function lancerDeFusees(fuseecompteur){
     c = 299792458;
     G = 6.67385 * Math.pow(10, -11);				  
@@ -153,6 +158,8 @@ function lancerDeFusees(fuseecompteur){
 	document.getElementById("pause/resume").addEventListener("click", function() {
         pausee()}); //ajouté Là par Khaled car le fonctionnement du button à ete changé
 }
+
+//----------------------------------------------------{supprHtml}----------------------------------------------------
 
 //supprHtml et genereHtml sont les fonctions qui generent le html de maniere dynamique
 function supprHtml(){
@@ -193,14 +200,7 @@ function supprHtml(){
 
 }
 
-
-//Fonction htmlDecode écrite par Comrade Programmer#7608, ce qui résout le problème de parsing de html. 
-function htmlDecode(input) {
-	var doc = new DOMParser().parseFromString(input, "text/html");
-	return doc.documentElement.textContent;
-}
-
-//---------------------------------------------------------------{fonction genereHtml}---------------------------------------------------------
+//----------------------------------------------------{genereHtml}----------------------------------------------------
 
 function genereHtml(){
 	var nbredefuseesgenere = Number(document.getElementById("nombredefusees").value);
@@ -435,71 +435,7 @@ function genereHtml(){
 	 
 }// fin fonction genereHtml
 
-//-----------------------------{Fonction rajoutée par Manon}--------------------------------------------
-
-function rendreVisibleNbG() {
-
-	blyo = Number(document.getElementById("nombredefusees").value);//nombre de mobiles
-	element2=document.getElementById('traject_type2');//si spationaute ou observateur
-	
-    // Sélectionne toutes les cellules dont l'ID commence par "nb_g" :
-    var nbGCells = document.querySelectorAll('[id^="nb_g"]');
-
-	// Sélectionne toutes les cellules dont l'ID commence par "g_ressenti" :
-	var gRessCells = document.querySelectorAll('[id^="g_ressenti"]');
-
-	var dernier_g_Cells = document.querySelectorAll('[id^="dernier_g"]');
-
-	var dernier_g_res_Cells = document.querySelectorAll('[id^="dernier_g_res"]');
-
-	var puissance_consommee_label_Cells = document.querySelectorAll('[id^="puissance_consommee_label"]'); //ManonV3
-
-	var puissance_consommee_Cells = document.querySelectorAll('[id^="puissance_consommee"]'); //ManonV3
-    
-    // Si element2.value est "mobile" et que y a que 1 mobile, rend les cellules visibles, sinon les cache
-    if (element2.value == "mobile" && blyo==1) {
-        nbGCells.forEach(function(cell) {
-            cell.style.display = ''; // Rend visible la cellule nb_g
-        });
-		gRessCells.forEach(function(cell) {
-            cell.style.display = ''; // Rend visible la cellule g_ressenti
-        });
-		dernier_g_Cells.forEach(function(cell) {
-            cell.style.display = ''; // Rend visible la cellule derniger_g
-        });
-		dernier_g_res_Cells.forEach(function(cell) {
-            cell.style.display = ''; // Rend visible la cellule dernier_g_res
-        });
-		puissance_consommee_label_Cells.forEach(function(cell) {
-            cell.style.display = ''; // Rend visible la cellule dernier_g_res
-        });
-		puissance_consommee_Cells.forEach(function(cell) {
-            cell.style.display = ''; // Rend visible la cellule dernier_g_res
-        });
-    } else {
-        nbGCells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule nb_g
-        });
-		gRessCells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule g_ressenti
-        });
-		dernier_g_Cells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule dernier_g
-        });
-		dernier_g_res_Cells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule dernier_g_res
-        });
-		puissance_consommee_Cells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule dernier_g_res
-        });
-		puissance_consommee_label_Cells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule dernier_g_res
-        });
-    }
-}
-
-
-//--------------------------{Fin fonction rajoutée par Manon}---------------------------------------------
+//----------------------------------------------------{initialisation}----------------------------------------------------
 
 // calcul en temps réel des E, L,...
 //on crée un objet json(idée de Mme Mougenot) mobile pour chaque mobile, pour bien differencier/contenir les variables appartenant a chaque mobile de maniere distincte.
@@ -635,13 +571,13 @@ function initialisation(compteur){
 		vphi2i = v0;
 		vr2i = phi0*180/Math.PI;
 	}
-	boutonAvantLancement();
+	boutonAvantLancement(true);
 	canvasAvantLancement();
 
 	return mobile;
 }  // fin fonction initialisation
 
-//---------------------------------------------------------------{début fonction verifnbr}---------------------------------------------------------
+//----------------------------------------------------{verifnbr}----------------------------------------------------
 
 function verifnbr() {//fonction qui affiche un message d'erreur si des valeurs ne sont pas donnée dans l'une des cases
 	
@@ -686,10 +622,7 @@ function verifnbr() {//fonction qui affiche un message d'erreur si des valeurs n
 
 }
 
-//---------------------------------------------------------------{fin fonction verifnbr}---------------------------------------------------------
-
-//---------------------------------------------------------------{début fonction trajectoire}---------------------------------------------------------
-
+//----------------------------------------------------{trajectoire}----------------------------------------------------
 
 // première étape qui lance la partie calculatoire
 function trajectoire(compteur,mobile) {
@@ -828,7 +761,7 @@ function trajectoire(compteur,mobile) {
     mobile["Rebond"]=Rebond;//mobile.Rebond
 
     // permet de gérer les touches du clavier pour certaines actions
-    clavierEvenement();
+    clavierEvenement(true);
    
 	dtau=temps_chute_libre/1e3;	
     mobile["dtau"]=dtau;//mobile.dtau
@@ -1016,9 +949,9 @@ function trajectoire(compteur,mobile) {
 	//On supprime dans un premier temps les eventListener lié au canvas avant lancement
 
 	
-	document.getElementById('moinszoom').removeEventListener('click',foncPourZoomMoinsAvantLancement, false);
+	document.getElementById('moinszoom').removeEventListener('click',function(){foncPourZoomMoinsAvantLancement(true)}, false);
 
-	document.getElementById('pluszoom').removeEventListener('click',foncPourZoomPlusAvantLancement, false);
+	document.getElementById('pluszoom').removeEventListener('click',function(){foncPourZoomPlusAvantLancement(true)}, false);
 
     document.getElementById('moinszoom').addEventListener('click',function(){
       	var retour=bouttons.zoom(false,mobile,canvas,mobilefactor,compteur);  /// voir dossier bouttons.js
@@ -1162,8 +1095,7 @@ function trajectoire(compteur,mobile) {
 	
 }  // fin fonction trajectoire
 
-//---------------------------------------------------------------{Fin fonction trajectoire}---------------------------------------------------------
-
+//----------------------------------------------------{animate}----------------------------------------------------
 
 // tracé de la particule
 function animate(compteur,mobile,mobilefactor) {
@@ -1620,23 +1552,32 @@ if (element2.value == "mobile"){
 
 }   //fin fonction animate
 
+//----------------------------------------------------{Vr_mob}----------------------------------------------------
+
 // Expression du potentiel divisé par c^2
 function Vr_mob(L,r) {
 	return potentiel_Schwarzchild_massif(L,r);
 }
 
+//----------------------------------------------------{Vr_obs}----------------------------------------------------
+
 function Vr_obs(E,L,r) {
 	return Math.pow(E,2)-( 1-potentiel_Schwarzchild_massif(L, r)/Math.pow(E,2) )*Math.pow(1-rs/r,2)  ;
 }
+
+//----------------------------------------------------{potentiel_Schwarzschild_massif}----------------------------------------------------
 
 function potentiel_Schwarzchild_massif(L, r) {
 	return (1 - rs / r) * (1 + Math.pow(L / r, 2));
 }
 
+//----------------------------------------------------{derivee_seconde_Schwarzschild_massif}----------------------------------------------------
+
 function derivee_seconde_Schwarzchild_massif(L, r) {
 		return Math.pow(c, 2)/(2*Math.pow(r, 4)) *  (-rs*Math.pow(r,2) + Math.pow(L, 2)*(2*r-3*rs));
 }
 
+//----------------------------------------------------{rungekutta}----------------------------------------------------
 
 function rungekutta(L, h, r, A) {
 	k = [0, 0, 0, 0];
@@ -1649,10 +1590,14 @@ function rungekutta(L, h, r, A) {
 	return [r, A];
 }
 
+//----------------------------------------------------{derivee_seconde_Schwarzschild_massif_obs}----------------------------------------------------
+
 function derivee_seconde_Schwarzchild_massif_obs(E,L,r) {
 	return c*c*(r-rs)*(2*E*E*r*r*r*rs + 2*L*L*r*r - 7*L*L*r*rs 
 	+ 5*L*L*rs*rs - 3*r*r*r*rs + 3*r*r*rs*rs)/(2*Math.pow(r,6)*E*E);
 }
+
+//----------------------------------------------------{rungekutta_obs}----------------------------------------------------
 
 function rungekutta_obs(E,L,h, r, A) {
 	k = [0, 0, 0, 0];
@@ -1664,6 +1609,8 @@ function rungekutta_obs(E,L,h, r, A) {
 	A = A + (h / 6) * (k[0] + 2 * (k[1] + k[2]) + k[3]);
 	return [r, A];
 }
+
+//----------------------------------------------------{calcul_rmax}----------------------------------------------------
 
 function calcul_rmax(L,E,vr,r0,rmax1ou2){
 	
@@ -1710,6 +1657,9 @@ function calcul_rmax(L,E,vr,r0,rmax1ou2){
 	}
 	return rmax;
 }
+
+//----------------------------------------------------{pausee}----------------------------------------------------
+
 // Fonction bouton pause
 //cette fonction a ete changé par Khaled en ajoutant la variable qui pause la Timer créé en haut
 function pausee() {
@@ -1734,48 +1684,14 @@ function pausee() {
 	}
 
 
-
-
-// permet de gérer les touches du clavier pour certaines actions
-function clavierEvenement() {
-  	$(document).keyup(function(event) { // the event variable contains the key pressed
-		if (event.which == 65) { // touche a
-			$('#r1').click();
-		}
-		if (event.which == 90) { // touche z
-			$('#r2').click();
-		}
-		if (event.which == 69) { // touche e
-			$('#rebondd').click();
-		}
-		if (event.which == 81) { // touche q
-			$('#start').click();
-		}
-		if (event.which == 83) { // touche s
-			$('#clear').click();
-		}
-		if (event.which == 68) { // touche d
-			$('#boutton_enregis').click();
-		}
-		if (event.which == 70) { // touche f
-			$('#boutton_recup').click();
-		}
-		if (event.which == 87) { // touche w
-			$('#moinsvite').click();
-		}
-		if (event.which == 88) { // touche x
-			$('#pau').click();
-		}
-		if (event.which == 67) { // touche c
-			$('#plusvi').click();
-		}
-  	});
-}
+//----------------------------------------------------{rafraichir2}----------------------------------------------------
 
 function rafraichir2(context,mobilefactor,rmaxjson,r0ou2,compteur) {
 	majFondFixe();
 	creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur);
 }
+
+//----------------------------------------------------{rafraichir}----------------------------------------------------
 
 //ici  le rafraichir appeler avec reset element2 n'est pas defini donc il y a une erreur
 function rafraichir() {
@@ -1783,8 +1699,7 @@ function rafraichir() {
 	element2.value="observateur";
 }
 
-// -------------------------------------{fonction enregistrer}--------------------------------------------
-
+// -------------------------------------{enregistrer}--------------------------------------------
 
 function enregistrer() {
 	var texte = o_recupereJson();
@@ -1826,6 +1741,8 @@ function enregistrer() {
 	}
 }
 
+//----------------------------------------------------{choixTrajectoire}----------------------------------------------------
+
 function choixTrajectoire(compteur,context,mobile,mobilefactor,rmaxjson,r0ou2) {
 	if (element.value == 'simple') {
 		majFondFixe();
@@ -1839,10 +1756,14 @@ function choixTrajectoire(compteur,context,mobile,mobilefactor,rmaxjson,r0ou2) {
 
 }
 
+//----------------------------------------------------{commandes}----------------------------------------------------
+
 function commandes(){
 	var texte = o_recupereJson();
 	alert(texte.page_trajectoire_massive.commandes);
 }
+
+//----------------------------------------------------{majFondFixe}----------------------------------------------------
 
 function majFondFixe(){
 	context.clearRect(0, 0, canvas.width, canvas.height);
@@ -1875,20 +1796,28 @@ function majFondFixe(){
 	}
 }
 
+//----------------------------------------------------{majFondFixe44}----------------------------------------------------
+
 function majFondFixe44(mobile){
 	mobile["context22"].clearRect(0, 0, canvas.width, canvas.height);
 	//console.log(canvas.width, canvas.height);
 }
+
+//----------------------------------------------------{majFondFixe22}----------------------------------------------------
 
 function majFondFixe22(){
 	context22.clearRect(0, 0, canvas.width, canvas.height);
 	//console.log(canvas.width, canvas.height);
 }
 
+//----------------------------------------------------{majFondFixe3}----------------------------------------------------
+
 function majFondFixe3(){
 	context3.clearRect(0, 0, canvas.width, canvas.height);
 	//console.log(canvas.width, canvas.height);
 }
+
+//----------------------------------------------------{test_inte}----------------------------------------------------
 
 // Empeche le lancer si on part de l'interieur de l'horizon
 function test_inte() {
@@ -1936,6 +1865,8 @@ function test_inte() {
 		arret();
 	}
 }
+
+//----------------------------------------------------{creation_blocs}----------------------------------------------------
 
 // crée les différentes couches visuelles
 function creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur){
@@ -2009,6 +1940,8 @@ function creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur){
 	// Fermeture du chemin (facultative)
 	context.stroke();
 }
+
+//----------------------------------------------------{canvasAvantLancement}----------------------------------------------------
 
 function canvasAvantLancement(){
 	nbrFusee = document.getElementById("nombredefusees").value
@@ -2099,20 +2032,11 @@ function canvasAvantLancement(){
 
 }
 
-function foncPourZoomPlusAvantLancement(){
-	
-		factGlobalAvecClef = factGlobalAvecClef*1.2;
-		nzoom+=1;
-		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
-		canvasAvantLancement();
-	
-}
+//----------------------------------------------------{Recuperation}----------------------------------------------------
 
-function foncPourZoomMoinsAvantLancement(){
-	
-		factGlobalAvecClef = factGlobalAvecClef/1.2;
-		nzoom-=1;
-		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
-		canvasAvantLancement();
+function recuperation(){ //ManonV4
+    if (document.getElementById('trace_present').value != "1") {
+        load_schwarshild_massif();
+        initialisationGenerale(lenbdefusees)
+    }
 }
-

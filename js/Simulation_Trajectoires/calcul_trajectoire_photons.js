@@ -175,15 +175,6 @@ function supprHtml(){
 
 }
 
-// -------------------------------------{fonction htmlDecode}--------------------------------------------
-
-//Fonction htmlDecode écrite par Comrade Programmer#7608, ce qui résout le problème d'affichage. 
-function htmlDecode(input) {
-	var doc = new DOMParser().parseFromString(input, "text/html");
-	return doc.documentElement.textContent;
-}
-
-
 // -------------------------------------{fonction genereHtml}--------------------------------------------
 
 function genereHtml(){
@@ -498,7 +489,7 @@ function initialisation(compteur){
 		vr2i = phi0*180/Math.PI;
 	}
 
-	boutonAvantLancement();
+	boutonAvantLancement(true);
 	canvasAvantLancement();
 
   	return mobile;
@@ -667,7 +658,7 @@ function trajectoire(compteur,mobile) {
     mobile["temps_observateur_distant"]=temps_observateur_distant;//mobile.temps_observateur
 
     // permet de gérer les touches du clavier pour certaines actions
-    clavierEvenement();
+    clavierEvenement(true);
 	element2=document.getElementById('traject_type2');
 
 	
@@ -802,9 +793,9 @@ function trajectoire(compteur,mobile) {
     // Gestion des bouttons Zoom moins
 	//On supprime dans un premier temps les eventListener lié au canvas avant lancement
 
-	document.getElementById('moinszoom').removeEventListener('click',foncPourZoomMoinsAvantLancement, false);
+	document.getElementById('moinszoom').removeEventListener('click',function(){foncPourZoomMoinsAvantLancement(true)}, false);
 
-	document.getElementById('pluszoom').removeEventListener('click',foncPourZoomPlusAvantLancement, false);
+	document.getElementById('pluszoom').removeEventListener('click',function(){foncPourZoomPlusAvantLancement(true)}, false);
 
 
     document.getElementById('moinszoom').addEventListener('click', function() {
@@ -1246,44 +1237,6 @@ function pausee() {
 
 
 
-// -------------------------------------{fonction clavierEvenement}--------------------------------------------
-
-// permet de gérer les touches du clavier pour certaines actions
-function clavierEvenement(){
-	$(document).keyup(function(event) { // the event variable contains the key pressed
-	if(event.which == 65) { // touche a
-		$('#r1').click();
-	}
-	if(event.which == 90) { // touche z
-		$('#r2').click();
-	}
-	if(event.which == 69) { // touche e
-		$('#rebondd').click();
-	}
-	if(event.which == 81) { // touche q
-		$('#start').click();
-	}
-	if(event.which == 83) { // touche s
-		$('#clear').click();
-	}
-	if(event.which == 68) { // touche d
-		$('#boutton_enregis').click();
-	}
-	if(event.which == 70) { // touche f
-		$('#boutton_recup').click();
-	}
-	if(event.which == 87) { // touche w
-		$('#moinsvite').click();
-	}
-	if(event.which == 88) { // touche x
-		$('#pau').click();
-	}
-	if(event.which == 67) { // touche c
-		$('#plusvi').click();
-	}
-	});
-}
-
 // -------------------------------------{fonction rafraichir2}--------------------------------------------
 
 function rafraichir2(context,mobilefactor,rmaxjson,r0ou2,compteur) {
@@ -1631,27 +1584,6 @@ function canvasAvantLancement(){
 
 }
 
-// -------------------------------------{fonction foncPourZoomPlusAvantLancement}--------------------------------------------
-
-function foncPourZoomPlusAvantLancement(){
-	
-		factGlobalAvecClef = factGlobalAvecClef*1.2;
-		nzoom+=1;
-		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
-		canvasAvantLancement();
-	
-}
-
-// -------------------------------------{fonction foncPourZoomMoinsAvantLancement}--------------------------------------------
-
-function foncPourZoomMoinsAvantLancement(){
-	
-		factGlobalAvecClef = factGlobalAvecClef/1.2;
-		nzoom-=1;
-		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
-		canvasAvantLancement();
-}
-
 // -------------------------------------{fonction MAJGraphePotentiel}--------------------------------------------
 
 function MAJGraphePotentiel(data1,data2,compteur,mobile){
@@ -1663,4 +1595,13 @@ function MAJGraphePotentiel(data1,data2,compteur,mobile){
 	
 	graphique_creation_pot(0,data1,data2,compteur,mobile);
 
+}
+
+// -------------------------------------{recuperation}--------------------------------------------
+
+function recuperation(){ //ManonV4
+    if (document.getElementById('trace_present').value != "1") {
+        load_schwarshild_photon();
+        initialisationGenerale(lenbdefusees);
+    }
 }

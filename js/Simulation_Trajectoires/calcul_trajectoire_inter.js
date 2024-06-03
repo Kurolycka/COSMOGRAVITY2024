@@ -162,12 +162,6 @@ function supprHtml(){
 
 }
 
-//Fonction htmlDecode écrite par Comrade Programmer#7608, ce qui résout le problème d'affichage. 
-function htmlDecode(input) {
-	var doc = new DOMParser().parseFromString(input, "text/html");
-	return doc.documentElement.textContent;
-}
-
 function genereHtml(){
 	var nbredefuseesgenere = Number(document.getElementById("nombredefusees").value);
 
@@ -346,7 +340,8 @@ function genereHtml(){
 					<th id="v_total`+countt.toString()+`" title="" class="tg-aicv"> V<SUB>physique</SUB> (m.s<sup>-1</sup>)  </th>
 					<th id="distance_metrique`+countt.toString()+`" title="" class="tg-aicv"></th> 
 					<th id="nb_g`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>
-					<th id="dernier_g`+countt.toString()+`" title="" class="tg-aicv" style="display: none;">testou</th>`; //ManonV2
+					<th id="dernier_g`+countt.toString()+`" title="" class="tg-aicv" style="display: none;">testou</th>
+					<th id ="puissance_consommee_label`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>`; //ManonV3
 
 		var newRow2=document.getElementById('tableauresultatsimu').insertRow();
 
@@ -361,7 +356,8 @@ function genereHtml(){
 				<td class="tg-3ozo" id="v_tot`+countt.toString()+`">res</td>
 				<td class="tg-3ozo" id="distance_parcourue`+countt.toString()+`">res</td>
 				<td class="tg-3ozo" id="g_ressenti`+countt.toString()+`" style="display: none;">0</td>
-				<td class="tg-3ozo" id="dernier_g_res`+countt.toString()+`" style="display: none;">0</td>`; //ManonV2
+				<td class="tg-3ozo" id="dernier_g_res`+countt.toString()+`" style="display: none;">0</td>
+				<td class="tg-3ozo" id="puissance_consommee`+countt.toString()+`" style="display: none;">0</td>`; //ManonV3
 					
 
 	}
@@ -424,57 +420,6 @@ function genereHtml(){
 	 
 }
 
-//-----------------------------{Fonction rajoutée par Manon}--------------------------------------------
-
-function rendreVisibleNbG() {
-
-	blyo = Number(document.getElementById("nombredefusees").value);//nombre de mobiles
-	element2=document.getElementById('traject_type2');//si spationaute ou observateur
-	
-    // Sélectionne toutes les cellules dont l'ID commence par "nb_g" :
-    var nbGCells = document.querySelectorAll('[id^="nb_g"]');
-
-	// Sélectionne toutes les cellules dont l'ID commence par "g_ressenti" :
-	var gRessCells = document.querySelectorAll('[id^="g_ressenti"]');
-
-	var dernier_g_Cells = document.querySelectorAll('[id^="dernier_g"]');
-
-	var dernier_g_res_Cells = document.querySelectorAll('[id^="dernier_g_res"]');
-
-    
-    // Si element2.value est "mobile" et que y a que 1 mobile, rend les cellules visibles, sinon les cache
-    if (element2.value == "mobile" && blyo==1) {
-        nbGCells.forEach(function(cell) {
-            cell.style.display = ''; // Rend visible la cellule nb_g
-        });
-		gRessCells.forEach(function(cell) {
-            cell.style.display = ''; // Rend visible la cellule g_ressenti
-        });
-		dernier_g_Cells.forEach(function(cell) {
-            cell.style.display = ''; // Rend visible la cellule derniger_g
-        });
-		dernier_g_res_Cells.forEach(function(cell) {
-            cell.style.display = ''; // Rend visible la cellule dernier_g_res
-        });
-    } else {
-        nbGCells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule nb_g
-        });
-		gRessCells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule g_ressenti
-        });
-		dernier_g_Cells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule dernier_g
-        });
-		dernier_g_res_Cells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule dernier_g_res
-        });
-    }
-}
-
-//--------------------------{Fin fonction rajoutée par Manon}---------------------------------------------
-
-
 // calcul en temps réel des E, L,...
 function initialisation(compteur){
 
@@ -513,6 +458,7 @@ function initialisation(compteur){
 	L = vphi * r0 / c;
 	
 	deltam_sur_m = 0;
+	puissance_consommee_calcul=0; //ManonV3
 
 	//Manon : ------------------------------------------
 
@@ -635,7 +581,7 @@ function initialisation(compteur){
 		vr2i =phi0*180/Math.PI;
 	}
 
-	boutonAvantLancement();
+	boutonAvantLancement(true);
 	canvasAvantLancement();
   	return mobile;
 }  // fin fonction initialisation
@@ -817,7 +763,7 @@ function trajectoire(compteur,mobile) {
 
 
 		// permet de gérer les touches du clavier pour certaines actions
-		clavierEvenement();
+		clavierEvenement(true);
 		
 		dtau=temps_chute_libre/1e3;	//déjà modifié ? 
 
@@ -883,6 +829,8 @@ function trajectoire(compteur,mobile) {
 		temps_allumage_reacteur = temps_allumage_reacteur*Math.pow(10,-3); //Remettre en secondes
 		var puissance_reacteur = Number(document.getElementById("puissance_reacteur").value); //ManonV3
 
+		var temps_total_reacteur =0;
+
 		if(blyo == 1 && element2.value == "mobile") {
 			setInterval(function(){
 				
@@ -896,6 +844,8 @@ function trajectoire(compteur,mobile) {
 						mobile.L = mobile.L + mobile.L*Delta_L_sur_L; //ManonV3
 						mobile.E = mobile.E + mobile.E*Delta_E_sur_E //ManonV3
 						deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E)*Math.pow(c,2); //ManonV3
+						temps_total_reacteur = Math.abs(joy.GetPhi()*temps_allumage_reacteur);
+						puissance_consommee_calcul = deltam_sur_m/temps_total_reacteur;
 
 						/*Delta_L=-(joy.GetPhi()/5)/((1e-10)*mobile.r0/rs)*mobile.E;
 						mobile.L=mobile.L+Delta_L ;
@@ -907,6 +857,8 @@ function trajectoire(compteur,mobile) {
 						document.getElementById("E"+compteur.toString()).innerHTML = mobile.E.toExponential(3);
 						document.getElementById("L"+compteur.toString()).innerHTML = mobile.L.toExponential(3);
 						document.getElementById("decal"+compteur.toString()).innerHTML = deltam_sur_m.toExponential(3);
+						document.getElementById("puissance_consommee"+compteur.toString()).innerHTML = puissance_consommee_calcul.toExponential(3);
+
 					
 				}
 		
@@ -920,6 +872,8 @@ function trajectoire(compteur,mobile) {
 						mobile.L = mobile.L + mobile.L*Delta_L_sur_L; //ManonV3
 						mobile.E_tot = mobile.E + mobile.E*Delta_E_sur_E //ManonV3
 						deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E)*Math.pow(c,2); //ManonV3
+						temps_total_reacteur = Math.abs(joy.GetPhi()*temps_allumage_reacteur);
+						puissance_consommee_calcul = deltam_sur_m/temps_total_reacteur;
 
 
 						/*Delta_L=-(joy.GetPhi()/5)/((1e-10)*mobile.r0/rs)*mobile.E;
@@ -932,6 +886,7 @@ function trajectoire(compteur,mobile) {
 						document.getElementById("E"+compteur.toString()).innerHTML = mobile.E.toExponential(3);
 						document.getElementById("L"+compteur.toString()).innerHTML = mobile.L.toExponential(3);
 						document.getElementById("decal"+compteur.toString()).innerHTML = deltam_sur_m.toExponential(3);
+						document.getElementById("puissance_consommee"+compteur.toString()).innerHTML = puissance_consommee_calcul.toExponential(3);
 					
 				}
 				
@@ -1012,9 +967,9 @@ function trajectoire(compteur,mobile) {
 		//On supprime dans un premier temps les eventListener lié au canvas avant lancement
 
 	
-		document.getElementById('moinszoom').removeEventListener('click',foncPourZoomMoinsAvantLancement, false);
+		document.getElementById('moinszoom').removeEventListener('click',function(){foncPourZoomMoinsAvantLancement(true)}, false);
 
-		document.getElementById('pluszoom').removeEventListener('click',foncPourZoomPlusAvantLancement, false);
+		document.getElementById('pluszoom').removeEventListener('click',function(){foncPourZoomPlusAvantLancement(true)}, false);
 
 		document.getElementById('moinszoom').addEventListener('click', function() {
 			var retour=bouttons.zoom(false,mobile,canvas,mobilefactor,compteur); 
@@ -1726,42 +1681,6 @@ function pausee() {
 
 
 
-// permet de gérer les touches du clavier pour certaines actions
-function clavierEvenement() {
-	$(document).keyup(function(event) { // the event variable contains the key pressed
-    if (event.which == 65) { // touche a
-		$('#r1').click();
-    }
-    if (event.which == 90) { // touche z
-		$('#r2').click();
-    }
-    if (event.which == 69) { // touche e
-		$('#rebondd').click();
-    }
-    if (event.which == 81) { // touche q
-    	$('#start').click();
-    }
-    if (event.which == 83) { // touche s
-    	$('#clear').click();
-    }
-    if (event.which == 68) { // touche d
-    	$('#boutton_enregis').click();
-    }
-    if (event.which == 70) { // touche f
-    	$('#boutton_recup').click();
-    }
-    if (event.which == 87) { // touche w
-    	$('#moinsvite').click();
-    }
-    if (event.which == 88) { // touche x
-    	$('#pau').click();
-    }
-    if (event.which == 67) { // touche c
-    	$('#plusvi').click();
-    }
-  });
-}
-
 function rafraichir2(context,mobilefactor,rmaxjson,r0ou2,compteur) {
 	majFondFixe();
 	creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur);
@@ -2090,23 +2009,6 @@ function canvasAvantLancement(){
 
 }
 
-function foncPourZoomPlusAvantLancement(){
-	
-		factGlobalAvecClef = factGlobalAvecClef*1.2;
-		nzoom+=1;
-		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
-		canvasAvantLancement();
-	
-}
-
-function foncPourZoomMoinsAvantLancement(){
-	
-		factGlobalAvecClef = factGlobalAvecClef/1.2;
-		nzoom-=1;
-		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
-		canvasAvantLancement();
-}
-
 function MAJGraphePotentiel(data1,data2,compteur,mobile){
 	data1 = []
 	for (r = 0.7*mobile.r_part; r < 1.3*mobile.r_part; r += mobile.dr) {
@@ -2116,4 +2018,13 @@ function MAJGraphePotentiel(data1,data2,compteur,mobile){
 	
 	graphique_creation_pot(0,data1,data2,compteur,mobile);
 
+}
+
+//----------------------------------------------------{Recuperation}----------------------------------------------------
+
+function recuperation(){ //ManonV4
+    if (document.getElementById('trace_present').value != "1") {
+        load_schwarshild_massif_nonBar();
+        initialisationGenerale(lenbdefusees);
+    }
 }

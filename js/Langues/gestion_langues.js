@@ -737,6 +737,7 @@ function texteTrajectoireMassiveNonBar(nbrderockets) {
     document.getElementById("distance_metrique"+count.toString()+"").innerHTML = texte.pages_trajectoire.distance_metrique_parcourue;//ManonGeneralisation
     document.getElementById("distance_metrique"+count.toString()).title = texte.pages_trajectoire.distance_metrique_parcourue_infobulle; //ManonGeneralisation
     document.getElementById("vitesse_orb_circ_nonBar_massive"+count.toString()+"").title=texte.pages_trajectoire.vitesse_orbite_circulaire;
+    document.getElementById("puissance_consommee_label"+count.toString()).innerHTML = texte.pages_trajectoire.puissance_consommee_label; //ManonV3
 	}
 }
 

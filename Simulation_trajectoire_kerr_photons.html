@@ -53,7 +53,7 @@
 	<script src="./Lib/snap.svg.js"></script>
 	<script src="./js/Simulation_Trajectoires/calcul_trajectoire_kerr_photons.js"></script>
 	<script src="./js/Simulation_Trajectoires/bouttons.js"></script>
-	<script src="./js/Simulation_Trajectoires/graphe_potentiel_kerr.js"></script>
+	<script src="./js/Simulation_Trajectoires/graphe_potentiel.js"></script>
 	<script src="./js/Langues/gestion_langues.js"></script>
 	<script src="./js/Simulation_Trajectoires/Get_para.js"></script>
 	<script src="./js/Simulation_Trajectoires/fonctions_utilitaires_trajectoires.js"></script>
@@ -341,7 +341,7 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
 	<script src="js/Graphisme/Menu/nav.jquery.min.js"></script>
 	<script>
 		initialisation();
-		d3.select(window).on('resize', resize);
+		/* d3.select(window).on('resize', resize); */ //khaled l'a enlevé car il voit pas à quoi ça sert
 		$(function() {
 			$("#nav-ici").load("Menu.html");
 		});
