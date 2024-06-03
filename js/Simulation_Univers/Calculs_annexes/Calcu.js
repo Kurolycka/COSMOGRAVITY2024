@@ -1064,11 +1064,11 @@ function calcu(path) {
 		
 
 	}
-else if(path == 6 && modele == 0){ //S modele=0 quand l'univers à un âge déf. (un bool serait préférable... ou au moins un nom de variable explicite :))
+	else if(path == 6 && modele == 0){ //S modele=0 quand l'univers à un âge déf. (un bool serait préférable... ou au moins un nom de variable explicite :))
 	//Il faut vraiment réduire tout ça à une seule checkbox ... la redondance du code pour chaque cas de figure rend le tout illisible( ou bien usage fonction, je sais pas?)
 
 	if (sessionStorage.getItem("LANGUE") == "fr") {frtemp="t(a)";
-	}else{frtemp="t(y)";} 
+	}else{frtemp="t";} 
 
 	t_checkbox = document.getElementById("t_checkbox");				
 	if(t_checkbox.checked) {
@@ -1097,9 +1097,10 @@ else if(path == 6 && modele == 0){ //S modele=0 quand l'univers à un âge déf.
 	let amin=1/(1+zmax);
 	let amax=1/(1+zmin);
 	let res = calcul_facteur_echelle_LCDM(amin,amax,equa_diff_1_LCDM, equa_diff_2_LCDM, fonction_E);
-	let ordonnee =res[1].map((x) => 1/(1+x))
+	let ordonnee = res[1].map((x) => (1-x)/x);
 	ordonnee=ordonnee.reverse();
-	let abscisse=res[0].reverse()
+	let abscisse = res[0].map((x) => x*1e9);
+	abscisse=abscisse.reverse() ;
 
 
 
@@ -1167,7 +1168,7 @@ else if(path == 6 && modele == 0){ //S modele=0 quand l'univers à un âge déf.
 
 
 
-}
+	}
 
 
 	time_affiche2 = document.getElementById("resul_tps2");

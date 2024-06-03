@@ -151,6 +151,7 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
     console.log("Liste temps :", taus)
     console.log("Liste facteur :", facteur_echelle)
 
+    setTimeout(stop_spin, 300);
     return [taus, facteur_echelle]
 }
 

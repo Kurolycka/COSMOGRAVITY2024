@@ -555,6 +555,12 @@ function texteUniversNoire() {
   document.getElementById("txt_ML").innerHTML = texte.page_univers_noire.matiereEsombre;
 }
 
+function texteUniversCalculsNoire(){
+  var texte = o_recupereJson();
+  document.getElementById("txt_omegadr_normalise").innerHTML = texte.page_univers_calculs.omegade_normalise;
+}
+
+
 function texteUniversMonofluides() {
   var texte = o_recupereJson();
   document.getElementById("trace").value = texte.page_univers_general.bouton_tracer;

@@ -143,6 +143,7 @@
 		"tracer_omega_t":"Plot &Omega;<sub>i</sub>(t)",
 		"GenerateurG":"Graph Generator (z<sub>max</sub> and z<sub>min</sub> >-1):",
 		"echelle_log_d" :"Log plot",
+		"omegade_normalise" : "Normalized &Omega;<sub>DE</sub>",
 		"echelle_log_omega" :"Log plot",
 		"echelle_log_t" :"Log plot",
 		"zmin":"z<sub>min</sub>",

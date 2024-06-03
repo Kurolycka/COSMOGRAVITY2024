@@ -509,3 +509,23 @@ function calcul_horizon_evenements(z_reception=0){
     //formule 23 dans la théorie du 20/05/2024
     return DistanceMetrique(-.99999999,z_reception,H0_parSecondes(H0),Omega_k(0),Omega_r(0),Omega_m(0),Omega_l(0));
 }
+
+
+
+function calcul_t_inverse(temps,fonction){
+	//Remy test
+	function a_dichotomer(x){
+		return calcul_ages(fonction,H0enannee,1e-15,x);
+	}
+	age_univers=a_dichotomer(1);
+	console.log(age_univers);
+	
+	if (age_univers>=temps){
+		a_t=Dichotomie_Remy(a_dichotomer,temps,1e-15,1,temps*1e-12);
+	}else{
+		a_t=Dichotomie_Remy(a_dichotomer,temps,1,1e7,1e-12);
+
+	};
+
+	return (1-a_t)/a_t;
+}

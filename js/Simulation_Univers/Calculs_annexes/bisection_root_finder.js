@@ -52,7 +52,7 @@ function inverse(){
 
 
 
-	  eps = 1e-6;    //tolérence d'erreur pour les intégrales
+	eps = 1e-6;    //tolérence d'erreur pour les intégrales
 
 	get_root_dm();
 	get_root_t();
@@ -112,26 +112,27 @@ function get_root_t(){// omega est omegalambda0 en cas de constante cosmo et ome
 	t_max=simpson_simple_degre2(fonction_integrale, 0, omegam0, Number(omegalambda0), Number(Or));
 	t_em = (document.getElementById("t_racine_em").value);
 	if(t_em <=0 ){
-		messagebox(texte.page_univers_calculs.erreur,"te" + texte.page_univers_calculs.t_negatif);z_em=NaN;}
+		messagebox(texte.page_univers_calculs.erreur,"te" + texte.page_univers_calculs.t_negatif);z_em=NaN;}/*Remy a enlever
 	else if (t_em > t_max-1){
 		messagebox(texte.page_univers_calculs.erreur,texte.page_univers_calculs.t_trop_grand + "\u0020(" + (t_max).toExponential(4) + "  a)");
-		z_em=NaN;}
-	else{
-		z_em = bisection_method_t(t_em, omegam0, omegalambda0, Or, eps);
+		z_em=NaN;}*/
+	else{//remy change le bisection par sa fonction
+		//z_em = bisection_method_t(t_em, omegam0, omegalambda0, Or, eps);
+		z_em = calcul_t_inverse(t_em,fonction_E) ;
 	}
-	document.getElementById("z_racine_t_em").innerHTML= z_em;
-	
+	document.getElementById("z_racine_t_em").innerHTML= z_em.toExponential(5);
 	
 	t_rec = (document.getElementById("t_racine_rec").value);
 	if(t_rec <=0){
-		messagebox(texte.page_univers_calculs.erreur, "tr" + texte.page_univers_calculs.t_negatif);z_rec=NaN;}
+		messagebox(texte.page_univers_calculs.erreur, "tr" + texte.page_univers_calculs.t_negatif);z_rec=NaN;}/*
 	else if(t_rec > t_max-1){
 		messagebox(texte.page_univers_calculs.erreur,texte.page_univers_calculs.t_trop_grand + "\u0020(" + (t_max).toExponential(4) + "  a)");
-		z_rec=NaN;}
+		z_rec=NaN;}*/
 	else{
-	z_rec = bisection_method_t(t_rec, omegam0, omegalambda0, Or, eps);
+		//z_rec = bisection_method_t(t_rec, omegam0, omegalambda0, Or, eps);
+		z_rec = calcul_t_inverse(t_rec,fonction_E);
 	}
-	document.getElementById("z_racine_t_rec").innerHTML= z_rec;
+	document.getElementById("z_racine_t_rec").innerHTML= z_rec.toExponential(5);
 }
 
 

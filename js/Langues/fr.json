@@ -142,6 +142,7 @@
 		"tracer_omega_t":"Tracer &Omega;<sub>i</sub>(t)",
 		"GenerateurG":"Génerateur des Graphiques (z<sub>max</sub> et z<sub>min</sub> >-1):",
 		"echelle_log_d" :"Échelle log",
+		"omegade_normalise" : "&Omega;<sub>DE</sub> normalisé",
 		"echelle_log_omega" :"Échelle log",
 		"echelle_log_t" :"Échelle log",
 		"zmin":"z<sub>min</sub>",

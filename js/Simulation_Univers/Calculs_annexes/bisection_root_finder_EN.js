@@ -18,6 +18,7 @@ function inverse_EN(){
 	h0 = Number(document.getElementById("H0").value);
 	omegam0 = Number(document.getElementById("omegam0").value);
 	omegaDE0 = Number(document.getElementById("omegaDE0").value);
+	z_negatif_inverse = document.getElementById("z_negatif_check").checked;
 
 	omegak0=(1-omegam0-omegaDE0-Or);
 	H0parsec = h0*1000/((au*(180*3600))/Math.PI*Math.pow(10, 6));
@@ -115,7 +116,11 @@ function bisection_method_dm_EN (dm, omegam0, omegaDE0, Or, eps){
 	//vÃ©rification des valeurs permisent
 	//cette variable possÃ¨de 2 valeurs [nouveau_zb, contrainte] contrainte =0 ou 1. 0 pour absence de contrainte
 	reconditionneur = espacedefinie_EN(omegam0, omegaDE0, Or,w0,w1);
-	zb = Number(reconditionneur[0])-0.0001;
+	if (z_negatif_inverse){
+		zb=-.999999999;
+	}else{
+		zb = Number(reconditionneur[0])-0.0001;
+	}
 	contrainte = Number(reconditionneur[1]);
 	dm_za = f_x(za, omegam0, omegaDE0, Or, eps,w0,w1);
 	dm_zb = f_x(zb, omegam0, omegaDE0, Or, eps,w0,w1);
@@ -141,6 +146,13 @@ function bisection_method_dm_EN (dm, omegam0, omegaDE0, Or, eps){
 			return NaN;
 		}
 		Z = dichotomie_EN(za, zb, f_x, dm, ex,w0,w1);
+
+		if (z_negatif_inverse){
+			Z = dichotomie_EN(zb, za, f_x, dm, ex,w0,w1);
+		}else{
+			Z = dichotomie_EN(za, zb, f_x, dm, ex,w0,w1);
+		}
+
 		return Z;
 	}
 	//la condition de else est omegak0 >0
@@ -330,24 +342,26 @@ t_max=simpson_simple_degre2_EN(fonction_integrale_EN, 0, omegam0, Number(omegaDE
 
 t_em = (document.getElementById("t_racine_em").value);
 if(t_em <=0 ){
-    messagebox(texte.page_univers_calculs.erreur,"te" + texte.page_univers_calculs.t_negatif);z_em=NaN;}
+    messagebox(texte.page_univers_calculs.erreur,"te" + texte.page_univers_calculs.t_negatif);z_em=NaN;}/* Remy a enlever
 else if (t_em > t_max-1){
     messagebox(texte.page_univers_calculs.erreur,texte.page_univers_calculs.t_trop_grand + "\u0020(" + (t_max).toExponential(4) + "  a)");
-    z_em=NaN;}
+    z_em=NaN;}*/
 else{
-z_em = bisection_method_t_EN(t_em, omegam0, omegaDE0, Or, eps,w0,w1);
+	//z_em = bisection_method_t_EN(t_em, omegam0, omegaDE0, Or, eps,w0,w1);
+	z_em = calcul_t_inverse(t_em,fonction_F);
 }
 document.getElementById("z_racine_t_em").innerHTML= z_em;
 
 
 t_rec = (document.getElementById("t_racine_rec").value);
 if(t_rec <=0){
-    messagebox(texte.page_univers_calculs.erreur,"tr" + texte.page_univers_calculs.t_negatif);z_rec=NaN;}
+    messagebox(texte.page_univers_calculs.erreur,"tr" + texte.page_univers_calculs.t_negatif);z_rec=NaN;}/* Remy a enlever
 else if(t_rec > t_max-1){
     messagebox(texte.page_univers_calculs.erreur,texte.page_univers_calculs.t_trop_grand + "\u0020(" + (t_max).toExponential(4) + "  a)");
-    z_rec=NaN;}
+    z_rec=NaN;}*/
 else{
-z_rec = bisection_method_t_EN(t_rec, omegam0, omegaDE0, Or, eps,w0,w1);
+	//z_rec = bisection_method_t_EN(t_rec, omegam0, omegaDE0, Or, eps,w0,w1);
+	z_rec = calcul_t_inverse(t_rec,fonction_F);
 }
 document.getElementById("z_racine_t_rec").innerHTML= z_rec;
 }

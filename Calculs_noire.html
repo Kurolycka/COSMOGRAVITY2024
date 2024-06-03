@@ -187,6 +187,13 @@
 
         <br/>
 
+        <div class="choix_z_negatif">
+            <label for="z_negatif_check">z&lt 0</label>
+            <input type="checkbox" name="z_negatif_check" id="z_negatif_check">
+        </div>
+
+        <br>
+
         <div class="desact_retour">
             <label for="dm_racine_dm">d<sub>m</sub> =</label>
             <input id="dm_racine_dm" value="0" maxlength="26" type="text"><span style="font-size:smaller"> (m)</span>
@@ -335,8 +342,10 @@
                 </div>
 
                 <div>
-                    <div style="padding:15px">
-                        <label>Ω<sub>DE normalisé</sub></label>
+                    <div style="padding:12px 15px">
+                        <label for="omegade_normalise">
+                        <span id="txt_omegadr_normalise">Ω<sub>DE normalisé</sub></span>
+                        </label>
                         <input type="checkbox" id="omegade_normalise" checked>
                     </div>
                 </div>
@@ -936,6 +945,7 @@
     transfert_calcu(update_omegar0_calc_noir, 2);
     calculs = 0;
     texteUniversCalculs();
+    texteUniversCalculsNoire();
     </script>
     <script src="js/Simulation_Univers/MéthodesNumériques.js"></script>
     <script src="js/Simulation_Univers/Fonctions_utiles.js"></script>
