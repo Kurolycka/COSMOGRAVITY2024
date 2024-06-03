@@ -1,0 +1,56 @@
+{
+	"univers":{
+		"Entrées": "<h2>Entrées</h2>",
+			"infoT0": "Température actuelle de l'univers",
+
+			"infoH0": "Taux d'expansion actuel de l'univers (constante de hubble)",
+
+			"infoTypeUnivers": "Vous pouvez choisir le type d'univers. Si vous vous choisissez classique vous pourrez modifier les omégas. Sinon un des 4 oméga sera égal à 1, les autres à 0",
+			"monofluide_null": "Univers classique",
+				"monofluide_M": "Monofluide Matière",
+				"monofluide_R": "Monofluide Rayonnement",
+				"monofluide_LDE": "Monofluide Consomologique",
+				"monofluide_K": "Monofluide Courbure",
+
+			"infoOmégam0": "Paramètre de densité de matière actuel",
+
+			"infoOmégaLDE0": "Paramètre de densité de \"constante cosmologique\" actuel",
+
+			"infoOmégaR0": "Paramètre de densité de rayonnement actuel. Il est calculé en sortie mais vous pouvez choisir de le mettre à zéro avec \"Rien\" et de choisir de prendre en comtpe ou non les \"Neutrinos primordiaux\"",
+			"label_Omégar0": " Options &Omega;<sub>r<sub>0</sub></sub> : ",
+				"Omégar0_RFC_et_Neutrinos": "RFC et neutrinos",
+				"Omégar0_RFC": "RFC",
+				"Omégar0_Rien": "Rien",
+
+			"infoOmégaK0": "Paramètre de densité de courbure actuel. Vous pouvez le mettre à 0 ce qui correspond à un univers plat",
+			"label_Omégak0": " Univers plat ? <br /> (&Omega;<sub>k<sub>0</sub></sub> = 0)",
+
+			"Tracé": "<h2>Tracé</h2>",
+				"infoAmin": "Le tracé n'ira pas en dessous de cette valeur. Ne peut pas être supérieur à 1 si l'univers n'as pas de début.",
+				"infoAmax": "Le tracé n'ira pas au dessus de cette valeur. Ne peut pas être inférieur à 1 si l'univers n'as pas de début.",
+				"bouttonTracer": "Tracer",
+
+
+		"headGraphiqueLCDM": "<h2>Tracé du facteur d'échelle <br /> Constante cosmologique</h2>",
+		"headGraphiqueDE": "<h2>Tracé du facteur d'échelle <br /> Energie sombre</h2>",
+
+
+
+		"Sorties": "<h2>Sorties</h2>",
+			"Omégas": "<h3>Les omégas</h3>",
+				"infoOmégaR0Sortie": "Paramètre de densité de rayonnement calculé.",
+				"infoOmégaK0Sortie": "Paramètre de densité de courbure calculé.",
+			"Temps": "<h3>Temporalité</h3>",
+
+		"Enregistrer": "<h3>Enregistrement</h3>",
+			"infoNomFichier": "Nom d'enregistrement du graphique. Ne pas utiliser de caractère spéciaux tels que . * / | + \\ et autres",
+			"labelNom": "Nom du fichier",
+			"nomDéfautLCDM": "échelle_LCDM",
+			"nomDéfautDE": "échelle_DE",
+			"bouttonEnregistrer": "Enregistrer"
+
+	}
+}
+
+
+

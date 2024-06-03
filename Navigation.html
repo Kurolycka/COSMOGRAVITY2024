@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Barre de navigation de cosmogravity</title>
+
+    <link rel="stylesheet" href="./CSS/styleNav.css">
+</head>
+<body>
+<button id="toggle-nav" onclick="toggleNav()">☰</button>
+<nav id="nav" class="menu">
+    <div style="background: none; width: 500px"></div>
+
+    <div class="item haut" style="cursor: pointer">
+        Acceuil
+    </div>
+
+    <div class="item haut univers">
+        Univers
+        <div class="sousMenu" style="top: 100%; left: 0">
+            <div class="item univers">
+                Théorie
+            </div>
+
+            <div class="item univers">
+                Simulation
+                <div class="sousMenu">
+                    <div class="item univers" style="white-space: nowrap; cursor: pointer">
+                        Modèle &Lambda;CDM
+                    </div>
+
+                    <div class="item univers" style="white-space: nowrap; cursor: pointer">
+                        Modèle DE
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="item haut trajectoire">
+        Trajectoire
+        <div class="sousMenu" style="top: 100%; left: 0">
+            <div class="item trajectoire">
+                Théorie
+            </div>
+
+            <div class="item trajectoire">
+                Simulation
+                <div class="sousMenu">
+                    <div class="item trajectoire">
+                        Métrique de Schwarzchild
+                        <div class="sousMenu">
+                            <div class="item trajectoire" style="white-space: nowrap; cursor: pointer">
+                                Masse baryonique - Mobile baryonique
+                            </div>
+
+                            <div class="item trajectoire" style="white-space: nowrap; cursor: pointer">
+                                Masse baryonique - Mobile photonique
+                            </div>
+
+                            <div class="item trajectoire" style="white-space: nowrap; cursor: pointer">
+                                Masse non-baryonique - Mobile non-baryonique
+                            </div>
+
+                            <div class="item trajectoire" style="white-space: nowrap; cursor: pointer">
+                                Masse non-baryonique - Mobile photonique
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="item trajectoire">
+                        Métrique de Kerr
+                        <div class="sousMenu">
+                            <div class="item trajectoire" style="white-space: nowrap; cursor: pointer">
+                                Mobile baryonique
+                            </div>
+
+                            <div class="item trajectoire" style="white-space: nowrap; cursor: pointer">
+                                Mobile photonique
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="item espaceur"></div>
+
+    <div class="item bas">
+        Langue
+        <div class="sousMenu" style="top: 100%; left: 0">
+            <div class="item" style="cursor: pointer">
+                Français
+            </div>
+
+            <div class="item" style="cursor: pointer">
+                English
+            </div>
+        </div>
+    </div>
+
+    <div class="item bas" style="cursor: pointer">
+        À propos
+    </div>
+
+    <div class="item bas" style="cursor: pointer">
+        Retour LUPM
+    </div>
+</nav>
+
+<script src="./JavaScript/fonction_animation.js"></script>
+</body>
+</html>
