@@ -482,7 +482,7 @@ function animate() {
     onestarrete=0;
     estUnMobile();
     element = document.getElementById('traject_type');
-    choixTrajectoire();
+    choixTrajectoire(null,context,null,null,null,false);
     element2=document.getElementById('traject_type2');
 
     if (r0 != 0.0) {
@@ -878,11 +878,6 @@ function enregistrer(){
 	}
 }
 
-function choixTrajectoire() {
-	siTrajectoireSimple();
-	siTrajectoireComplete();
-}
-
 function commandes(){
 	var texte = o_recupereJson();
 	alert(texte.pages_trajectoire.commandes_horsSchwarMassif);
@@ -1214,4 +1209,17 @@ function CubicSolve(a, b, c, d){
 	return roots;
 }
 
+	
+	function foncPourZoomPlusAvantLancement(){
+		
+			input +=1
+			document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString();
+		
+	}
+	
+	function foncPourZoomMoinsAvantLancement(){
+		
+			input -= 1
+			document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString();
+	}
 	

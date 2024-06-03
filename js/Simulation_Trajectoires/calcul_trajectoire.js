@@ -71,6 +71,7 @@ expl6.src='./Images/explose/expl6.png';
 var c = 299792458;
 var G = 6.67385 * Math.pow(10, -11);
 
+
 //----------------------------------------------------{Timer}----------------------------------------------------
 
 //-----------------------------------------------------------KHALED--------------------------------------------------
@@ -108,8 +109,6 @@ class Timer {
     stop() {
         const index = Timer.instances.indexOf(this);
         Timer.instances.splice(index, 1);
-    }
-}
 
 Timer.instances = [];
 Timer.paused = false;
@@ -124,7 +123,7 @@ Timer.ontick = function () {
 };
 
 window.setInterval(Timer.ontick, 1);
-//-----------------------------------------------------------KHALED--------------------------------------------------
+
 
 //----------------------------------------------------{initialisationGenerale}----------------------------------------------------
 
@@ -158,6 +157,7 @@ function lancerDeFusees(fuseecompteur){
 	document.getElementById("pause/resume").addEventListener("click", function() {
         pausee()}); //ajouté Là par Khaled car le fonctionnement du button à ete changé
 }
+
 
 //----------------------------------------------------{supprHtml}----------------------------------------------------
 
@@ -1104,7 +1104,7 @@ function animate(compteur,mobile,mobilefactor) {
 	// on vérifie le type de trajectoire sélectionné
 	estUnMobile();
 	element = document.getElementById('traject_type');
-	choixTrajectoire(compteur,context,mobile,mobilefactor,rmaxjson,maximum);
+	choixTrajectoire(compteur,context,mobilefactor,rmaxjson,maximum,true);
 	var isrebond = document.getElementById("boutton_ammorti").value;					  								   
 	//Tracé de la particule
 	element2=document.getElementById('traject_type2');
@@ -1683,7 +1683,6 @@ function pausee() {
 		}
 	}
 
-
 //----------------------------------------------------{rafraichir2}----------------------------------------------------
 
 function rafraichir2(context,mobilefactor,rmaxjson,r0ou2,compteur) {
@@ -1739,21 +1738,6 @@ function enregistrer() {
 	} else {
 		alert(texte.pages_trajectoire.message_enregistrer);
 	}
-}
-
-//----------------------------------------------------{choixTrajectoire}----------------------------------------------------
-
-function choixTrajectoire(compteur,context,mobile,mobilefactor,rmaxjson,r0ou2) {
-	if (element.value == 'simple') {
-		majFondFixe();
-		// Tracé du Rayon de Schwarzchild,...
-		creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur);
-		diametre_particule = DIAMETRE_PART*2;
-	}
-	else if (element.value == 'complete') {
-		diametre_particule = DIAMETRE_PART;
-	}
-
 }
 
 //----------------------------------------------------{commandes}----------------------------------------------------
@@ -2032,11 +2016,26 @@ function canvasAvantLancement(){
 
 }
 
-//----------------------------------------------------{Recuperation}----------------------------------------------------
+function foncPourZoomMoinsAvantLancement(){
+	
+    factGlobalAvecClef = factGlobalAvecClef/1.2;
+    nzoom-=1;
+    document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
+    canvasAvantLancement();
+}
 
-function recuperation(){ //ManonV4
-    if (document.getElementById('trace_present').value != "1") {
-        load_schwarshild_massif();
-        initialisationGenerale(lenbdefusees)
-    }
+function foncPourZoomPlusAvantLancement(){
+	
+		factGlobalAvecClef = factGlobalAvecClef*1.2;
+		nzoom+=1;
+		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
+		canvasAvantLancement();
+	
+}
+
+function recuperation(lenbdefusees){
+	if(document.getElementById('trace_present').value!="1"){
+		load_schwarshild_massif();
+		initialisationGenerale(lenbdefusees);
+	}
 }

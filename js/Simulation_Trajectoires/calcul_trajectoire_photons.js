@@ -902,7 +902,7 @@ function animate(compteur,mobile,mobilefactor) {
 	mobilefactor[compteur] = factGlobalAvecClef
 	estUnMobile();
 	element = document.getElementById('traject_type');
-	choixTrajectoire(compteur,context,mobile,mobilefactor,rmaxjson,maximum);
+	choixTrajectoire(compteur,context,mobilefactor,rmaxjson,maximum,true);
 	var isrebond = document.getElementById("boutton_ammorti").value;
 	element2=document.getElementById('traject_type2');													 
 
@@ -1235,8 +1235,6 @@ function pausee() {
 		}
 	}
 
-
-
 // -------------------------------------{fonction rafraichir2}--------------------------------------------
 
 function rafraichir2(context,mobilefactor,rmaxjson,r0ou2,compteur) {
@@ -1288,20 +1286,6 @@ function enregistrer() {
 		}
 	} else {
 		alert(texte.pages_trajectoire.message_enregistrer);
-	}
-}
-
-// -------------------------------------{fonction choixTrajectoire}--------------------------------------------
-
-function choixTrajectoire(compteur,context,mobile,mobilefactor,rmaxjson,r0ou2) {
-	if (element.value == 'simple') {
-		majFondFixe();
-		// Tracé du Rayon de Schwarzchild,...
-		creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur);
-		diametre_particule = DIAMETRE_PART*2;
-	}
-	else if (element.value == 'complete') {
-		diametre_particule = DIAMETRE_PART;
 	}
 }
 
@@ -1584,6 +1568,27 @@ function canvasAvantLancement(){
 
 }
 
+// -------------------------------------{fonction foncPourZoomPlusAvantLancement}--------------------------------------------
+
+function foncPourZoomPlusAvantLancement(){
+	
+		factGlobalAvecClef = factGlobalAvecClef*1.2;
+		nzoom+=1;
+		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
+		canvasAvantLancement();
+	
+}
+
+// -------------------------------------{fonction foncPourZoomMoinsAvantLancement}--------------------------------------------
+
+function foncPourZoomMoinsAvantLancement(){
+	
+		factGlobalAvecClef = factGlobalAvecClef/1.2;
+		nzoom-=1;
+		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
+		canvasAvantLancement();
+}
+
 // -------------------------------------{fonction MAJGraphePotentiel}--------------------------------------------
 
 function MAJGraphePotentiel(data1,data2,compteur,mobile){
@@ -1599,9 +1604,9 @@ function MAJGraphePotentiel(data1,data2,compteur,mobile){
 
 // -------------------------------------{recuperation}--------------------------------------------
 
-function recuperation(){ //ManonV4
-    if (document.getElementById('trace_present').value != "1") {
-        load_schwarshild_photon();
-        initialisationGenerale(lenbdefusees);
-    }
+function recuperation(lenbdefusees){
+	if(document.getElementById('trace_present').value!="1"){
+		load_schwarshild_photon();
+		initialisationGenerale(lenbdefusees);
+	}
 }

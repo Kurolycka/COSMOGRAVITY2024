@@ -1115,7 +1115,7 @@ function animate(compteur,mobile,mobilefactor) {
 	// on vérifie le type de trajectoire sélectionné
 	estUnMobile();
 	element = document.getElementById('traject_type');
-	choixTrajectoire(compteur,context,mobile,mobilefactor,rmaxjson,maximum);
+	choixTrajectoire(compteur,context,mobilefactor,rmaxjson,maximum, true);
 
 	element2=document.getElementById('traject_type2');
 	blyo=Number(document.getElementById('nombredefusees').value)//ManonGeneralisation
@@ -1679,8 +1679,6 @@ function pausee() {
 		}
 	}
 
-
-
 function rafraichir2(context,mobilefactor,rmaxjson,r0ou2,compteur) {
 	majFondFixe();
 	creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur);
@@ -1735,19 +1733,6 @@ function enregistrer() {
 		alert(texte.pages_trajectoire.message_enregistrer);
 	}
 }}
-
-function choixTrajectoire(compteur,context,mobile,mobilefactor,rmaxjson,r0ou2) {
-	if (element.value == 'simple') {
-		majFondFixe();
-		// Tracé du Rayon de Schwarzchild,...
-		creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur);
-		diametre_particule = DIAMETRE_PART*2;
-	}
-	else if (element.value == 'complete') {
-		diametre_particule = DIAMETRE_PART;
-	}
-
-}
 
 function commandes(){
 	var texte = o_recupereJson();
@@ -2009,6 +1994,23 @@ function canvasAvantLancement(){
 
 }
 
+function foncPourZoomPlusAvantLancement(){
+	
+		factGlobalAvecClef = factGlobalAvecClef*1.2;
+		nzoom+=1;
+		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
+		canvasAvantLancement();
+	
+}
+
+function foncPourZoomMoinsAvantLancement(){
+	
+		factGlobalAvecClef = factGlobalAvecClef/1.2;
+		nzoom-=1;
+		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
+		canvasAvantLancement();
+}
+
 function MAJGraphePotentiel(data1,data2,compteur,mobile){
 	data1 = []
 	for (r = 0.7*mobile.r_part; r < 1.3*mobile.r_part; r += mobile.dr) {
@@ -2022,9 +2024,9 @@ function MAJGraphePotentiel(data1,data2,compteur,mobile){
 
 //----------------------------------------------------{Recuperation}----------------------------------------------------
 
-function recuperation(){ //ManonV4
-    if (document.getElementById('trace_present').value != "1") {
-        load_schwarshild_massif_nonBar();
-        initialisationGenerale(lenbdefusees);
-    }
+function recuperation(lenbdefusees){
+	if(document.getElementById('trace_present').value!="1"){
+		load_schwarshild_massif_nonBar();
+		initialisationGenerale(lenbdefusees);
+	}
 }
