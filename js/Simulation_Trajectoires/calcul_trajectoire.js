@@ -1,6 +1,6 @@
+
 // variables globales
 var title = "V(r)/c² - 1";
-
 var clicks = 0;
 var nbRebonds = 0;
 const DIAMETRE_PART = 1;
@@ -11,6 +11,8 @@ var facteurDeMalheur=[];
 var cle;
 var fact_defaut;
 var temps_observateur_distant=0
+testouille=true; //ManonV5
+testouilleV2=true; //ManonV5
 
 // liste de couleurs en hexa
 const COULEUR_ORANGE = '#ffb407';
@@ -69,43 +71,62 @@ expl6.src='./Images/explose/expl6.png';
 var c = 299792458;
 var G = 6.67385 * Math.pow(10, -11);
 
-//Fonction pour arrondir l'échelle:
-function testnum(a){
+//----------------------------------------------------{Timer}----------------------------------------------------
 
-	for (var i = -30; i < 30; i++) {
-		resu=a/(10**i);
-		if (resu >=1 && resu <=10){
-			z=i; 
-			return z;
-		}
-	}
+//-----------------------------------------------------------KHALED--------------------------------------------------
+//ceci est une fonction que j'ai trouvé sur StackOverflow de ce brave monsieur Nisse Engström
+//je l'ai adapté avec l'aide de chatGPT pour avoir une class de Timer
+//puis j'ai fait de sorte que ça remplace setinterval et ça marche 1000x mieux
+
+class Timer {
+    constructor(funct, delayMs, times) {
+        if (times === undefined) times = -1;
+        if (delayMs === undefined) delayMs = 10;
+
+        this.funct = funct;
+        this.times = times;
+        this.timesCount = 0;
+        this.ticks = (delayMs / 10) | 0;
+        this.count = 0;
+        Timer.instances.push(this);
+    }
+
+    tick() {
+        if (this.count >= this.ticks) {
+            this.funct();
+            this.count = 0;
+            if (this.times > -1) {
+                this.timesCount++;
+                if (this.timesCount >= this.times) {
+                    this.stop();
+                }
+            }
+        }
+        this.count++;
+    }
+
+    stop() {
+        const index = Timer.instances.indexOf(this);
+        Timer.instances.splice(index, 1);
+    }
 }
 
-// Fonction pour garder les dernieres valeurs de vr et vphi au moment du pause.
-function testvaleur(x) {
-	if (isNaN(x)) {
-		return 'Not a Number!';
-	}
-	return x ;
-}
+Timer.instances = [];
+Timer.paused = false;
 
 
-//genere couleur aleatoirement pour le trace du mobile
-//il faudrait verifier que blanc ou des couleurs trop proches de blanc ne soient pas generes (a definir ce qui est trop proche de blanc)
-//sinon on ne verra rien sur le canvas quand le trace est dessine
-function generateurCouleur(){
-	redd=Math.floor(Math.random() * 255); 
-	greenn=Math.floor(Math.random() * 255); 
-	bluee=Math.floor(Math.random() * 255); 
-	if (0.3*redd+0.59*greenn+0.11*bluee>=100){ //teste pour mettre que des couleurs foncer
-		//console.log("clair",redd,greenn,bluee,0.3*redd+0.59*greenn+0.11*bluee)
-		cool=generateurCouleur()
-		redd=cool[0]
-		greenn=cool[1]
-		bluee=cool[2]
-	}
-	return [redd,greenn,bluee];
-}
+Timer.ontick = function () {
+    if (!Timer.paused) {
+        for (const instance of Timer.instances) {
+            instance.tick();
+        }
+    }
+};
+
+window.setInterval(Timer.ontick, 1);
+//-----------------------------------------------------------KHALED--------------------------------------------------
+
+//----------------------------------------------------{initialisationGenerale}----------------------------------------------------
 
 function initialisationGenerale(fuseecompteur){
     c = 299792458;
@@ -121,6 +142,8 @@ function initialisationGenerale(fuseecompteur){
   
 }
 
+//----------------------------------------------------{lancerDeFusees}----------------------------------------------------
+
 function lancerDeFusees(fuseecompteur){
     c = 299792458;
     G = 6.67385 * Math.pow(10, -11);				  
@@ -132,8 +155,12 @@ function lancerDeFusees(fuseecompteur){
 	for (compteur = 1; compteur <= fuseecompteur; compteur += 1) {
 		trajectoire(compteur,listejsonfusees[compteur]);
 	}
-
+	document.getElementById("pause/resume").addEventListener("click", function() {
+        pausee()}); //ajouté Là par Khaled car le fonctionnement du button à ete changé
 }
+
+//----------------------------------------------------{supprHtml}----------------------------------------------------
+
 //supprHtml et genereHtml sont les fonctions qui generent le html de maniere dynamique
 function supprHtml(){
 	var nbrfuseesuppr = sessionStorage.getItem("nombredefusees");
@@ -173,14 +200,7 @@ function supprHtml(){
 
 }
 
-
-//Fonction htmlDecode écrite par Comrade Programmer#7608, ce qui résout le problème de parsing de html. 
-function htmlDecode(input) {
-	var doc = new DOMParser().parseFromString(input, "text/html");
-	return doc.documentElement.textContent;
-}
-
-//---------------------------------------------------------------{fonction genereHtml}---------------------------------------------------------
+//----------------------------------------------------{genereHtml}----------------------------------------------------
 
 function genereHtml(){
 	var nbredefuseesgenere = Number(document.getElementById("nombredefusees").value);
@@ -205,7 +225,7 @@ function genereHtml(){
 		newinput.setAttribute("id","r0"+countt.toString()+"");
 		newinput.setAttribute("value","2e13");
 		newinput.setAttribute("align","left");
-		newinput.setAttribute("maxlength","10");
+		newinput.setAttribute("maxlength","18");
 		newinput.setAttribute("type","text");
 		newinput.setAttribute("size","5");
 		newinput.setAttribute("onChange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
@@ -228,7 +248,7 @@ function genereHtml(){
 		var newinput = document.createElement("Input");
 		newinput.setAttribute("id","v0"+countt.toString()+"");
 		newinput.setAttribute("value","7.75e7");
-		newinput.setAttribute("maxlength","10");
+		newinput.setAttribute("maxlength","25");
 		newinput.setAttribute("type","text");
 		newinput.setAttribute("size","5");
 		newinput.setAttribute("onChange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
@@ -339,7 +359,8 @@ function genereHtml(){
 		<th id="v_total`+countt.toString()+`" title="" class="tg-aicv">   V<SUB>physique</SUB> (m.s<sup>-1</sup>) </th>
 		<th id="distance_metrique`+countt.toString()+`" title="" class="tg-aicv"></th> 
 		<th id="nb_g`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>
-		<th id="dernier_g`+countt.toString()+`" title="" class="tg-aicv" style="display: none;">testou</th>`; //ManonV2
+		<th id="dernier_g`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>
+		<th id ="puissance_consommee_label`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>`; //ManonV3
 		
 
 		var newRow2=document.getElementById('tableauresultatsimu').insertRow();
@@ -355,7 +376,8 @@ function genereHtml(){
 		<td class="tg-3ozo" id="v_tot`+countt.toString()+`">res</td>
 		<td class="tg-3ozo" id="distance_parcourue`+countt.toString()+`">res</td>
 		<td class="tg-3ozo" id="g_ressenti`+countt.toString()+`" style="display: none;">0</td>
-		<td class="tg-3ozo" id="dernier_g_res`+countt.toString()+`" style="display: none;">0</td>`; //ManonV2
+		<td class="tg-3ozo" id="dernier_g_res`+countt.toString()+`" style="display: none;">0</td>
+		<td class="tg-3ozo" id="puissance_consommee`+countt.toString()+`" style="display: none;">0</td>`; //ManonV3
 	}
 
 
@@ -413,56 +435,7 @@ function genereHtml(){
 	 
 }// fin fonction genereHtml
 
-//-----------------------------{Fonction rajoutée par Manon}--------------------------------------------
-
-function rendreVisibleNbG() {
-
-	blyo = Number(document.getElementById("nombredefusees").value);//nombre de mobiles
-	element2=document.getElementById('traject_type2');//si spationaute ou observateur
-	
-    // Sélectionne toutes les cellules dont l'ID commence par "nb_g" :
-    var nbGCells = document.querySelectorAll('[id^="nb_g"]');
-
-	// Sélectionne toutes les cellules dont l'ID commence par "g_ressenti" :
-	var gRessCells = document.querySelectorAll('[id^="g_ressenti"]');
-
-	var dernier_g_Cells = document.querySelectorAll('[id^="dernier_g"]');
-
-	var dernier_g_res_Cells = document.querySelectorAll('[id^="dernier_g_res"]');
-
-    
-    // Si element2.value est "mobile" et que y a que 1 mobile, rend les cellules visibles, sinon les cache
-    if (element2.value == "mobile" && blyo==1) {
-        nbGCells.forEach(function(cell) {
-            cell.style.display = ''; // Rend visible la cellule nb_g
-        });
-		gRessCells.forEach(function(cell) {
-            cell.style.display = ''; // Rend visible la cellule g_ressenti
-        });
-		dernier_g_Cells.forEach(function(cell) {
-            cell.style.display = ''; // Rend visible la cellule derniger_g
-        });
-		dernier_g_res_Cells.forEach(function(cell) {
-            cell.style.display = ''; // Rend visible la cellule dernier_g_res
-        });
-    } else {
-        nbGCells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule nb_g
-        });
-		gRessCells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule g_ressenti
-        });
-		dernier_g_Cells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule dernier_g
-        });
-		dernier_g_res_Cells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule dernier_g_res
-        });
-    }
-}
-
-
-//--------------------------{Fin fonction rajoutée par Manon}---------------------------------------------
+//----------------------------------------------------{initialisation}----------------------------------------------------
 
 // calcul en temps réel des E, L,...
 //on crée un objet json(idée de Mme Mougenot) mobile pour chaque mobile, pour bien differencier/contenir les variables appartenant a chaque mobile de maniere distincte.
@@ -500,12 +473,15 @@ function initialisation(compteur){
 	L = vphi * r0 / c;
 	
 	deltam_sur_m = 0;
+	puissance_consommee_calcul=0; //ManonV3
+
+	v_rotation = c*Math.sqrt(rs/(2*(r0-rs))); //ManonCirculaire
 
 	v_rotation = c*Math.sqrt(rs/(2*(r0-rs))); //ManonCirculaire
 
 	document.getElementById("L"+compteur.toString()).innerHTML = L.toExponential(3);
 	document.getElementById("E"+compteur.toString()).innerHTML = E.toExponential(3);
-	document.getElementById("Vcirc"+compteur.toString()).innerHTML = v_rotation.toExponential(5); //ManonCirculaire
+	document.getElementById("Vcirc"+compteur.toString()).innerHTML = v_rotation.toExponential(20); //ManonCirculaire
 	document.getElementById("m").innerHTML = rs.toExponential(3);
 	document.getElementById("decal"+compteur.toString()).innerHTML = "";	//   affichage en blanc au debut de la simulation
 
@@ -595,13 +571,13 @@ function initialisation(compteur){
 		vphi2i = v0;
 		vr2i = phi0*180/Math.PI;
 	}
-	boutonAvantLancement();
+	boutonAvantLancement(true);
 	canvasAvantLancement();
 
 	return mobile;
 }  // fin fonction initialisation
 
-//---------------------------------------------------------------{début fonction verifnbr}---------------------------------------------------------
+//----------------------------------------------------{verifnbr}----------------------------------------------------
 
 function verifnbr() {//fonction qui affiche un message d'erreur si des valeurs ne sont pas donnée dans l'une des cases
 	
@@ -646,10 +622,7 @@ function verifnbr() {//fonction qui affiche un message d'erreur si des valeurs n
 
 }
 
-//---------------------------------------------------------------{fin fonction verifnbr}---------------------------------------------------------
-
-//---------------------------------------------------------------{début fonction trajectoire}---------------------------------------------------------
-
+//----------------------------------------------------{trajectoire}----------------------------------------------------
 
 // première étape qui lance la partie calculatoire
 function trajectoire(compteur,mobile) {
@@ -782,13 +755,13 @@ function trajectoire(compteur,mobile) {
 
     temps_particule = 0;
     mobile["temps_particule"]=temps_particule;
-    temps_observateur = 0;
-    mobile["temps_observateur"]=temps_observateur;//mobile.temps_observateur
+    temps_observateur_distant = 0;
+    mobile["temps_observateur_distant"]=temps_observateur_distant;//mobile.temps_observateur
 	Rebond = document.getElementById("reb").value / 100.0;
     mobile["Rebond"]=Rebond;//mobile.Rebond
 
     // permet de gérer les touches du clavier pour certaines actions
-    clavierEvenement();
+    clavierEvenement(true);
    
 	dtau=temps_chute_libre/1e3;	
     mobile["dtau"]=dtau;//mobile.dtau
@@ -844,8 +817,11 @@ function trajectoire(compteur,mobile) {
     // lorsqu'on est dans le setinterval, il est impossible ce modifier ce 10/6 par une variable qu'on pourrait incrémenter.
     //Il utilise la valeur initiale avant l'entrée dans setinterval
  
-	mobile.myInterval = setInterval(animate.bind(null,compteur,mobile,mobilefactor), 10 / 6);
+	
+    new Timer(() => animate(compteur,mobile,mobilefactor), 1, -1); // Update every second
+	//mobile.myInterval = setInterval(animate.bind(null,compteur,mobile,mobilefactor), 10 / 6);
 
+    
     Dtau1 = 1e8 * dtau ;
     
     Dtau2 = dtau / 1e8;
@@ -854,6 +830,11 @@ function trajectoire(compteur,mobile) {
     	pausee(compteur,mobile,mobilefactor);
     }, false);
 
+	var temps_allumage_reacteur = Number(document.getElementById("temps_allumage").value); //ManonV3
+	temps_allumage_reacteur = temps_allumage_reacteur*0.001; //Remettre en secondes ManonV3
+	var puissance_reacteur = Number(document.getElementById("puissance_reacteur").value); //ManonV3
+
+	var temps_total_reacteur =0;
 
 	if(blyo == 1 && element2.value == "mobile" ) {
 	setInterval(function(){
@@ -861,34 +842,49 @@ function trajectoire(compteur,mobile) {
 
 				vitesse_précédente_nombre_g = vtotal //Manon
 
-				Delta_L=joy.GetPhi()*1e-2*Math.log10(10+Math.abs(mobile.L))*Math.log10(10+Math.abs(vtotal))*Math.log10(10+mobile.r_part)/Math.log10(Math.sqrt(1-(vtotal/c)^2));     
+				Delta_E_sur_E = joy.GetPhi()*(puissance_reacteur*temps_allumage_reacteur)/Math.pow(c,2); //ManonV3
+				Delta_L_sur_L = Delta_E_sur_E; //ManonV3
+
+				mobile.L = mobile.L + mobile.L*Delta_L_sur_L; //ManonV3
+				mobile.E = mobile.E + mobile.E*Delta_E_sur_E //ManonV3
+				deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E); //ManonV3 Réellement divisé par c au carré et pas multiplié ???
+				temps_total_reacteur = Math.abs(joy.GetPhi()*temps_allumage_reacteur);
+				puissance_consommee_calcul = deltam_sur_m/temps_total_reacteur;
+
+				/*Delta_L=joy.GetPhi()*1e-2*Math.log10(10+Math.abs(mobile.L))*Math.log10(10+Math.abs(vtotal))*Math.log10(10+mobile.r_part)/Math.log10(Math.sqrt(1-(vtotal/c)^2));     
 				mobile.L=mobile.L+Delta_L ;
 				Delta_E=(1-rs/mobile.r_part)*mobile.L*Delta_L/mobile.E/Math.pow(mobile.r_part,2);
 				mobile.E=mobile.E+Delta_E; 
-				deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/mobile.E);
-						
-				
+				deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/mobile.E);*/
+									
 				document.getElementById("E"+compteur.toString()).innerHTML = mobile.E.toExponential(3);
 				document.getElementById("L"+compteur.toString()).innerHTML = mobile.L.toExponential(3);
 				document.getElementById("decal"+compteur.toString()).innerHTML = deltam_sur_m.toExponential(3);
+				document.getElementById("puissance_consommee"+compteur.toString()).innerHTML = puissance_consommee_calcul.toExponential(3);
 			 
 		}else if(joy.GetPhi()>0){ 
 
 				vitesse_précédente_nombre_g = vtotal //Manon
+
+				Delta_E_sur_E = joy.GetPhi()*(puissance_reacteur*temps_allumage_reacteur)/Math.pow(c,2); //ManonV3
+				Delta_L_sur_L = Delta_E_sur_E; //ManonV3
+
+				mobile.L = mobile.L + mobile.L*Delta_L_sur_L; //ManonV3
+				mobile.E = mobile.E + mobile.E*Delta_E_sur_E //ManonV3
+				deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E); //ManonV3
+				temps_total_reacteur = Math.abs(joy.GetPhi()*temps_allumage_reacteur);
+				puissance_consommee_calcul = deltam_sur_m/temps_total_reacteur;
 				
-				Delta_L=joy.GetPhi()*1e-2*Math.log10(10+Math.abs(mobile.L))*Math.log10(10+Math.abs(vtotal))*Math.log10(10+mobile.r_part)/Math.log10(Math.sqrt(1-(vtotal/c)^2));     
+				/*Delta_L=joy.GetPhi()*1e-2*Math.log10(10+Math.abs(mobile.L))*Math.log10(10+Math.abs(vtotal))*Math.log10(10+mobile.r_part)/Math.log10(Math.sqrt(1-(vtotal/c)^2));     
 				mobile.L=mobile.L+Delta_L ;
 				Delta_E=(1-rs/mobile.r_part)*mobile.L*Delta_L/mobile.E/Math.pow(mobile.r_part,2) ;
 				mobile.E=mobile.E+Delta_E; 
-				deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/mobile.E);
-				
-			
-				
-				
+				deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/mobile.E);*/
 				
 				document.getElementById("E"+compteur.toString()).innerHTML = mobile.E.toExponential(3);
 				document.getElementById("L"+compteur.toString()).innerHTML = mobile.L.toExponential(3);
 				document.getElementById("decal"+compteur.toString()).innerHTML = deltam_sur_m.toExponential(3);
+				document.getElementById("puissance_consommee"+compteur.toString()).innerHTML = puissance_consommee_calcul.toExponential(3);
 		}
 		}, 50); //Réactivité du système et pas du pilote 
 	}												  
@@ -953,9 +949,9 @@ function trajectoire(compteur,mobile) {
 	//On supprime dans un premier temps les eventListener lié au canvas avant lancement
 
 	
-	document.getElementById('moinszoom').removeEventListener('click',foncPourZoomMoinsAvantLancement, false);
+	document.getElementById('moinszoom').removeEventListener('click',function(){foncPourZoomMoinsAvantLancement(true)}, false);
 
-	document.getElementById('pluszoom').removeEventListener('click',foncPourZoomPlusAvantLancement, false);
+	document.getElementById('pluszoom').removeEventListener('click',function(){foncPourZoomPlusAvantLancement(true)}, false);
 
     document.getElementById('moinszoom').addEventListener('click',function(){
       	var retour=bouttons.zoom(false,mobile,canvas,mobilefactor,compteur);  /// voir dossier bouttons.js
@@ -1086,12 +1082,11 @@ function trajectoire(compteur,mobile) {
 
   	} 
 	else {  
-    	mobile.myInterval = setInterval(animate.bind(null,compteur,mobile,mobilefactor), 10 / 6);
+		new Timer(() => animate(compteur,mobile,mobilefactor), 1, -1); // Update every second
 	}  //  fin du if(pause ....
     
 	
-	document.getElementById("pause/resume").addEventListener("click", function() {
-        pausee(compteur,mobile,mobilefactor)}); 
+
 	// apres start on affiche le bouton pause/resume avec la fonction pausee
 	document.getElementById('start').style.display = "none";
 	document.getElementById('pause/resume').style.display ="inline-block";
@@ -1100,8 +1095,7 @@ function trajectoire(compteur,mobile) {
 	
 }  // fin fonction trajectoire
 
-//---------------------------------------------------------------{Fin fonction trajectoire}---------------------------------------------------------
-
+//----------------------------------------------------{animate}----------------------------------------------------
 
 // tracé de la particule
 function animate(compteur,mobile,mobilefactor) {
@@ -1146,9 +1140,14 @@ function animate(compteur,mobile,mobilefactor) {
 		}
 		else{   // spationaute
 
-   
+			var temps_allumage_reacteur = Number(document.getElementById("temps_allumage").value); //ManonV3
 
-			val = rungekutta(mobile.L,mobile.dtau, mobile.r_part, mobile.A_part);
+			if (joy.GetPhi()!=0 && blyo==1){//ManonV3
+				val = rungekutta(mobile.L, temps_allumage_reacteur, mobile.r_part, mobile.A_part); //ManonV3
+			}else{
+				val = rungekutta(mobile.L,mobile.dtau, mobile.r_part, mobile.A_part); //ManonV3
+			}
+
 			mobile.r_part = val[0];
 			mobile.A_part = val[1]; 		// dr/dtau
 			resultat=calculs.MSC_Ex_vitess(mobile.E,mobile.L,mobile.r_part,rs,false); /// voir fichier fonctions.js
@@ -1167,9 +1166,11 @@ function animate(compteur,mobile,mobilefactor) {
 			}
 
 			if(joy.GetPhi()!=0 && blyo==1){ //Manon
-				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_précédente_nombre_g)/(mobile.dtau*(1-rs/mobile.r_part)/mobile.E))/9.80665 //Manon
+				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_précédente_nombre_g)/temps_allumage_reacteur)/9.80665 //ManonV3
+				nombre_de_g_calcul_memo = nombre_de_g_calcul;
+			}else{
+				nombre_de_g_calcul_memo = 0;
 			}
-			
 
 		}
 
@@ -1399,13 +1400,13 @@ function animate(compteur,mobile,mobilefactor) {
 
 	if (element2.value != "mobile"){ // observateur
 		if(mobile.r_part_obs >= 1.00001*rs){
-			temps_observateur_distant += dtau
+			mobile.temps_observateur_distant += dtau
 			mobile.temps_particule += mobile.dtau*(1-rs/mobile.r_part_obs)/(mobile.E); 
 			
 			z_obs= Math.pow(1-((vr_1_obs*vr_1_obs + vp_1_obs*vp_1_obs)/(c*c)),(-1/2))*Math.pow(1-rs/mobile.r_part_obs,-(1/2))-1 ;
 			// l'observateur est dans la direction perpendiculaire aux trajectoires	
 			
-			document.getElementById("to"+compteur.toString()).innerHTML = temps_observateur_distant.toExponential(3);
+			document.getElementById("to"+compteur.toString()).innerHTML = mobile.temps_observateur_distant.toExponential(3);
 			document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3);
 			document.getElementById("ga"+compteur.toString()).innerHTML = fm.toExponential(3);
 			document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part_obs.toExponential(3);
@@ -1417,14 +1418,14 @@ function animate(compteur,mobile,mobilefactor) {
 
 						
 			}else{
-				temps_observateur_distant+= dtau;
+				mobile.temps_observateur_distant+= dtau;
 				mobile.r_part_obs=rs;
 			document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = "";
 			document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = "";	
 			vr_1_obs=c ; vp_1_obs=0 ; vtotal=c ; z_obs=1/0;
 			document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_1_obs.toExponential(3);
 		    document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_1_obs.toExponential(3);
-			document.getElementById("to"+compteur.toString()).innerHTML = temps_observateur_distant.toExponential(3);
+			document.getElementById("to"+compteur.toString()).innerHTML = mobile.temps_observateur_distant.toExponential(3);
 			document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(3); 
 			document.getElementById("decal"+compteur.toString()).innerHTML= z_obs.toExponential(3); 		
 			document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part_obs.toExponential(3);
@@ -1436,14 +1437,21 @@ function animate(compteur,mobile,mobilefactor) {
 	else{
 		if (mobile.r_part>0){
 
-			temps_observateur_distant+=dtau;
+			mobile.temps_observateur_distant+=dtau;
 			mobile.temps_particule+=mobile.dtau*(1-rs/mobile.r_part)/mobile.E; 
-			
 
+			
+			if (mobile.phi>=2*math.pi && testouille){ pausee(compteur,mobile,mobilefactor);
+				testouille=false;
+			} //ManonV5
+
+			if (mobile.phi >= 3*math.pi && testouilleV2){pausee(compteur,mobile,mobilefactor);
+				testouilleV2=false;
+			}
 
 			document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3); 
-			document.getElementById("to"+compteur.toString()).innerHTML = temps_observateur_distant.toExponential(3);
-			document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part.toExponential(3);
+			document.getElementById("to"+compteur.toString()).innerHTML = mobile.temps_observateur_distant.toExponential(3);
+			document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part.toExponential(20);
 			document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_1.toExponential(3);
 			document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_1.toExponential(3);
 			document.getElementById("ga"+compteur.toString()).innerHTML = fm.toExponential(3);
@@ -1456,15 +1464,9 @@ function animate(compteur,mobile,mobilefactor) {
 
 			if(element2.value == "mobile" && blyo==1) { //ManonV2
 
-				intervalID = setInterval(function(){
-					if(joy.GetPhi()!=0){ 
-						document.getElementById("g_ressenti"+compteur.toString()).innerHTML = nombre_de_g_calcul.toExponential(3);
-						document.getElementById("dernier_g_res"+compteur.toString()).innerHTML = nombre_de_g_calcul.toExponential(3);}
-					else{
-						document.getElementById("g_ressenti"+compteur.toString()).innerHTML = 0;}
-						clearInterval(intervalID);
+				document.getElementById("g_ressenti"+compteur.toString()).innerHTML = nombre_de_g_calcul_memo.toExponential(3); //ManonV3
+				document.getElementById("dernier_g_res"+compteur.toString()).innerHTML = nombre_de_g_calcul.toExponential(3);
 
-					}, 50); 
 			}
 			
 			//-------------------{Fin Manon}------------------------------------
@@ -1486,7 +1488,9 @@ function animate(compteur,mobile,mobilefactor) {
 			document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = "";
 			document.getElementById("g_ressenti"+compteur.toString()).innerHTML = ""; 	//Manon			 
 			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=1/0; //Manonbis
-			document.getElementById("g_ressenti"+compteur.toString()).innerHTML = 0; //ManonV2
+
+			document.getElementById("g_ressenti"+compteur.toString()).innerHTML = nombre_de_g_calcul_memo.toExponential(3); //ManonV2
+
 
 		}
 	}
@@ -1523,6 +1527,23 @@ if (element2.value == "mobile"){
 		document.getElementById('DivClignotantePilot'+compteur.toString()).style.color = "red";
 	} 
 }	
+
+//  Gestion de la diode Nombre de g ressenti - ManonV3
+if (element2.value == "mobile"){
+	if (nombre_de_g_calcul_memo <= 4) {
+		document.getElementById('DivClignotanteNbG'+compteur.toString()).innerHTML = " <img src='./Images/diodever.gif' height='14px' />";
+		document.getElementById('DivClignotanteNbG'+compteur.toString()).style.color = "green";
+	} 
+	else if (4 < nombre_de_g_calcul_memo && nombre_de_g_calcul_memo <= 9) {
+		document.getElementById('DivClignotanteNbG'+compteur.toString()).innerHTML = " <img src='./Images/diodejaune.gif' height='14px' />";
+		document.getElementById('DivClignotanteNbG'+compteur.toString()).style.color = "yellow";
+	} 
+	else if (nombre_de_g_calcul_memo > 9) {
+		document.getElementById('DivClignotanteNbG'+compteur.toString()).innerHTML = " <img src='./Images/dioderouge.gif' height='14px' />";
+		document.getElementById('DivClignotanteNbG'+compteur.toString()).style.color = "red";
+	} 
+}
+
 	
 
 	
@@ -1531,22 +1552,32 @@ if (element2.value == "mobile"){
 
 }   //fin fonction animate
 
+//----------------------------------------------------{Vr_mob}----------------------------------------------------
+
 // Expression du potentiel divisé par c^2
 function Vr_mob(L,r) {
 	return potentiel_Schwarzchild_massif(L,r);
 }
 
+//----------------------------------------------------{Vr_obs}----------------------------------------------------
+
 function Vr_obs(E,L,r) {
 	return Math.pow(E,2)-( 1-potentiel_Schwarzchild_massif(L, r)/Math.pow(E,2) )*Math.pow(1-rs/r,2)  ;
 }
+
+//----------------------------------------------------{potentiel_Schwarzschild_massif}----------------------------------------------------
 
 function potentiel_Schwarzchild_massif(L, r) {
 	return (1 - rs / r) * (1 + Math.pow(L / r, 2));
 }
 
+//----------------------------------------------------{derivee_seconde_Schwarzschild_massif}----------------------------------------------------
+
 function derivee_seconde_Schwarzchild_massif(L, r) {
-	return Math.pow(c, 2)/(2*Math.pow(r, 4)) *  (-rs*Math.pow(r,2) + Math.pow(L, 2)*(2*r-3*rs));
+		return Math.pow(c, 2)/(2*Math.pow(r, 4)) *  (-rs*Math.pow(r,2) + Math.pow(L, 2)*(2*r-3*rs));
 }
+
+//----------------------------------------------------{rungekutta}----------------------------------------------------
 
 function rungekutta(L, h, r, A) {
 	k = [0, 0, 0, 0];
@@ -1559,10 +1590,14 @@ function rungekutta(L, h, r, A) {
 	return [r, A];
 }
 
+//----------------------------------------------------{derivee_seconde_Schwarzschild_massif_obs}----------------------------------------------------
+
 function derivee_seconde_Schwarzchild_massif_obs(E,L,r) {
 	return c*c*(r-rs)*(2*E*E*r*r*r*rs + 2*L*L*r*r - 7*L*L*r*rs 
 	+ 5*L*L*rs*rs - 3*r*r*r*rs + 3*r*r*rs*rs)/(2*Math.pow(r,6)*E*E);
 }
+
+//----------------------------------------------------{rungekutta_obs}----------------------------------------------------
 
 function rungekutta_obs(E,L,h, r, A) {
 	k = [0, 0, 0, 0];
@@ -1574,6 +1609,8 @@ function rungekutta_obs(E,L,h, r, A) {
 	A = A + (h / 6) * (k[0] + 2 * (k[1] + k[2]) + k[3]);
 	return [r, A];
 }
+
+//----------------------------------------------------{calcul_rmax}----------------------------------------------------
 
 function calcul_rmax(L,E,vr,r0,rmax1ou2){
 	
@@ -1620,70 +1657,41 @@ function calcul_rmax(L,E,vr,r0,rmax1ou2){
 	}
 	return rmax;
 }
-// Fonction bouton pause
 
-function pausee(compteur,mobile,mobilefactor) {
-    if (! mobile.pause) {
-		mobile.pause = true;  
+//----------------------------------------------------{pausee}----------------------------------------------------
+
+// Fonction bouton pause
+//cette fonction a ete changé par Khaled en ajoutant la variable qui pause la Timer créé en haut
+function pausee() {
+    if (!Timer.paused) {
+		Timer.paused = true;  
+		mobile.pause = true; //je laisse cette variable comme ça pour l'intant pour ne pas changer la structure du code
 		document.getElementById("pau").src = "Images/lecture.png";
 		document.getElementById("pau").title = texte.pages_trajectoire.bouton_lecture;
         document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_enpause;
         document.getElementById("pause/resume").innerHTML =texte.pages_trajectoire.bouton_resume;
-		document.getElementById("to"+compteur.toString()).innerHTML = temps_observateur_distant.toExponential(3); 
-		clearInterval(mobile.myInterval);
+		//clearInterval(mobile.myInterval);
 	} 
     else if(mobile.peuxonrelancer) {
-            mobile.pause = false;
+		    Timer.paused = false;
+			mobile.pause = false;
             document.getElementById("pause/resume").innerHTML = texte.pages_trajectoire.bouton_pause;
 			document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_encours;
 			document.getElementById("pau").title = texte.pages_trajectoire.bouton_pause;
 			document.getElementById("pau").src = "Images/pause.png";
-			mobile.myInterval = setInterval(animate.bind(null,compteur,mobile,mobilefactor), 10/6);
-		}}
+			
+		}
+	}
 
 
-
-
-// permet de gérer les touches du clavier pour certaines actions
-function clavierEvenement() {
-  	$(document).keyup(function(event) { // the event variable contains the key pressed
-		if (event.which == 65) { // touche a
-			$('#r1').click();
-		}
-		if (event.which == 90) { // touche z
-			$('#r2').click();
-		}
-		if (event.which == 69) { // touche e
-			$('#rebondd').click();
-		}
-		if (event.which == 81) { // touche q
-			$('#start').click();
-		}
-		if (event.which == 83) { // touche s
-			$('#clear').click();
-		}
-		if (event.which == 68) { // touche d
-			$('#boutton_enregis').click();
-		}
-		if (event.which == 70) { // touche f
-			$('#boutton_recup').click();
-		}
-		if (event.which == 87) { // touche w
-			$('#moinsvite').click();
-		}
-		if (event.which == 88) { // touche x
-			$('#pau').click();
-		}
-		if (event.which == 67) { // touche c
-			$('#plusvi').click();
-		}
-  	});
-}
+//----------------------------------------------------{rafraichir2}----------------------------------------------------
 
 function rafraichir2(context,mobilefactor,rmaxjson,r0ou2,compteur) {
 	majFondFixe();
 	creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur);
 }
+
+//----------------------------------------------------{rafraichir}----------------------------------------------------
 
 //ici  le rafraichir appeler avec reset element2 n'est pas defini donc il y a une erreur
 function rafraichir() {
@@ -1691,8 +1699,7 @@ function rafraichir() {
 	element2.value="observateur";
 }
 
-// -------------------------------------{fonction enregistrer}--------------------------------------------
-
+// -------------------------------------{enregistrer}--------------------------------------------
 
 function enregistrer() {
 	var texte = o_recupereJson();
@@ -1734,9 +1741,7 @@ function enregistrer() {
 	}
 }
 
-function traceEstAbsent(){
-	document.getElementById('trace_present').value="0";
-}
+//----------------------------------------------------{choixTrajectoire}----------------------------------------------------
 
 function choixTrajectoire(compteur,context,mobile,mobilefactor,rmaxjson,r0ou2) {
 	if (element.value == 'simple') {
@@ -1751,20 +1756,14 @@ function choixTrajectoire(compteur,context,mobile,mobilefactor,rmaxjson,r0ou2) {
 
 }
 
-function estUnMobile(){
-	var x = window.matchMedia("(max-width: 960px)")
-	if(x.matches){
-		document.getElementById("bouton_info").style.visibility='hidden';
-	}
-	else{
-		document.getElementById("bouton_info").style.visibility='visible';
-	}
-}
+//----------------------------------------------------{commandes}----------------------------------------------------
 
 function commandes(){
 	var texte = o_recupereJson();
 	alert(texte.page_trajectoire_massive.commandes);
 }
+
+//----------------------------------------------------{majFondFixe}----------------------------------------------------
 
 function majFondFixe(){
 	context.clearRect(0, 0, canvas.width, canvas.height);
@@ -1797,20 +1796,28 @@ function majFondFixe(){
 	}
 }
 
+//----------------------------------------------------{majFondFixe44}----------------------------------------------------
+
 function majFondFixe44(mobile){
 	mobile["context22"].clearRect(0, 0, canvas.width, canvas.height);
 	//console.log(canvas.width, canvas.height);
 }
+
+//----------------------------------------------------{majFondFixe22}----------------------------------------------------
 
 function majFondFixe22(){
 	context22.clearRect(0, 0, canvas.width, canvas.height);
 	//console.log(canvas.width, canvas.height);
 }
 
+//----------------------------------------------------{majFondFixe3}----------------------------------------------------
+
 function majFondFixe3(){
 	context3.clearRect(0, 0, canvas.width, canvas.height);
 	//console.log(canvas.width, canvas.height);
 }
+
+//----------------------------------------------------{test_inte}----------------------------------------------------
 
 // Empeche le lancer si on part de l'interieur de l'horizon
 function test_inte() {
@@ -1858,6 +1865,8 @@ function test_inte() {
 		arret();
 	}
 }
+
+//----------------------------------------------------{creation_blocs}----------------------------------------------------
 
 // crée les différentes couches visuelles
 function creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur){
@@ -1931,6 +1940,9 @@ function creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur){
 	// Fermeture du chemin (facultative)
 	context.stroke();
 }
+
+//----------------------------------------------------{canvasAvantLancement}----------------------------------------------------
+
 function canvasAvantLancement(){
 	nbrFusee = document.getElementById("nombredefusees").value
 	//for (countt = 1; countt <= nbrFusee; countt += 1) {
@@ -2020,47 +2032,11 @@ function canvasAvantLancement(){
 
 }
 
-function boutonAvantLancement(){
-//Gestion de l'accélération/décélération de la simu
-document.getElementById("panneau_mobile").style.visibility='visible';
+//----------------------------------------------------{Recuperation}----------------------------------------------------
 
-// Gestion des bouttons Zoom moins
-document.getElementById("panneau_mobile2").style.visibility='visible';
-
-
-document.getElementById('moinszoom').addEventListener('click',foncPourZoomMoinsAvantLancement, false);
-
-document.getElementById('pluszoom').addEventListener('click',foncPourZoomPlusAvantLancement, false);
-
-document.getElementById('plusvite').addEventListener('click',foncPourVitAvantLancement,false);
-document.getElementById('plusvite').myParam = true
-document.getElementById('moinsvite').addEventListener('click',foncPourVitAvantLancement,false);
-document.getElementById('moinsvite').myParam = false
-}
-
-function foncPourZoomPlusAvantLancement(){
-	
-		factGlobalAvecClef = factGlobalAvecClef*1.2;
-		nzoom+=1;
-		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
-		canvasAvantLancement();
-	
-}
-
-function foncPourZoomMoinsAvantLancement(){
-	
-		factGlobalAvecClef = factGlobalAvecClef/1.2;
-		nzoom-=1;
-		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
-		canvasAvantLancement();
-}
-
-function foncPourVitAvantLancement(accelerer){
-	if(accelerer.currentTarget.myParam){
-		compteurVitesseAvantLancement += 1
-	}
-	else{
-		compteurVitesseAvantLancement -= 1
-	}
-	document.getElementById('nsimtxt').innerHTML= "ns="+ compteurVitesseAvantLancement.toString();
+function recuperation(){ //ManonV4
+    if (document.getElementById('trace_present').value != "1") {
+        load_schwarshild_massif();
+        initialisationGenerale(lenbdefusees)
+    }
 }

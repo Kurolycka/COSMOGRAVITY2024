@@ -52,16 +52,7 @@ const COULEUR_RH = COULEUR_GRIS_FONCE;
 const COULEUR_ERGOS = COULEUR_JAUNE;
 
 
-																											
-			   
-				
-
-function testnum(a){
-	for (var i = -30; i < 30; i++) {
-		resu=a/(10**i);
-		if (resu >=1 && resu <=10){ z=i; return z;}
-	}
-}
+																						
 function pressionBouttonObservateur2() {
 	if (document.getElementById("r3").className == "myButton2") {
 		document.getElementById("r3").className = "myButton";
@@ -131,7 +122,7 @@ function initialisation(){
 	else { document.getElementById("rhm").innerHTML = rhm.toExponential(3);;}
 
 	document.getElementById("gravS").innerHTML = gravSurface.toExponential(3);
-	boutonAvantLancement();
+	boutonAvantLancement(false);
 
 }
 
@@ -212,7 +203,7 @@ function trajectoire() {
 		bool = true;
 		confirme = false;
 		// permet de gérer les touches du clavier pour certaines actions
-		clavierEvenement();
+		clavierEvenement(false);
 
     /* ----- */
 
@@ -359,9 +350,9 @@ function trajectoire() {
 
 
 
-	document.getElementById('moinszoom').removeEventListener('click',foncPourZoomMoinsAvantLancement, false);
+	document.getElementById('moinszoom').removeEventListener('click',function(){foncPourZoomMoinsAvantLancement(false)}, false);
 
-	document.getElementById('pluszoom').removeEventListener('click',foncPourZoomPlusAvantLancement, false);
+	document.getElementById('pluszoom').removeEventListener('click',function(){foncPourZoomPlusAvantLancement(false)}, false);
 
 	document.getElementById('moinszoom').addEventListener('click', function() {
         scale_factor /= 1.2;
@@ -498,12 +489,17 @@ function animate() {
 			r_part_obs = val_obs[0];
 			varphi_obs = c *dtau* ( rs*a*E/r_part_obs + (1-rs/r_part_obs)*L )/( (Math.pow(r_part_obs,2)+Math.pow(a,2)+rs*Math.pow(a,2)/r_part_obs)*E - rs*a*L/r_part_obs ); 
 			phi_obs=phi_obs+varphi_obs;
-			if(r_part_obs<rhp*1.001) { r_part_obs=rhp;}
+			if(r_part_obs<rhp) { r_part_obs=rhp;} //changé par Khaled pour arriver à rhp
+
+
 			A_part_obs = val_obs[1];
 			resulta=calculs.MK_vitess(E,L,a,r_part_obs,rs,true);
 			vtot=resulta[0];
 			vr_3_obs=resulta[1]*Math.sign(A_part_obs);
-			if(r_part_obs<rhp*1.0001) { vr_3_obs=0;}
+
+
+			if(r_part_obs<rhp) { vr_3_obs=0;}//changé par Khaled 
+			
 			vp_3_obs=resulta[2]; // r_part_obs*varphi_obs/dtau;
 			posX2 = scale_factor * r_part_obs * (Math.cos(phi_obs) / rmax) + (canvas.width / 2.);
 			posY2 = scale_factor * r_part_obs * (Math.sin(phi_obs) / rmax) + (canvas.height / 2.);
@@ -673,13 +669,7 @@ function animate() {
     }// fin r0!=0
 }//  fin fonction animate
 
-// Fonction pour garder les dernieres valeurs de vr et vphi au moment du pause.  
-function testvaleur(x) {
-	if (isNaN(x)) {
-		return 'Not a Number!';
-	}
-	return x ;
-}							
+						
 // Expression du potentiel divisé par c^2
 function Vr_mob(r) {
 	return potentiel_Kerr_photon(r);
@@ -815,53 +805,9 @@ function pausee() {
 	}
 }
 
-// permet de gérer les touches du clavier pour certaines actions
-function clavierEvenement(){
-	$(document).keyup(function(event) { // the event variable contains the key pressed
-		if(event.which == 65) { // touche a
-			$('#r1').click();
-		}
-		if(event.which == 90) { // touche z
-			$('#r2').click();
-		}
-									
-		if(event.which == 81) { // touche q
-			$('#start').click();
-		}
-		if(event.which == 83) { // touche s
-			$('#clear').click();
-		}
-		if(event.which == 68) { // touche d
-			$('#boutton_enregis').click();
-		}
-		if(event.which == 70) { // touche f
-			$('#boutton_recup').click();
-		}
-		if(event.which == 87) { // touche w
-			$('#moinsvite').click();
-		}
-		if(event.which == 88) { // touche x
-			$('#pau').click();
-		}
-		if(event.which == 67) { // touche c
-			$('#plusvi').click();
-		}
-	});
-}
-
 function rafraichir() {
 	window.location.reload(); 						   
 	element2.value="non";
-}
-
-
-function siTrajectoireSimple() {
-	if (element.value == 'simple') {
-		majFondFixe();
-		// Tracé du Rayon de Schwarzchild,...
-		creation_blocs(context);
-		diametre_particule = DIAMETRE_PART*2;
-	}
 }
 
 
@@ -931,33 +877,9 @@ function enregistrer(){
 	}
 }
 
-
-
-
-
-function traceEstAbsent(){
-	document.getElementById('trace_present').value="0";
-}
-
-function siTrajectoireComplete() {
-	if (element.value == 'complete') {
-		diametre_particule = DIAMETRE_PART;
-	}
-}
-
 function choixTrajectoire() {
 	siTrajectoireSimple();
 	siTrajectoireComplete();
-}
-
-function estUnMobile(){
-	var x = window.matchMedia("(max-width: 960px)")
-	if(x.matches){
-		document.getElementById("bouton_info").style.visibility='hidden';
-	}
-	else{
-		document.getElementById("bouton_info").style.visibility='visible';
-	}
 }
 
 function commandes(){
@@ -1058,6 +980,8 @@ function tests_lancement(){
 // crée les différentes couches visuelles
 function creation_blocs(context){
 	context.lineWidth = "1";
+	var posX3 = (canvas.width / 2.0);
+	var posY3 = (canvas.height / 2.0);
 	if (((scale_factor * rs / rmax)) < 6) {
 		context.beginPath();
 		context.strokeStyle = COULEUR_RS;
@@ -1096,8 +1020,7 @@ function creation_blocs(context){
 		// tracé de RH- en bleue
 		context.strokeStyle = 'blue';
 		context.beginPath()
-		var posX3 = (canvas.width / 2.0);
-		var posY3 = (canvas.height / 2.0);
+		
 		context.setLineDash([5, 5]);
 		context.arc(posX3, posY3, (rhm * scale_factor)/rmax, 0, 2 * Math.PI);
 		context.stroke();
@@ -1116,6 +1039,92 @@ function creation_blocs(context){
 		context.stroke();
 		context.closePath();
 		context.closePath();
+
+
+		//la partie qui vient est ajouté par Khaled elle gere les infos bulles sur le graphe
+		var infobulle = document.createElement('div');
+		infobulle.id = 'infobulle_graphe';
+		infobulle.className = 'infobulle_graphe';
+		document.body.appendChild(infobulle);
+
+		var canvas4 = document.getElementById('myCanvas4');
+		var ctx = canvas4.getContext('2d');
+
+		// Dessiner un cercle
+		var circle_RHM = { x: posX3, y: posY3, radius: (rhm * scale_factor)/rmax };
+		var circle_RHP = { x: posX3, y: posY3, radius: (rhp* scale_factor)/rmax };
+		var circle_RS = { x: posX3, y: posY3, radius: (rs* scale_factor)/rmax };
+
+
+
+		ctx.fillStyle = 'rgba(0, 0, 0, 0)';  // Remplissage transparent
+		ctx.strokeStyle = 'rgba(0, 0, 0, 0)';  // Contour transparent
+		ctx.beginPath();
+		ctx.arc(circle_RHM.x, circle_RHM.y, circle_RHM.radius, 0, 2 * Math.PI);
+		ctx.arc(circle_RHP.x, circle_RHP.y, circle_RHP.radius, 0, 2 * Math.PI);
+		ctx.arc(circle_RS.x, circle_RS.y, circle_RS.radius, 0, 2 * Math.PI);
+		ctx.fill();
+		ctx.closePath();
+		// Vérifier si la souris est proche du bord du cercle
+		canvas4.addEventListener('mousemove', function(event) {
+			var rect = canvas4.getBoundingClientRect();
+			var mouseX = event.clientX - rect.left;
+			var mouseY = event.clientY - rect.top;
+
+			// Calculer la distance entre la souris et le centre du cercle
+			var dx_RHM= mouseX - circle_RHM.x;
+			var dy_RHM = mouseY - circle_RHM.y;
+
+			var dx_RHP= mouseX - circle_RHP.x;
+			var dy_RHP = mouseY - circle_RHP.y;
+
+			var dx_RS= mouseX - circle_RS.x;
+			var dy_RS = mouseY - circle_RS.y;
+
+			var distanceFromCenter_RHM = Math.sqrt(dx_RHM * dx_RHM + dy_RHM * dy_RHM);
+			var distanceFromCenter_RHP = Math.sqrt(dx_RHP * dx_RHP + dy_RHP * dy_RHP);
+			var distanceFromCenter_RS = Math.sqrt(dx_RS * dx_RS + dy_RS * dy_RS);
+
+
+			var onEdge_RHM = Math.abs(distanceFromCenter_RHM - circle_RHM.radius) <= 5;
+			var onEdge_RHP= Math.abs(distanceFromCenter_RHP - circle_RHP.radius) <= 5;
+			var onEdge_RS= Math.abs(distanceFromCenter_RS - circle_RS.radius) <= 5;
+
+
+
+
+			if (onEdge_RHM) {
+				infobulle.style.visibility = 'visible';
+				infobulle.style.left = event.clientX + 'px';
+				infobulle.style.top = "700" + 'px';//event.clientY + 'px';
+				var latex = 'Rh-';
+				infobulle.innerHTML = '\\(' + latex + '\\)';
+				MathJax.typeset();
+			} 
+			else if (onEdge_RHP) {
+				infobulle.style.visibility = 'visible';
+				infobulle.style.left = event.clientX + 'px';
+				infobulle.style.top = "700" + 'px';//event.clientY + 'px';
+				var latex = 'Rh+';
+				infobulle.innerHTML = '\\(' + latex + '\\)';
+				MathJax.typeset();
+			} 
+			
+			else if (onEdge_RS) {
+				infobulle.style.visibility = 'visible';
+				infobulle.style.left = event.clientX + 'px';
+				infobulle.style.top = "700" + 'px';//event.clientY + 'px';
+				var latex = 'rs';
+				infobulle.innerHTML = '\\(' + latex + '\\)';
+				MathJax.typeset();
+			} 
+			
+			
+			else {
+				infobulle.style.visibility = 'hidden';
+			}
+		});
+
 	}
 	context.fillStyle = 'white';
 
@@ -1204,46 +1213,4 @@ function CubicSolve(a, b, c, d){
 	return roots;
 }
 
-
-function boutonAvantLancement(){
-	//Gestion de l'accélération/décélération de la simu
-	document.getElementById("panneau_mobile").style.visibility='visible';
-	
-	// Gestion des bouttons Zoom moins
-	document.getElementById("panneau_mobile2").style.visibility='visible';
-	
-	
-	document.getElementById('moinszoom').addEventListener('click',foncPourZoomMoinsAvantLancement, false);
-	
-	document.getElementById('pluszoom').addEventListener('click',foncPourZoomPlusAvantLancement, false);
-	
-	document.getElementById('plusvite').addEventListener('click',foncPourVitAvantLancement,false);
-	document.getElementById('plusvite').myParam = true
-	document.getElementById('moinsvite').addEventListener('click',foncPourVitAvantLancement,false);
-	document.getElementById('moinsvite').myParam = false
-	}
-	
-	function foncPourZoomPlusAvantLancement(){
-		
-			input +=1
-			document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString();
-		
-	}
-	
-	function foncPourZoomMoinsAvantLancement(){
-		
-			input -= 1
-			document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString();
-	}
-	
-	function foncPourVitAvantLancement(accelerer){
-		if(accelerer.currentTarget.myParam){
-			compteurVitesseAvantLancement += 1
-		}
-		else{
-			compteurVitesseAvantLancement -= 1
-		}
-		document.getElementById('nsimtxt').innerHTML= "ns="+ compteurVitesseAvantLancement.toString();
-
-	}
 	

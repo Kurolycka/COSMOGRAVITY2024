@@ -28,6 +28,17 @@ table{
   display: inline-block;
 }
 
+/*ajoutée par Khaled pour les info bulles dans les graphes*/
+.infobulle_graphe {
+  position: absolute;
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  visibility: hidden;
+  white-space: nowrap;
+}
+
 #bouton_info{
 
   float:left;
