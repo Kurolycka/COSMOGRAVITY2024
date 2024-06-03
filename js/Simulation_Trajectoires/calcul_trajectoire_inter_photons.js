@@ -933,7 +933,7 @@ function animate(compteur,mobile,mobilefactor) {
 	// on vérifie le type de trajectoire sélectionné
 	estUnMobile();
 	element = document.getElementById('traject_type');
-	choixTrajectoire(compteur,context,mobile,mobilefactor,rmaxjson,maximum);
+	choixTrajectoire(compteur,context,mobilefactor,rmaxjson,maximum, true);
 	element2=document.getElementById('traject_type2');
    
   	if (mobile.r0 != 0.0) {
@@ -1371,19 +1371,6 @@ function enregistrer() {
 	} else {
 		alert(texte.pages_trajectoire.message_enregistrer);
 	}
-}
-
-function choixTrajectoire(compteur,context,mobile,mobilefactor,rmaxjson,r0ou2) {
-	if (element.value == 'simple') {
-		majFondFixe();
-		// Tracé du Rayon de Schwarzchild,...
-		creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur);
-		diametre_particule = DIAMETRE_PART*2;
-	}
-	else if (element.value == 'complete') {
-		diametre_particule = DIAMETRE_PART;
-	}
-
 }
 
 function commandes(){
