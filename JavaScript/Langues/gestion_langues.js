@@ -152,7 +152,7 @@ function o_recupereJson() {
 // Fonctions chargeant le texte pour chaque page
 
 function texte_navigation() {
-    var texte = o_recupereJson();
+    let texte = o_recupereJson();
     document.getElementById("txt-acceuil").innerHTML = texte.nav.acceuil
     document.getElementById("txt-univers").insertAdjacentHTML("beforeend", texte.nav.univers)
     document.getElementById("txt-théorieUnivers").insertAdjacentHTML("beforeend", texte.nav.theorie)
@@ -179,8 +179,9 @@ function texte_navigation() {
 
 
 function texte_univers_LCDM() {
-    var texte = o_recupereJson();
+    let texte = o_recupereJson();
     document.getElementById("Entrées").innerHTML = texte.univers.Entrées;
+    document.getElementById("constantesUniverselles").innerHTML = texte.univers.constantes
     document.getElementById("infoT0").title = texte.univers.infoT0
     document.getElementById("infoH0").title = texte.univers.infoH0
     document.getElementById("infoTypeUnivers").title = texte.univers.infoTypeUnivers
@@ -225,8 +226,9 @@ function texte_univers_LCDM() {
 
 
 function texte_univers_DE() {
-    var texte = o_recupereJson();
+    let texte = o_recupereJson();
     document.getElementById("Entrées").innerHTML = texte.univers.Entrées;
+    document.getElementById("constantesUniverselles").innerHTML = texte.univers.constantes
     document.getElementById("infoT0").title = texte.univers.infoT0
     document.getElementById("infoH0").title = texte.univers.infoH0
     document.getElementById("infoTypeUnivers").title = texte.univers.infoTypeUnivers
@@ -265,4 +267,22 @@ function texte_univers_DE() {
     document.getElementById("labelNom_fichier").insertAdjacentHTML("beforeend", texte.univers.labelNom)
     document.getElementById("nom_fichier").value = texte.univers.nomDéfautDE
     document.getElementById("bouttonEnregistrer").value = texte.univers.bouttonEnregistrer
+}
+
+function texte_constantes() {
+    let texte = o_recupereJson()
+    document.getElementById("infoc").title = texte.constante.c
+    document.getElementById("infoG").title = texte.constante.G
+    document.getElementById("infok").title = texte.constante.k
+    document.getElementById("infoh").title = texte.constante.h
+
+    document.getElementById("infoTypeAnnee").title = texte.constante.typeAnnée
+    document.getElementById("annee_grégorienne").innerHTML = texte.constante.grégorienne
+    document.getElementById("annee_sidérale").innerHTML = texte.constante.sidérale
+    document.getElementById("annee_julienne").innerHTML = texte.constante.julienne
+    document.getElementById("annee_tropique").innerHTML = texte.constante.tropique
+
+    document.getElementById("enregistrer").innerHTML = texte.constante.enregistrer
+    document.getElementById("réinitialiser").innerHTML = texte.constante.reinitialiser
+    document.getElementById("retour").innerHTML = texte.constante.retour
 }

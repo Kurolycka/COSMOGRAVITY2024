@@ -21,7 +21,8 @@
 		"LUPM": "Retour LUPM"
 	},
 
-	"univers":{
+	"univers": {
+		"constantes": "Constantes universelles",
 		"Entrées": "<h2>Entrées</h2>",
 			"infoT0": "Température actuelle de l'univers",
 
@@ -71,6 +72,22 @@
 			"nomDéfautDE": "échelle_DE",
 			"bouttonEnregistrer": "Enregistrer"
 
+	},
+
+	"constante": {
+		"c": "Célérité de la lumière dans le vide",
+		"G": "Constante de gravitation universelle",
+		"k": "Constante de Blotzman",
+		"h": "Constante de Plank",
+		"typeAnnée": "Vous pouvez choisir le type d'année, ce qui change le nombre de jour par ans",
+		"grégorienne": "Grégorienne",
+		"sidérale": "Sidérale",
+		"julienne": "Julienne",
+		"tropique": "Tropique (200)",
+		"enregistrer": "Enregistrer",
+		"reinitialiser": "Réinitialiser",
+		"retour": "Retour",
+		"alerteConstante": "Impossible de trouver la fenêtre parente"
 	}
 }
 
