@@ -33,10 +33,10 @@ function testvaleur(x) {
 //----------------------------------------------------{traceEstAbsent}----------------------------------------------------
 
 /**
- * Fonction qui fixe la valeur de l'élément d'ID "trace_present" à 0, cela permet de déclarer qu'aucune trajectoire n'a encore été tracée. 
+ * Fonction qui fixe la valeur de l'élément d'ID "trace_present" à false, cela permet de déclarer qu'aucune trajectoire n'a encore été tracée. 
  */
 function traceEstAbsent(){
-	document.getElementById('trace_present').value="0";
+	document.getElementById('trace_present').value=false;
 }
 
 //----------------------------------------------------{estUnMobile}----------------------------------------------------
@@ -328,30 +328,5 @@ function clavierEvenement(SCH){
 	});
 }
 
-//----------------------------------------------------{choixTrajectoire}----------------------------------------------------
-
-/**
- * Fonction qui permet de préparer le canvas de la simulation en fonction de si on choisit une trajectoire complète ou simple. 
- * @param {Number} compteur : numéro de la fusée entre 0 et le nombre de fusées total, sans dimension. 
- * @param {object} context : objet de contexte de rendu 2D obtenu à partir d'un élément <canvas> en HTML. Cet objet de contexte de rendu 2D contient toutes les méthodes et propriétés nécessaires pour dessiner la simulation en terme de graphes.
- * @param {Number} mobilefactor : le facteur d'échelle lié à ce mobile, sans dimension.
- * @param {Number} rmaxjson : valeur maximale de la coordonnée radiale, en m.   
- * @param {Number} r0ou2 : distance initiale au centre de l'astre qui est la plus grande parmi les différentes mobiles, en m.  
- * @param {boolean} SCH : indique si je suis dans la métrique de Schwarzschild et sinon si false je suis en métrique de Kerr.
- */
-/*function choixTrajectoire(compteur,context,mobilefactor,rmaxjson,r0ou2, SCH) {
-    if (element.value == 'simple') {
-		majFondFixe();
-		// Tracé du Rayon de Schwarzchild,...
-        if (SCH){
-            creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur);
-        }else{
-            creation_blocs(context);
-        }
-		diametre_particule = DIAMETRE_PART*2;
-	}else if (element.value=='complete'){
-        diametre_particule = DIAMETRE_PART;
-    }
-}*/
 
 

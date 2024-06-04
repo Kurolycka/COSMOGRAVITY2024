@@ -598,6 +598,7 @@ function texteTrajectoireMassive(nbrderockets) {
   var texte = o_recupereJson();
   element2=document.getElementById('traject_type2');
  
+  document.getElementById("clear").title = texte.pages_trajectoire.bouton_stop_bulleInfo;
   document.getElementById("txt_titre").innerHTML = texte.page_trajectoire_massive.titre;
   document.getElementById("txt_rphysique").innerHTML = texte.page_trajectoire_massive.rayon_physique;																		   
   document.getElementById("moinsvi").title = texte.pages_trajectoire.bouton_moins;
