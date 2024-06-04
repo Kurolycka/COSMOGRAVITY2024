@@ -357,7 +357,7 @@ function debut_fin_univers(equa_diff, t_0) {
     let set_solution = [0, 1 ,1]
     let save_set_solution;
     let pas = 1e-4 * H0 / Math.abs(H0)
-    let limite_derivee = Math.abs(1000 / pas)
+    let limite_derivee = Math.abs(100000 / pas)
     let nombre_point = 0
 
     let naissance_univers;
@@ -367,15 +367,15 @@ function debut_fin_univers(equa_diff, t_0) {
 
 
     // Recherche a = 0 / da/dtau = Infinity dans le sens négatif
-    while (set_solution[1] >= 0 && Math.abs(set_solution[2]) <= limite_derivee && nombre_point <= 5/Math.abs(pas)) {
+    while (set_solution[1] >= 0 && (Math.abs(set_solution[1]) <= +Infinity || Math.abs(set_solution[2]) <= +Infinity) && nombre_point <= 5/Math.abs(pas)) {
         save_set_solution = set_solution
         set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff)
         nombre_point = nombre_point + 1
     }
 
     // Si le dernier set de solution contient des valeurs non définies on utilise celui du pas précédent
-    if ( isNaN(set_solution[1]) || isNaN(set_solution[2]) ) {
-        console.log("Le set de solution saved a été utilisé")
+    if ( (isNaN(set_solution[1]) && isNaN(set_solution[2])) ) {
+        console.log("Le set de solution saved a été utilisé (sens neg)", set_solution, save_set_solution)
         set_solution = save_set_solution
     }
     console.log(set_solution)
@@ -400,7 +400,7 @@ function debut_fin_univers(equa_diff, t_0) {
         on :
             Dit que l'univers a commencé avec un BigFall
     */
-    if ( set_solution[1] > 1 && Math.abs(set_solution[2]) <= limite_derivee ) {
+    if ( set_solution[1] > 1 && (Math.abs(set_solution[1]) <= limite_derivee || Math.abs(set_solution[2]) <= limite_derivee)) {
         naissance_univers = "Pas de naissance de l'univers"
     }
     else {
@@ -410,7 +410,7 @@ function debut_fin_univers(equa_diff, t_0) {
             naissance_univers = "L'univers est né il y a " + Math.abs(age_debut).toExponential(4) + " Milliard d'année (BigBang)"
         }
 
-        if (Math.abs(set_solution[2]) > limite_derivee) {
+        if ((Math.abs(set_solution[1]) >= limite_derivee || Math.abs(set_solution[2]) >= limite_derivee)) {
             naissance_univers = "L'univers est né il y a " + Math.abs(age_debut).toExponential(4) + " Milliard d'année (BigFall)"
         }
     }
@@ -420,13 +420,15 @@ function debut_fin_univers(equa_diff, t_0) {
     nombre_point = 0;
 
     // Recherche a = 0 / da/dtau = Infinity dans le sens positif
-    while (set_solution[1] >= 0 && Math.abs(set_solution[2]) <= limite_derivee && nombre_point <= 5/Math.abs(pas)) {
+    while (set_solution[1] >= 0 && (Math.abs(set_solution[1]) <= +Infinity || Math.abs(set_solution[2]) <= +Infinity) && nombre_point <= 5/Math.abs(pas)) {
         save_set_solution = set_solution
         set_solution = RungeKuttaEDO2(pas, set_solution[0], set_solution[1], set_solution[2], equa_diff)
         nombre_point = nombre_point + 1
     }
 
     if ( isNaN(set_solution[1]) || isNaN(set_solution[2]) ) {
+        console.log("Le set de solution saved a été utilisé (sens pos)", set_solution, save_set_solution)
+        set_solution = save_set_solution
         set_solution = save_set_solution
     }
     console.log(set_solution)
@@ -451,7 +453,7 @@ function debut_fin_univers(equa_diff, t_0) {
         on :
             Dit que l'univers se finit avec un BigRip
     */
-    if ( set_solution[1] > 1 && Math.abs(set_solution[2]) <= limite_derivee ) {
+    if ( set_solution[1] > 1 && (Math.abs(set_solution[1]) <= limite_derivee || Math.abs(set_solution[2]) <= limite_derivee)) {
         mort_univers = "Pas de mort de l'univers"
     }
     else {
@@ -461,7 +463,7 @@ function debut_fin_univers(equa_diff, t_0) {
             mort_univers = "L'univers va mourir dans " + Math.abs(age_fin).toExponential(4) + " Milliard d'année (BigCrunch)"
         }
 
-        if (Math.abs(set_solution[2]) > limite_derivee) {
+        if ((Math.abs(set_solution[1]) >= limite_derivee || Math.abs(set_solution[2]) >= limite_derivee)) {
             mort_univers = "L'univers va mourir dans " + Math.abs(age_fin).toExponential(4) + " Milliard d'année (BigRip)"
         }
     }
@@ -499,8 +501,19 @@ function tauEnTemps(listeTaus, t_debut) {
  * @param t_fin
  */
 function graphique_facteur_echelle(solution, t_debut, t_fin) {
+    let H0 = Number(document.getElementById("H0").value);
     let abscisse = solution[0];
     let ordonnee = solution[1];
+
+    let facteur_debut;
+    let facteur_fin;
+    if (H0 > 0) {
+        facteur_debut = ordonnee[0]
+        facteur_fin = ordonnee[ordonnee.length - 1]
+    } else {
+        facteur_debut = ordonnee[ordonnee.length - 1]
+        facteur_fin = ordonnee[0]
+    }
 
     // Pour corriger l'erreur numérique
     if (t_debut && abscisse[0] < 0) {
@@ -510,14 +523,22 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
         }
     }
 
-    if (t_debut && ordonnee[0] < 0.5) {
-        console.log("correction ordonné gauche")
-        ordonnee[0] = 0
+    if (t_debut && facteur_debut < 0.5) {
+        console.log("correction ordonnée gauche")
+        if (H0 > 0) {
+            ordonnee[0] = 0
+        } else {
+            ordonnee[ordonnee.length - 1] = 0
+        }
     }
 
-    if (t_fin && ordonnee[ordonnee.length - 1] < 0.5) {
+    if (t_fin && facteur_fin < 0.5) {
         console.log("correction ordonné droite")
-        ordonnee[ordonnee.length - 1] = 0
+        if (H0 > 0) {
+            ordonnee[ordonnee.length - 1] = 0
+        } else {
+            ordonnee[0] = 0
+        }
     }
 
     let max = ordonnee.reduce((a, b) => Math.max(a, b), -Infinity);
@@ -534,7 +555,8 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
         line: { color: 'purple' }
     }];
 
-    if (t_debut) {
+    if (t_debut && facteur_debut > 0.5) {
+        console.log("test assymptote 1", t_debut, Math.abs(ordonnee[0]))
         donnee.push({
             type: 'line',
             x:[0, 0],
@@ -548,7 +570,8 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
         });
     }
 
-    if (t_fin) {
+    if (t_fin && facteur_fin > 0.5) {
+        console.log("test assymptote 2", t_debut, Math.abs(ordonnee[ordonnee.length - 1]))
         let x_assymptote;
         if (t_fin && t_debut) {
             x_assymptote = Math.abs(Math.abs(t_fin) + Math.abs(t_debut))
