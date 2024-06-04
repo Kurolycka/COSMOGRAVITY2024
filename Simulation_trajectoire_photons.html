@@ -48,13 +48,11 @@ src="./katex/contrib/auto-render.min.js"></script>
   <script src="./Lib/d3.js"></script>
   <script src="./Lib/snap.svg.js"></script>
   <script src="./js/Simulation_Trajectoires/calcul_trajectoire_photons.js"></script>
-  <script src="./js/Simulation_Trajectoires/equation3d.js"></script>
   <script src="./js/Simulation_Trajectoires/bouttons.js"></script>
-  <script src="./js/Simulation_Trajectoires/fonctions.js"></script>
-  <script src="./js/Simulation_Trajectoires/stopper.js"></script>
   <script src="./js/Simulation_Trajectoires/graphe_potentiel.js"></script>
   <script src="./js/Simulation_Trajectoires/Get_para.js"></script>
   <script src="./js/Langues/gestion_langues.js"></script>
+  <script src="./js/Simulation_Trajectoires/fonctions_utilitaires_trajectoires.js"></script>
   <script type="text/javascript">
     //pause = true;
     //debut = true;
@@ -215,7 +213,7 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
               </span>
 
         	<span id="recup">
-                <button id="boutton_recup" type="button" class="myButton" onclick="load_schwarshild_photon();initialisationGenerale(lenbdefusees);"></button>
+                <button id="boutton_recup" type="button" class="myButton" onclick="recuperation(lenbdefusees);"></button>
             </span>
 
           	<!--<span id="rrrrrrrrrrr">

@@ -19,6 +19,8 @@
 	<!-- The loading of KaTeX is deferred to speed up page rendering -->
 	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
 
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> <!--AJoouté par Khaled juste pour afficher latex dans les infobulles des graphes-->
+
 	<!-- To automatically render math in text elements, include the auto-render extension: -->
 	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
 		onload="renderMathInElement(document.body);"></script>
@@ -50,13 +52,11 @@
 	<script src="./Lib/d3.js"></script>
 	<script src="./Lib/snap.svg.js"></script>
 	<script src="./js/Simulation_Trajectoires/calcul_trajectoire_kerr_photons.js"></script>
-	<script src="./js/Simulation_Trajectoires/equation3d.js"></script>
 	<script src="./js/Simulation_Trajectoires/bouttons.js"></script>
-	<script src="./js/Simulation_Trajectoires/fonctions.js"></script>
-	<script src="./js/Simulation_Trajectoires/stopper.js"></script>
-	<script src="./js/Simulation_Trajectoires/graphe_potentiel_kerr.js"></script>
+	<script src="./js/Simulation_Trajectoires/graphe_potentiel.js"></script>
 	<script src="./js/Langues/gestion_langues.js"></script>
 	<script src="./js/Simulation_Trajectoires/Get_para.js"></script>
+	<script src="./js/Simulation_Trajectoires/fonctions_utilitaires_trajectoires.js"></script>
 	<script type="text/javascript">
 		pause = true;
 		debut = true;
@@ -297,6 +297,8 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
 		<canvas id="myCanvas" width="750" height="750"></canvas>
 		<canvas id="myCanvas22" width="750" height="750"></canvas>
 		<canvas id="myCanvas3" width="750" height="750"></canvas>
+		<canvas id="myCanvas4" width="750" height="750"></canvas>
+
 	</div>
 	<div class="wrapper2">
 		<svg id="grsvg_2"></svg></div>
@@ -339,7 +341,7 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
 	<script src="js/Graphisme/Menu/nav.jquery.min.js"></script>
 	<script>
 		initialisation();
-		d3.select(window).on('resize', resize);
+		/* d3.select(window).on('resize', resize); */ //khaled l'a enlevé car il voit pas à quoi ça sert
 		$(function() {
 			$("#nav-ici").load("Menu.html");
 		});
