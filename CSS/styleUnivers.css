@@ -2,8 +2,8 @@ body{
     margin: 0;
 }
 
-.grosBouttonViolet {
-    background-color: rgb(112, 34, 98);
+.grosBoutton {
+    background-color: rgb(121, 20, 123);
     color: white;
     font-size: 16px;
     border: none;
@@ -14,46 +14,52 @@ body{
     height: 25px;
 }
 
-    .grosBouttonViolet:active {
-        background-color: rgb(170, 4, 193);
+    .grosBoutton:active {
+        background-color: rgb(195, 32, 198);
         transform: translateY(2px);
-        border: 2px rgb(152, 131, 87);
     }
 
-.grosBouttonOrange {
-    background-color: rgb(186, 82, 3);
+.petitBoutton {
+    background-color: rgb(121, 20, 123);
     color: white;
     font-size: 16px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 
-    width: 200px;
-    height: 25px;
+    width: 20px;
+    height: 20px;
+    z-index: 3000;
+    position: relative;
 }
 
-    .grosBouttonOrange:active {
-        background-color: rgb(255, 109, 0);
+    .petitBoutton:active {
+        background-color: rgb(195, 32, 198);
         transform: translateY(2px);
     }
 
 .grillePrincipale {
-    /*
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
-    grid-template-rows: 1fr;
-    grid-template-areas: "Entree Graphe Sortie";
-    gap: 10px;*/
-    display: flex;
-    padding: 0; /* Supprime le padding autour de la grille */
-    margin: 0; /* Supprime les marges autour de la grille */
-    height: 100vh; /* Optionnel : Assurez-vous que la grille occupe toute la hauteur de la fenêtre */
-    width: 100vw; /* Assurez-vous que la grille occupe toute la largeur de la fenêtre */
-    box-sizing: border-box; /* Inclut la bordure et le padding dans la largeur et la hauteur totales */
+    grid-template-rows: 38px 1fr;
+    grid-template-areas:
+            "Nav Nav Nav"
+            "Entree Graphe Sortie";
+    gap: 10px;
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+    width: 100vw;
+    box-sizing: border-box;
+    position: absolute;
+}
+
+.Nav {
+    grid-area: Nav;
+    column-span: all;
 }
 
 .Entree {
-    width:25%;
     grid-area: Entree;
     display: grid;
     grid-auto-columns: 1fr;
@@ -62,6 +68,7 @@ body{
     padding: 5px;
     gap: 10px;
     border-radius: 10px;
+    position: relative;
 }
 
     .Entree h2 {
@@ -72,7 +79,7 @@ body{
         display: flex;
         flex-direction: column;
         align-items: center;
-        background-color: rgb(243, 210, 140);
+        background-color: rgb(188, 167, 220);
         gap: 10px;
         padding: 5px;
         border-radius: 10px;
@@ -115,7 +122,6 @@ body{
 
 
 .Graphe {
-    width: 50%;
     grid-area: Graphe;
     display: grid;
     grid-auto-columns: 1fr;
@@ -141,7 +147,6 @@ body{
     }
 
 .Sortie {
-    width: 25%;
     grid-area: Sortie;
     display: grid;
     grid-auto-columns: 1fr;
@@ -160,7 +165,7 @@ body{
         display: flex;
         flex-direction: column;
         align-items: center;
-        background-color: rgb(230, 191, 234);
+        background-color: rgb(188, 167, 220);
         gap: 10px;
         padding: 5px;
         border-radius: 10px;
@@ -191,3 +196,7 @@ body{
             .résultats label {
                 justify-self: end;
             }
+
+.cache {
+    display: none;
+}

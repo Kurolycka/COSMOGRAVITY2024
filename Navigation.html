@@ -1,81 +1,47 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Barre de navigation de cosmogravity</title>
-
-    <link rel="stylesheet" href="./CSS/styleNav.css">
-</head>
-<body>
-<button id="toggle-nav" onclick="toggleNav()">☰</button>
 <nav id="nav" class="menu">
-    <div style="background: none; width: 500px"></div>
+    <div id="txt-acceuil" class="item haut" style="cursor: pointer"></div>
 
-    <div class="item haut" style="cursor: pointer">
-        Acceuil
-    </div>
-
-    <div class="item haut univers">
-        Univers
+    <div id="txt-univers" class="item haut univers">
         <div class="sousMenu" style="top: 100%; left: 0">
-            <div class="item univers">
-                Théorie
-            </div>
+            <div id="txt-théorieUnivers" class="item univers"></div>
 
-            <div class="item univers">
-                Simulation
+            <div id="txt-tutoUnivers" class="item univers"></div>
+
+            <div id="txt-simulationUnivers" class="item univers">
                 <div class="sousMenu">
-                    <div class="item univers" style="white-space: nowrap; cursor: pointer">
-                        Modèle &Lambda;CDM
-                    </div>
+                    <div id="txt-modeleLCDM" class="item univers" style="white-space: nowrap; cursor: pointer"></div>
 
-                    <div class="item univers" style="white-space: nowrap; cursor: pointer">
-                        Modèle DE
-                    </div>
+                    <div id="txt-modeleDE" class="item univers" style="white-space: nowrap; cursor: pointer"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="item haut trajectoire">
-        Trajectoire
+    <div id="txt-trajectoire" class="item haut trajectoire">
         <div class="sousMenu" style="top: 100%; left: 0">
-            <div class="item trajectoire">
-                Théorie
-            </div>
+            <div id="txt-théorieTrajectoire" class="item trajectoire"></div>
 
-            <div class="item trajectoire">
-                Simulation
+            <div id="txt-tutoTrajectoire" class="item trajectoire"></div>
+
+            <div id="txt-simulationTrajectoire" class="item trajectoire">
                 <div class="sousMenu">
-                    <div class="item trajectoire">
-                        Métrique de Schwarzchild
+                    <div id="txt-metriqueSCH" class="item trajectoire">
                         <div class="sousMenu">
-                            <div class="item trajectoire" style="white-space: nowrap; cursor: pointer">
-                                Masse baryonique - Mobile baryonique
-                            </div>
+                            <div id="txt-BBSCH" class="item trajectoire" style="white-space: nowrap; cursor: pointer"></div>
 
-                            <div class="item trajectoire" style="white-space: nowrap; cursor: pointer">
-                                Masse baryonique - Mobile photonique
-                            </div>
+                            <div id="txt-BPSCH" class="item trajectoire" style="white-space: nowrap; cursor: pointer"></div>
 
-                            <div class="item trajectoire" style="white-space: nowrap; cursor: pointer">
-                                Masse non-baryonique - Mobile non-baryonique
-                            </div>
+                            <div id="txt-nBnBSCH" class="item trajectoire" style="white-space: nowrap; cursor: pointer"></div>
 
-                            <div class="item trajectoire" style="white-space: nowrap; cursor: pointer">
-                                Masse non-baryonique - Mobile photonique
-                            </div>
+                            <div id="txt-nBPSCH" class="item trajectoire" style="white-space: nowrap; cursor: pointer"></div>
                         </div>
                     </div>
 
-                    <div class="item trajectoire">
-                        Métrique de Kerr
+                    <div id="txt-metriqueK" class="item trajectoire">
                         <div class="sousMenu">
-                            <div class="item trajectoire" style="white-space: nowrap; cursor: pointer">
-                                Mobile baryonique
-                            </div>
+                            <div id="txt-BK" class="item trajectoire" style="white-space: nowrap; cursor: pointer"></div>
 
-                            <div class="item trajectoire" style="white-space: nowrap; cursor: pointer">
+                            <div id="txt-PK" class="item trajectoire" style="white-space: nowrap; cursor: pointer">
                                 Mobile photonique
                             </div>
                         </div>
@@ -87,8 +53,7 @@
 
     <div class="item espaceur"></div>
 
-    <div class="item bas">
-        Langue
+    <div id="txt-langue" class="item bas">
         <div class="sousMenu" style="top: 100%; left: 0">
             <div class="item" style="cursor: pointer">
                 Français
@@ -100,15 +65,13 @@
         </div>
     </div>
 
-    <div class="item bas" style="cursor: pointer">
-        À propos
-    </div>
+    <div id="txt-propos" class="item bas" style="cursor: pointer"></div>
 
-    <div class="item bas" style="cursor: pointer">
-        Retour LUPM
-    </div>
+    <div id="txt-LUPM" class="item bas" style="cursor: pointer"></div>
 </nav>
 
-<script src="./JavaScript/fonction_animation.js"></script>
-</body>
-</html>
+<script src="JavaScript/Fonctions_pour_HTML.js"></script>
+<script src="./JavaScript/Langues/gestion_langues.js"></script>
+<script>
+    texte_navigation()
+</script>

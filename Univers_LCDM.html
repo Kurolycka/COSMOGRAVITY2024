@@ -6,19 +6,24 @@
 
     <title>Grille CSS avec grid-area</title>
 
+    <script src="JavaScript/Fonctions_pour_HTML.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 
-    <link rel="stylesheet" href="CSS/styleUnivers.css">
-    <link rel="stylesheet" href="CSS/styleAnimation.css">
+    <link rel="stylesheet" href="./CSS/styleUnivers.css">
+    <link rel="stylesheet" href="./CSS/styleAnimation.css">
+    <link rel="stylesheet" href="./CSS/styleNav.css">
 
 </head>
 <body>
 <div class="grillePrincipale">
+    <div id="positionNav" class="Nav"></div>
     <!--Fenêtre entrée-->
-    <div class="fenetre Entree">
-        <button class="collapse_bouton" onclick="togglePanel('left')" style="top:10px; right:10px;">☰</button>
+    <button onclick=toggleEntreeSortie("panneauEntree") class="petitBoutton" style="display:block; top: 60px; left:10px; position: absolute">☰</button>
+    <div id="panneauEntree" class="Entree">
         <div class="boiteEntree">
             <div id="Entrées"></div>
 
@@ -114,14 +119,15 @@
 
             <div class="paramètre">
                 <span></span>
-                <button id="bouttonTracer" class="grosBouttonViolet"></button>
+                <button id="bouttonTracer" class="grosBoutton"></button>
                 <span></span>
+
             </div>
         </div>
     </div>
 
     <!--Fenêtre graphe-->
-    <div class="Graphe" style="position: relative;">
+    <div id="panneauGraphe" class="Graphe" style="position: relative;">
         <div class="boiteGraphe">
             <div id="headGraphiqueLCDM"></div>
 
@@ -134,8 +140,8 @@
     </div>
 
     <!--Fenêtre sortie-->
-    <div class="fenetre Sortie">
-        <button class="collapse_bouton" onclick="togglePanel('right')" style="top: 10px; left: 10px;">☰</button>
+    <button onclick=toggleEntreeSortie("panneauSortie") class="petitBoutton" style="display:block; top: 60px; right:10px; position: absolute">☰</button>
+    <div id="panneauSortie" class="Sortie">
         <div class="boiteSortie">
             <div id="Sorties"></div>
 
@@ -201,7 +207,7 @@
 
             <div class="résultats">
                 <span></span>
-                <button id="bouttonEnregistrer" class="grosBouttonOrange">Enregistrer</button>
+                <button id="bouttonEnregistrer" class="grosBoutton">Enregistrer</button>
                 <span></span>
             </div>
 
@@ -210,10 +216,13 @@
 </div>
 
     <script src="./JavaScript/Langues/gestion_langues.js"></script>
-    <script src="JavaScript/fonction_animation.js"></script>
 <script>
     choixLangueFr();
     texte_univers_LCDM();
+
+    $(function() {
+        $("#positionNav").load("Navigation.html");
+    });
 </script>
 </body>
 </html>

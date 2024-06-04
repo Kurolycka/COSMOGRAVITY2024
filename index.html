@@ -1,10 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Comogravity</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <link rel="stylesheet" href="./CSS/styleIndex.css">
+    <link rel="stylesheet" href="./CSS/styleNav.css">
 </head>
 <body>
+<div id="positionNav"></div>
+<div class="conteneurPrincipal"></div>
+<div class="content"><img class="image" src="./Images/Logo.png" alt=""></div>
 
+<script src="JavaScript/Fonctions_pour_HTML.js"></script>
+<script src="./JavaScript/Langues/gestion_langues.js"></script>
+<script>
+    choixLangueFr();
+
+    $(function() {
+        $("#positionNav").load("./Navigation.html");
+    });
+</script>
 </body>
 </html>

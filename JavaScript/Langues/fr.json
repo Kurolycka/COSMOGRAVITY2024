@@ -1,4 +1,26 @@
 {
+	"nav": {
+		"acceuil": "Acceuil",
+		"univers": "Univers",
+		"theorie": "Théorie",
+		"tutoriel": "Tutoriel",
+		"simulation": "Simulation",
+		"modeleLCDM": "Modèle &Lambda;CDM",
+		"modeleDE": "Modèle DE",
+		"trajectoire": "Trajectoire",
+		"SCH": "Métrique de Schwarzchild",
+		"K": "Métrique de Kerr",
+		"BBSCH": "Masse baryonique - Mobile baryonique",
+		"BPSCH": "Masse baryonique - Mobile photonique",
+		"nBnBSCH": "Masse non-baryonique - Mobile non-baryonique",
+		"nBPSCH": "Masse non-baryonique - Mobile photonique",
+		"BK": "Mobile baryonique",
+		"PK": "Mobile photonique",
+		"langue": "Langue",
+		"propos": "À propos",
+		"LUPM": "Retour LUPM"
+	},
+
 	"univers":{
 		"Entrées": "<h2>Entrées</h2>",
 			"infoT0": "Température actuelle de l'univers",
