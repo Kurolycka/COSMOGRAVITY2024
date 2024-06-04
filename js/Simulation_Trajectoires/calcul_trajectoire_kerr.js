@@ -159,17 +159,30 @@ function initialisation(){
 		document.getElementById("circulaire_retrograde_res_bar").removeAttribute("title");
 	}
 
+	CirculaireProgradeBarLabelCell = document.getElementById("circulaire_prograde_bar");
+	CirculaireProgradeBarCell = document.getElementById("circulaire_prograde_res_bar");
 
 	if (isNaN(E_prograde)){
 		document.getElementById("circulaire_prograde_res_bar").innerHTML=""; //ManonCirculaire
+		CirculaireProgradeBarCell.style.display='none';
+		CirculaireProgradeBarLabelCell.style.display='none';
 	}else{
 		document.getElementById("circulaire_prograde_res_bar").innerHTML=vitesse_orbite_circulaire_prograde_bar.toExponential(4); //ManonCirculaire
+		CirculaireProgradeBarCell.style.display='';
+		CirculaireProgradeBarLabelCell.style.display='';
 	}
+
+	CirculaireRetrogradeBarLabelCell = document.getElementById("circulaire_retrograde_bar");
+	CirculaireRetrogradeBarCell = document.getElementById("circulaire_retrograde_res_bar");
 
 	if (isNaN(E_retrograde)){
 		document.getElementById("circulaire_retrograde_res_bar").innerHTML=""; //ManonCirculaire
+		CirculaireRetrogradeBarCell.style.display='none';
+		CirculaireRetrogradeBarLabelCell.style.display='none';
 	}else{
 		document.getElementById("circulaire_retrograde_res_bar").innerHTML=vitesse_orbite_circulaire_retrograde_bar.toExponential(4); //ManonCirculaire
+		CirculaireRetrogradeBarCell.style.display='';
+		CirculaireRetrogradeBarLabelCell.style.display='';
 	}
 	
 	

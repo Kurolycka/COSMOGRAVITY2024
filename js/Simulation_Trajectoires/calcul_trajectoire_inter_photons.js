@@ -254,17 +254,17 @@ function genereHtml(){
         }
 
 		for (countt=1; countt <= nbredefuseesgenere; countt +=1) {
-			jstring += '<th class="tg-aicv" id="rayon_orb_circ_ext_photon_nonBar'+countt.toString()+'" title="">$rcirc ext'+countt.toString()+'$</th>'; //Manon
+			jstring += '<th class="tg-aicv" style="display: none;" id="rayon_orb_circ_ext_photon_nonBar'+countt.toString()+'" title="">$rcirc ext'+countt.toString()+'$</th>'; //Manon
 		}
 
 		for (countt=1; countt <= nbredefuseesgenere; countt +=1) {
-			jstring += '<th class="tg-aicv" id="rayon_orb_circ_int_photon_nonBar'+countt.toString()+'" title="">$rcirc int'+countt.toString()+'$</th>'; //Manon
+			jstring += '<th class="tg-aicv" style="display: none;" id="rayon_orb_circ_int_photon_nonBar'+countt.toString()+'" title="">$rcirc int'+countt.toString()+'$</th>'; //Manon
 		}
 
     //pour katex il faux mettre un antislash devant le antislash 
         jstring +='<th class="tg-6l4m" id="rayonschwars"  title="" >$rs=\\frac{2GM}{c^{2}}(m)$</th>';
-		jstring +='<th class="tg-6l4m" id="gravtxt" title="">$grav=\\frac{GM}{R^{2}}\\frac{1}{9.81}(g)$</th>';
-		jstring +='<th class="tg-6l4m" id="vitesseLibéra" title="">$Vlib=c(\\frac{rs}{R})^{1/2}(m.s^{-1}) $</th>';
+		jstring +='<th class="tg-6l4m" style="display: none;"  id="gravtxt" title="">$grav=\\frac{GM}{R^{2}}\\frac{1}{9.81}(g)$</th>';
+		jstring +='<th class="tg-6l4m" style="display: none;" id="vitesseLibéra" title="">$Vlib=c(\\frac{rs}{R})^{1/2}(m.s^{-1}) $</th>';
         //jstring +='<th class="tg-6l4m" id="TempTrouNoirtxt" title="">$T=6.15*10^{-8}\\frac{M\\odot}{M}(K)$</th>';
         //jstring +='<th class="tg-6l4m" id="tempsEvaporationTrouNoirtxt" title="">$t=6.6*10^{74}(\\frac{M}{M\\odot})^{3}(s)$</th>';
 		jstring +='</tr>';
@@ -283,16 +283,16 @@ function genereHtml(){
 		}
 
 		for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
-            jstring += '<td class="tg-3ozo" id="r_circ_ext_res'+countt.toString()+'">0</td>'; //Manon
+            jstring += '<td class="tg-3ozo" style="display: none;" id="r_circ_ext_res'+countt.toString()+'">0</td>'; //Manon
 		}
 
 		for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
-            jstring += '<td class="tg-3ozo" id="r_circ_int_res'+countt.toString()+'">0</td>'; //Manon
+            jstring += '<td class="tg-3ozo" style="display: none;" id="r_circ_int_res'+countt.toString()+'">0</td>'; //Manon
 		}
 
         jstring +='<td class="tg-3ozo" id="m">0</td>';
-		jstring +='<td class="tg-3ozo" id="g">0</td>';	
-		jstring +='<td class="tg-3ozo" id="Vlib">0</td>';	
+		jstring +='<td class="tg-3ozo" style="display: none;" id="g">0</td>';	
+		jstring +='<td class="tg-3ozo" style="display: none;" id="Vlib">0</td>';	
 		//jstring +='<td class="tg-3ozo" id="TempTN">0</td>';
 		//jstring +='<td class="tg-3ozo" id="tempsEvapTN">0</td>';											
         jstring +='</tr>';
@@ -431,23 +431,37 @@ function initialisation(compteur){
 	limite_haute = (3/2)*rs;
 	limite_basse = (9/8)*rs;
 
+	rCircIntResCell = document.getElementById("r_circ_int_res"+compteur.toString());
+	rCircIntLabelCell = document.getElementById("rayon_orb_circ_int_photon_nonBar"+compteur.toString());
+
 	if (r_phy > limite_basse && r_phy < limite_haute){
 		r_circ_int = (1/3)*r_phy*((Math.sqrt(r_phy*(8*r_phy - 9*rs)))/(Math.sqrt(rs*(r_phy-rs))));
 		document.getElementById("r_circ_int_res"+compteur.toString()).innerHTML = r_circ_int.toExponential(10);
 		document.getElementById("r_circ_int_res"+compteur.toString()).title = texte.pages_trajectoire.orbite_circulaire_stable;
+		rCircIntLabelCell.style.display='';
+		rCircIntResCell.style.display='';
 	}else{
 		r_circ_int="";
 		document.getElementById("r_circ_int_res"+compteur.toString()).innerHTML = r_circ_int;
 		document.getElementById("r_circ_int_res"+compteur.toString()).removeAttribute("title");
+		rCircIntLabelCell.style.display='none';
+		rCircIntResCell.style.display='none';
 	}
+
+	rCircExtResCell = document.getElementById("r_circ_ext_res"+compteur.toString());
+	rCircExtLabelCell = document.getElementById("rayon_orb_circ_ext_photon_nonBar"+compteur.toString());
 
 	r_circ_ext = (3/2)*rs;
 	if (r_circ_ext >= r_phy){
 		document.getElementById("r_circ_ext_res"+compteur.toString()).innerHTML = r_circ_ext.toExponential(10);
 		document.getElementById("r_circ_ext_res"+compteur.toString()).title = texte.pages_trajectoire.orbite_circulaire_instable;
+		rCircExtLabelCell.style.display='';
+		rCircExtResCell.style.display='';
 	}else{
 		document.getElementById("r_circ_ext_res"+compteur.toString()).innerHTML = "";
 		document.getElementById("r_circ_ext_res"+compteur.toString()).removeAttribute("title");
+		rCircExtLabelCell.style.display='none';
+		rCircExtResCell.style.display='none';
 	}
 
 	document.getElementById("L"+compteur.toString()).innerHTML = L.toExponential(3);
@@ -490,20 +504,37 @@ function initialisation(compteur){
 	mobile["blue"]=couleurs[2];
 
   //calcul de grav
+	gCell=document.getElementById("g");
+	gLabelCell=document.getElementById("gravtxt");
+
   	g=(G*M)/(Math.pow(r_phy,2)*9.81);
 	if(r_phy==0){
 		document.getElementById("g").innerHTML=" ";
+		gCell.style.display='none';
+		gLabelCell.style.display='none';
 	}
 	else{
 		document.getElementById("g").innerHTML=g.toExponential(3);
+		gCell.style.display='';
+		gLabelCell.style.display='';
 	}	
 	
-	// calcule de vitesse de liberation 
+	// calcule de vitesse de liberation
+	VlibCell=document.getElementById("Vlib");
+	VlibLabelCell=document.getElementById("vitesseLibéra");
+	
 	Vlib=c*Math.pow(rs/r_phy,1/2);
 	if(r_phy>=rs){
 		document.getElementById("Vlib").innerHTML=Vlib.toExponential(3);
+		VlibCell.style.display='';
+		VlibLabelCell.style.display='';
 	}
-	else{document.getElementById("Vlib").innerHTML=" ";}
+	else{
+		document.getElementById("Vlib").innerHTML=" ";
+		VlibCell.style.display='none';
+		VlibLabelCell.style.display='none';
+	}
+
     boutonAvantLancement();
 	canvasAvantLancement();
 	return mobile;

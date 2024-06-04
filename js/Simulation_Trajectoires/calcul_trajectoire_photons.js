@@ -272,10 +272,10 @@ function genereHtml(){
     //pour katex il faux mettre un antislash devant le antislash  	
 	jstring +='<th class="tg-6l4m" id="rayonschwars" title="" >$rs=\\frac{2GM}{c^{2}}(m)$</th>';
 
-	jstring +='<th class="tg-6l4m" id="gravtxt" title="">$grav=\\frac{GM}{R^{2}}\\frac{1}{9.81}(g)$</th>';		
-	jstring +='<th class="tg-6l4m" id="vitesseLibéra" title="">$Vlib=c(\\frac{rs}{R})^{1/2}(m.s^{-1}) $</th>';
-	jstring +='<th class="tg-6l4m" id="TempTrouNoirtxt" title="">$T=6.15*10^{-8}\\frac{M\\odot}{M}(K)$</th>';
-	jstring +='<th class="tg-6l4m" id="tempsEvaporationTrouNoirtxt" title="">$t=6.6*10^{74}(\\frac{M}{M\\odot})^{3}(s)$</th>';
+	jstring +='<th class="tg-6l4m" style="display: none;" id="gravtxt" title="">$grav=\\frac{GM}{R^{2}}\\frac{1}{9.81}(g)$</th>';		
+	jstring +='<th class="tg-6l4m" style="display: none;" id="vitesseLibéra" title="">$Vlib=c(\\frac{rs}{R})^{1/2}(m.s^{-1}) $</th>';
+	jstring +='<th class="tg-6l4m" style="display: none;" id="TempTrouNoirtxt" title="">$T=6.15*10^{-8}\\frac{M\\odot}{M}(K)$</th>';
+	jstring +='<th class="tg-6l4m" style="display: none;" id="tempsEvaporationTrouNoirtxt" title="">$t=6.6*10^{74}(\\frac{M}{M\\odot})^{3}(s)$</th>';
 	jstring +='</tr>';
 
           
@@ -297,10 +297,10 @@ function genereHtml(){
 	}
 
 	jstring +='<td class="tg-3ozo" id="m">0</td>';
-	jstring +='<td class="tg-3ozo" id="g">0</td>';
-	jstring +='<td class="tg-3ozo" id="Vlib"></td>';
-	jstring +='<td class="tg-3ozo" id="TempTN">0</td>';
-	jstring +='<td class="tg-3ozo" id="tempsEvapTN">0</td>';
+	jstring +='<td class="tg-3ozo" style="display: none;" id="g">0</td>';
+	jstring +='<td class="tg-3ozo" style="display: none;" id="Vlib"></td>';
+	jstring +='<td class="tg-3ozo" style="display: none;" id="TempTN">0</td>';
+	jstring +='<td class="tg-3ozo" style="display: none;" id="tempsEvapTN">0</td>';
 	jstring +='</tr>';
 
 	newRow2.innerHTML = jstring;
@@ -445,16 +445,30 @@ function initialisation(compteur){
 	mobile["red"]=couleurs[0];
 	mobile["green"]=couleurs[1];
 	mobile["blue"]=couleurs[2];
+
+
 	//calcul de grav
+	gCell = document.getElementById("g");
+	gLabelCell = document.getElementById("gravtxt");
+
 	g=(G*M)/(Math.pow(r_phy,2)*9.81);
 	if(r_phy==0){
 		document.getElementById("g").innerHTML=" ";
+		gCell.style.display='none';
+		gLabelCell.style.display='none';
 	}
 	else{
 		document.getElementById("g").innerHTML=g.toExponential(3);
+		gCell.style.display='';
+		gLabelCell.style.display='';
 	}
 
-		// Rayonnement de Hawking d’un trou noir
+	// Rayonnement de Hawking d’un trou noir
+
+	var TempTNLabelCell = document.getElementById("TempTrouNoirtxt");
+	var TempTNCell = document.getElementById("TempTN");
+	var tempsEvapLabelCell = document.getElementById("tempsEvaporationTrouNoirtxt");
+	var tempsEvapCell = document.getElementById("tempsEvapTN");
 
 	// 1. calcul température du trou noir
 	if (rs>r_phy){
@@ -465,20 +479,35 @@ function initialisation(compteur){
 	// 2. calcul temps d'évaporation de Hawking (calcul simplifié)
 	tempsEvaporation_trouNoir = 6.6e74*((M/M_soleil)**3); 		//en secondes
 	document.getElementById("tempsEvapTN").innerHTML=tempsEvaporation_trouNoir.toExponential(3);
+	TempTNCell.style.display='';
+	TempTNLabelCell.style.display='';
+	tempsEvapCell.style.display='';
+	tempsEvapLabelCell.style.display='';
     }
 
 	else{//pas trou noir 
 		document.getElementById("TempTN").innerHTML=" ";
 		document.getElementById("tempsEvapTN").innerHTML = " ";
-
+		TempTNCell.style.display='none';
+		TempTNLabelCell.style.display='none';
+		tempsEvapCell.style.display='none';
+		tempsEvapLabelCell.style.display='none';
 	}
 	
 	// calcule de vitesse de liberation 
+	VlibLabelCell = document.getElementById("vitesseLibéra");
+	VlibCell = document.getElementById("Vlib");
+
 	Vlib=c*Math.pow(rs/r_phy,1/2);
 	if(r_phy>=rs){
 	  document.getElementById("Vlib").innerHTML=Vlib.toExponential(3);
+	  VlibCell.style.display='';
+	  VlibLabelCell.style.display='';
 	}
-	else{document.getElementById("Vlib").innerHTML=" ";}
+	else{document.getElementById("Vlib").innerHTML=" ";
+		VlibCell.style.display='none';
+		VlibLabelCell.style.display='none';
+	}
 
 	if (compteur==1){
 		vphiblab=c;

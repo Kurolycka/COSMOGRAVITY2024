@@ -294,8 +294,8 @@ function genereHtml(){
  
         //pour katex il faux mettre un antislash devant le antislash
 		jstring +='<th class="tg-6l4m" id="rayonschwars" title="" >$rs=\\frac{2GM}{c^{2}}(m)$</th>';
-		jstring +='<th class="tg-6l4m" id="gravtxt" title="">$grav=\\frac{GM}{R^{2}}\\frac{1}{9.81}(g)$</th>';						
-		jstring +='<th class="tg-6l4m" id="vitesseLibéra" title="">$Vlib=c(\\frac{rs}{R})^{1/2}(m.s^{-1}) $</th>';
+		jstring +='<th class="tg-6l4m"  style="display: none;" id="gravtxt" title="">$grav=\\frac{GM}{R^{2}}\\frac{1}{9.81}(g)$</th>';						
+		jstring +='<th class="tg-6l4m"  style="display: none;" id="vitesseLibéra" title="">$Vlib=c(\\frac{rs}{R})^{1/2}(m.s^{-1}) $</th>';
         //jstring +='<th class="tg-6l4m" id="TempTrouNoirtxt" title="">$T=6.15*10^{-8}\\frac{M\\odot}{M}(K)$</th>';
         //jstring +='<th class="tg-6l4m" id="tempsEvaporationTrouNoirtxt" title="">$t=6.6*10^{74}(\\frac{M}{M\\odot})^{3}(s)$</th>';
 		jstring +='</tr>'; 
@@ -318,8 +318,8 @@ function genereHtml(){
 		}
 
 		jstring +='<td class="tg-3ozo" id="m">0</td>';
-		jstring +='<td class="tg-3ozo" id="g">0</td>';
-		jstring +='<td class="tg-3ozo" id="Vlib">0</td>';	
+		jstring +='<td class="tg-3ozo"  style="display: none;" id="g">0</td>';
+		jstring +='<td class="tg-3ozo"  style="display: none;" id="Vlib">0</td>';	
 		//jstring +='<td class="tg-3ozo" id="TempTN">0</td>';
 		//jstring +='<td class="tg-3ozo" id="tempsEvapTN">0</td>';																
 		jstring +='</tr>';
@@ -555,21 +555,38 @@ function initialisation(compteur){
 	mobile["blue"]=couleurs[2];
 
   //calcul de grav
+
+	gCell = document.getElementById("g");
+	gLabelCell = document.getElementById("gravtxt");
+
   	g=(G*M)/(Math.pow(r_phy,2)*9.81);
 
 	if(r_phy==0){
 		document.getElementById("g").innerHTML=" ";
+		gCell.style.display='none';
+		gLabelCell.style.display='none'
 	}
 	else{
 		document.getElementById("g").innerHTML=g.toExponential(3);
+		gCell.style.display='';
+		gLabelCell.style.display='';
 	}
 
 	//calcul de vitesse de libération
+
+	var VlibCell = document.getElementById("Vlib");
+	var VlibLabelCell = document.getElementById("vitesseLibéra");
+
 	Vlib=c*Math.pow(rs/r_phy,1/2);
 	if(r_phy>=rs){
 		document.getElementById("Vlib").innerHTML=Vlib.toExponential(3);
-		}
-	else{document.getElementById("Vlib").innerHTML=" ";}
+		VlibCell.style.display='';
+		VlibLabelCell.style.display='';
+	}else{
+		document.getElementById("Vlib").innerHTML=" ";
+		VlibCell.style.display='none';
+		VlibLabelCell.style.display='none';
+	}
 		
 
 	if(compteur==1){
