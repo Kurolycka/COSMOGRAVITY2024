@@ -271,7 +271,7 @@ function Calc() {
         while (Math.pow(fonction_F(z_infini,Number(omegak0),Number(Or),Number(omegam0),Number(omegaDE0)),-0.5)>1e-7){
             z_infini=z_infini+1;
         }
-        dm_horizon_particule_mpc=DistanceMetriqueDE(0,z_infini,h0*1e3,Number(omegak0),Number(Or),Number(omegam0),Number(omegaDE0));
+        dm_horizon_particule_mpc=DistanceMetriqueDE(0,z_infini,h0*1e3,true);
         dm_horizon_particule_m=pc_vers_m(dm_horizon_particule_mpc*1e6);    //passage du megaparsec au metre puis giga annee lumiere
         dm_horizon_particule_Ga=m_vers_AL(dm_horizon_particule_m)/1e9 
 

@@ -177,10 +177,10 @@ function calcu(path) {
 	//on recupere les valeurs de z1 et z2
 	z1 = Number(document.getElementById("z1").value);
 	z2 = Number(document.getElementById("z2").value);
-    if (z1<=-1) {stop_spin();//C'est pour arrêter le GIF spin à côté du bouton calcule
-	return messagebox(texte.page_univers_calculs.message_z1_incorrect,"z1 >-1");}
+		if (z1<=-1) {stop_spin();//C'est pour arrêter le GIF spin à côté du bouton calcule
+		return messagebox(texte.page_univers_calculs.message_z1_incorrect,"z1 >-1");}
 	if (z2<=-1) {stop_spin();
-	return messagebox(texte.page_univers_calculs.message_z2_incorrect,"z2 >-1");}
+		return messagebox(texte.page_univers_calculs.message_z2_incorrect,"z2 >-1");}
 	avertissement();
 
 	// permet de contourner le problème du dm (tend vers la même valeur sur l'infini)
@@ -239,7 +239,6 @@ function calcu(path) {
 
 
 	// TEMPS
-	//
 	// Calcul du temps de réception
 	if (Number(z2) <= 1e12) {
 		tempsReception = simpson_simple_degre2(fonction_integrale, Number(z2), omegam0, Number(omegalambda0), Number(Or));
@@ -255,6 +254,8 @@ function calcu(path) {
 		}
 
 	}
+	console.log(calcul_ages(fonction_E,H0enannee,1e-15,1/(1+z2)));
+	console.log(tempsReception);
 	if (isNaN(tempsReception)) {
 		tempsReception = NaN;
 	}
@@ -1299,7 +1300,7 @@ function calculDeDs(abscissa) {
 
 	abscissa.forEach(i => {   
 		// calcul de la distance mètrique 
-		dm1=DistanceMetrique(fonction_E,0,i,Number(H0parsec),Number(omegak0),Number(Or),Number(omegam0),Number(omegalambda0));		
+		dm1=DistanceMetrique(fonction_E,0,i,true);		
 
 		//  temps en secondes
 		temps = calcul_ages(fonction_E,H0parsec,.0000001,1/(1+i));

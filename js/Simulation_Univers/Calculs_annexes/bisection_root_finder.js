@@ -20,7 +20,6 @@ function inverse(){
 	if(typeannee == "Sidérale"){
 		nbrjours = 365.256363051;
 		}else if(typeannee == "Julienne"){
-			
 		nbrjours = 365.25;
 		}else if(typeannee == "Tropique (2000)"){
 		nbrjours = 365.242190517;
@@ -155,10 +154,11 @@ function bisection_method_dm (dm, omegam0, omegalambda0, Or, eps){
 	//cette variable possède 2 valeurs [nouveau_zb, contrainte] contrainte =0 ou 1. 0 pour absence de contrainte
 
 	contrainte = Number(reconditionneur[1]);
+	console.log(contrainte);
 	dm_za = f_x(za, omegam0, omegalambda0, Or, eps);
 	dm_zb = f_x(zb, omegam0, omegalambda0, Or, eps);
 	if (Number(dm)===0){
-	  	return 0;
+		return 0;
 	}
 
 	if (omegak0 <=0){
@@ -245,14 +245,12 @@ function espacedefinie(omegam0, omegalambda0, Or){
 		racines = fourth_order_solver(omegam0, omegalambda0, Or);
 		//racines existantes
 		if (racines.length>=2){
-			console.log(racines[0]);
-			console.log(racines[1]);
 			//au moins 2 solutions existent sur l'axe des abscisses possitive. Celle qui est inférieur délimite la zone pour la distance métrique
 			if ((racines[0]>0) && (racines[1]>0)){
 				res = [racines[1],1];
 				return res;
 			}
-			//au moins 2 solutions existent sur l'axe des abscisses. Une est possitive, l'autre est négative. Celle qui est possitive délimite la zone pour la distance métrique
+			//au moins 2 solutions existent sur l'axe des abscisses. Une est positive, l'autre est négative. Celle qui est possitive délimite la zone pour la distance métrique
 			else if ((racines[0]>0) && (racines[1]<0)){
 				res = [racines[0],1];
 				return res;
@@ -561,7 +559,7 @@ function espace_definie(omegam0, omegalambda0, Or){
 	e = 1;
 
 	//on cherche les racines d'un polynôme d'ordre 4
-	if (a!=0 && (Math.abs(a/b)>1e-3 || Math.abs(a/c)>1e-3 )){
+	if (a!=0 && (Math.abs(a/b)>1e-3 || Math.abs(a/C)>1e-3 )){
 		racines = fourth_order_solver(omegam0, omegalambda0, Or);
 		//racines existantes
 		if (racines.length>=2){

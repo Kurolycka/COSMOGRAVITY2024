@@ -460,29 +460,24 @@ function Sk(x,OmegaK){
  * pour avoir l'horizon cosmologique des évenement Zemission=-1 (dans le futur) \
  * (Univers,simple) \
  * Si les omega et H0 sont définis dans la page pas besoin de les mettre en paramètre : DistanceMetrique(Zemission,Zreception)
+ * @param {*} fonction fonction_E ou fonction_F en fonction de si c'est lcdm ou de
  * @param {*} Zemission décalage spectral au moment ou le photon est émis
  * @param {*} Zreception décalage spectral au moment ou le photon est reçu
- * @param {*} H0 
- * @param {*} OmegaK0 
- * @param {*} OmegaR0 
- * @param {*} OmegaM0 
- * @param {*} OmegaLambda0 
+ * @param {*} z_utilisé
  * @returns 
  */
-function DistanceMetrique(fonction,Zemission,Zreception,H0,OmegaK0){
-    function fonction_a_integrer(x){
-        return Math.pow(fonction(x,true),-0.5);
-    }
-    return c/(H0*Math.pow(Math.abs(OmegaK0),0.5))*Sk(Math.pow(Math.abs(OmegaK0),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,1e3),OmegaK0)
+function DistanceMetrique(fonction,Zemission,Zreception, z_utilisé=false){
+    if (z_utilisé){
+        function fonction_a_integrer(x){
+            return Math.pow(fonction(x,true),-0.5);
+        };
+    }else{
+        function fonction_a_integrer(x){
+            return Math.pow(fonction(x),-0.5)/Math.pow(x,2);
+        };
+    };
+    return c/(H0_parSecondes(H0)*Math.pow(Math.abs(Omega_k(0)),0.5))*Sk(Math.pow(Math.abs(Omega_k(0)),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,1e3),Omega_k(0))
 };
-
-function DistanceMetriquea(fonction,a_emission,a_reception,H0,OmegaK0){
-    function fonction_a_integrer(x){
-        return Math.pow(fonction(x),-0.5);
-    }
-    return c/(H0*Math.pow(Math.abs(OmegaK0),0.5))*Sk(Math.pow(Math.abs(OmegaK0),0.5)*simpson_composite(fonction_a_integrer,a_emission,a_reception,1e4),OmegaK0)
-}
-
 
 //Remy 26/05/24
 /** 
@@ -491,14 +486,10 @@ function DistanceMetriquea(fonction,a_emission,a_reception,H0,OmegaK0){
  * @returns 
  */
 function calcul_horizon_particule(fonction,z_emission=0){
-    let z_infini;
-    if (z_emission===0){
-        z_infini=1e3;
-    }else{
-        z_infini=z_emission*1e5;
-    }
+    let a_emission=1/(z_emission+1);
     //formule 21 dans la théorie du 20/05/2024
-    return DistanceMetrique(fonction,z_emission,z_infini,H0_parSecondes(H0),Omega_k(0));
+    console.log(a_emission);
+    return DistanceMetrique(fonction,1e-4,a_emission);
 };
 
 /**
@@ -508,11 +499,15 @@ function calcul_horizon_particule(fonction,z_emission=0){
  */
 function calcul_horizon_evenements(fonction,z_reception=0){
     //formule 23 dans la théorie du 20/05/2024
-    return DistanceMetrique(fonction,-1,z_reception,H0_parSecondes(H0),Omega_k(0));
+    return DistanceMetrique(fonction,-1,z_reception,true);
 }
 
-
-
+/**
+ * Inverse du calcul de l'age en fonction d'un z grâce a la fonction dichotomie (marche seulement pour des fonction absolument croissante)
+ * @param {*} temps valeur t
+ * @param {*} fonction fonction a rechercher
+ * @returns valeur de z
+ */
 function calcul_t_inverse(temps,fonction){
 	//Remy test
 	function a_dichotomer(x){
