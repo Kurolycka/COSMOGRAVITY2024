@@ -56,6 +56,7 @@
 
 		"headGraphiqueLCDM": "<h2>Tracé du facteur d'échelle <br /> Constante cosmologique</h2>",
 		"headGraphiqueDE": "<h2>Tracé du facteur d'échelle <br /> Energie sombre</h2>",
+		"avertissement": "Ce site permet de faire des simulations qui prennent en compte 11 paramètres. Il ce peut qu'il y ait des erreur de calculs ou dans le pire des cas un crash de la bage internet. Dans ces cas là n'hésitez pas à recharger la page",
 
 
 
@@ -64,6 +65,11 @@
 				"infoOmégaR0Sortie": "Paramètre de densité de rayonnement calculé.",
 				"infoOmégaK0Sortie": "Paramètre de densité de courbure calculé.",
 			"Temps": "<h3>Temporalité</h3>",
+				"pasDebut": "Pas de naissance de l'univers",
+				"Debut": "L'univers est né il y a ",
+				"Gannee": " Milliard d'année",
+				"pasMort": "Pas de mort de l'univers",
+				"Mort": "L'univers va mourir dans ",
 
 		"Enregistrer": "<h3>Enregistrement</h3>",
 			"infoNomFichier": "Nom d'enregistrement du graphique. Ne pas utiliser de caractère spéciaux tels que . * / | + \\ et autres",

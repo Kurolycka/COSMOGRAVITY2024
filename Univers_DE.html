@@ -154,11 +154,14 @@
         <div class="boiteGraphe">
             <div id="headGraphiqueDE"></div>
 
-            <div>
-                <img style="position: absolute; top: 10px; right: 10px; width: 50px; height: 50px; cursor: pointer;"
+            <button style="background-color: #BCA7DCFF; position: absolute; top: 50px; right: 50px; cursor: pointer;" class="petitBoutton" onclick=avertissement()>
+                <img id="panneauAvertissement"
+                     style="width: 25px; height: 25px"
                      src="./Images/panneau_avertissement.png"
                      alt="avertissement">
-            </div>
+            </button>
+
+            <div class="avertissement" id="avertissementUnivers"></div>
 
             <div id="graphique_DE"></div>
 
@@ -197,13 +200,13 @@
 
             <div class="résultats">
                 <span></span>
-                <span id="début"></span>
+                <span style="width: 100%" id="début"></span>
                 <span></span>
             </div>
 
             <div class="résultats">
                 <span></span>
-                <span id="fin "></span>
+                <span style="width: 100%" id="fin"></span>
                 <span></span>
             </div>
         </div>
@@ -247,7 +250,6 @@
     <script src="./JavaScript/MéthodesNumériques.js"></script>
 
 <script>
-    choixLangueFr();
     texte_univers_DE();
 
     $(function() {

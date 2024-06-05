@@ -355,6 +355,7 @@ function equa_diff_2_DE(t, a, ap) {
  * @return Soit les temps de naissance/mort soit un string explicant pourquoi il n'y a pas de naissance/mort
  */
 function debut_fin_univers(equa_diff, t_0) {
+    let texte = o_recupereJson()
     let H0 = Number(document.getElementById("H0").value);
 
     // Déclaration des variables et des valeurs retournée
@@ -405,17 +406,17 @@ function debut_fin_univers(equa_diff, t_0) {
             Dit que l'univers a commencé avec un BigFall
     */
     if ( set_solution[1] > 1 && (Math.abs(set_solution[1]) <= limite_derivee || Math.abs(set_solution[2]) <= limite_derivee)) {
-        naissance_univers = "Pas de naissance de l'univers"
+        naissance_univers = texte.univers.pasDebut
     }
     else {
         age_debut = set_solution[0] / H0_parGAnnees(H0)
 
         if (set_solution[1] <= 1) {
-            naissance_univers = "L'univers est né il y a " + Math.abs(age_debut).toExponential(4) + " Milliard d'année (BigBang)"
+            naissance_univers = texte.univers.Debut + Math.abs(age_debut).toExponential(4) + texte.univers.Gannee + " (BigBang)"
         }
 
         if ((Math.abs(set_solution[1]) >= limite_derivee || Math.abs(set_solution[2]) >= limite_derivee)) {
-            naissance_univers = "L'univers est né il y a " + Math.abs(age_debut).toExponential(4) + " Milliard d'année (BigFall)"
+            naissance_univers = texte.univers.Debut + Math.abs(age_debut).toExponential(4) + texte.univers.Gannee + " (BigFall)"
         }
     }
 
@@ -458,17 +459,17 @@ function debut_fin_univers(equa_diff, t_0) {
             Dit que l'univers se finit avec un BigRip
     */
     if ( set_solution[1] > 1 && (Math.abs(set_solution[1]) <= limite_derivee || Math.abs(set_solution[2]) <= limite_derivee)) {
-        mort_univers = "Pas de mort de l'univers"
+        mort_univers = texte.univers.pasMort
     }
     else {
         age_fin = set_solution[0] / H0_parGAnnees(H0)
 
         if (set_solution[1] <= 1) {
-            mort_univers = "L'univers va mourir dans " + Math.abs(age_fin).toExponential(4) + " Milliard d'année (BigCrunch)"
+            mort_univers = texte.univers.Mort + Math.abs(age_fin).toExponential(4) + texte.univers.Gannee + " (BigCrunch)"
         }
 
         if ((Math.abs(set_solution[1]) >= limite_derivee || Math.abs(set_solution[2]) >= limite_derivee)) {
-            mort_univers = "L'univers va mourir dans " + Math.abs(age_fin).toExponential(4) + " Milliard d'année (BigRip)"
+            mort_univers = texte.univers.Mort + Math.abs(age_fin).toExponential(4) + texte.univers.Gannee + " (BigRip)"
         }
     }
 
@@ -505,6 +506,8 @@ function tauEnTemps(listeTaus, t_debut) {
  * @param t_fin
  */
 function graphique_facteur_echelle(solution, t_debut, t_fin) {
+    let texte = o_recupereJson()
+
     let H0 = Number(document.getElementById("H0").value);
     let abscisse = solution[0];
     let ordonnee = solution[1];
@@ -631,6 +634,19 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
         plot_bgcolor: "rgba(255,255,255,0)",
         paper_bgcolor: "rgba(255,255,255,0)"
     };
+
+    /* On construis le texte qui va donner les entrée ou les sortie */
+    let texteEntree = "Entrées: \n" +
+        "oui"
+
+    donnee.push({
+        x: [0],
+        y: [facteur_fin],
+        mode: "markers+text",
+        text: [texteEntree],
+        textposition: "bottomright",
+
+    })
 
     let configuration = {
         responsive: true

@@ -163,6 +163,9 @@ function affichage_site_DE() {
 
     let age_univers = sorties[1]
     let debutEtFin = sorties[2]
+
+    document.getElementById("début").innerHTML = debutEtFin[0]
+    document.getElementById("fin").innerHTML = debutEtFin[1]
     console.log("Timeline :", debutEtFin, age_univers)
     console.log("Omega DE/k/m/r :", Omega_DE(0), Omega_k(0), Omega_m(0), Omega_r(0))
 

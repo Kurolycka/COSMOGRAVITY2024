@@ -159,6 +159,9 @@ function affichage_site_LCDM() {
 
     let age_univers = sorties[1]
     let debutEtFin = sorties[2]
+
+    document.getElementById("début").innerHTML = debutEtFin[0]
+    document.getElementById("fin").innerHTML = debutEtFin[1]
     console.log("Timeline :", debutEtFin, age_univers)
 
 

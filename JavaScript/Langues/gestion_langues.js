@@ -18,7 +18,7 @@ const PATH_TRAJ_TUTO_EN = "./Fichiers/Tutoriels/Tuto-Traj-EN.pdf";
  * Fonction qui rafraîchi la page
  */
 function rafraichirPage() {
-    document.location.reload(true);
+    document.location.reload();
 }
 
 /**
@@ -207,6 +207,7 @@ function texte_univers_LCDM() {
 
 
     document.getElementById("headGraphiqueLCDM").innerHTML = texte.univers.headGraphiqueLCDM
+    document.getElementById("avertissementUnivers").innerHTML = texte.univers.avertissement
 
 
     document.getElementById("Sorties").innerHTML = texte.univers.Sorties
@@ -214,6 +215,7 @@ function texte_univers_LCDM() {
     document.getElementById("infoOmégar0Sortie").title = texte.univers.infoOmégaR0Sortie
     document.getElementById("infoOmégak0Sortie").title = texte.univers.infoOmégaK0Sortie
     document.getElementById("Temps").innerHTML = texte.univers.Temps
+
 
     document.getElementById("Enregistrer").innerHTML = texte.univers.Enregistrer
     document.getElementById("infoNomFichier").title = texte.univers.infoNomFichier
@@ -254,6 +256,7 @@ function texte_univers_DE() {
 
 
     document.getElementById("headGraphiqueDE").innerHTML = texte.univers.headGraphiqueDE
+    document.getElementById("avertissementUnivers").innerHTML = texte.univers.avertissement
 
 
     document.getElementById("Sorties").innerHTML = texte.univers.Sorties

@@ -1,17 +1,23 @@
 <nav id="nav" class="menu">
-    <div id="txt-acceuil" class="item haut" style="cursor: pointer"></div>
+    <div class="item haut" style="cursor: pointer">
+        <a id="txt-acceuil" href="./index.html" style="text-decoration: none; color: inherit;"></a>
+    </div>
 
     <div id="txt-univers" class="item haut univers">
         <div class="sousMenu" style="top: 100%; left: 0">
-            <div id="txt-théorieUnivers" class="item univers" style="cursor: pointer"></div>
+            <button onclick="langageTheorieUnivers()" id="txt-théorieUnivers" class="item univers" style="cursor: pointer"></button>
 
-            <div id="txt-tutoUnivers" class="item univers" style="cursor: pointer"></div>
+            <button onclick="langageTutorielUnivers()" id="txt-tutoUnivers" class="item univers" style="cursor: pointer"></button>
 
             <div id="txt-simulationUnivers" class="item univers">
                 <div class="sousMenu">
-                    <div id="txt-modeleLCDM" class="item univers" style="white-space: nowrap; cursor: pointer"></div>
+                    <div class="item univers" style="white-space: nowrap; cursor: pointer">
+                        <a id="txt-modeleLCDM" href="./Univers_LCDM.html" style="text-decoration: none; color: inherit;"></a>
+                    </div>
 
-                    <div id="txt-modeleDE" class="item univers" style="white-space: nowrap; cursor: pointer"></div>
+                    <div class="item univers" style="white-space: nowrap; cursor: pointer">
+                        <a id="txt-modeleDE" href="./Univers_DE.html" style="text-decoration: none; color: inherit;"></a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -19,9 +25,9 @@
 
     <div id="txt-trajectoire" class="item haut trajectoire">
         <div class="sousMenu" style="top: 100%; left: 0">
-            <div id="txt-théorieTrajectoire" class="item trajectoire" style="cursor: pointer"></div>
+            <button onclick="langageTheorieTrajectoire()" id="txt-théorieTrajectoire" class="item trajectoire" style="cursor: pointer"></button>
 
-            <div id="txt-tutoTrajectoire" class="item trajectoire" style="cursor: pointer"></div>
+            <button onclick="langageTutorielTrajectoires()" id="txt-tutoTrajectoire" class="item trajectoire" style="cursor: pointer"></button>
 
             <div id="txt-simulationTrajectoire" class="item trajectoire">
                 <div class="sousMenu">
@@ -55,13 +61,13 @@
 
     <div id="txt-langue" class="item bas">
         <div class="sousMenu" style="top: 100%; left: 0">
-            <div class="item" style="cursor: pointer">
+            <button onclick="choixLangueFr(); document.location.reload();" class="item" style="cursor: pointer">
                 Français
-            </div>
+            </button>
 
-            <div class="item" style="cursor: pointer">
+            <button onclick="choixLangueEn(); document.location.reload();" class="item" style="cursor: pointer">
                 English
-            </div>
+            </button>
         </div>
     </div>
 

@@ -142,3 +142,16 @@ function ajustementGraphique() {
     }
 }
 window.addEventListener('resize', ajustementGraphique());
+
+/**
+ * Fonction qui permet de détecter un click sur le panneau d'avertissement
+ */
+function avertissement() {
+    let message = document.getElementById('avertissementUnivers');
+    if (message.style.display === 'none') {
+        message.style.display = 'block';
+    } else {
+        message.style.display = 'none';
+    }
+    ajustementGraphique()
+}

@@ -26,7 +26,7 @@ nav {
 
         height: fit-content;
         width: 100%;
-        background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.6)),
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4)),
         url("../Images/DeepFieldWebb.png") no-repeat;
         background-size: cover;
     }
@@ -36,9 +36,16 @@ nav {
             width: 100%;
             padding: 10px;
             box-sizing: border-box;
+            /* border-radius: 10px;*/
 
             cursor: default;
             color: rgb(255, 255, 255);
+            font-family: Arial, sans-serif;
+            font-size: 1rem;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .item::after {
@@ -57,6 +64,11 @@ nav {
             left: 0;
         }
 
+            .item button {
+                border: none;
+                background: none;
+            }
+
             .item:hover {
                 background: linear-gradient(to bottom, rgba(220, 93, 79, 0.85), rgba(210, 144, 137, 0.85));
             }
@@ -66,9 +78,7 @@ nav {
                 animation: balayage 1s forwards;
             }
 
-            .item.haut {
-                justify-content: flex-start;
-            }
+
 
             .item.espaceur {
                 flex-grow: 1;
@@ -79,9 +89,7 @@ nav {
                     left: 0;
                 }
 
-            .item.bas {
-                justify-content: flex-end;
-            }
+
 
                 .item.univers:hover {
                     background: linear-gradient(to bottom, rgba(121, 20, 123, 0.85), rgba(154, 124, 203, 0.85));
