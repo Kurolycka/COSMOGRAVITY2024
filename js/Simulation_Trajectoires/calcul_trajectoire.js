@@ -7,6 +7,7 @@ const DIAMETRE_PART = 1;
 var observateur=0;
 var vtotal=0;
 var nzoom=0
+var ns_avant_lancement=0;
 var facteurDeMalheur=[];
 var cle;
 var fact_defaut;
@@ -973,6 +974,17 @@ function trajectoire(compteur,mobile) {
     	document.getElementById('clear').addEventListener('click', function() {//Lorsque j'appuie sur le bouton reset la fenêtre est rechargée et le mode observateur est choisit par défaut. 
       		rafraichir();
     	}, false);
+
+		//Partie qui permet de mettre à l'échelle le dessin de l'astre et du rayon de SCH vis à vis des zooms avant le lancement de la simulation : 
+		if (ns_avant_lancement < 0) {
+			for (incr = 0; incr > ns_avant_lancement; incr -= 1) {
+				mobilefactor[cle] = mobilefactor[cle] / 1.2;
+			}
+		} else if (ns_avant_lancement > 0) {
+			for (incr = 0; incr < ns_avant_lancement; incr += 1) {
+				mobilefactor[cle] = mobilefactor[cle] * 1.2;
+			}
+		}
 
     	creation_blocs(context,mobilefactor,rmaxjson,maximum,compteur); //Je trace le rayon et SCH et si besoin l'astre. 
 
@@ -1942,6 +1954,7 @@ function canvasAvantLancement(){
 function foncPourZoomMoinsAvantLancement(){
 	
     factGlobalAvecClef = factGlobalAvecClef/1.2;
+	ns_avant_lancement-=1;
     nzoom-=1;
     document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
     canvasAvantLancement();
@@ -1950,6 +1963,7 @@ function foncPourZoomMoinsAvantLancement(){
 function foncPourZoomPlusAvantLancement(){
 	
 		factGlobalAvecClef = factGlobalAvecClef*1.2;
+		ns_avant_lancement+=1;
 		nzoom+=1;
 		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
 		canvasAvantLancement();

@@ -6,6 +6,7 @@ var clicks = 0;
 const DIAMETRE_PART = 1;
 const c = 299792458;
 var nzoom=0;
+var ns_avant_lancement=0;
 var facteurDeMalheur;
 var fact_defaut;
 
@@ -880,6 +881,17 @@ function trajectoire(compteur,mobile) {
       	rafraichir();
     }, false);
 
+	//Partie qui permet de mettre à l'échelle le dessin de l'astre et du rayon de SCH vis à vis des zooms avant le lancement de la simulation : 
+	if (ns_avant_lancement < 0) {
+		for (incr = 0; incr > ns_avant_lancement; incr -= 1) {
+			mobilefactor[cle] = mobilefactor[cle] / 1.2;
+		}
+	} else if (ns_avant_lancement > 0) {
+		for (incr = 0; incr < ns_avant_lancement; incr += 1) {
+			mobilefactor[cle] = mobilefactor[cle] * 1.2;
+		}
+	}
+
     // Tracé du Rayon de Schwarzchild.				   
     creation_blocs(context,mobilefactor,rmaxjson,maximum,compteur);
  	element2=document.getElementById('traject_type2');	
@@ -1671,6 +1683,7 @@ function foncPourZoomMoinsAvantLancement(){
 		factGlobalAvecClef = factGlobalAvecClef/1.2;
 		canvasAvantLancement();
 		nzoom-=1;
+		ns_avant_lancement-=1;
 		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
 
 }
@@ -1679,6 +1692,7 @@ function foncPourZoomPlusAvantLancement(){
 	
 	factGlobalAvecClef = factGlobalAvecClef*1.2;
 	nzoom+=1;
+	ns_avant_lancement+=1;
 	document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
 	canvasAvantLancement();
 

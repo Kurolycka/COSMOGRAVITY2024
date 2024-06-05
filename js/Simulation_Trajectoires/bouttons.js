@@ -27,7 +27,7 @@ var bouttons = bouttons || (function(){
 
 		/// Cette fonction gére les zoom sur les diffentes simulution trajectoirs
 		zoom: function(zoomtype,mobile,canvas,mobilefactor,compteur) {
-				factor=mobilefactor[compteur];8
+				factor=mobilefactor[compteur];
 				if(zoomtype){factor*= 1.2;} //(==true) (: true pour zoom +
 				else{factor/= 1.2;} // fasle pour Zoom moin -
 				mobile.positionspatio.posX1 = factor* mobile.r_part * (Math.cos(mobile.phi) / mobile.rmax) + (canvas.width / 2);
