@@ -99,13 +99,26 @@ function load_schwarshild_massif() {
 			document.getElementById('ammorti').innerHTML = document.getElementById("reb").value / 100;
 		}
 
+		var inputNbfusees = document.getElementById("nombredefusees"); //manon
+		var labelNbfusees = document.getElementById("labelnumberfusees"); //manon
+
 		if (document.getElementById("traject_type2").value == "observateur") {
 			pressionBouttonObservateur();
+			inputNbfusees.style.display = "inline"; //manon
+			labelNbfusees.style.display = "inline"; //manon
+			labelNbGTempsAcc.style.display="none"; //Manon
+			inputNbGTempsAcc.style.display="none"; //Manon
 		} 
 		else if (document.getElementById("traject_type2").value == "mobile") {
 			pressionBouttonMobile();
+			inputNbfusees.style.display = "none"; //manon
+			labelNbfusees.style.display = "none"; //manon
+			labelNbGTempsAcc.style.display="inline"; //Manon
+			inputNbGTempsAcc.style.display="inline"; //Manon
 
 		}
+
+	
   	}
 }
 
@@ -240,11 +253,20 @@ function load_schwarshild_massif_nonBar() {
 		else if (document.getElementById("traject_type").value == "complete") {
 			pressionBouttonTrajectoireComplete();
 		}
+
+
+		var inputNbfusees = document.getElementById("nombredefusees"); //manon
+		var labelNbfusees = document.getElementById("labelnumberfusees"); //manon
+
 		if (document.getElementById("traject_type2").value == "observateur") {
 			pressionBouttonObservateur();
+			inputNbfusees.style.display = "inline"; //manon
+			labelNbfusees.style.display = "inline"; //manon
 		} 
 		else if (document.getElementById("traject_type2").value == "mobile") {
 			pressionBouttonMobile();
+			inputNbfusees.style.display = "none"; //manon
+			labelNbfusees.style.display = "none"; //manon
 		}
   	}
 }
@@ -286,10 +308,17 @@ function load_schwarshild_photon() {
 			pressionBouttonTrajectoireComplete();
 		}
 
+		var inputNbfusees = document.getElementById("nombredefusees"); //manon
+		var labelNbfusees = document.getElementById("labelnumberfusees"); //manon
+
 		if (document.getElementById("traject_type2").value == "observateur") {
 			pressionBouttonObservateur();
+			inputNbfusees.style.display = "inline"; //manon
+			labelNbfusees.style.display = "inline"; //manon
 		} else if (document.getElementById("traject_type2").value == "mobile") {
 			pressionBouttonMobile();
+			inputNbfusees.style.display = "none"; //manon
+			labelNbfusees.style.display = "none"; //manon
 
 		}
 
@@ -340,10 +369,17 @@ function load_schwarshild_photon_nonBar() {
 			pressionBouttonTrajectoireComplete();
 		}
 
+		var inputNbfusees = document.getElementById("nombredefusees"); //manon
+		var labelNbfusees = document.getElementById("labelnumberfusees"); //manon
+
 		if (document.getElementById("traject_type2").value == "observateur") {
 			pressionBouttonObservateur();
+			inputNbfusees.style.display = "inline"; //manon
+			labelNbfusees.style.display = "inline"; //manon
 		} else if (document.getElementById("traject_type2").value == "mobile") {
 			pressionBouttonMobile();
+			inputNbfusees.style.display = "none"; //manon
+			labelNbfusees.style.display = "none"; //manon
 
 		}
 	}
@@ -399,10 +435,17 @@ function load_kerr_massif() {
 			pressionBouttonTrajectoireComplete();
 		}
 
+		var inputNbfusees = document.getElementById("nombredefusees"); //manon
+		var labelNbfusees = document.getElementById("labelnumberfusees"); //manon
+
 		if (document.getElementById("traject_type2").value == "observateur") {
 			pressionBouttonObservateur2();
+			inputNbfusees.style.display = "inline"; //manon
+			labelNbfusees.style.display = "inline"; //manon
 		} else if (document.getElementById("traject_type2").value == "mobile") {
 			pressionBouttonMobile2();
+			inputNbfusees.style.display = "none"; //manon
+			labelNbfusees.style.display = "none"; //manon
 
 		}
 	}
@@ -452,10 +495,17 @@ function load_kerr_photon() {
 			pressionBouttonTrajectoireComplete();
 		}
 
+		var inputNbfusees = document.getElementById("nombredefusees"); //manon
+		var labelNbfusees = document.getElementById("labelnumberfusees"); //manon
+
 		if (document.getElementById("traject_type2").value == "observateur") {
 			pressionBouttonObservateur2();
+			inputNbfusees.style.display = "inline"; //manon
+			labelNbfusees.style.display = "inline"; //manon
 		} else if (document.getElementById("traject_type2").value == "mobile") {
 			pressionBouttonMobile2();
+			inputNbfusees.style.display = "none"; //manon
+			labelNbfusees.style.display = "none"; //manon
 
 		}
 	}

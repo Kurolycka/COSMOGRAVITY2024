@@ -71,7 +71,7 @@
 		"enregistrerEn":"",
 		"entrees":"Entrées",
 		"sorties":"Sorties",
-		"tempsBigBang":"Temps depuis le Big Bang",
+		"tempsBigBang":"Temporalité",
 		"temps_BF": "Temps depuis le Big Fall",
 		"dureeUnivers":"Durée de l'univers",
 		"simuavertissement":"Avertissement",
@@ -101,7 +101,7 @@
 	},
 
 	"page_univers_calculs":{
-		"titre": "Calculs Annexes",
+		"titre": "Calculette Cosmologique",
 		"t_trop_grand":"Durée supérieure à la valeur maximale \r pour cet espace-temps",
 		"t_negatif":" doit être un nombre positif(> 0).",
 		"dm_trop_grand":"Distance métrique supérieure à la valeur maximale \r pour cet espace-temps",
@@ -237,6 +237,14 @@
 		"r3":"il est (par défaut) dans une direction perpendiculaire au plan de l’orbite (et de l’écran) et a une distance d constante à la fois >> rS et << H0/c²",
 		"ctreastre":"Distance initiale du projectile au centre de l'astre",
 		"rayonschwars":"Rayon de Schwarzschild",
+		"vitesse_orbite_circulaire":"Vitesse de l'orbite circulaire pour ce r0 (ɸ₀ = 90°)",
+		"orbite_circulaire_stable":"stable",
+		"orbite_circulaire_instable":"instable",
+		"rayon_orbite_circulaire_photon":"Distance initiale du projectile au centre de l'astre pour une orbite circulaire (ɸ₀ = 90°)",
+		"rayon_orbite_circulaire_photon_kerr_prograde":"Distance initiale du projectile au centre de l'astre pour une orbite circulaire prograde (ɸ₀ = 90°)",
+		"rayon_orbite_circulaire_photon_kerr_retrograde":"Distance initiale du projectile au centre de l'astre pour une orbite circulaire rétrograde (ɸ₀ = -90°)",
+		"vitesse_orbite_circulaire_kerr_prograde":"Vitesse de l'orbite circulaire prograde pour ce r0 (ɸ₀ = 90°)",
+		"vitesse_orbite_circulaire_kerr_retrograde":"Vitesse de l'orbite circulaire retrograde pour ce r0 (ɸ₀ = -90°)",
 		"diffderive":"Différence des dérivées seconde de r",
 		"depart":"Distance initiale",
 		"massetxt":"Masse de l'astre",
@@ -297,7 +305,7 @@
 		"rayonHorzInfRayon":"Veuillez saisir une valeur de r0 strictement supérieure à l'horizon extérieur Rh+ !",
 		"lancerInterdit":"Lancer depuis l'intérieur du rayon physique interdit !",
 		"simuavertissement":"Avertissement",
-		"avertissement":"Les simulations trajectoires respectent la cinématique. Pour certaines  conditions initiales le pas de calcul devient trop grand  près des périastres et cela entraine des erreurs sur la suite de la trajectoire. Pour la matière non baryonique, les trajectoires calculées numériquement au voisinage de r=0 sont parfois imprévisibles (les équations des géodésiques ont « r » en dénominateur). <br> Le bouton « Décélérer » permet, en diminuant interactivement le pas de calcul, de palier (la plupart du temps) à ces  difficultés numériques.<br><br> Pour le calcul des vitesses on suppose qu'un observateur fixe (suivant une géodésique) mesure la vitesse du mobile quand celui-ci passe à sa position. Dans le cas de la métrique de Kerr lorsque r est inférieur à rs il ne peut y avoir de géodésique ayant la propriété précédente donc aucun observateur de ne peut demeurer fixe. Ainsi une fois rs dépassé le calcul des vitesses n'est pas possible d'où le 'pas définie'. ",
+		"avertissement":"Les simulations trajectoires respectent la cinématique. Pour certaines  conditions initiales le pas de calcul devient trop grand  près des périastres et cela entraine des erreurs sur la suite de la trajectoire. Pour la matière non baryonique, les trajectoires calculées numériquement au voisinage de r=0 sont parfois imprévisibles (les équations des géodésiques ont « r » en dénominateur). <br> Le bouton « Décélérer » permet, en diminuant interactivement le pas de calcul, de palier (la plupart du temps) à ces  difficultés numériques.<br><br> Pour le calcul des vitesses on suppose qu'un observateur fixe (suivant une géodésique) mesure la vitesse du mobile quand celui-ci passe à sa position. Dans le cas de la métrique de Kerr lorsque r est inférieur à rs il ne peut y avoir de géodésique ayant la propriété précédente donc aucun observateur de ne peut demeurer fixe. Ainsi une fois rs dépassé le calcul des vitesses n'est pas possible d'où le 'pas définie'. <br><br> Le changement brusque de rotation de la trajectoire du mobile/photon à Rh+/Rh- est prédit dans la théorie.",
 		"message_enregistrer":"Tracez avant d'enregistrer !",
 		"entrees":"Entrées :",
 		"horiz_ext_atteint":"Horizon extérieur atteint !",
@@ -319,6 +327,8 @@
 		"alerte_nomFichier": "Le nom de fichier n'est pas valide",
 		"nombre_de_g": "g ressenti",
 		"nombre_g_infobulle": "Nombre de g ressenti par le pilote avec 1g = 9.81m/s². Valable seulement pour la mécanique Newtonienne.",
+		"dernier_g": "Dernier g",
+		"dernier_g_infobulle":"Dernier nombre de g ≠ 0 ressenti par le pilote avec 1g = 9.81m/s². Valable seulement pour la mécanique Newtonienne.",
 		"distance_metrique_parcourue":"D(m)",
 		"distance_metrique_parcourue_infobulle":"Distance métrique parcourue par le mobile depuis l'instant initial."
 
@@ -351,7 +361,9 @@
 	},
 
 	"page_trajectoire_photon_nonBar":{
-		"titre":"Trajectoire d'un photon en métrique de Schwarzchild <br/> (cas non baryonique)"
+		"titre":"Trajectoire d'un photon en métrique de Schwarzchild <br/> (cas non baryonique)",
+		"orbite_circulaire_exterieure":"Distance nécessaire du photon au centre de l'astre pour obtenir une orbite circulaire à l'extérieur de l'astre (ɸ₀ = 90°).",
+		"orbite_circulaire_interieure":"Distance nécessaire du photon au centre de l'astre pour obtenir une orbite circulaire à l'intérieur de l'astre (ɸ₀ = 90°)."
 	},
 
 	"page_trajectoire_massive_kerr":{

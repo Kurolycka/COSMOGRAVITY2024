@@ -496,7 +496,7 @@ function updateTemperatureWeinberg(){
 		h = Number(document.getElementById("h_p").value);
 		k = Number(document.getElementById("k_p").value);
 		h0 = Number(document.getElementById("H0calc").value);
-		h0=calcul_H0parsec(h0); //fonction présente dans Monofluides/calcul_lambda_CDM.js
+		h0=H0_parSecondes(h0); //fonction présente dans Monofluides/calcul_lambda_CDM.js
 		num=puis(45*puis(c,5)*puis(h,3),1/4)*puis(h0,1/2);
 		denom=puis(64*puis(pi(),6)*G*puis(k,4),1/4);
 		calc=(num/denom).toExponential(4);

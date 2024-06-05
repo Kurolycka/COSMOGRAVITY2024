@@ -283,10 +283,11 @@ function genereHtml(){
 	var newRow=document.getElementById('tableauconstanteslers').insertRow();
 	var jstring = '<tr id="tgggg1" >'
 	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
-		jstring += '<th class="tg-aicv">$L'+countt.toString()+'(m)$</th>';} //  <---------modif
-
+		jstring += '<th class="tg-aicv">$L'+countt.toString()+'(m)$</th>';}
 	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
-		jstring += '<th class="tg-aicv">$E'+countt.toString()+'$</th>'; //  <---------modif
+		jstring += '<th class="tg-aicv">$E'+countt.toString()+'$</th>';}
+	for (countt = 1; countt <= nbredefuseesgenere; countt +=1) {
+		jstring += '<th class="tg-aicv" id="vitesse_orb_circ'+countt.toString()+'" title="">$Vcirc'+countt.toString()+' (m/s)$</th>'; //ManonCirculaire
 	}
 
 	//pour katex il faux mettre un antislash devant le antislash
@@ -308,6 +309,9 @@ function genereHtml(){
 
 	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
 		jstring += '<td class="tg-3ozo" id="E'+countt.toString()+'">0</td>';
+	}
+	for (countt =1; countt <= nbredefuseesgenere; countt +=1) {
+		jstring += '<td class="tg-3ozo" id="Vcirc'+countt.toString()+'">0</td>'; //ManonCirculaire
 	}
 
 	jstring +='<td class="tg-3ozo" id="m">0</td>';
@@ -334,7 +338,8 @@ function genereHtml(){
 		<th id="decal_spect`+countt.toString()+`" title="" class="tg-aicv"></th>
 		<th id="v_total`+countt.toString()+`" title="" class="tg-aicv">   V<SUB>physique</SUB> (m.s<sup>-1</sup>) </th>
 		<th id="distance_metrique`+countt.toString()+`" title="" class="tg-aicv"></th> 
-		<th id="nb_g`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>`; //ManonGeneralisation
+		<th id="nb_g`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>
+		<th id="dernier_g`+countt.toString()+`" title="" class="tg-aicv" style="display: none;">testou</th>`; //ManonV2
 		
 
 		var newRow2=document.getElementById('tableauresultatsimu').insertRow();
@@ -349,7 +354,8 @@ function genereHtml(){
 		<td class="tg-3ozo" id="decal`+countt.toString()+`">res</td>
 		<td class="tg-3ozo" id="v_tot`+countt.toString()+`">res</td>
 		<td class="tg-3ozo" id="distance_parcourue`+countt.toString()+`">res</td>
-		<td class="tg-3ozo" id="g_ressenti`+countt.toString()+`" style="display: none;">N/A</td>`; //ManonGeneralisation
+		<td class="tg-3ozo" id="g_ressenti`+countt.toString()+`" style="display: none;">0</td>
+		<td class="tg-3ozo" id="dernier_g_res`+countt.toString()+`" style="display: none;">0</td>`; //ManonV2
 	}
 
 
@@ -420,6 +426,10 @@ function rendreVisibleNbG() {
 	// Sélectionne toutes les cellules dont l'ID commence par "g_ressenti" :
 	var gRessCells = document.querySelectorAll('[id^="g_ressenti"]');
 
+	var dernier_g_Cells = document.querySelectorAll('[id^="dernier_g"]');
+
+	var dernier_g_res_Cells = document.querySelectorAll('[id^="dernier_g_res"]');
+
     
     // Si element2.value est "mobile" et que y a que 1 mobile, rend les cellules visibles, sinon les cache
     if (element2.value == "mobile" && blyo==1) {
@@ -429,6 +439,12 @@ function rendreVisibleNbG() {
 		gRessCells.forEach(function(cell) {
             cell.style.display = ''; // Rend visible la cellule g_ressenti
         });
+		dernier_g_Cells.forEach(function(cell) {
+            cell.style.display = ''; // Rend visible la cellule derniger_g
+        });
+		dernier_g_res_Cells.forEach(function(cell) {
+            cell.style.display = ''; // Rend visible la cellule dernier_g_res
+        });
     } else {
         nbGCells.forEach(function(cell) {
             cell.style.display = 'none'; // Cache la cellule nb_g
@@ -436,16 +452,26 @@ function rendreVisibleNbG() {
 		gRessCells.forEach(function(cell) {
             cell.style.display = 'none'; // Cache la cellule g_ressenti
         });
+		dernier_g_Cells.forEach(function(cell) {
+            cell.style.display = 'none'; // Cache la cellule dernier_g
+        });
+		dernier_g_res_Cells.forEach(function(cell) {
+            cell.style.display = 'none'; // Cache la cellule dernier_g_res
+        });
     }
 }
+
 
 //--------------------------{Fin fonction rajoutée par Manon}---------------------------------------------
 
 // calcul en temps réel des E, L,...
 //on crée un objet json(idée de Mme Mougenot) mobile pour chaque mobile, pour bien differencier/contenir les variables appartenant a chaque mobile de maniere distincte.
 function initialisation(compteur){
-  c = 299792458;
-  G = 6.67385 * Math.pow(10, -11);							  
+
+	var texte = o_recupereJson();
+
+	c = 299792458;
+	G = 6.67385 * Math.pow(10, -11);							  
 	M = Number(document.getElementById("M").value);
 	r_phy = Number(document.getElementById("r_phy").value);
 	m = G * M / Math.pow(c, 2); 
@@ -475,10 +501,20 @@ function initialisation(compteur){
 	
 	deltam_sur_m = 0;
 
+	v_rotation = c*Math.sqrt(rs/(2*(r0-rs))); //ManonCirculaire
+
 	document.getElementById("L"+compteur.toString()).innerHTML = L.toExponential(3);
 	document.getElementById("E"+compteur.toString()).innerHTML = E.toExponential(3);
+	document.getElementById("Vcirc"+compteur.toString()).innerHTML = v_rotation.toExponential(5); //ManonCirculaire
 	document.getElementById("m").innerHTML = rs.toExponential(3);
 	document.getElementById("decal"+compteur.toString()).innerHTML = "";	//   affichage en blanc au debut de la simulation
+
+	if (v_rotation>= (c/2)){ //ManonCirculaire
+		document.getElementById("Vcirc"+compteur.toString()).title=texte.pages_trajectoire.orbite_circulaire_instable;
+	}else{
+		document.getElementById("Vcirc"+compteur.toString()).title=texte.pages_trajectoire.orbite_circulaire_stable;
+	}
+
 
 	scale_factor = Number(document.getElementById("scalefactor").value);
 	mobile = { r0:r0, vphi:vphi, vr:vr, L:L, E:E , phi0:phi0  };     
@@ -653,7 +689,6 @@ function trajectoire(compteur,mobile) {
 
 		if(blyo == 1 && element2.value == "mobile") { 	
 			document.getElementById("joyDiv").style.visibility='visible';
-		
 		}
 
 
@@ -818,8 +853,6 @@ function trajectoire(compteur,mobile) {
     document.getElementById('bouton_pause').addEventListener('click', function() {
     	pausee(compteur,mobile,mobilefactor);
     }, false);
-	
-
 
 
 	if(blyo == 1 && element2.value == "mobile" ) {
@@ -857,9 +890,7 @@ function trajectoire(compteur,mobile) {
 				document.getElementById("L"+compteur.toString()).innerHTML = mobile.L.toExponential(3);
 				document.getElementById("decal"+compteur.toString()).innerHTML = deltam_sur_m.toExponential(3);
 		}
-		}, 50); 
- 
-
+		}, 50); //Réactivité du système et pas du pilote 
 	}												  
 		
 
@@ -1107,15 +1138,10 @@ function animate(compteur,mobile,mobilefactor) {
 			
 			mobile.position.posX2 = mobilefactor[compteur] * mobile.r_part_obs * (Math.cos(mobile.phi_obs) / rmax) + (canvas.width / 2.);  // rmax pas mobile.rmax <-----  JPC
 			mobile.position.posY2 = mobilefactor[compteur] * mobile.r_part_obs * (Math.sin(mobile.phi_obs) / rmax) + (canvas.height / 2.);  // rmax pas mobile.rmax <-----  JPC
+
+			if (mobile.r_part > r_phy){
+			mobile.distance_parcourue_totale += vtotal*(mobile.dtau*(1-rs/mobile.r_part_obs)/(mobile.E));} //ManonCorrection
 			
-			if (mobile.r_part>r_phy){
-				if (r_phy==0 && mobile.r_part_obs<=1.0001*rs){
-					mobile.distance_parcourue_totale+=0; //ManonGeneralisation
-				}
-				else{
-					mobile.distance_parcourue_totale+=vtotal*mobile.dtau; //ManonGeneralisation
-				}
-			}//ManonGeneralisation
 			
 		}
 		else{   // spationaute
@@ -1136,8 +1162,8 @@ function animate(compteur,mobile,mobilefactor) {
 			mobile.positionspatio.posX1 = mobilefactor[compteur] * mobile.r_part * (Math.cos(mobile.phi) / rmax) + (canvas.width / 2.);  // rmax pas mobile.rmax <-----  JPC
 			mobile.positionspatio.posY1 = mobilefactor[compteur] * mobile.r_part * (Math.sin(mobile.phi) / rmax) + (canvas.height / 2.)   // rmax pas mobile.rmax <-----  JPC
 
-			if (mobile.r_part>r_phy){ //ManonGeneralisation
-				mobile.distance_parcourue_totale+=vtotal*(mobile.dtau*(1-rs/mobile.r_part)/mobile.E); //ManonGeneralisation
+			if (mobile.r_part>r_phy){ 
+				mobile.distance_parcourue_totale+=vtotal*(mobile.dtau*(1-rs/mobile.r_part)/mobile.E); //ManonCorrection
 			}
 
 			if(joy.GetPhi()!=0 && blyo==1){ //Manon
@@ -1426,14 +1452,18 @@ function animate(compteur,mobile,mobilefactor) {
 
 			//------------------------{Manon}----------------------------------
 
-			if(element2.value == "mobile" && blyo==1 && mobile.r_part>rs) { //ManonGeneralisation
-				setInterval(function(){
-					if(joy.GetPhi()!=0){ 
-						document.getElementById("g_ressenti"+compteur.toString()).innerHTML = nombre_de_g_calcul.toExponential(3);}
-					else{
-						document.getElementById("g_ressenti"+compteur.toString()).innerHTML = "N/A";}
 
-					}, mobile.dtau*(1-rs/mobile.r_part)/mobile.E); 
+			if(element2.value == "mobile" && blyo==1) { //ManonV2
+
+				intervalID = setInterval(function(){
+					if(joy.GetPhi()!=0){ 
+						document.getElementById("g_ressenti"+compteur.toString()).innerHTML = nombre_de_g_calcul.toExponential(3);
+						document.getElementById("dernier_g_res"+compteur.toString()).innerHTML = nombre_de_g_calcul.toExponential(3);}
+					else{
+						document.getElementById("g_ressenti"+compteur.toString()).innerHTML = 0;}
+						clearInterval(intervalID);
+
+					}, 50); 
 			}
 			
 			//-------------------{Fin Manon}------------------------------------
@@ -1455,6 +1485,7 @@ function animate(compteur,mobile,mobilefactor) {
 			document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = "";
 			document.getElementById("g_ressenti"+compteur.toString()).innerHTML = ""; 	//Manon			 
 			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=1/0; //Manonbis
+			document.getElementById("g_ressenti"+compteur.toString()).innerHTML = 0; //ManonV2
 
 		}
 	}

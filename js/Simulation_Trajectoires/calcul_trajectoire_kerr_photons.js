@@ -113,11 +113,16 @@ function initialisation(){
 	E=Math.sqrt(Math.abs(E));
 	L = (delta(r0) * vphi / c - rs * a * E) / (r0 - rs);
 
+	rayon_orbite_pro=rs*(1+Math.cos((2/3)*Math.acos(-(2*a)/rs)));
+	rayon_orbite_retro=rs*(1+Math.cos((2/3)*Math.acos((2*a)/rs)));
+
 	textegravetetc_Kerr();				   
 	document.getElementById("a").innerHTML = a.toExponential(3);
 	document.getElementById("m").innerHTML = rs.toExponential(3);
 	document.getElementById("L").innerHTML = L.toExponential(3);
 	document.getElementById("E").innerHTML = E.toExponential(3);
+	document.getElementById("circulaire_prograde_res").innerHTML=rayon_orbite_pro.toExponential(5);
+	document.getElementById("circulaire_retrograde_res").innerHTML=rayon_orbite_retro.toExponential(5);
 
 	if (isNaN(rhp)){document.getElementById("rhp").innerHTML = 0;}
 	else {  document.getElementById("rhp").innerHTML = rhp.toExponential(3);}
@@ -502,7 +507,6 @@ function animate() {
 			vp_3_obs=resulta[2]; // r_part_obs*varphi_obs/dtau;
 			posX2 = scale_factor * r_part_obs * (Math.cos(phi_obs) / rmax) + (canvas.width / 2.);
 			posY2 = scale_factor * r_part_obs * (Math.sin(phi_obs) / rmax) + (canvas.height / 2.);
-			distance_parcourue_totale+=vtot*dtau; //Manon
 
 			if(r_part_obs<rs){
 				vtot=NaN
@@ -523,7 +527,6 @@ function animate() {
         	vp_3=resulta[2];
 			posX1 = scale_factor * r_part * (Math.cos(phi) / rmax) + (canvas.width / 2.);
 			posY1 = scale_factor * r_part * (Math.sin(phi) / rmax) + (canvas.height / 2.);
-			distance_parcourue_totale+=0
 
 
 			if(r_part<rs){

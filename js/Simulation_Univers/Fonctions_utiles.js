@@ -371,21 +371,252 @@ function equa_diff_2_DE(t, a, ap) {
 }
 
 /**
+ * Fonction permettant de déterminer si l'univers à un début ou une fin. Si ce n'est pas le cas, renvoie un string
+ * précisant pourquoi il n'y a pas de début/fin de l'univers
+ * @param equa_diff {function} Fonction caractéristique de l'EDO2 du modèle
+ * @param t_0 {number} Age actuel de l'univers
+ * @return Soit les temps de naissance/mort soit un string explicant pourquoi il n'y a pas de naissance/mort
+ */
+function debut_fin_univers(equa_diff, t_0) {
+    let H0 = Number(document.getElementById("H0").value);
+
+    // Déclaration des variables et des valeurs retournée
+    let set_solution = [0, 1 ,1]
+    let save_set_solution;
+    let pas = 1e-4 * H0 / Math.abs(H0)
+    let limite_derivee = Math.abs(100000 / pas)
+    let nombre_point = 0
+
+    let naissance_univers;
+    let mort_univers;
+    let age_debut;
+    let age_fin;
+
+
+    // Recherche a = 0 / da/dtau = Infinity dans le sens négatif
+    while (set_solution[1] >= 0 && (Math.abs(set_solution[1]) <= +Infinity || Math.abs(set_solution[2]) <= +Infinity) && nombre_point <= 5/Math.abs(pas)) {
+        save_set_solution = set_solution
+        set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff)
+        nombre_point = nombre_point + 1
+    }
+
+    // Si le dernier set de solution contient des valeurs non définies on utilise celui du pas précédent
+    if ( (isNaN(set_solution[1]) && isNaN(set_solution[2])) ) {
+        console.log("Le set de solution saved a été utilisé (sens neg)", set_solution, save_set_solution)
+        set_solution = save_set_solution
+    }
+    console.log(set_solution)
+
+    /*
+    Si :
+        la valeur de a est plus grande que 1 (arbitraire)
+        et
+        la valeur de da/dtau est 10^11 fois plus grande que le pas
+    on :
+        Dit que l'univers n'a pas de point de naissance
+
+    sinon :
+        On récupère le tau du set de solution et on le transforme en temps
+        Si :
+            c'est la valeur de a qui est plus petite ou égale a 1
+        on :
+            Dit que l'univers a commencé avec un BigBang
+
+        Si :
+            c'est la valeur de da/dtau qui est trop grande
+        on :
+            Dit que l'univers a commencé avec un BigFall
+    */
+    if ( set_solution[1] > 1 && (Math.abs(set_solution[1]) <= limite_derivee || Math.abs(set_solution[2]) <= limite_derivee)) {
+        naissance_univers = "Pas de naissance de l'univers"
+    }
+    else {
+        age_debut = set_solution[0] / H0_parGAnnees(H0)
+
+        if (set_solution[1] <= 1) {
+            naissance_univers = "L'univers est né il y a " + Math.abs(age_debut).toExponential(4) + " Milliard d'année (BigBang)"
+        }
+
+        if ((Math.abs(set_solution[1]) >= limite_derivee || Math.abs(set_solution[2]) >= limite_derivee)) {
+            naissance_univers = "L'univers est né il y a " + Math.abs(age_debut).toExponential(4) + " Milliard d'année (BigFall)"
+        }
+    }
+
+    // On réinitialise
+    set_solution = [0, 1, 1];
+    nombre_point = 0;
+
+    // Recherche a = 0 / da/dtau = Infinity dans le sens positif
+    while (set_solution[1] >= 0 && (Math.abs(set_solution[1]) <= +Infinity || Math.abs(set_solution[2]) <= +Infinity) && nombre_point <= 5/Math.abs(pas)) {
+        save_set_solution = set_solution
+        set_solution = RungeKuttaEDO2(pas, set_solution[0], set_solution[1], set_solution[2], equa_diff)
+        nombre_point = nombre_point + 1
+    }
+
+    if ( isNaN(set_solution[1]) || isNaN(set_solution[2]) ) {
+        console.log("Le set de solution saved a été utilisé (sens pos)", set_solution, save_set_solution)
+        set_solution = save_set_solution
+        set_solution = save_set_solution
+    }
+    console.log(set_solution)
+
+    /*
+    Si :
+        la valeur de a est plus grande que 1 (arbitraire)
+        et
+        la valeur de da/dtau est 10^11 fois plus grande que le pas
+    on :
+        Dit que l'univers n'a pas de point de mort
+
+    sinon :
+        On récupère le tau du set de solution et on le transforme en temps
+        Si :
+            c'est la valeur de a qui est plus petite ou égale a 1
+        on :
+            Dit que l'univers se finit avec un BigCrunch
+
+        Si :
+            c'est la valeur de da/dtau qui est trop grande
+        on :
+            Dit que l'univers se finit avec un BigRip
+    */
+    if ( set_solution[1] > 1 && (Math.abs(set_solution[1]) <= limite_derivee || Math.abs(set_solution[2]) <= limite_derivee)) {
+        mort_univers = "Pas de mort de l'univers"
+    }
+    else {
+        age_fin = set_solution[0] / H0_parGAnnees(H0)
+
+        if (set_solution[1] <= 1) {
+            mort_univers = "L'univers va mourir dans " + Math.abs(age_fin).toExponential(4) + " Milliard d'année (BigCrunch)"
+        }
+
+        if ((Math.abs(set_solution[1]) >= limite_derivee || Math.abs(set_solution[2]) >= limite_derivee)) {
+            mort_univers = "L'univers va mourir dans " + Math.abs(age_fin).toExponential(4) + " Milliard d'année (BigRip)"
+        }
+    }
+
+    return [naissance_univers, mort_univers, age_debut, age_fin]
+}
+
+/**
+ * Fonction permettant de transformer les taux en temps
+ * @param listeTaus {[number]} Liste des taux sous forme de nombre
+ * @param t_debut {number} age de naissance de l'univers
+ * @param t_fin {number} age de mort de l'univers
+ * @param t_0 {number} age théorique actuel de l'univers
+ * @return La liste des temps
+ */
+function tauEnTemps(listeTaus, t_debut) {
+    let H0 = Number(document.getElementById("H0").value);
+    let H0parGAnnee = H0_parGAnnees(H0);
+
+    for (let index = 0; index < listeTaus.length; index = index + 1) {
+        listeTaus[index] = listeTaus[index] / H0parGAnnee
+
+        if (t_debut) {
+            listeTaus[index] = listeTaus[index] + Math.abs(t_debut)
+        }
+    }
+
+    return listeTaus
+}
+
+/**
  * Fonction permettant de tracer le facteur d'échelle en fonction du temps.
  * @param solution {[number[], number[]]} Liste contenant la liste des temps et les valeurs du facteur d'échelle
+ * @param t_debut
+ * @param t_fin
  */
-function graphique_facteur_echelle(solution) {
+function graphique_facteur_echelle(solution, t_debut, t_fin) {
+    let H0 = Number(document.getElementById("H0").value);
     let abscisse = solution[0];
     let ordonnee = solution[1];
+
+    let facteur_debut;
+    let facteur_fin;
+    if (H0 > 0) {
+        facteur_debut = ordonnee[0]
+        facteur_fin = ordonnee[ordonnee.length - 1]
+    } else {
+        facteur_debut = ordonnee[ordonnee.length - 1]
+        facteur_fin = ordonnee[0]
+    }
+
+    // Pour corriger l'erreur numérique
+    if (t_debut && abscisse[0] < 0) {
+        let offset = Math.abs(abscisse[0]);
+        for (let index = 0; index < abscisse.length; index++) {
+            abscisse[index] = abscisse[index] + offset;
+        }
+    }
+
+    if (t_debut && facteur_debut < 0.5) {
+        console.log("correction ordonnée gauche")
+        if (H0 > 0) {
+            ordonnee[0] = 0
+        } else {
+            ordonnee[ordonnee.length - 1] = 0
+        }
+    }
+
+    if (t_fin && facteur_fin < 0.5) {
+        console.log("correction ordonné droite")
+        if (H0 > 0) {
+            ordonnee[ordonnee.length - 1] = 0
+        } else {
+            ordonnee[0] = 0
+        }
+    }
+
+    let max = ordonnee.reduce((a, b) => Math.max(a, b), -Infinity);
+    let min = ordonnee.reduce((a, b) => Math.min(a, b), +Infinity);
+
+
 
     let donnee = [{
         x: abscisse,
         y: ordonnee,
-        type: "scatter", // Change 'line' to 'scatter'
-        mode: "lines", // Change 'line' to 'lines'
+        type: "scatter",
+        mode: "lines",
         name: "Facteur d'échelle",
-        line: {color: 'purple'} // Change 'marker' to 'line' for line color
+        line: { color: 'purple' }
     }];
+
+    if (t_debut && facteur_debut > 0.5) {
+        console.log("test assymptote 1", t_debut, Math.abs(ordonnee[0]))
+        donnee.push({
+            type: 'line',
+            x:[0, 0],
+            y:[min, max],
+            line: {
+                color: "black",
+                simplify: false,
+                shape: 'linear',
+                dash: 'dash'
+            },
+        });
+    }
+
+    if (t_fin && facteur_fin > 0.5) {
+        console.log("test assymptote 2", t_debut, Math.abs(ordonnee[ordonnee.length - 1]))
+        let x_assymptote;
+        if (t_fin && t_debut) {
+            x_assymptote = Math.abs(Math.abs(t_fin) + Math.abs(t_debut))
+        } else {
+            x_assymptote = t_fin
+        }
+        donnee.push({
+            type: 'line',
+            x:[x_assymptote, x_assymptote],
+            y:[min, max],
+            line: {
+                color: "black",
+                simplify: false,
+                shape: 'linear',
+                dash: 'dash'
+            },
+        });
+    }
 
     let apparence = {
         title: {
@@ -399,23 +630,23 @@ function graphique_facteur_echelle(solution) {
             x: 0.55
         },
         xaxis: {
-            title: "Temps en milliard d'année",
-            autorange: true
+            title: "Temps en milliard d'années",
         },
         yaxis: {
             title: "facteur d'échelle réduit",
-            autorange: true
-        }
+        },
+        showlegend: false,
     };
 
     if (document.getElementById("graphique")) {
-        Plotly.newPlot("graphique", donnee, apparence);
+        Plotly.newPlot("graphique", [donnee], apparence);
     }
 
     if (document.getElementById("graphique_sombre")) {
         Plotly.newPlot("graphique_sombre", donnee, apparence);
     }
 }
+
 
 /**
  * Fonction permettant de calculer l'âge de l'univers

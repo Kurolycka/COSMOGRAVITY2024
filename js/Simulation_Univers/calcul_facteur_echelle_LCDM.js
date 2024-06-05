@@ -15,8 +15,7 @@ function calcul_facteur_echelle_LCDM(a_min,a_max,equa_diff_1, equa_diff_2, fonct
     let texte = o_recupereJson();
 
     let H0 = document.getElementById("H0").value;
-    let H0parGAnnee = H0_parSecondes(H0)
-    H0parGAnnee = H0_parGAnnees(H0)
+    let H0parGAnnee = H0_parGAnnees(H0)
 
 
     /**
@@ -53,17 +52,18 @@ function calcul_facteur_echelle_LCDM(a_min,a_max,equa_diff_1, equa_diff_2, fonct
         // On calcule le pas qui sera utilisé
         if ( (isNaN(tau_min) || isNaN(tau_max)) && !isNaN(t_0)) {
             console.log("Pas calculé avec t_0")
-            pas = t_0 * 1e-3
+            pas = Math.abs(t_0) * 1e-4
         } else {
-            pas = 1e-2
+            console.log("Pas calculé grossèrement")
+            pas = 1e-3
         }
 
         if (!isNaN(tau_min) && !isNaN(tau_max)) {
             console.log("Pas calculé avec tau_min - tau_max")
-            pas = Math.abs(tau_max - tau_min) * 1e-3
+            pas = Math.abs(tau_max - tau_min) * 1e-4
         }
 
-        console.log("les taus :", t_min, t_0, t_max)
+        console.log("les temps :", t_min, t_0, t_max)
 
         return [tau_init, a_init, ap_init, pas]
     }
@@ -73,62 +73,73 @@ function calcul_facteur_echelle_LCDM(a_min,a_max,equa_diff_1, equa_diff_2, fonct
 
     let set_solution = [params[0], params[1], params[2]];
     let pas = params[3];
+
     let taus = [set_solution[0]]
     let facteur_echelle = [set_solution[1]]
+    let nombre_point = 0;
 
     // Résolution dans le sens négatif
-    while (set_solution[1] >= a_min && set_solution[1] <= a_max) {
+    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 10/Math.abs(pas)) {
         set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
-        taus.push(set_solution[0])
-        facteur_echelle.push(set_solution[1])
+        if (set_solution[1] >= a_min && set_solution[1] <= a_max) {
+            taus.push(set_solution[0])
+            facteur_echelle.push(set_solution[1])
+        }
+        nombre_point = nombre_point + 1
+        console.log(set_solution)
     }
 
     // On inverse pour que les listes commencent avec le tau le plus petit puis on réinitialise les conditions initiales
     taus.reverse()
     facteur_echelle.reverse()
     set_solution = [params[0], params[1], params[2]];
+    nombre_point = 0;
 
     // Résolution dans le sens positif
-    while (set_solution[1] >= a_min && set_solution[1] <= a_max) {
+    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 10/Math.abs(pas)) {
         set_solution = RungeKuttaEDO2(pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
-        taus.push(set_solution[0])
-        facteur_echelle.push(set_solution[1])
+        if (set_solution[1] >= a_min && set_solution[1] <= a_max) {
+            taus.push(set_solution[0])
+            facteur_echelle.push(set_solution[1])
+        }
+        nombre_point = nombre_point + 1
+        console.log(set_solution)
     }
 
     // On calcule le temps associé à l'instant présent et si il n'est pas définis on le met à zéro
     let t_0 = calcul_ages(fonction_simplifiant, H0parsec, 1e-8, 0.999999999);
+
     if (isNaN(t_0)) {
-        console.log("t0 est NaN")
+        console.log("t0 théorique est NaN")
         t_0 = 0
     } else {
         console.log("t0 n'est pas NaN")
-        t_0 = t_0 / (365.25 * 24 * 3600 * 1e9)
+        t_0 = t_0 / (nbrJours() * 24 * 3600 * 1e9)
     }
 
-    // On transforme les taux en temps
-    for (let index = 0; index < taus.length; index = index + 1) {
-        taus[index] = taus[index] / H0parGAnnee
-        taus[index] = taus[index] + t_0
-    }
+    let debutEtFin = debut_fin_univers(equa_diff_2, t_0)
 
-    taus.pop()
-    facteur_echelle.pop()
+    taus = tauEnTemps(taus, debutEtFin[2])
 
-    taus.shift()
-    facteur_echelle.shift()
+
     console.log("Liste temps :", taus)
     console.log("Liste facteur :", facteur_echelle)
 
+
     setTimeout(stop_spin, 300);
-    return [taus, facteur_echelle]
+    return [[taus, facteur_echelle], t_0, debutEtFin]
 }
 
 function affichage_site_LCDM() {
-    console.log("param utilisé dans affichage_site_LCDm", equa_diff_1_LCDM, equa_diff_2_LCDM, fonction_E)
     //on recupere les valeurs des variables
     let a_min = Number(document.getElementById("ami").value);
     let a_max = Number(document.getElementById("ama").value);
-    let donnee = calcul_facteur_echelle_LCDM(a_min,a_max,equa_diff_1_LCDM, equa_diff_2_LCDM, fonction_E)
+    let equa_diff_1 = equa_diff_1_LCDM
+    let equa_diff_2 = equa_diff_2_LCDM
+    let fonction = fonction_E
+  
+    let sorties = calcul_facteur_echelle_LCDM(a_min,a_max,equa_diff_1_LCDM, equa_diff_2_LCDM, fonction_E)
+    let donnee = sorties[0]
     graphique_facteur_echelle(donnee)
     //Remy 26/05/24
     dm_horizon_particule_m=calcul_horizon_particule(fonction_E);
@@ -139,5 +150,12 @@ function affichage_site_LCDM() {
     document.getElementById("resultat_ZHorizonEvenement").innerHTML = -1;
     document.getElementById("resultat_DmHorizonParticule").innerHTML = dm_horizon_particule_Ga.toExponential(4);
     document.getElementById("resultat_ZHorizonParticule").innerHTML = "∞";
-}
+  
+    let age_univers = sorties[1]
+    let debutEtFin = sorties[2]
+    console.log("Timeline :", debutEtFin, age_univers)
 
+
+    graphique_facteur_echelle(donnee, debutEtFin[2], debutEtFin[3])
+
+}

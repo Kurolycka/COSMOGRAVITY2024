@@ -429,7 +429,7 @@ function graphique_creation_noir(boolBigRip,modele) { //S Ajout d'un booléen po
 				dash: 'dash'
 			},
 			name:" ",
-		showlegend: false	   
+			showlegend: false
 		};//S
 
 	}else {

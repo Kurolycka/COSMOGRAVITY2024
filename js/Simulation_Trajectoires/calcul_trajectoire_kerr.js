@@ -79,6 +79,9 @@ function pressionBouttonMobile2() {
 
 
 function initialisation(){
+
+	var texte = o_recupereJson();
+
 	c = 299792458;
 	G = 6.67385 * Math.pow(10, -11);
 	r0 = Number(document.getElementById("r0").value);
@@ -111,11 +114,71 @@ function initialisation(){
     rhm = 0.5 * ( (2 * G * M / Math.pow(c, 2)) - Math.sqrt(Math.pow( (2 * G * M / Math.pow(c, 2)), 2) - 4 * Math.pow( (J / (c * M)) , 2)));     //RH-
 	gravSurface = 0.5 * Math.pow(c, 2) * (Math.pow(rhp, 2) - Math.pow(a, 2)) / (Math.pow(rhp, 2) + Math.pow(a, 2))/rhp; 			//gravité de surface Kerr
 
+	Y_orbites = (rs/2)*Math.pow(r0,5); //ManonCirculaire
+
+
+	E_prograde = (Math.pow(r0,3)*(r0-rs)+a*Math.sqrt(Y_orbites))/(Math.pow(r0,2)*Math.sqrt(Math.pow(r0,3)*(r0-(3/2)*rs)+2*a*Math.sqrt(Y_orbites))); //ManonCirculaire
+	E_retrograde = (Math.pow(r0,3)*(r0-rs)-a*Math.sqrt(Y_orbites))/(Math.pow(r0,2)*Math.sqrt(Math.pow(r0,3)*(r0-(3/2)*rs)-2*a*Math.sqrt(Y_orbites))); //ManonCirculaire
+
+	if (isNaN(E_prograde)){ //ManonCirculaire
+		vitesse_orbite_circulaire_prograde_bar = NaN;
+	}else{
+		vitesse_orbite_circulaire_prograde_bar = c*Math.sqrt(1-(1-(rs/r0))/Math.pow(E_prograde,2))
+	}
+
+	if (isNaN(E_retrograde)){ //ManonCirculaire
+		vitesse_orbite_circulaire_retrograde_bar = NaN;
+	}else{
+		vitesse_orbite_circulaire_retrograde_bar = c*Math.sqrt(1-(1-(rs/r0))/Math.pow(E_retrograde,2))
+	}
+
+
+
+	r_stabilite = (-3*rs*Math.pow((L-a*E),2))/(Math.pow(a,2)*(Math.pow(E,2)-1)-Math.pow(L,2)); //ManonCirculaire
+	vitesse_orbite_criculaire_prograde_bar_limite_stabilite = (c*Math.sqrt(2*rs*Math.pow(r_stabilite,5)*delta(r_stabilite))) / (2*Math.pow(r_stabilite,4) - 2*Math.pow(r_stabilite,3)*rs + a*Math.sqrt(2*rs*Math.pow(r_stabilite,5))); //ManonCirculaire
+	vitesse_orbite_criculaire_retrograde_bar_limite_stabilite = (c*Math.sqrt(2*rs*Math.pow(r_stabilite,5)*delta(r0))) / (2*Math.pow(r_stabilite,4) - 2*Math.pow(r_stabilite,3)*rs - a*Math.sqrt(2*rs*Math.pow(r_stabilite,5))); //ManonCirculaire
+
+	
+	
 	textegravetetc_Kerr();						   
 	document.getElementById("a").innerHTML = a.toExponential(3);
 	document.getElementById("m").innerHTML = rs.toExponential(3);
 	document.getElementById("L").innerHTML = L.toExponential(3);
 	document.getElementById("E").innerHTML = E.toExponential(3);
+
+
+	if (!isNaN(E_prograde)){ //ManonCirculaire
+		if (vitesse_orbite_circulaire_prograde_bar >= vitesse_orbite_criculaire_prograde_bar_limite_stabilite){
+			document.getElementById("circulaire_prograde_res_bar").title=texte.pages_trajectoire.orbite_circulaire_instable;
+		}else{
+			document.getElementById("circulaire_prograde_res_bar").title=texte.pages_trajectoire.orbite_circulaire_stable;
+		}
+	}else{
+		document.getElementById("circulaire_prograde_res_bar").removeAttribute("title");
+	}
+
+	if (!isNaN(E_retrograde)){ //ManonCirculaire
+		if (vitesse_orbite_circulaire_retrograde_bar >= vitesse_orbite_criculaire_retrograde_bar_limite_stabilite){
+			document.getElementById("circulaire_retrograde_res_bar").title=texte.pages_trajectoire.orbite_circulaire_instable;
+		}else{
+			document.getElementById("circulaire_retrograde_res_bar").title=texte.pages_trajectoire.orbite_circulaire_stable;
+		}
+	}else{
+		document.getElementById("circulaire_retrograde_res_bar").removeAttribute("title");
+	}
+
+
+	if (isNaN(E_prograde)){
+		document.getElementById("circulaire_prograde_res_bar").innerHTML=""; //ManonCirculaire
+	}else{
+		document.getElementById("circulaire_prograde_res_bar").innerHTML=vitesse_orbite_circulaire_prograde_bar.toExponential(4); //ManonCirculaire
+	}
+
+	if (isNaN(E_retrograde)){
+		document.getElementById("circulaire_retrograde_res_bar").innerHTML=""; //ManonCirculaire
+	}else{
+		document.getElementById("circulaire_retrograde_res_bar").innerHTML=vitesse_orbite_circulaire_retrograde_bar.toExponential(4); //ManonCirculaire
+	}
 	
 	
 	if (isNaN(rhp)){document.getElementById("rhp").innerHTML = 0;}
@@ -196,9 +259,13 @@ function trajectoire() {
 			document.getElementById("joyDiv").style.visibility='visible';
 			document.getElementById("nb_g").style.visibility='visible'; //Manon
 			document.getElementById("g_ressenti").style.visibility='visible'; //Manon
+			document.getElementById("dernier_g").style.visibility='visible'; //ManonV2
+			document.getElementById("dernier_g_res").style.visibility='visible'; //ManonV2
 		}else{
 			document.getElementById("g_ressenti").style.display='none'; //Manon
 			document.getElementById("nb_g").style.display='none'; //Manon
+			document.getElementById("dernier_g").style.display='none'; //ManonV2
+			document.getElementById("dernier_g_res").style.display='none'; //ManonV2
 
 		}
 
@@ -676,8 +743,9 @@ function animate() {
 				vtot=resulta[0];
 				vr_3_obs=resulta[1]*Math.sign(A_part_obs);
 				vp_3_obs= resulta[2]; 
-				distance_parcourue_totale+=vtot*dtau; //Manon 
+				distance_parcourue_totale+=vtot*(dtau*delta(r_part_obs)/( (Math.pow(r_part_obs,2)+Math.pow(a,2)+rs*Math.pow(a,2)/r_part_obs)*E - rs*a*L/r_part_obs )); //ManonCorrection
 			}
+
 			posX2 = scale_factor * r_part_obs * (Math.cos(phi_obs) / rmax) + (canvas.width / 2.);
 			posY2 = scale_factor * r_part_obs * (Math.sin(phi_obs) / rmax) + (canvas.height / 2.);
 			
@@ -706,7 +774,7 @@ function animate() {
 					nombre_de_g_calcul = (Math.abs(vtot-vitesse_précédente_nombre_g)/(dtau))/9.80665 //Manon
 				}
 
-				distance_parcourue_totale+=vtot*dtau; //Manon
+				distance_parcourue_totale+=vtot*dtau; //ManonCorrection
 			}
 			posX1 = scale_factor * r_part * (Math.cos(phi) / rmax) + (canvas.width / 2.);
 			posY1 = scale_factor * r_part * (Math.sin(phi) / rmax) + (canvas.height / 2.);
@@ -750,15 +818,21 @@ function animate() {
 	else{
 		context.beginPath();
 		context.fillStyle = COULEUR_ROUGE_COSMO;
-		context.rect(posX1, posY1, 1, 1);
+		if (r_part==0){
+			context.rect((canvas.width / 2.), (canvas.height / 2.), 1,1);
+		}else{ 
+			context.rect(posX1, posY1, 1, 1);
+		}//Manon
 		context.lineWidth = "1";
 		context.fill();
 		majFondFixe22();
 		context22.beginPath();
 		context22.fillStyle = COULEUR_BLEU;
-		if (r_part==0){context22.arc((canvas.width / 2.), (canvas.height / 2.) , 5, 0, Math.PI * 2);} //Manon
-		else{ //Manon
-		context22.arc(posX1, posY1 , 5, 0, Math.PI * 2);}//Manon
+		if (r_part==0){
+			context22.arc((canvas.width / 2.), (canvas.height / 2.) , 5, 0, Math.PI * 2); //Manon
+		}else{ //Manon
+		context22.arc(posX1, posY1 , 5, 0, Math.PI * 2);
+		}//Manon
 		context22.lineWidth = "1";
 		context22.fill();
     }
@@ -856,9 +930,10 @@ function animate() {
 
 			setInterval(function(){ //Manon
 				if(joy.GetPhi()!=0){ 
-					document.getElementById("g_ressenti").innerHTML = nombre_de_g_calcul.toExponential(3);}
+					document.getElementById("g_ressenti").innerHTML = nombre_de_g_calcul.toExponential(3);
+					document.getElementById("dernier_g_res").innerHTML = nombre_de_g_calcul.toExponential(3);}
 					else{
-					document.getElementById("g_ressenti").innerHTML = "N/A";
+					document.getElementById("g_ressenti").innerHTML = 0;//ManonV2
 					}
 				}, dtau); 
 			
@@ -1404,19 +1479,6 @@ function MAJGraphePotentiel(){
 	graphique_creation_pot();
 }
 
-/*function MAJGraphePotentiel(data1,data2,compteur,mobile){
-	data1 = []
-	if(rmini==rs){
-		rmini=rmini/2;
-	} 
-	for (r = 0.5*mobile.r_part; r < 1.5*mobile.r_part; r += mobile.dr) {
-		V = Vr_mob(mobile.L,r);
-		data1.push({date: r,close: V});
-	}
-
-	graphique_creation_pot(0,data1,data2,compteur,mobile)
-
-}*/
 
 
 function boutonAvantLancement(){
