@@ -635,19 +635,6 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
         paper_bgcolor: "rgba(255,255,255,0)"
     };
 
-    /* On construis le texte qui va donner les entrée ou les sortie */
-    let texteEntree = "Entrées: \n" +
-        "oui"
-
-    donnee.push({
-        x: [0],
-        y: [facteur_fin],
-        mode: "markers+text",
-        text: [texteEntree],
-        textposition: "bottomright",
-
-    })
-
     let configuration = {
         responsive: true
     };

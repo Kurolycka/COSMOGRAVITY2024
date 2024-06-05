@@ -215,6 +215,7 @@ function texte_univers_LCDM() {
     document.getElementById("infoOmégar0Sortie").title = texte.univers.infoOmégaR0Sortie
     document.getElementById("infoOmégak0Sortie").title = texte.univers.infoOmégaK0Sortie
     document.getElementById("Temps").innerHTML = texte.univers.Temps
+    document.getElementById("horizons").innerHTML = texte.univers.horizons
 
 
     document.getElementById("Enregistrer").innerHTML = texte.univers.Enregistrer
@@ -264,6 +265,7 @@ function texte_univers_DE() {
     document.getElementById("infoOmégar0Sortie").title = texte.univers.infoOmégaR0Sortie
     document.getElementById("infoOmégak0Sortie").title = texte.univers.infoOmégaK0Sortie
     document.getElementById("Temps").innerHTML = texte.univers.Temps
+    document.getElementById("horizons").innerHTML = texte.univers.horizons
 
     document.getElementById("Enregistrer").innerHTML = texte.univers.Enregistrer
     document.getElementById("infoNomFichier").title = texte.univers.infoNomFichier
