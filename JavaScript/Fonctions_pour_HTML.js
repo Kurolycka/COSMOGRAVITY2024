@@ -31,6 +31,8 @@ function toggleEntreeSortie (IDpanel) {
             '"Nav Nav Nav"' +
             '"Entree Graphe Sortie"';
     }
+
+    ajustementGraphique()
 }
 
 /**
@@ -127,3 +129,16 @@ function updateUnivers(fractionDigits) {
 
     document.getElementById("Omégam0").value = Omega_m(0).toExponential(4)
 }
+
+/**
+ * fonction permettant de changer la taille du graphique dynamiquement, elle est utilisé dans un Event listener
+ */
+function ajustementGraphique() {
+    if (document.getElementById("graphique_LCDM")) {
+        Plotly.Plots.resize(document.getElementById("graphique_LCDM"));
+    }
+    if (document.getElementById("graphique_DE")) {
+        Plotly.Plots.resize(document.getElementById("graphique_DE"));
+    }
+}
+window.addEventListener('resize', ajustementGraphique());

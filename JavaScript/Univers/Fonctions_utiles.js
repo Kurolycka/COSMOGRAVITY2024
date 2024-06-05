@@ -608,19 +608,40 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
         },
         xaxis: {
             title: "Temps en milliard d'années",
+            gridcolor: "#b1b1b1",
+            zerolinewidth: 2,
+            zeroline: true
         },
         yaxis: {
             title: "facteur d'échelle réduit",
+            gridcolor: "#b1b1b1",
+            zerolinewidth: 2,
+            zeroline: true
         },
         showlegend: false,
+
+        autosize: true,
+        margin: {
+            l: 50,
+            r: 50,
+            b: 50,
+            t: 50,
+            pad: 4
+        },
+        plot_bgcolor: "rgba(255,255,255,0)",
+        paper_bgcolor: "rgba(255,255,255,0)"
+    };
+
+    let configuration = {
+        responsive: true
     };
 
     if (document.getElementById("graphique_LCDM")) {
-        Plotly.newPlot("graphique_LCDM", donnee, apparence);
+        Plotly.newPlot("graphique_LCDM", donnee, apparence, configuration);
     }
 
     if (document.getElementById("graphique_DE")) {
-        Plotly.newPlot("graphique_DE", donnee, apparence);
+        Plotly.newPlot("graphique_DE", donnee, apparence, configuration);
     }
 }
 
