@@ -32,16 +32,12 @@ function calcul_ages(fonction, H0, a1, a2) {
  * @param fonction_simplifiant_2 Fonction utilisée dans le calcul des âges.
  * @return Liste des abscisses ou la fonction a été calculée et liste des valeurs de la fonction.
  */
-function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifiant_1, fonction_simplifiant_2) {
+function calcul_facteur_echelle_DE(a_min,a_max,equa_diff_1, equa_diff_2, fonction_simplifiant_1, fonction_simplifiant_2) {
     let texte = o_recupereJson();
 
     let H0 = document.getElementById("H0").value;
     let H0parGAnnee = H0_parSecondes(H0)
     H0parGAnnee = H0_parGAnnees(H0)
-
-    //on recupere les valeurs des variables
-    let a_min = Number(document.getElementById("ami").value);
-    let a_max = Number(document.getElementById("ama").value);
 
     /**
      * Fonction qui permet de :
@@ -156,7 +152,11 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
 }
 
 function affichage_site_DE() {
-    let donnee = calcul_facteur_echelle_DE(equa_diff_1_DE, equa_diff_2_DE, fonction_F, fonction_Y)
+    //on recupere les valeurs des variables
+    let a_min = Number(document.getElementById("ami").value);
+    let a_max = Number(document.getElementById("ama").value);
+
+    let donnee = calcul_facteur_echelle_DE(a_min,a_max,equa_diff_1_DE, equa_diff_2_DE, fonction_F, fonction_Y)
     graphique_facteur_echelle(donnee)
     //Remy 26/05/24
     dm_horizon_particule_m=calcul_horizon_particule(fonction_F);

@@ -1123,7 +1123,7 @@ function Tracer(path) {
 		yanchor: 'bottom',
 		text: 'T<sub>0</sub>: '+t0.toExponential(3)+'   H<sub>0</sub>:'+h0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+omegam0.toExponential(3)+'   \Ω<sub>DE0</sub>:  '+omegaDE0+'   \Ω<sub>r0</sub>: ' +Or+'  \Ω<sub>k0</sub>:   '+omegak0.toExponential(3),
 		showarrow: false}] ;
-		let val_graph = calcul_temps_EN(abscissa_t);
+		let val_graph = new_calcul_temps(abscissa_t);
 
 		if(t_checkbox.checked && axeAbscicceEnZPlus1){	//gère le cas du décalage des absicces pour que tout tienne sur le graph quand on utilise l'échelle log
 			for(i=0;i<val_graph[0].length;i++){//Dans val_graph[0] se trouve les z, les abscicces pour le tracé des graphes, on le décale ici
@@ -1199,17 +1199,11 @@ function Tracer(path) {
 			plot_type = 'scatter'
 
 			var abscissa_d = linear_scale(zmin, zmax, pas);
-
-
 		}
 
 
-		var val_abscissa = calcul_temps_EN(abscissa_d);
+		var val_abscissa = new_calcul_temps(abscissa_d);
 
-		if(!(d_checkbox.checked)){
-			abscissa_d = (obtenir_linearScale_pour_t_EN(val_abscissa[0],val_abscissa[1],pas,omegam0,omegaDE0,Or,H0enannee,w0,w1))//A SUPPRIMER
-			val_abscissa = calcul_temps_EN(abscissa_d)
-		}
 
 		let val_graph = calculDeDs_EN(abscissa_d);
 		let annots =  [{xref: 'paper',
@@ -1308,12 +1302,7 @@ function Tracer(path) {
 		}
 	
 
-		var val_abscissa = calcul_temps_EN(abscissa_omega);
-
-		if(!(omega_checkbox.checked)){
-			abscissa_omega = (obtenir_linearScale_pour_t_EN(val_abscissa[0],val_abscissa[1],pas,omegam0,omegaDE0,Or,H0enannee,w0,w1))//A SUPPRIMER
-			val_abscissa = calcul_temps_EN(abscissa_omega)
-		}
+		var val_abscissa = new_calcul_temps(abscissa_omega);
 
 		let val_graph = calcul_omegas_EN(abscissa_omega);
 		let annots = [{xref: 'paper',
@@ -1417,11 +1406,14 @@ function Tracer(path) {
 			var abscissa_z = linear_scale(zmin, zmax, pas);
 		} 
 
-		let val_graph = calcul_temps_EN(abscissa_z);
-		if(!(t_checkbox.checked)){
-			abscissa_z = obtenir_linearScale_pour_t_EN(val_graph[0],val_graph[1],pas,omegam0,omegaDE0,Or,H0enannee,w0,w1)
-			val_graph = calcul_temps_EN(abscissa_z)	
-		}
+		let val_graph = new_calcul_temps(abscissa_z);
+		let amin=1/(1+zmax);
+		let amax=1/(1+zmin);
+		let res = calcul_facteur_echelle_DE(amin,amax,equa_diff_1_DE, equa_diff_2_DE, fonction_F);
+		let ordonnee = res[1].map((x) => (1-x)/x);
+		ordonnee=ordonnee.reverse();
+		let abscisse = res[0].map((x) => x*1e9);
+		abscisse=abscisse.reverse() ;
 
 		let annots = [{xref: 'paper',
 		yref: 'paper',
@@ -1526,22 +1518,10 @@ function calculDeDs_EN(abscissa) {
 		abscissa.forEach(i => {   
 		
 		// calcul de la distance mètrique 
-
-		if (omegak0>0){
-		integ_1 = Math.sqrt( Math.abs(omegak0)) * simpson_EN(0, Number(i), fonction_dm_EN, omegam0, Number(omegaDE0), Number(Or),Eps,w0,w1);  // sans unité
-		dm1=(c/(H0parsec*Math.sqrt( Math.abs(omegak0) ))) * Math.sin(integ_1);  // distance mètrique en mètres
-		}
-		else if (omegak0==0){
-		dm1=(c/(H0parsec) * simpson_EN(0, Number(i), fonction_dm_EN, omegam0, Number(omegaDE0), Number(Or),Eps,w0,w1));
-		}
-		else{
-		integ_1 = Math.sqrt( Math.abs(omegak0)) * simpson_EN(0, Number(i), fonction_dm_EN, omegam0, Number(omegaDE0), Number(Or),Eps,w0,w1);
-		dm1=(c/(H0parsec*Math.sqrt( Math.abs(omegak0) ))) * Math.sinh(integ_1) ;
-		}
+		dm1=DistanceMetrique(fonction_F,0,i,true);
 
 		//  temps en secondes
-		temps = simpson_simple_degre2_EN(fonction_integrale_EN, Number(i), omegam0, Number(omegaDE0), Number(Or),w0,w1);
-		temps = temps * H0enannee / H0parsec;
+		temps = calcul_ages(fonction_F,H0parsec,.0000001,1/(1+i));
 
 		dlt = temps * c;
 		dlt = dlt * LUMIERE_INV;
@@ -1565,12 +1545,6 @@ function calculDeDs_EN(abscissa) {
 		zArr.push(i); 
 	});
 
-
-	/*console.log(dlArr)  ;
-	console.log(daArr)  ;
-	console.log(dmArr)  ;
-	console.log(zArr)  ;
-	console.log(dltArr)  ;*/
 	return [dlArr,daArr,dmArr,zArr,dltArr];
 }
 
@@ -1670,7 +1644,16 @@ function calcul_temps_EN(abscissa){
 	return [zArr,tempsArr];
 }
 
-
+//Remy 28/05/2024
+function new_calcul_temps(abscissa){
+	zArr=[];
+	tempsArr=[];
+	abscissa.forEach(i => {
+		tempsArr.push(calcul_ages(fonction_F,H0enannee,0.000000001,1/(1+i)));
+		zArr.push(i)
+	});
+	return [zArr,tempsArr];
+};
 
 
 function obtenir_linearScale_pour_t_EN(zArr,tArr,pas,omegam0,omegaDE0,Or,H0enannee,w0,w1){// Fonction utilisant la dérivé première et seconde de t(z) (Soit fonction intégrable et sa première dérivé) : fait pour ne marcher qu'ici

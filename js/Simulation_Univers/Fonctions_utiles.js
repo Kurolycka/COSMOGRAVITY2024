@@ -79,7 +79,7 @@ function Omega_r(z) {
     let sigma = ( 2 * Math.pow(Math.PI, 5) * Math.pow(k, 4) ) / ( 15 * Math.pow(h, 3) * Math.pow(c, 2) );
     if (z === 0) {
         let rho_r = ( 4 * sigma * Math.pow(T0, 4) ) / Math.pow(c, 3)
-        omega_r = ( 8 * Math.PI * G * rho_r) / ( 3 * Math.pow(H0, 3) )
+        omega_r = ( 8 * Math.PI * G * rho_r) / ( 3 * Math.pow(H0_parSecondes(H0), 2) )
     }
     else {
         omega_r = ( Omega_r(0) * Math.pow(1 + z, 4) ) / fonction_E(z);
@@ -100,7 +100,6 @@ function Omega_r(z) {
             omega_r = 0
         }
     }
-
     return omega_r
 }
 
@@ -488,7 +487,14 @@ function DistanceMetrique(fonction,Zemission,Zreception, z_utilisé=false){
 function calcul_horizon_particule(fonction,z_emission=0){
     let a_emission=1/(z_emission+1);
     //formule 21 dans la théorie du 20/05/2024
-    console.log(a_emission);
+    function fonction_a_integrer(x){
+        return Math.pow(fonction_E(x),-0.5)/Math.pow(x,2);
+    };
+    console.log(simpson_composite(fonction_a_integrer,0.00001,1,1e3));
+    function fonction_a_integrer(x){
+        return Math.pow(fonction_E(x,true),-0.5);
+    };
+    console.log(simpson_simple_degre2(fonction_a_integrer,0,Omega_m(0), Omega_l(0), Omega_r(0)));
     return DistanceMetrique(fonction,1e-4,a_emission);
 };
 

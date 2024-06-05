@@ -1,5 +1,5 @@
 
-// Fonctions nécéssaires à 'linteractivité et au tracer du Canvas contant les separatrices
+// Fonctions nécéssaires à 'linteractivité et au tracer du Canvas contenant les separatrices
 
 
 function FindPosition(a) {

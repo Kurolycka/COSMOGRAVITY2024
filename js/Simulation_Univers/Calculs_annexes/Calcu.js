@@ -1304,6 +1304,7 @@ function calculDeDs(abscissa) {
 
 		//  temps en secondes
 		temps = calcul_ages(fonction_E,H0parsec,.0000001,1/(1+i));
+		
 		dlt = temps * c;
 		dlt = dlt * LUMIERE_INV;
 
@@ -1556,6 +1557,7 @@ function calcul_horizons_annexe(){
 		document.getElementById("resultat_dm_evenement_t").innerHTML=NaN;
 	}else{
 		z_pour_horizon=calcul_t_inverse(t_pour_horizon,fonction_E);
+		console.log(z_pour_horizon);
 		let dm_horizon_particule_m=calcul_horizon_particule(fonction_E,z_pour_horizon);
 		let dm_horizon_particule_Ga=m_vers_AL(dm_horizon_particule_m)/1e9;
 		let dm_horizon_evenement_m=calcul_horizon_evenements(fonction_E,z_pour_horizon);
