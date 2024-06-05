@@ -861,13 +861,18 @@ function trajectoire(compteur,mobile) {
 					vitesse_précédente_nombre_g = vtotal //Stockage de la vitesse précédent l'accélération pour le calcul du nombre de g ressenti. 
 
 					Delta_E_sur_E = joy.GetPhi()*(puissance_reacteur*temps_allumage_reacteur)/Math.pow(c,2); //Calcul du ΔE/E en fonction de la puissance et du temps d'allumage des réacteurs.
-					Delta_L_sur_L = Delta_E_sur_E; //ΔL/L en fonction de ΔE/E. 
+					Delta_L = ((mobile.E)/(mobile.L))*Math.pow(mobile.r_part,2)*Delta_E_sur_E*mobile.E*(1/(1-rs/mobile.r_part));
 
-					mobile.L = mobile.L + mobile.L*Delta_L_sur_L; //Calcul du nouveau L associé à ce mobile.
-					mobile.E = mobile.E + mobile.E*Delta_E_sur_E //Calcul du nouveau E associé à ce mobile. 
-					deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E)*Math.pow(c,2); //Calcul de l'énergie en J/kg consommée au total. 
+					//Delta_L_sur_L = Delta_E_sur_E; //ΔL/L en fonction de ΔE/E. 
+
+					//mobile.L = mobile.L + mobile.L*Delta_L_sur_L; //Calcul du nouveau L associé à ce mobile.
+					//mobile.E = mobile.E + mobile.E*Delta_E_sur_E //Calcul du nouveau E associé à ce mobile. 
+
+					mobile.L = mobile.L + Delta_L;
+					mobile.E = mobile.E + mobile.E*Delta_E_sur_E;
+					deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E); //Calcul de l'énergie en J/kg consommée au total. 
 					temps_total_reacteur = Math.abs(joy.GetPhi()*temps_allumage_reacteur); //Calcul du temps total durant lequel les réacteurs sont allumés.
-					puissance_consommee_calcul = deltam_sur_m/temps_total_reacteur; //Calcul de la puissance consommée au total en W/kg. 
+					puissance_consommee_calcul = (deltam_sur_m/temps_total_reacteur)*Math.pow(c,2); //Calcul de la puissance consommée au total en W/kg. 
 									
 					document.getElementById("E"+compteur.toString()).innerHTML = mobile.E.toExponential(3); //Affichage sur le site du nouveau E. 
 					document.getElementById("L"+compteur.toString()).innerHTML = mobile.L.toExponential(3); //Affichage sur le site du nouveau L. 

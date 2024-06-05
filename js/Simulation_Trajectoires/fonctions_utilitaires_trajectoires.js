@@ -194,8 +194,7 @@ var calculs = calculs || (function() {
  * @param {Object} mobile : Indique quel est le mobile (objet) que l'on souhaite arrêter.
  */
 function arret(mobile) {
-	mobile.pause = true;
-    clearInterval(mobile.myInterval);
+	pausee();
 	document.getElementById("indic_calculs").innerHTML=texte.pages_trajectoire.calcul_termine;
 }
 
