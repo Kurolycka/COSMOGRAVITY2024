@@ -80,7 +80,7 @@ function Omega_r(z) {
     let sigma = ( 2 * Math.pow(Math.PI, 5) * Math.pow(k, 4) ) / ( 15 * Math.pow(h, 3) * Math.pow(c, 2) );
     if (z === 0) {
         let rho_r = ( 4 * sigma * Math.pow(T0, 4) ) / Math.pow(c, 3)
-        omega_r = ( 8 * Math.PI * G * rho_r) / ( 3 * Math.pow(H0, 3) )
+        omega_r = ( 8 * Math.PI * G * rho_r) / ( 3 * Math.pow(H0_parSecondes(H0), 2) )
     }
     else {
         omega_r = ( Omega_r(0) * Math.pow(1 + z, 4) ) / fonction_E(z);
@@ -92,6 +92,15 @@ function Omega_r(z) {
     }
     if (document.getElementById("optionsOmégar0").options[2].selected) {
         omega_r = 0
+    }
+
+    let option = document.getElementById("optionsMonofluide").value
+    if ( option !== "optionNull" ) {
+        if (option === "optionR") {
+            omega_r = 1
+        } else {
+            omega_r = 0
+        }
     }
 
     return omega_r
@@ -111,6 +120,15 @@ function Omega_m(z) {
     }
     else {
         omega_m = Omega_m(0) * Math.pow(1 + z, 3) / fonction_E(z);
+    }
+
+    let option = document.getElementById("optionsMonofluide").value
+    if ( option !== "optionNull" ) {
+        if (option === "optionM") {
+            omega_m = 1
+        } else {
+            omega_m = 0
+        }
     }
 
     return omega_m
@@ -136,6 +154,15 @@ function Omega_l(z) {
         omega_l = 1 - Omega_m(z) - Omega_r(z)
     }
 
+    let option = document.getElementById("optionsMonofluide").value
+    if ( option !== "optionNull" ) {
+        if (option === "optionLDE") {
+            omega_l = 1
+        } else {
+            omega_l = 0
+        }
+    }
+
     return omega_l
 }
 
@@ -157,6 +184,15 @@ function Omega_DE(z) {
 
     if (document.getElementById("OptionsOmégak0").checked) {
         omega_de = 1 - Omega_m(z) - Omega_r(z)
+    }
+
+    let option = document.getElementById("optionsMonofluide").value
+    if ( option !== "optionNull" ) {
+        if (option === "optionLDE") {
+            omega_de = 1
+        } else {
+            omega_de = 0
+        }
     }
 
     return omega_de
@@ -181,6 +217,15 @@ function Omega_k(z) {
 
     if (document.getElementById("OptionsOmégak0").checked) {
         omega_k = 0
+    }
+
+    let option = document.getElementById("optionsMonofluide").value
+    if ( option !== "optionNull" ) {
+        if (option === "optionK") {
+            omega_k = 1
+        } else {
+            omega_k = 0
+        }
     }
 
     return omega_k
@@ -405,12 +450,16 @@ function debut_fin_univers(equa_diff, t_0) {
         on :
             Dit que l'univers a commencé avec un BigFall
     */
-    if ( set_solution[1] > 1 && (Math.abs(set_solution[1]) <= limite_derivee || Math.abs(set_solution[2]) <= limite_derivee)) {
+
+    let option = document.getElementById("optionsMonofluide").value
+    if ( set_solution[1] > 1 &&
+        (Math.abs(set_solution[1]) <= limite_derivee || Math.abs(set_solution[2]) <= limite_derivee) || option === "optionLDE") {
         naissance_univers = texte.univers.pasDebut
     }
     else {
         age_debut = set_solution[0] / H0_parGAnnees(H0)
 
+        let option = document.getElementById("optionsMonofluide").value
         if (set_solution[1] <= 1) {
             naissance_univers = texte.univers.Debut + Math.abs(age_debut).toExponential(4) + texte.univers.Gannee + " (BigBang)"
         }
@@ -507,6 +556,8 @@ function tauEnTemps(listeTaus, t_debut) {
  */
 function graphique_facteur_echelle(solution, t_debut, t_fin) {
     let texte = o_recupereJson()
+    let a_min = Number(document.getElementById("a_min").value)
+    let a_max = Number(document.getElementById("a_max").value)
 
     let H0 = Number(document.getElementById("H0").value);
     let abscisse = solution[0];
@@ -523,23 +574,26 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
     }
 
     // Pour corriger l'erreur numérique
-    if (t_debut && abscisse[0] < 0) {
-        let offset = Math.abs(abscisse[0]);
+    if (t_debut) {
+        let offset = abscisse[0];
         for (let index = 0; index < abscisse.length; index++) {
-            abscisse[index] = abscisse[index] + offset;
+            abscisse[index] = abscisse[index] - offset;
         }
     }
 
-    if (t_debut && facteur_debut < 0.5) {
+    console.log("correction ordonnée gauche", a_min === 0)
+    if ( a_min === 0 && t_debut && facteur_debut < Math.abs(a_max - a_min)  ) {
         console.log("correction ordonnée gauche")
         if (H0 > 0) {
+            abscisse[0] = 0
             ordonnee[0] = 0
         } else {
+            abscisse[ordonnee.length - 1] = 0
             ordonnee[ordonnee.length - 1] = 0
         }
     }
 
-    if (t_fin && facteur_fin < 0.5) {
+    if (a_min === 0 && t_fin && facteur_fin < Math.abs(a_max - a_min)) {
         console.log("correction ordonné droite")
         if (H0 > 0) {
             ordonnee[ordonnee.length - 1] = 0

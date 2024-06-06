@@ -58,7 +58,7 @@
                 <span>
                     <img id="infoTypeUnivers" src="./Images/icone_info.png" alt="" width="20" height="20", style="float: right">
                 </span>
-                <select name="Monofluide" id="optionsMonofluide">
+                <select name="Monofluide" id="optionsMonofluide" onchange="universMonofluides()">
                     <option id="Monofluide_optionNull" value="optionNull"></option>
                     <option id="Monofluide_optionM" value="optionM"></option>
                     <option id="Monofluide_optionR" value="optionR"></option>
@@ -150,6 +150,17 @@
             <div class="avertissement" id="avertissementUnivers"></div>
 
             <div id="graphique_LCDM"></div>
+
+            <div style="display: flex; gap: 10px">
+                <div style="justify-self: left">
+                    <h3>In</h3>
+                    <p></p>
+                </div>
+                <div style="justify-self: right">
+                    <h3>Out</h3>
+                </div>
+
+            </div>
         </div>
     </div>
 
@@ -211,9 +222,9 @@
             <div class="résultats">
                 <label for="optionsEnregistrement">Format : </label>
                 <select name="Format enregistrement" id="optionsEnregistrement">
-                    <option value="option1">PNG</option>
-                    <option value="option2">SVG</option>
-                    <option value="option3">JPG</option>
+                    <option value="PNG">PNG</option>
+                    <option value="SVG">SVG</option>
+                    <option value="JPG">JPG</option>
                 </select>
             </div>
 
@@ -221,7 +232,7 @@
 
             <div class="résultats">
                 <span></span>
-                <button id="bouttonEnregistrer" class="grosBoutton">Enregistrer</button>
+                <button onclick="enregistrer()" id="bouttonEnregistrer" class="grosBoutton">Enregistrer</button>
                 <span></span>
             </div>
 

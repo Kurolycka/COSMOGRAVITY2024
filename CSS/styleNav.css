@@ -149,3 +149,7 @@ nav {
             url("../Images/DeepFieldWebb.png") no-repeat;
             background-size: cover;
         }
+
+.cache {
+    display: none
+}

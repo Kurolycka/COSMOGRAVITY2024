@@ -56,7 +56,7 @@
                 <span>
                     <img id="infoTypeUnivers" src="./Images/icone_info.png" alt="" width="20" height="20", style="float: right">
                 </span>
-                <select name="Monofluide" id="optionsMonofluide">
+                <select name="Monofluide" id="optionsMonofluide" onchange="universMonofluides()">
                     <option id="Monofluide_optionNull" value="optionNull"></option>
                     <option id="Monofluide_optionM" value="optionM"></option>
                     <option id="Monofluide_optionR" value="optionR"></option>
@@ -76,7 +76,7 @@
             <div class="paramètre">
                 <label for="OmégaDE0">
                     <img id="infoOmégaLDE0" src="./Images/icone_info.png" alt="" width="20" height="20">
-                    &Omega;<sub>&Lambda;<sub>0</sub></sub> =
+                    &Omega;<sub>DE<sub>0</sub></sub> =
                 </label>
                 <input id="OmégaDE0" type="number" value="0.69110" step="0.01">
                 <span>∅</span>
@@ -135,7 +135,7 @@
                     <img id="infoAmax" src="./Images/icone_info.png" alt="" width="20" height="20">
                     a<sub>max</sub> =
                 </label>
-                <input id="a_max" type="number" value="5" step="0.1" min="0" max="1000">
+                <input id="a_max" type="number" value="5" step="0.1" min="0">
                 <span>∅</span>
             </div>
 
@@ -236,7 +236,7 @@
 
             <div class="résultats">
                 <span></span>
-                <button id="bouttonEnregistrer" class="grosBoutton">Enregistrer</button>
+                <button onclick="enregistrer()" id="bouttonEnregistrer" class="grosBoutton">Enregistrer</button>
                 <span></span>
             </div>
 

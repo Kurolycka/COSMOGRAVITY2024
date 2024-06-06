@@ -82,7 +82,8 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
             pas = 1e-3
         }
 
-        if (!isNaN(tau_min) && !isNaN(tau_max)) {
+        let option = document.getElementById("optionsMonofluide").value
+        if (!isNaN(tau_min) && !isNaN(tau_max) && option !== "optionLDE") {
             console.log("Pas calculé avec tau_min - tau_max")
             pas = Math.abs(tau_max - tau_min) * 1e-3
         }
@@ -110,7 +111,6 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
             facteur_echelle.push(set_solution[1])
         }
         nombre_point = nombre_point + 1
-        console.log(set_solution, nombre_point)
     }
 
     // On inverse pour que les listes commencent avec le tau le plus petit puis on réinitialise les conditions initiales
@@ -127,7 +127,6 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
             facteur_echelle.push(set_solution[1])
         }
         nombre_point = nombre_point + 1
-        console.log(set_solution, nombre_point)
     }
 
     // On calcule le temps associé à l'instant présent et si il n'est pas définis on le met à zéro

@@ -86,7 +86,7 @@ function envoisConstantes(nomBoutton) {
 let timeoutId = null;
 
 /**
- * Fonction de debounce pour retarder l'exécution d'une fonction
+ * Fonction pour retarder l'exécution d'une fonction
  */
 function updateUniversDelais(func, delay) {
     return function() {
@@ -95,6 +95,102 @@ function updateUniversDelais(func, delay) {
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => func.apply(context, args), delay);
     };
+}
+
+function universMonofluides() {
+    let option = document.getElementById("optionsMonofluide").value
+    let elementOmegaM = document.getElementById("Omégam0")
+    let elementOmegaR = document.getElementById("Omégar0")
+    let elementOmegaK = document.getElementById("Omégak0")
+
+    let elementOmegaL;
+    let elementOmegaDE;
+    if ( document.getElementById("Omégal0") ) {
+        elementOmegaL = document.getElementById("Omégal0")
+    }
+
+    if ( document.getElementById("OmégaDE0") ) {
+        elementOmegaDE = document.getElementById("OmégaDE0")
+    }
+
+    if (option === "optionNull") {
+        console.log("oui")
+        elementOmegaM.disabled = false;
+        elementOmegaR.disabled = false;
+        elementOmegaK.disabled = false;
+        if ( document.getElementById("Omégal0") ) {
+            elementOmegaL.disabled = false;
+        }
+
+        if ( document.getElementById("OmégaDE0") ) {
+            elementOmegaDE.disabled = false;
+        }
+
+    } else {
+        console.log("non")
+        elementOmegaM.disabled = true;
+        elementOmegaR.disabled = true;
+        elementOmegaK.disabled = true;
+        if ( document.getElementById("Omégal0") ) {
+            elementOmegaL.disabled = true;
+        }
+
+        if ( document.getElementById("OmégaDE0") ) {
+            elementOmegaDE.disabled = true;
+        }
+    }
+
+    if (option === "optionM") {
+        elementOmegaM.value = 1;
+        elementOmegaR.value = 0;
+        elementOmegaK.value = 0;
+        if ( document.getElementById("Omégal0") ) {
+            elementOmegaL.value = 0;
+        }
+
+        if ( document.getElementById("OmégaDE0") ) {
+            elementOmegaDE.value = 0;
+        }
+    }
+
+    if (option === "optionR") {
+        elementOmegaM.value = 0;
+        elementOmegaR.value = 1;
+        elementOmegaK.value = 0;
+        if ( document.getElementById("Omégal0") ) {
+            elementOmegaL.value = 0;
+        }
+
+        if ( document.getElementById("OmégaDE0") ) {
+            elementOmegaDE.value = 0;
+        }
+    }
+
+    if (option === "optionLDE") {
+        elementOmegaM.value = 0;
+        elementOmegaR.value = 0;
+        elementOmegaK.value = 0;
+        if ( document.getElementById("Omégal0") ) {
+            elementOmegaL.value = 1;
+        }
+
+        if ( document.getElementById("OmégaDE0") ) {
+            elementOmegaDE.value = 1;
+        }
+    }
+
+    if (option === "optionK") {
+        elementOmegaM.value = 0;
+        elementOmegaR.value = 0;
+        elementOmegaK.value = 1;
+        if ( document.getElementById("Omégal0") ) {
+            elementOmegaL.value = 0;
+        }
+
+        if ( document.getElementById("OmégaDE0") ) {
+            elementOmegaDE.value = 0;
+        }
+    }
 }
 
 /**
@@ -114,7 +210,7 @@ window.onload = ajouterEcouteurs;
 /**
  * Fonction qui permet de rafraîchir les éléments importants de la page univers
  */
-function updateUnivers(fractionDigits) {
+function updateUnivers() {
     document.getElementById("Omégak0").value = Omega_k(0).toExponential(4)
 
     if (document.getElementById("Omégal0")) {
@@ -154,4 +250,32 @@ function avertissement() {
         message.style.display = 'none';
     }
     ajustementGraphique()
+}
+
+/**
+ * Fonction qui permet d'enregistrer un élément html sous plusieurs formats
+ * @param cible {string} Id du div à enregistrer
+ * @param format {string} Id de la liste qui contient les formats d'enregistrement
+ * @param nom {string} Id de l'input qui contient le nom du fichier
+ */
+function enregistrer() {
+    let format = document.getElementById("optionsEnregistrement").value
+    let nom = document.getElementById("nom_fichier").value
+    let element;
+    if (document.getElementById("graphique_LCDM")) {
+        element = document.getElementById("graphique_LCDM")
+    }
+
+    if (document.getElementById("graphique_DE")) {
+        element = document.getElementById("graphique_LCDM")
+    }
+
+    html2canvas(element).then(canvas => {
+        const URLimage = canvas.toDataURL("image/"+format)
+        const lien = document.createElement("a")
+        lien.href = URLimage
+        lien.download = nom+"."+format
+
+        lien.click()
+    })
 }
