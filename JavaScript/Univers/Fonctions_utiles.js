@@ -32,6 +32,7 @@ function nbrJours() {
             return 365.2425;
     }
 }
+
 /**
  * Fonction permettant de convertir H0 des km / s / Mpc vers les s
  * @param H0 {number} H0 en kilomètre par seconde par Mégaparsec
@@ -235,17 +236,27 @@ function Omega_k(z) {
  * Fonction facilitant l'écriture des expression dans le cas du modlèle LCDM. On a fait la substitution u = 1 / (1 + x)
  * afin que les bornes d'intégrations soient finies
  * @param u {number} Paramètre de la fonction
+ * @param z_utilisé {Boolean} Pour choisir si le calcul se fait avec les a (false par defaut) ou z (true)
  * @return {number} Valeur de la fonction
  */
-function fonction_E(u) {
-    let Omegam0 = Omega_m(0)
-    let Omegar0 = Omega_r(0)
-    let Omegal0 = Omega_l(0)
+function fonction_E(u, z_utilisé=false) {
+    let Omegam0 = Omega_m(0);
+    let Omegar0 = Omega_r(0);
+    let Omegal0 = Omega_l(0);
+    let terme_1;
+    let terme_2;
+    let terme_3;
 
     // On calcule les terme 1 à 1 par soucis de clareté
-    let terme_1 = Omegar0 * Math.pow(u, -4);
-    let terme_2 = Omegam0 * Math.pow(u, -3);
-    let terme_3 = (1 - Omegam0 - Omegal0 - Omegar0) * Math.pow(u, -2);
+    if (z_utilisé){
+        terme_1 = Omegar0 * Math.pow(1+u, 4);
+        terme_2 = Omegam0 * Math.pow(1+u, 3);
+        terme_3 = (1 - Omegam0 - Omegal0 - Omegar0) * Math.pow(1+u, 2);
+    }else{
+        terme_1 = Omegar0 * Math.pow(u, -4);
+        terme_2 = Omegam0 * Math.pow(u, -3);
+        terme_3 = (1 - Omegam0 - Omegal0 - Omegar0) * Math.pow(u, -2);
+    };
     return terme_1 + terme_2 + terme_3 + Omegal0;
 }
 
@@ -286,19 +297,30 @@ function derivee_fonction_Y(x) {
 /**
  * Deuxième fonction facilitant l'écriture des expression dans le cas du modlèle DE. On a fait la substitution u = 1 / (1 + x)
  * @param u {number} Paramètre de la fonction
+ * @param z_utilisé {Boolean} Pour choisir si le calcul se fait avec les a (false par defaut) ou z (true)
  * @return {number} Valeur de la fonction
  */
-function fonction_F(u) {
+function fonction_F(u,z_utilisé) {
     let Omegak0 = Omega_k(0)
     let Omegam0 = Omega_m(0)
     let Omegar0 = Omega_r(0)
     let OmegaDE0 = Omega_DE(0)
+    let terme_1;
+    let terme_2;
+    let terme_3;
+    let terme_4;
 
-    let terme_1 = Omegak0 * Math.pow(u, -2)
-    let terme_2 = Omegam0 * Math.pow(u, -3)
-    let terme_3 = Omegar0 * Math.pow(u, -4)
-    let terme_4 = OmegaDE0 * fonction_Y(u)
-
+    if (z_utilisé){
+        terme_1 = Omegak0 * Math.pow(1+u, 2)
+        terme_2 = Omegam0 * Math.pow(1+u, 3)
+        terme_3 = Omegar0 * Math.pow(1+u, 4)
+        terme_4 = OmegaDE0 * fonction_Y(Math.pow(1+u, -1))
+    }else{
+        terme_1 = Omegak0 * Math.pow(u, -2)
+        terme_2 = Omegam0 * Math.pow(u, -3)
+        terme_3 = Omegar0 * Math.pow(u, -4)
+        terme_4 = OmegaDE0 * fonction_Y(u)
+    };
     return terme_1 + terme_2 + terme_3 + terme_4
 }
 
@@ -702,4 +724,108 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
     }
 }
 
+/**
+ * Fonction permettant de calculer l'âge de l'univers
+ * @param fonction {function} La fonction qui permet de simplifier l'écriture des relations,
+ * ne doit dépendre que d'une variable
+ * @param H0 {number} taux d'expansion actuel
+ * @param a1 {number}
+ * @param a2 {number}
+ * @return {number} âge de l'univers.
+ */
+function calcul_ages(fonction, H0, a1, a2) {
+    function integrande(u) {
+        let terme_1 = Math.pow(u, -1)
+        let terme_2 = Math.sqrt(fonction(u))
 
+        return terme_1 * Math.pow(terme_2 , -1);
+    }
+    return (1 / H0) * simpson_composite(integrande, a1, a2, 100);
+}
+
+//Partie Remy
+/** renvoie la fonction Sk pour calculer les distances cosmologiques en fontion de la courbure de l'espace
+ * (Univers,simple,DarkEnergy et monofluide)
+ * @param {*} x Paramètre d'entré
+ * @param {*} OmegaK paramètre de densité de courbure
+ * @returns 
+ */
+function Sk(x,OmegaK){
+    if (OmegaK>0) { //si k=-1 alors omegaK positif
+        return Math.sinh(x);
+    }else if(OmegaK<0){//si k=1 alors omegaK négatif
+        return Math.sin(x);
+    }else{//si k=0 alors omegaK est nul
+        return x;
+    }
+};  
+
+/** renvoie la distance métrique entre un photon émis avec un Zemission et recu a une coordonné r avec un Zreception \
+ * pour avoir la distance d'un objet observé avec un certain décalge Zemission=0 \
+ * pour avoir l'horizon cosmologique des particules Zreception=infini \
+ * pour avoir l'horizon cosmologique des évenement Zemission=-1 (dans le futur) \
+ * (Univers,simple) \
+ * Si les omega et H0 sont définis dans la page pas besoin de les mettre en paramètre : DistanceMetrique(Zemission,Zreception)
+ * @param {*} fonction fonction_E ou fonction_F en fonction de si c'est lcdm ou de
+ * @param {*} Zemission décalage spectral au moment ou le photon est émis
+ * @param {*} Zreception décalage spectral au moment ou le photon est reçu
+ * @param {*} z_utilisé
+ * @returns 
+ */
+function DistanceMetrique(fonction,Zemission,Zreception, z_utilisé=false){
+    if (z_utilisé){
+        function fonction_a_integrer(x){
+            return Math.pow(fonction(x,true),-0.5);
+        };
+    }else{
+        function fonction_a_integrer(x){
+            return Math.pow(fonction(x),-0.5)/Math.pow(x,2);
+        };
+    };
+    return c/(H0_parSecondes(H0)*Math.pow(Math.abs(Omega_k(0)),0.5))*Sk(Math.pow(Math.abs(Omega_k(0)),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,1e4),Omega_k(0))
+};
+
+/** 
+ * Fonction qui renvoie la distance de l'horizon des particules cosmologiques (plus grande distance a laquelle on peut recevoir un signal emis à l'instant t)
+ * @param {*} z_emission par defaut = 0 décalage spectral du moment où le signal est émis
+ * @returns 
+ */
+function calcul_horizon_particule(fonction,z_emission=0){
+    let a_emission=1/(z_emission+1);
+    //formule 21 dans la théorie du 20/05/2024
+    return DistanceMetrique(fonction,1e-4,a_emission);
+};
+
+/**
+ * Fonction qui renvoie la distance de l'horizon des évenements cosmologiques (plus grande distance a laquelle on peut envoyer un signal emis à l'instant t)
+ * @param {*} z_reception par defaut = 0 décalage spectral du moment où le signal est reçu
+ * @returns 
+ */
+function calcul_horizon_evenements(fonction,z_reception=0){
+    //formule 23 dans la théorie du 20/05/2024
+    console.log(DistanceMetrique(fonction,-.5,.3,true));
+    return DistanceMetrique(fonction,-.99999999,z_reception,true);
+}
+
+/**
+ * Inverse du calcul de l'age en fonction d'un z grâce a la fonction dichotomie (marche seulement pour des fonction absolument croissante)
+ * @param {*} temps valeur t
+ * @param {*} fonction fonction a rechercher
+ * @returns valeur de z
+ */
+function calcul_t_inverse(temps,fonction){
+	//Remy test
+	function a_dichotomer(x){
+		return calcul_ages(fonction,H0enannee,1e-15,x);
+	}
+	age_univers=a_dichotomer(1);
+	
+	if (age_univers>=temps){
+		a_t=Dichotomie_Remy(a_dichotomer,temps,1e-15,1,temps*1e-12);
+	}else{
+		a_t=Dichotomie_Remy(a_dichotomer,temps,1,1e7,1e-12);
+
+	};
+
+	return (1-a_t)/a_t;
+}

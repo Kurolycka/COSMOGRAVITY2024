@@ -4,25 +4,6 @@ le facteur d'échelle dans le cas du modèle LCDM.
  */
 
 /**
- * Fonction permettant de calculer l'âge de l'univers
- * @param fonction {function} La fonction qui permet de simplifier l'écriture des relations,
- * ne doit dépendre que d'une variable
- * @param H0 {number} taux d'expansion actuel
- * @param a1 {number}
- * @param a2 {number}
- * @return {number} âge de l'univers.
- */
-function calcul_ages(fonction, H0, a1, a2) {
-    function integrande(u) {
-        let terme_1 = Math.pow(u, -1)
-        let terme_2 = Math.sqrt(fonction(u))
-
-        return terme_1 * Math.pow(terme_2 , -1);
-    }
-    return (1 / H0) * simpson_composite(integrande, a1, a2, 100);
-}
-
-/**
  * Fonction permettant de calculer le facteur d'échelle en fonction du temps
  * @param equa_diff_1 {function} Fonction qui décrit la première dérivée du facteur d'échelle en fonction de tau
  * @param equa_diff_2 {function} Fonction qui décrit la deuxième dérivée du facteur d'échelle en fonction de tau
@@ -163,6 +144,15 @@ function affichage_site_LCDM() {
     document.getElementById("fin").innerHTML = debutEtFin[1]
     console.log("Timeline :", debutEtFin, age_univers)
 
+    //Remy 26/05/24
+    dm_horizon_particule_m=calcul_horizon_particule(fonction_E);
+    dm_horizon_particule_Ga=m_vers_AL(dm_horizon_particule_m)/1e9;
+    dm_horizon_evenement_m=calcul_horizon_evenements(fonction_E);
+    dm_horizon_evenement_Ga=m_vers_AL(dm_horizon_evenement_m)/1e9;
+    document.getElementById("resultat_DmHorizonEvenement").innerHTML = dm_horizon_evenement_Ga.toExponential(4);
+    document.getElementById("resultat_ZHorizonEvenement").innerHTML = -1;
+    document.getElementById("resultat_DmHorizonParticule").innerHTML = dm_horizon_particule_Ga.toExponential(4);
+    document.getElementById("resultat_ZHorizonParticule").innerHTML = "∞";
 
     graphique_facteur_echelle(donnee, debutEtFin[2], debutEtFin[3])
 }
