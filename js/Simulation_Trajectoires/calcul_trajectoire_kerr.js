@@ -237,18 +237,23 @@ function verifnbr() {
 	}
 }
 
-
+//----------------------------------------------------{trajectoire}----------------------------------------------------
+/**
+ * 
+ * @returns Première étape qui lance la partie calculatoire.
+ */
 function trajectoire() {
+
 	texte = o_recupereJson();
+
 	if (pause || debut) {
-		document.getElementById("tg2").style.display = "table";
-		$("#grsvg_2").empty();
-		document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_encours;
-		// pour rendre visible le panneau de contrôle pause et vitesse de la simu
-		document.getElementById("panneau_mobile").style.visibility='visible';
-		document.getElementById("bouton_info").style.visibility='visible';
-		document.getElementById("panneau_mobile2").style.visibility='visible';
-		estUnMobile();
+
+		document.getElementById("tg2").style.display = "table"; //Fait apparaître le tableau des résultats.
+		document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_encours; //Affiche que le calcul est en cours.
+		$("#grsvg_2").empty(); //Je vide le contenue du canvas du potentiel.  
+
+		estUnMobile(); //Affichage de l'information sur les touches claviers en fonction de la taille de l'écran.
+
 		// permet de griser les cases de saisie pour éviter de changer les valeurs pendant la simulation
 		// conseillé car toutes les exceptions ne sont pas gérées
 		document.getElementById('M').disabled = true;

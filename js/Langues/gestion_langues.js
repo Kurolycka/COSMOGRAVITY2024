@@ -671,6 +671,7 @@ function texteTrajectoireMassiveEnGrand() {  // ne sert pas!!!!!!!!!!!!!
 
 function texteTrajectoirePhoton(nbrderockets) {
   var texte = o_recupereJson();
+  document.getElementById("clear").title = texte.pages_trajectoire.bouton_stop_bulleInfo;
   document.getElementById("txt_titre").innerHTML = texte.page_trajectoire_photon.titre;
   document.getElementById("txt_rphysique").innerHTML = texte.page_trajectoire_photon.rayon_physique;
   document.getElementById("moinsvi").title = texte.pages_trajectoire.bouton_moins;
@@ -703,6 +704,7 @@ function texteTrajectoirePhoton(nbrderockets) {
 }
 function texteTrajectoireMassiveNonBar(nbrderockets) {
   var texte = o_recupereJson();
+  document.getElementById("clear").title = texte.pages_trajectoire.bouton_stop_bulleInfo;
   document.getElementById("txt_titre").innerHTML = texte.page_trajectoire_massive_nonBar.titre;
   document.getElementById("txt_rphysique").innerHTML = texte.page_trajectoire_massive.rayon_physique;
   document.getElementById("moinsvi").title = texte.pages_trajectoire.bouton_moins;
@@ -744,6 +746,7 @@ function texteTrajectoireMassiveNonBar(nbrderockets) {
 
 function texteTrajectoirePhotonNonBar(nbrderockets) {
   var texte = o_recupereJson();
+  document.getElementById("clear").title = texte.pages_trajectoire.bouton_stop_bulleInfo;
   document.getElementById("txt_titre").innerHTML = texte.page_trajectoire_photon_nonBar.titre;
   document.getElementById("txt_rphysique").innerHTML = texte.page_trajectoire_photon.rayon_physique;
   document.getElementById("moinsvi").title = texte.pages_trajectoire.bouton_moins;

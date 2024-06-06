@@ -676,21 +676,24 @@ function trajectoire(compteur,mobile) {
 
 		estUnMobile(); //Affichage de l'information sur les touches claviers en fonction de la taille de l'écran.
 
-		document.getElementById('M').disabled = true; //Interdiction de changer la valeur de M une fois la simulation lancée.
-		document.getElementById('r_phy').disabled = true; //Interdiction de changer la valeur de r_phy une fois la simulation lancée. 
-		document.getElementById('nombredefusees').disabled = true; //Interdiction de changer le nombre de fusées une fois al simulation lancée.
+		//Interdiction de changer les valeurs de M, r_phy et le nombre de fusées une fois la simulation lancée : 
+		document.getElementById('M').disabled = true; 
+		document.getElementById('r_phy').disabled = true;
+		document.getElementById('nombredefusees').disabled = true; 
 
 		var nbredefusees = Number(document.getElementById("nombredefusees").value); //Récupère la valeur du nombre de fusées.
 
 		for (countt = 1; countt <= nbredefusees; countt += 1) { //Pour toutes les fusées :
-			document.getElementById('r0'+countt.toString()+'').disabled = true; //Interdiction de changer la valeur de r0 une fois la simulation lancée.
-			document.getElementById('phi0'+countt.toString()+'').disabled = true; //Interdiction de changer la valeur de phi0 une fois la simulation lancée.
-			document.getElementById('teta'+countt.toString()+'').disabled = true; //Interdiction de changer la valeur de teta une fois la simulation lancée.
-			document.getElementById('v0'+countt.toString()+'').disabled = true;   //Interdiction de changer la valeur de v0 une fois la simulation lancée.
+			//Interdiction de changer les valeurs de r0, phi0, v0 et teta une fois la simulation lancée.
+			document.getElementById('r0'+countt.toString()+'').disabled = true; 
+			document.getElementById('phi0'+countt.toString()+'').disabled = true;
+			document.getElementById('teta'+countt.toString()+'').disabled = true;
+			document.getElementById('v0'+countt.toString()+'').disabled = true;  
    		}
 
-		document.getElementById('r3').disabled = true; //Interdiction de changer la valeur du mode observateur une fois la simulation lancée.
-		document.getElementById('r4').disabled = true; //Interdiction de changer la valeur du mode spationaute une fois la simulation lancée.
+		//Interdiction de changer les valeurs des modes observateur et spationaute une fois la simulation lancée : 
+		document.getElementById('r3').disabled = true; //Observateur.
+		document.getElementById('r4').disabled = true; //Spationaute.
 
 		element2=document.getElementById('traject_type2'); //Récupère la valeur de si on est en mode observateur ou en mode spationaute.
 
@@ -753,7 +756,7 @@ function trajectoire(compteur,mobile) {
     	mobile["r_part_obs"]=r_part_obs; 
 		A_init_obs = mobile.vr*(1-rs/mobile.r0)/mobile.E; //Je multiplie par dτ/dt pour passer le dr/dτ en observateur. 
    		A_part_obs=A_init_obs; 
-		mobile["A_part_obs"]=A_part_obs; //mobile.A_part_obs
+		mobile["A_part_obs"]=A_part_obs; 
 		vrobs=A_init_obs; 
 		vphiobs=mobile.vphi*(1-rs/mobile.r0)/mobile.E; //J'utilise le même principe que pour A_init_obs et je multiplie par dτ/dt.
 
@@ -764,6 +767,7 @@ function trajectoire(compteur,mobile) {
     	mobile["temps_particule"]=temps_particule;
    		temps_observateur_distant = 0; //J'initialise le temps dans le référentiel de l'observateur distant. 
     	mobile["temps_observateur_distant"]=temps_observateur_distant;
+
 		Rebond = document.getElementById("reb").value / 100.0; //Je récupère la valeur du rebond remplie par l'utilisateur et je la divise par 100.
     	mobile["Rebond"]=Rebond;
 
@@ -867,7 +871,7 @@ function trajectoire(compteur,mobile) {
 					//Delta_L_sur_L = Delta_E_sur_E; //ΔL/L en fonction de ΔE/E. 
 
 					//mobile.L = mobile.L + mobile.L*Delta_L_sur_L; //Calcul du nouveau L associé à ce mobile.
-					//mobile.E = mobile.E + mobile.E*Delta_E_sur_E //Calcul du nouveau E associé à ce mobile. 
+					//mobile.E = mobile.E + mobile.E*Delta_E_sur_E; //Calcul du nouveau E associé à ce mobile. 
 
 					mobile.L = mobile.L + Delta_L;
 					mobile.E = mobile.E + mobile.E*Delta_E_sur_E;
@@ -886,6 +890,11 @@ function trajectoire(compteur,mobile) {
 
 		document.getElementById('plusvite').removeEventListener('click',foncPourVitAvantLancement,false) //Je désassocie la fonction foncPourVitAvantLancement du bouton pour accélérer une fois la simulation commencée.
 		document.getElementById('moinsvite').removeEventListener('click',foncPourVitAvantLancement,false) //Je désassocie la fonction foncPourVitAvantLancement du bouton pour décélérer une fois la simulation commencée.
+
+		Dtau1 = 1e8 * dtau ;  //Pour permettre une accélération.
+		mobile["Dtau1"]=Dtau1; //Pour associer ce Dtau1 à un mobile spécifique.
+		Dtau2 = dtau/1e8  ;  //Pour permettre une décélération.
+		mobile["Dtau2"]=Dtau2; //Pour associer ce Dtau2 à un mobile spécifique.
 
     	document.getElementById('plusvite').addEventListener('click', function() { //J'associe le bouton accélérer à la fonction suivante une fois la simulation lancée. 
 			mobile=bouttons.vitesse(mobile,true); //J'accélère grâce à la fonction vitesse du fichier bouttons. 
@@ -1006,17 +1015,18 @@ function trajectoire(compteur,mobile) {
 				data2.push({date: mobile.r_part_obs,close: V}); //Je stocke dans data2 les valeurs de r et V de la position actuelle.
 				mobile.point = graphique_creation_pot(0,data1,data2,compteur,mobile); //Trace le graphe du potentiel.
 
-			} else{ //Dans le cas du mobile
+			} else{ //Dans le cas du mobile je procède de manière identique.
 
-				mobile.dr=mobile.r_part*0.6/50; //Je calcule l'incrément dr. 
+				mobile.dr=mobile.r_part*0.6/50; 
 
-				for (r = 0.7*mobile.r_part; r < 1.3*mobile.r_part; r += mobile.dr) { //Je parcours une gamme de valeurs de r centrée autour de mobile.r_part_obs en incrémentant de mobile.dr .
-					V = Vr_mob(mobile.L,r)-1; //Pour afficher de manière plus pertinente le graphe. 
-					data1.push({date: r,close: V}); //Je stocke dans data1 les valeurs de r et V.
+				for (r = 0.7*mobile.r_part; r < 1.3*mobile.r_part; r += mobile.dr) { 
+					V = Vr_mob(mobile.L,r)-1; 
+					data1.push({date: r,close: V}); 
 				}
-				V = Vr_mob(mobile.L,mobile.r_part)-1; //Je calcule le potentiel à la position actuelle.
-				data2.push({date: mobile.r_part,close: V}); //Je stocke dans data2 les valeurs de r et V de la position actuelle.
-				mobile.point = graphique_creation_pot(0,data1,data2,compteur,mobile); //Trace le graphe du potentiel.
+				
+				V = Vr_mob(mobile.L,mobile.r_part)-1; 
+				data2.push({date: mobile.r_part,close: V}); 
+				mobile.point = graphique_creation_pot(0,data1,data2,compteur,mobile); 
 			}
 		},300);  
   	} 
@@ -1970,9 +1980,10 @@ function foncPourZoomPlusAvantLancement(){
 	
 }
 
-function recuperation(lenbdefusees){
+function recuperation(){
 	if(document.getElementById('trace_present').value!="true"){
 		load_schwarshild_massif();
+		var lenbdefusees = Number(document.getElementById("nombredefusees").value);
 		initialisationGenerale(lenbdefusees);
 	}
 }
