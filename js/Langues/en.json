@@ -292,7 +292,7 @@
 	"boutton_recup":"Last values",
 	"ouvreengrand":"Trajectory in a bigger window",
 	"rayon_neg":"Negative radius impossible !",
-	"rayonPhyInfHorz":"Physical radius biggest than horizon radius !",
+	"rayonPhyInfHorz":"Physical radius should be bigger than horizon radius !",
 	"EouLisNaN":"E(or L) is not computable",
 	"rayonHorzInfRayonSchw":"Please, input a value of r0 higher than Schwarschild's radius !",
 	"rayonHorzInfRayon":"Please, input a value of r0 higher than outer horizon Rh+ !",

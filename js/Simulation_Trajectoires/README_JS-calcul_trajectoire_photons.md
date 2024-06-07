@@ -84,7 +84,7 @@ Dans le code sont ainsi codées 9 couleurs : **COULEUR_NOIR** (#2F2D2B), **COULE
 #30 :traceEstAbsent
 #31 : siTrajectoireComplete
 #32 : choixTrajectoire
-#33 : estUnMobile
+#33 : SurTelephone
 #34 : commandes
 #35 : majFondFixe
 #36 : majFondFixe44
@@ -290,7 +290,7 @@ Cela va aider à générer les tableaux qui apparaissent sur la page web. Celui 
 2. Je vérifie si la trajectoire est en pause ou bien si elle vient de démarrer et si une de ces conditions est vérifiée alors j'effectue différentes action : <br>
 🔹  La couleur du champ de saisie de r0 est modifiée en fonction des composantes de couleurs définies dans l'objet mobile (de la couleur qui est associée à ce mobile) et la couleur du texte est ajustée en noir ou blanc en fonction de la luminosité du champ de saisie. <br>
 🔹 L'élément avec l'ID "tg2" est modifié pour afficher le style de table. (Affichage d'un élément HTML sous forme de tableau.) Et le contenu de l'élement avec l'ID "indic_caluls" est remplacé par le texte récupéré à partir de **texte.pages_trajectoire.calculs_encours**, ce qui semble être un indicateur visuel pour l'utilisateur indiquant que des calculs sont en cours. <br>
-🔹 La fonction **estUnMobile()** est appellée. <br>
+🔹 La fonction **SurTelephone()** est appellée. <br>
 🔹 Certains éléments de saisie dans le document HTML sont désactivés pour éviter que l'utilisateur ne modifie les valeurs pendant la simulation. Les éléments affectés sont la masse de l'astre (M), le rayon physique de l'astre (r_phy) et le nombre de mobiles (nombredefusees). <br>
 🔹 Je récupère le nombre de mobiles que l'utilisateur a rentré et je stocke cette valeur convertie en nombre dans la variable blyo. <br>
 🔹 Je boucle et pour tous les mobiles je désactive les champs de saisie associés à r0, phi0 et teta pour ne pas que l'utilisateur ne modifie les valeurs pendant la simulation. <br>
@@ -351,7 +351,7 @@ Cela va aider à générer les tableaux qui apparaissent sur la page web. Celui 
 7. Une info-bulle est ajoutée au bouton d'ID "clear" avec le texte spécifié dans **texte.pages_trajectoire.bouton_stop_bulleInfo**.
 
 
-📰 **Informations** : Cette fonction utilise les autres fonctions **o_recupereJson()**, **texte.pages_trajectoire.calculs_encours**, **estUnMobile()**, **clavierEvenement()**, **texte.pages_trajectoire.impossible_canvas**, **texte.pages_trajectoire.impossible_context**, **majFondFixe()**, **majFondFixe44()**, **animate()**, **pausee()**, **vitesse()** et **zoom()** liées au fichier **bouttons.js**, **rafraichir2()**, **creation_blocs()**, **graphique_creation_pot()**, **pausee()**, **texte.pages_trajectoire.bouton_stop_bulleInfo**.
+📰 **Informations** : Cette fonction utilise les autres fonctions **o_recupereJson()**, **texte.pages_trajectoire.calculs_encours**, **SurTelephone()**, **clavierEvenement()**, **texte.pages_trajectoire.impossible_canvas**, **texte.pages_trajectoire.impossible_context**, **majFondFixe()**, **majFondFixe44()**, **animate()**, **pausee()**, **vitesse()** et **zoom()** liées au fichier **bouttons.js**, **rafraichir2()**, **creation_blocs()**, **graphique_creation_pot()**, **pausee()**, **texte.pages_trajectoire.bouton_stop_bulleInfo**.
 Le **DOM** est une représentation hiérarchique sous forme d'arbdre de tous les éléments d'une page web où chaque élément est un noeud dans cet arbre.
 
 ## #14 : fonction animate 
@@ -365,7 +365,7 @@ Le **DOM** est une représentation hiérarchique sous forme d'arbdre de tous les
 📑 **Fonctionnement détaillé** :
 1. J'initialise la variable "onestarrete" de l'objet "mobil" à 0 pour indiquer que la particule n'est pas arrêtée.
 2. Je met à jour le facteur de zoom de la trajectoire de la particule dans le tableau "mobilefactor" à l'indice "compteur" avec la valeur de la variable "factGlobalAvecClef".
-3. J'appelle la fonction **estUnMobile()**.
+3. J'appelle la fonction **SurTelephone()**.
 4. Je récupère l'élément HTML avec l'ID "traject_type" que je stocke dans la variable "element"
 5. J'appelle la fonction **choixTrajectoire(compteur, context, mobile, mobilefactor, rmaxjson, maximum)** pour probablement choisir le type de trajectoire à afficher en fonction de certains paramètres passés en arguments.
 6. Je récupère la valeur de l'élément HTML avce l'ID "boutton_ammorti" que je stocke dans la variable "isrebond".
@@ -385,7 +385,7 @@ Le **DOM** est une représentation hiérarchique sous forme d'arbdre de tous les
 🔹  Je vérifie si "element2" est égal à "mobile" (référentiel de l'observateur) ou pas (référentiel du photon). Et puis je vérifie quelques conditions supplémentaires comme par exemple si "mobile.r_part_obs" >= rs * 1.000001 ou si "mobile.r_part">0 et en fonction des conditions qui sont remplie ou non je mets à jours les valeurs HTML des éléments d'ID "to{compteur}", "r_par{compteur}", "tp{compteur}", "vp_sc_mas{compteur}", "vr_sc_mas{compteur}", "v_tot{compteur}", "ga{compteur}". <br>
 🔹 Si on est dans le référentiel de la particule et que "mobile.r_part" > rs*1.00001 alors on rajouter à la valeur "mobile.temps_observateur" la valeur de "mobile.dtau". Et si on ne vérifie pas la condition "mobile.r_part" > rs*1.00001 alors "mobile.temps_observateur" prend la valeur 1/0. **GROS PROBLEME A CET ENDROIT**.Je mets ensuite à jour la valeur de l'élément HTML qui a pour ID "to{compteur}" peu importe si la condition est vérifiée ou non. <br>
 
-📰 **Informations** : Cette fonction utilise les autres fonctions **estUnMobile()**, **choixTrajectoire()**, **rungekutta()**, **MSC_Ex_vitesse()** liée au fichier **calculs**, **rungekutta_obs()**, **arret()**, **Vr_obs()**, **update_graphique_2()**
+📰 **Informations** : Cette fonction utilise les autres fonctions **SurTelephone()**, **choixTrajectoire()**, **rungekutta()**, **MSC_Ex_vitesse()** liée au fichier **calculs**, **rungekutta_obs()**, **arret()**, **Vr_obs()**, **update_graphique_2()**
 
 ## #15 : fonction Vr_mob
 
@@ -570,7 +570,7 @@ Le **DOM** est une représentation hiérarchique sous forme d'arbdre de tous les
 
 📰 **Informations** : Cette fonction utilise les autres fonctions : **majFondFixe()** et **creation_blocs()**.
 
-## #33 : fonction estUnMobile
+## #33 : fonction SurTelephone
 
 🔧 **Paramètres** : N/A
 

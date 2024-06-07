@@ -635,7 +635,7 @@ function trajectoire(compteur,mobile) {
 		document.getElementById("tg2").style.display = "table";	//Fait apparaître le tableau des résultats.											   
 		document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_encours; //Affiche que le calcul est en cours.
 
-		estUnMobile(); //Affichage de l'information sur les touches claviers en fonction de la taille de l'écran.
+		SurTelephone(); //Affichage de l'information sur les touches claviers en fonction de la taille de l'écran.
 
 		//Interdiction de changer les valeurs de M, r_phy et le nombre de fusées une fois la simulation lancée : 
 		document.getElementById('M').disabled = true;
@@ -981,9 +981,11 @@ function trajectoire(compteur,mobile) {
 function animate(compteur,mobile,mobilefactor) {
 	mobile.onestarrete=0;
 	mobilefactor[compteur] = factGlobalAvecClef
-	estUnMobile();
+	SurTelephone();
 	element = document.getElementById('traject_type');
+
 	choixTrajectoire(compteur,context,mobilefactor,rmaxjson,maximum);
+
 	var isrebond = document.getElementById("boutton_ammorti").value;
 	element2=document.getElementById('traject_type2');													 
 

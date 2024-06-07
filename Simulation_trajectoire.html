@@ -189,7 +189,7 @@ ga('send', 'pageview');
 
 			<span id="sp_reb">
 			</span>
-			<button id="rebondd" type="button" name="reb" class="myButton2" onclick="ammort();changerBouttonRebond()"></button>
+			<button id="rebondd" type="button" hidden name="reb" class="myButton2" onclick="ammort();changerBouttonRebond()"></button>
 		</div>
 
 		<div class="wraper" id="barre_reb">
@@ -304,13 +304,16 @@ ga('send', 'pageview');
 
 	//AJOUTE PAR KHALED : pour ne pas laisser le choix à un utilisateur le nb de fusees s'il passe en mode spationaute
 	var btnObervateur = document.getElementById("r3");
-    var btnSpationaute = document.getElementById("r4");
-    var inputNbfusees = document.getElementById("nombredefusees");
+  var btnSpationaute = document.getElementById("r4");
+  var inputNbfusees = document.getElementById("nombredefusees");
 	var labelNbfusees = document.getElementById("labelnumberfusees");
 	var labelTempsAllumage = document.getElementById("label_temps_allumage"); //ManonV3
 	var inputTempsAllumage = document.getElementById("temps_allumage"); //ManonV3
 	var labelPuissanceReacteur = document.getElementById("label_puissance_reacteur"); //ManonV3
 	var inputPuissanceReacteur = document.getElementById("puissance_reacteur"); //ManonV3
+	var btnrebond = document.getElementById("rebondd");
+	var inputRphysique = document.getElementById("r_phy");
+
 
     // Ajouter des écouteurs d'événements pour les boutons
     btnObervateur.addEventListener("click", function() {
@@ -323,13 +326,24 @@ ga('send', 'pageview');
     });
 
     btnSpationaute.addEventListener("click", function() {
-		inputNbfusees.style.display = "none"; // Masquer le input et le label de nbfusees si button spationaute est cliqué 
+		inputNbfusees.value='1'; // on met un seul mobile
+		const event = new Event('change');//on met à jour tout le changement en appelant la sa fonctionnalité de changement
+		inputNbfusees.dispatchEvent(event);
+		inputNbfusees.style.display="none";
 		labelNbfusees.style.display = "none";
 		labelTempsAllumage.style.display = "inline"; //ManonV3
 		inputTempsAllumage.style.display = "inline"; //ManonV3
 		labelPuissanceReacteur.style.display = "inline"; //ManonV3
 		inputPuissanceReacteur.style.display = "inline"; //ManonV3
     });
+
+	inputRphysique.addEventListener("input", function() {
+		if(inputRphysique.value=="0" || inputRphysique.value==""){btnrebond.style.display="none";} 
+		else{btnrebond.style.display="inline";}
+
+    });
+	
+
 
 	var lenbdefusees;
 	$(function() {

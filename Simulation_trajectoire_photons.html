@@ -191,7 +191,7 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
 
       <span id="sp_reb">
                 </span>
-      <button id="rebondd" type="button" name="reb" class="myButton2" onclick="ammort_photon();changerBouttonRebond()"></button>
+      <button id="rebondd" type="button" hidden name="reb" class="myButton2" onclick="ammort_photon();changerBouttonRebond()"></button>
     </div>
 
       <div id="boutons_actions">
@@ -305,9 +305,12 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
     }
 
     var btnObervateur = document.getElementById("r3");
-        var btnSpationaute = document.getElementById("r4");
-        var inputNbfusees = document.getElementById("nombredefusees");
+    var btnSpationaute = document.getElementById("r4");
+    var inputNbfusees = document.getElementById("nombredefusees");
 		var labelNbfusees = document.getElementById("labelnumberfusees")
+
+    var btnrebond = document.getElementById("rebondd");
+	  var inputRphysique = document.getElementById("r_phy");
 
         // Ajouter des écouteurs d'événements pour les boutons
         btnObervateur.addEventListener("click", function() {
@@ -316,9 +319,18 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
         });
 
         btnSpationaute.addEventListener("click", function() {
-			inputNbfusees.style.display = "none"; // Masquer le input et le label de nbfusees si button spationaute est cliqué 
-			labelNbfusees.style.display = "none";
+        inputNbfusees.value='1'; // on met un seul mobile
+        const event = new Event('change');//on met à jour tout le changement en appelant la sa fonctionnalité de changement
+        inputNbfusees.dispatchEvent(event);
+        inputNbfusees.style.display = "none"; // Masquer le input et le label de nbfusees si button spationaute est cliqué 
+        labelNbfusees.style.display = "none";
         });
+
+        inputRphysique.addEventListener("input", function() {
+        if(inputRphysique.value=="0" || inputRphysique.value==""){btnrebond.style.display="none";} 
+        else{btnrebond.style.display="inline";}
+        });
+	
 
     var lenbdefusees;
  

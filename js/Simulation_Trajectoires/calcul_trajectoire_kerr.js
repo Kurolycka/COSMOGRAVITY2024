@@ -272,7 +272,7 @@ function trajectoire() {
 		document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_encours; //Affiche que le calcul est en cours.
 		$("#grsvg_2").empty(); //Je vide le contenue du canvas du potentiel.  
 
-		estUnMobile(); //Affichage de l'information sur les touches claviers en fonction de la taille de l'écran.
+		SurTelephone(); //Affichage de l'information sur les touches claviers en fonction de la taille de l'écran.
 
 		//Interdiction de changer les valeurs de M, r0, J, teta, phi0 une fois la simulation lancée : 
 		document.getElementById('M').disabled = true;
@@ -428,7 +428,6 @@ function trajectoire() {
 				}
 
 				if (joy.GetPhi()!=0){ //Contrôle du pilotage
-
 					if (isNaN(vtot)){ //Dans le cas où je n'ai pas de vitesse une fois rs dépassée je ne dois pas pouvoir piloter.
 						joy.GetPhi()=0; 
 					}else{ //Autrement il est possible de piloter.
@@ -638,7 +637,7 @@ function trajectoire() {
 
 function animate() {
 	onestarrete=0;
-	estUnMobile();
+	SurTelephone();
 	element = document.getElementById('traject_type');
 	choixTrajectoire(context);
 

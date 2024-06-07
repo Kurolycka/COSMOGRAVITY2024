@@ -290,6 +290,9 @@
         });
 
         btnSpationaute.addEventListener("click", function() {
+			inputNbfusees.value='1'; // on met un seul mobile
+			const event = new Event('change');//on met à jour tout le changement en appelant la sa fonctionnalité de changement
+			inputNbfusees.dispatchEvent(event);
 			inputNbfusees.style.display = "none"; // Masquer le input et le label de nbfusees si button spationaute est cliqué 
 			labelNbfusees.style.display = "none";
 			labelTempsAllumage.style.display = "inline"; //ManonV3

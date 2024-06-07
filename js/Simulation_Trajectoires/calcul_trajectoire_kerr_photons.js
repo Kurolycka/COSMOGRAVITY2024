@@ -165,7 +165,7 @@ function trajectoire() {
 		document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_encours; //Affiche que le calcul est en cours.
 		$("#grsvg_2").empty();  //Je vide le contenue du canvas du potentiel. 
 
-		estUnMobile(); //Affichage de l'information sur les touches claviers en fonction de la taille de l'écran.
+		SurTelephone(); //Affichage de l'information sur les touches claviers en fonction de la taille de l'écran.
 
 		//Interdiction de changer les valeurs de M, r0, J, teta, phi0 une fois la simulation lancée : 
 		document.getElementById('M').disabled = true;
@@ -189,7 +189,6 @@ function trajectoire() {
 		//Interdiction de changer les valeurs des modes observateur et spationaute une fois la simulation lancée : 
 		document.getElementById('r3').disabled = true;
 		document.getElementById('r4').disabled = true;
-
 
 		document.getElementById('trace_present').value="true"; //Permet de déclarer qu'il y a un tracé. 
 
@@ -466,7 +465,7 @@ function trajectoire() {
 
 function animate() {
     onestarrete=0;
-    estUnMobile();
+    SurTelephone();
     element = document.getElementById('traject_type');
     choixTrajectoire(context);
     element2=document.getElementById('traject_type2');
@@ -1206,7 +1205,6 @@ function foncPourZoomMoinsAvantLancement(){
 	document.getElementById('nzoomtxt').innerHTML= "nz="+ ns_avant_lancement.toString();
 }
 	
-
 function boutonAvantLancement(){
 	//Gestion de l'accélération/décélération de la simu
 	document.getElementById("panneau_mobile").style.visibility='visible';

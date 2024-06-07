@@ -39,13 +39,14 @@ function traceEstAbsent(){
 	document.getElementById('trace_present').value=false;
 }
 
-//----------------------------------------------------{estUnMobile}----------------------------------------------------
+//----------------------------------------------------{surTelephone}----------------------------------------------------
 
 /**
  * Fonction qui vérifie si la largeur de l'écran est inférieure ou égale à 960 pixels et ajuste la visibilité (cachée ou non) d'un élément HTML avec l'ID "bouton_info" en conséquence. 
  * Si l'écran fait moins ou égal à 960 pixels alors l'élement sera caché et sinon il sera visible.
  */
-function estUnMobile(){
+
+function SurTelephone(){
 	var x = window.matchMedia("(max-width: 960px)")
 	if(x.matches){
 		document.getElementById("bouton_info").style.visibility='hidden';
@@ -186,17 +187,6 @@ var calculs = calculs || (function() {
 
 })()
 
-//----------------------------------------------------{arret}----------------------------------------------------
-
-/**
- * Fonction qui permet l'arrêt d'un mobile dans la métrique de Schwarzschild. 
- * A distinguer de la fonction pause pausee(), la fonction arret ne permet pas de relancer la simulation ensuite.
- * @param {Object} mobile : Indique quel est le mobile (objet) que l'on souhaite arrêter.
- */
-function arret(mobile) {
-	pausee();
-	document.getElementById("indic_calculs").innerHTML=texte.pages_trajectoire.calcul_termine;
-}
 
 //----------------------------------------------------{arretKerr}----------------------------------------------------
 
@@ -247,9 +237,9 @@ function rendreVisibleNbG() {
 
 	var puissance_consommee_Cells = document.querySelectorAll('[id^="puissance_consommee"]'); 
 
-    var distance_metrique_cell = document.querySelectorAll('[id^="distance_metrique"]'); 
+  var distance_metrique_cell = document.querySelectorAll('[id^="distance_metrique"]'); 
 
-    var distance_metrique_res_cell = document.querySelectorAll('[id^="distance_parcourue"]'); 
+  var distance_metrique_res_cell = document.querySelectorAll('[id^="distance_parcourue"]'); 
     
     // Si element2.value est "mobile" et que y a que 1 mobile, rend les cellules visibles, sinon les cache
     if (element2.value == "mobile" && blyo==1) {
@@ -342,6 +332,4 @@ function clavierEvenement(SCH){
 
 	});
 }
-
-
 

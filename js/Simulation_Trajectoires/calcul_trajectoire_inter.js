@@ -678,7 +678,7 @@ function trajectoire(compteur,mobile) {
 		document.getElementById("tg2").style.display = "table"; //Fait apparaître le tableau des résultats.
 		document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_encours; //Affiche que le calcul est en cours.
 
-		estUnMobile(); //Affichage de l'information sur les touches clavier en fonction de la taille de l'écran. 
+		SurTelephone(); //Affichage de l'information sur les touches clavier en fonction de la taille de l'écran. 
 
 		//Interdiction de changer les valeurs de M, r_phy et le nombre de fusées une fois la simulation lancée : 
 		document.getElementById('M').disabled = true;
@@ -775,6 +775,7 @@ function trajectoire(compteur,mobile) {
 
 		temps_particule = 0; //J'initialise le temps dans le référentiel du mobile. 
 		mobile["temps_particule"]=temps_particule;
+
 		temps_observateur_distant= 0; //J'initialise le temps dans le référentiel de l'observateur distant. 
 		mobile["temps_observateur_distant"]=temps_observateur_distant;
 
@@ -866,7 +867,7 @@ function trajectoire(compteur,mobile) {
 
 		var temps_total_reacteur =0; //Initialisation du temps total d'allumage des réacteurs au cours du pilotage. 
 
-		if(blyo == 1 && element2.value == "mobile") {//Dans le cas où j'ai un seul mobile et où je suis en mode spationaute. 
+		if(element2.value == "mobile") {//Dans le cas où j'ai un seul mobile et où je suis en mode spationaute. 
 			setInterval(function(){//Fonction effectuée toutes les 50 ms, qui est le temps de réaction du système fixé. 
 				if(joy.GetPhi()!=0){
 
@@ -1056,9 +1057,10 @@ function trajectoire(compteur,mobile) {
 function animate(compteur,mobile,mobilefactor) {	
 	mobilefactor[compteur] = factGlobalAvecClef
 	// on vérifie le type de trajectoire sélectionné
-	estUnMobile();
+	SurTelephone();
 	element = document.getElementById('traject_type');
-	choixTrajectoire(compteur,context,mobilefactor,rmaxjson,maximum);
+
+	choixTrajectoire(compteur,context,mobilefactor,rmaxjson,maximum, true);
 
 	element2=document.getElementById('traject_type2');
 	blyo=Number(document.getElementById('nombredefusees').value)//ManonGeneralisation
