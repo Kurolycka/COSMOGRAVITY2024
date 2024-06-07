@@ -74,6 +74,7 @@
 		"tempsBigBang":"Temporalité",
 		"temps_BF": "Temps depuis le Big Fall",
 		"dureeUnivers":"Durée de l'univers",
+		"DistanceDecalageHorizon":"Distance metrique et décalage z de l'horizon des évenements",
 		"simuavertissement":"Avertissement",
 		"avertissement":"La simulation Univers avec ses calculs annexes permet de choisir les valeurs d'une dizaine de paramètres (en comptant celles des constantes fondamentales). Le code actuel n'est évidemment pas robuste sur tout le domaine accessible de cet espace à 10 dimensions.   Nous espérons que les résultats sont exacts dans un voisinage 'prudent' du modèle standard, des valeurs usuelles des observables (z, thêta) et des constantes fondamentales. Nous pensons qu'ils le sont encore pour des univers très différents du nôtre mais il est évident que le risque d'échec de la simulation (temps de calcul excessif sur le processeur de l'utilisateur) ou, pire, de résultat inexact augmente lorsque l'on s'aventure très loin du modèle standard. L'option 'mono-fluides', avec son formalisme analytique, permet d'aller plus fiablement explorer les extrêmes. Près des 'séparatrices' entre types d'univers différents (avec ou sans Big Bang, avec ou sans Big Crunch), un avertissement automatique est normalement affiché.",
 		"message_nomFichier": "Veuillez saisir le nom de fichier désiré",
@@ -315,7 +316,7 @@
 		"temps_obs":"Temps observateur distant",
 		"decal_spect":"Décalage spectral / Energie consommée", 
 		"r0egale0": "r0 est  positif",
-		"commandes_horsSchwarMassif":"Liste des commandes au clavier : \n\n- Trajectoire Complète : touche a \n- Trajectoire Simple : touche z\n- Stopper la simulation : touche q \n- Reset : touche s \n- Enregistrer : touche d \n- Recupérer les valeurs précédentes : touche f \n- Ralentir la simulation : touche w \n- Pause / Lecture : touche x \n- Accélérer la simulation : touche c",
+		"commandes_horsSchwarMassif":"Liste des commandes au clavier : \n\n- Trajectoire Complète : touche a \n- Trajectoire Simple : touche z\n- Reset : touche s \n- Enregistrer : touche d \n- Ralentir la simulation : touche w \n- Pause / Lecture : touche x \n- Accélérer la simulation : touche c",
 		"theta_label":"Angle de la vitesse initiale du projectile",
 		"philabel":"Angle de la position initiale du projectile",
 		"TempTN":"Température du trou noir",
@@ -330,8 +331,15 @@
 		"dernier_g": "Dernier g",
 		"dernier_g_infobulle":"Dernier nombre de g ≠ 0 ressenti par le pilote avec 1g = 9.81m/s². Valable seulement pour la mécanique Newtonienne.",
 		"distance_metrique_parcourue":"D(m)",
-		"distance_metrique_parcourue_infobulle":"Distance métrique parcourue par le mobile depuis l'instant initial."
-
+		"distance_metrique_parcourue_infobulle":"Distance métrique parcourue par le mobile depuis l'instant initial.",
+		"temps_allumage_label":"T<sub>allumage</sub> (ms) =",
+		"temps_allumage_infobulle":"Temps d'allumage du réacteur lorsqu'on clique sur V\u1D69+ ou V\u1D69- .",
+		"puissance_reacteur_label":"P (W/kg) =",
+		"puissance_reacteur_infobulle":"Puissance du réacteur par unité de masse.",
+		"puissance_consommee_label":"P<sub>consommée</sub> (W/kg)",
+		"puissance_consommee_infobulle":"Puissance totale consommée par les réacteurs en W/kg.",
+		"alerte_v0_superieure_c" : "Attention votre vitesse v0 est supérieure à c.",
+		"alerte_r0_inferieure_rs" : "Attention votre distance initiale au centre de l'astre r0 est plus petite que le rayon de Schwarzschild."
 	},
 
 	"page_trajectoire_massive":{
@@ -344,7 +352,7 @@
 		"amortissement":"Coefficient d'amortissement : Rebond limité à vitesse d'impact < 300 m/s ",
 		"non_baryonique":"Masse et/ou mobile non baryonique(s)",
 		"titre2":"Masse et mobile baryoniques",
-		"commandes":"Liste des commandes au clavier : \n\n- Trajectoire Complète : touche a \n- Trajectoire Simple : touche z \n- Avec ou sans rebond : touche e \n- Stopper la simulation : touche q \n- Reset : touche s \n- Enregistrer : touche d \n- Recupérer les valeurs précédentes : touche f \n- Ralentir la simulation : touche w \n- Pause / Lecture : touche x \n- Accélérer la simulation : touche c"
+		"commandes":"Liste des commandes au clavier : \n\n- Trajectoire Complète : touche a \n- Trajectoire Simple : touche z \n- Avec ou sans rebond : touche e \n- Reset : touche s \n- Enregistrer : touche d \n- Ralentir la simulation : touche w \n- Pause / Lecture : touche x \n- Accélérer la simulation : touche c"
 	},
 
 	"page_trajectoire_photon":{

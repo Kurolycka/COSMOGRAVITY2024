@@ -74,6 +74,7 @@
 		"tempsBigBang":"Timeline",
 		"temps_BF": "Time since Big Fall",
 		"dureeUnivers":"Universe duration",
+		"DistanceDecalageHorizon":"Metric distance and redshift of the event horizon",
 		"simuavertissement":"Warning",
 		"avertissement":"The Universe simulation with it's annex calculations allows 10 or so parameters to be chosen(counting the fundamental constants). The current code is obviously not robust on all the accessible domain of this 10 dimensional space. We hope the results are exact in a 'prudent' neighborhood of the standard model, of the usual observable values (z, thêta) and of the fundamental constants. We think that they are still exact for universes very different from our own but it's obvious that the simulation's chances to fail(too long of a calculation time on the user's processor) or, worse, of erroneous results increase the further away we go from the standard model. The 'mono-fluids' option, with it's analytical formalism, allows us to explore more accurately those extremes. Near the 'seperators(?)' between different types of universes(with or without a Big Bang, with or without a Big Crunch), an automatic warning is normally displayed.",
 		"message_nomFichier": "Please enter the desired file name",
@@ -234,7 +235,7 @@
 	"gravtitle":"Surface gravity in g",
 	"decalageSpec_EnergyReserve":"If on Distant observer, Spectral Shift is shown. If there is only one spaceman, the energy consumed is displayed.",
 	"r3":"it is (by default) in a direction perpendicular to the plane of the orbit (and of the screen) and has a constant distance d at the same time >> rS and << H0/c²",
-	"ctreastre":"Initial distance of the projectile from the centre of the celestial body",
+	"ctreastre":"Initial distance of the projectile from the center of the celestial body",
 	"rayonschwars":"Schwarzschild's radius",
 	"vitesse_orbite_circulaire":"Circular orbit speed for this r0 (ɸ₀ = 90°)",
 	"orbite_circulaire_stable":"stable",
@@ -292,7 +293,7 @@
 	"boutton_recup":"Last values",
 	"ouvreengrand":"Trajectory in a bigger window",
 	"rayon_neg":"Negative radius impossible !",
-	"rayonPhyInfHorz":"Physical radius biggest than horizon radius !",
+	"rayonPhyInfHorz":"Physical radius should be bigger than horizon radius !",
 	"EouLisNaN":"E(or L) is not computable",
 	"rayonHorzInfRayonSchw":"Please, input a value of r0 higher than Schwarschild's radius !",
 	"rayonHorzInfRayon":"Please, input a value of r0 higher than outer horizon Rh+ !",
@@ -309,7 +310,7 @@
 	"decal_spect": "Spectral shift / Energy expended",
 	"v_total" :"Speed(m/s)",
 	"r0egale0": "r0 is positif",
-	"commandes_horsSchwarMassif":"Keyboard : \n\n- Complete trajectory : key a \n- Simple trajectory : key z\n- Stop the calculate : key q \n- Reset : key s \n- Save : key d \n- Last values : key f \n- Slow down : key w \n- Pause / Read : key x \n- Speed up : key c",
+	"commandes_horsSchwarMassif":"Keyboard : \n\n- Complete trajectory : key a \n- Simple trajectory : key z\n- Reset : key s \n- Save : key d \n- Slow down : key w \n- Pause / Read : key x \n- Speed up : key c",
 	"theta_label":"Angle of initial velocity of projectile",
 	"philabel":"Angle of the initial position of the projectile",
 	"TempTN":"Hawking radiation temperature",
@@ -325,7 +326,15 @@
 	"dernier_g": "Last g",
 	"dernier_g_infobulle":"Last number of g ≠ 0 felt by the pilot with 1g = 9.81m/s². Valid only for Newtonian mechanics.",
 	"distance_metrique_parcourue":"D(m)",
-	"distance_metrique_parcourue_infobulle":"Metric distance traveled by the mobile since the initial moment."
+	"distance_metrique_parcourue_infobulle":"Metric distance traveled by the mobile since the initial moment.",
+	"temps_allumage_label":"T<sub>ignition</sub> (ms) =",
+	"temps_allumage_infobulle":"Engine ignition time when V\u1D69+ or V\u1D69- is clicked.",
+	"puissance_reacteur_label":"P (W/kg) =",
+	"puissance_reacteur_infobulle":"Reactor power per unit mass.",
+	"puissance_consommee_label":"P<sub>consumed</sub> (W/kg)",
+	"puissance_consommee_infobulle":"Total power consumed by reactors in W/kg.",
+	"alerte_v0_superieure_c" : "Be careful, your speed v0 is greater than c.",
+	"alerte_r0_inferieure_rs" : "Be careful, your initial distance from the center of the celestial body r0 is smaller than the Schwarzschild's radius."
 },
 
 "page_trajectoire_massive":{
@@ -338,7 +347,7 @@
 	"rebond":"Bounce",
 	"amortissement":"Shock absorption : the bounce is limited to an impact speed of",
 	"non_baryonique":"Nonbaryonic mass and or particle",													 
-	"commandes":"Keyboard : \n\n- Complete trajectory : key a \n- Simple trajectory : key z \n- With or without rebbond : key e \n- Stop the calculate : key q \n- Reset : key s \n- Save : key d \n- Last values : key f \n- Slow down : key w \n- Pause / Read : key x \n- Speed up : key c"
+	"commandes":"Keyboard : \n\n- Complete trajectory : key a \n- Simple trajectory : key z \n- With or without rebbond : key e \n- Reset : key s \n- Save : key d \n- Slow down : key w \n- Pause / Read : key x \n- Speed up : key c"
 },
 
 "page_trajectoire_photon":{
