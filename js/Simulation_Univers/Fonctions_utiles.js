@@ -639,7 +639,7 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
     };
 
     if (document.getElementById("graphique")) {
-        Plotly.newPlot("graphique", [donnee], apparence);
+        Plotly.newPlot("graphique", donnee, apparence);
     }
 
     if (document.getElementById("graphique_sombre")) {
@@ -718,15 +718,7 @@ function DistanceMetrique(fonction,Zemission,Zreception, z_utilisé=false){
 function calcul_horizon_particule(fonction,z_emission=0){
     let a_emission=1/(z_emission+1);
     //formule 21 dans la théorie du 20/05/2024
-    function fonction_a_integrer(x){
-        return Math.pow(fonction_E(x),-0.5)/Math.pow(x,2);
-    };
-    console.log(simpson_composite(fonction_a_integrer,0.00001,1,1e3));
-    function fonction_a_integrer(x){
-        return Math.pow(fonction_E(x,true),-0.5);
-    };
-    console.log(simpson_simple_degre2(fonction_a_integrer,0,Omega_m(0), Omega_l(0), Omega_r(0)));
-    return DistanceMetrique(fonction,1e-4,a_emission);
+    return DistanceMetrique(fonction,1e-15,a_emission);
 };
 
 /**
@@ -736,7 +728,7 @@ function calcul_horizon_particule(fonction,z_emission=0){
  */
 function calcul_horizon_evenements(fonction,z_reception=0){
     //formule 23 dans la théorie du 20/05/2024
-    return DistanceMetrique(fonction,-1,z_reception,true);
+    return DistanceMetrique(fonction,-.99999999,z_reception,true);
 }
 
 /**

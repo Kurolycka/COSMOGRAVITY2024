@@ -1409,7 +1409,7 @@ function Tracer(path) {
 		let val_graph = new_calcul_temps(abscissa_z);
 		let amin=1/(1+zmax);
 		let amax=1/(1+zmin);
-		let res = calcul_facteur_echelle_DE(amin,amax,equa_diff_1_DE, equa_diff_2_DE, fonction_F);
+		let res = calcul_facteur_echelle_DE(amin,amax,equa_diff_1_DE, equa_diff_2_DE, fonction_F)[0];
 		let ordonnee = res[1].map((x) => (1-x)/x);
 		ordonnee=ordonnee.reverse();
 		let abscisse = res[0].map((x) => x*1e9);
@@ -1775,11 +1775,15 @@ function calcul_omegas_EN(abscissa){
 
 //Remy 27/05/2024
 function calcul_horizons_annexe_noire(){
-	let t_pour_horizon= Number(document.getElementById("t_pour_calcul_horizon").value);
-    let dm_horizon_particule_m=calcul_horizon_particule(fonction_F,t_pour_horizon);
-    let dm_horizon_particule_Ga=m_vers_AL(dm_horizon_particule_m)/1e9;
-    let dm_horizon_evenement_m=calcul_horizon_evenements(fonction_F,t_pour_horizon);
-    let dm_horizon_evenement_Ga=m_vers_AL(dm_horizon_evenement_m)/1e9;
-	document.getElementById("resultat_dm_particule_t").innerHTML=dm_horizon_particule_Ga.toExponential(4);
-	document.getElementById("resultat_dm_evenement_t").innerHTML=dm_horizon_evenement_Ga.toExponential(4);
+	if (t_pour_horizon<=0){
+		document.getElementById("resultat_dm_particule_t").innerHTML=NaN;
+		document.getElementById("resultat_dm_evenement_t").innerHTML=NaN;
+	}else{
+		z_pour_horizon=calcul_t_inverse(t_pour_horizon,fonction_F);
+		let dm_horizon_particule_m=calcul_horizon_particule(fonction_F,z_pour_horizon);
+		let dm_horizon_particule_Ga=m_vers_AL(dm_horizon_particule_m)/1e9;
+		let dm_horizon_evenement_m=calcul_horizon_evenements(fonction_F,z_pour_horizon);
+		let dm_horizon_evenement_Ga=m_vers_AL(dm_horizon_evenement_m)/1e9;
+		document.getElementById("resultat_dm_particule_t").innerHTML=dm_horizon_particule_Ga.toExponential(4);
+		document.getElementById("resultat_dm_evenement_t").innerHTML=dm_horizon_evenement_Ga.toExponential(4);}
 }
