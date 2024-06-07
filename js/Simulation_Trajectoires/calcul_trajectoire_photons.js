@@ -3,6 +3,8 @@
 const DIAMETRE_PART = 1;
 var z=0;
 var z_obs=0;
+var c = 299792458;
+var G = 6.67385 * Math.pow(10, -11);
 
 var title = "V(r)/c²";		  
 var clicks = 0;
@@ -390,139 +392,165 @@ function genereHtml(){
 	 
 }
 
-// -------------------------------------{fonction initialisation}--------------------------------------------
+//----------------------------------------------------{initialisation}----------------------------------------------------
 
+/**
+ * Fonction qui permet la récupération des valeurs remplies par l'utilisateur et en fonction le calcul et l'affichage du premier tableau fixe de constantes avant le début de la simulation.
+ * @param {Number} compteur : renseigne sur le numéro du mobile qu'on initialise.
+ * @returns {Object} mobile : objet contenant toutes les informations sur un mobile/fusée/particule... 
+ */
 function initialisation(compteur){
-	
 
-	c = 299792458;
-	G = 6.67385 * Math.pow(10, -11);
-	M = Number(document.getElementById("M").value);
-	r_phy = Number(document.getElementById("r_phy").value);
-	m = G * M / Math.pow(c, 2); 
-	rs=2*m;
-	r0 = Number(document.getElementById("r0"+compteur.toString()).value);
-	phi0 = Number(document.getElementById("phi0"+compteur.toString()).value);
-	teta = Number(document.getElementById("teta"+compteur.toString()).value);
-	teta1=teta;
+	//Je récupère les différentes valeurs rentrées par l'utilisateur :
+	M = Number(document.getElementById("M").value); //Masse de l'astre.
+	r_phy = Number(document.getElementById("r_phy").value); //Rayon physique de l'astre.
+	r0 = Number(document.getElementById("r0"+compteur.toString()).value); //Distance initiale au centre de l'astre.
+	phi0 = Number(document.getElementById("phi0"+compteur.toString()).value); //Angle initiale phi de la position du mobile.
+	teta = Number(document.getElementById("teta"+compteur.toString()).value); // Angle initiale phi de la vitesse du mobile.
+
+	teta1=teta; //Je garde une trace de l'angle en degrés avant de le convertir en radians.
+	//Je convertis les deux angles obtenus en degrés en radians :
 	phi0=(phi0*Math.PI)/180;
 	teta=(teta*Math.PI)/180;
 
-	vphi=Math.sin(teta)*c/Math.sqrt(1-rs/r0);
-	vr=Math.cos(teta)*c;
-	if(teta1==180){vphi=0;}
-	if(teta1==90){vr=0;}
-	L = vphi * r0 / c;
-	E = Math.sqrt(Math.pow(vr / c, 2) + (1 - rs / r0)* Math.pow(L / r0, 2));
+	//Je calcule le rayon de Schwarzschild correspondant : 
+	m = G * M / Math.pow(c, 2); 
+	rs=2*m;
 
-	rayon_orbite = (3/2)*rs; //ManonCirculaire
+	E = 1 ; //La constante d'intégration sans dimension E.
+	dphi_sur_dlambda=Math.sin(teta)*c/(Math.sqrt(1-rs/r0)*r0); //Je calcule dphi/dlambda.
+	vr=Math.cos(teta)*c; //Je calcule dr/dlambda. 
+	L = (dphi_sur_dlambda*(r0**2))/c; //Je calcule L la constante d'intégration. 
 
+	rayon_orbite = (3/2)*rs; //Calcul de la distance r pour une orbite circulaire. 
+
+	//J'affiche dans le tableau les valeurs calculée de L, E, rs, la distance r pour une orbite circulaire :
 	document.getElementById("L"+compteur.toString()).innerHTML = L.toExponential(3);
 	document.getElementById("E"+compteur.toString()).innerHTML = E.toExponential(3);
 	document.getElementById("m").innerHTML = rs.toExponential(3);
 	document.getElementById("rayon_orbite_circ_res"+compteur.toString()).innerHTML = rayon_orbite.toExponential(5); //ManonCirculaire
 
+	//Je récupère mon facteur d'échelle : 
 	scale_factor = Number(document.getElementById("scalefactor").value);
-	mobile = { r0:r0, vphi:vphi, vr:vr, L:L, E:E, phi0:phi0 }; 
+
+	//Je calcule la distance radiale maximale que je pourrais atteindre : 
+	calcul_rmax(L,E,vr,r0,1);
+
+	//--------------------------------Initialisation de mon objet mobile--------------------------------
+
+	mobile = { r0:r0, dphi_sur_dlambda:dphi_sur_dlambda, vr:vr, L:L, E:E, phi0:phi0 }; //Je créé un objet mobile dans lequel je stocke différentes valeurs initiales associées à ce mobile.
+
+	//J'associe à mon mobile des strings associés à mon graphe de potentiel : 
 	mobile["pointsvg"]="pointg"+compteur.toString();
 	mobile["graphesvg"]="#grsvg_"+compteur.toString();
+
+	//J'associe les variables permettant de déclarer si je suis arrêtée ou pas et si je peux relancer la simulation à mon objet mobile :
 	mobile["onestarrete"]=0;
 	mobile["peuxonrelancer"]=true;
 
-
-	/* Calcul de rmax */
-	calcul_rmax(L,E,vr,r0,1) 
-
-	mobile["rmax"]=rmax; //mobile.rmax
+	//J'initialise et j'associe d'autres variables à mon objet mobile : 
+	mobile["rmax"]=rmax; //Ma position radiale maximale atteinte. 
 	mobile["blups"]=0;
-	rmaxjson[compteur]=rmax;
-	mobilefactor[compteur]=scale_factor;
-	r0o2[compteur] = r0;
-	mobile["pause"]=true; //mobile.pause
-	mobile["debut"]=true; //mobile.debut
-  
+	mobile["pause"]=true; //Si je suis en pause, initialement oui. 
+	mobile["debut"]=true; //Si je suis au début de ma simulation, initialement oui.
 	couleurs = generateurCouleur();
-	mobile["couleur"]="rgb("+couleurs[0]+", "+couleurs[1]+", "+couleurs[2]+")";//mobile.couleur
+	mobile["couleur"]="rgb("+couleurs[0]+", "+couleurs[1]+", "+couleurs[2]+")";//La couleur générée aléatoirement associée à mon mobile.
+	//Les nombres rgb associés à cette couleurs : 
 	mobile["red"]=couleurs[0];
 	mobile["green"]=couleurs[1];
 	mobile["blue"]=couleurs[2];
 
+	rmaxjson[compteur]=rmax; // Je stocke dans la liste rmaxjson à la clé associée à ce mobile la position radiale maximale atteinte.
+	mobilefactor[compteur]=scale_factor; //Je stocke dans la liste mobilefactor à la clé associée à ce mobile le facteur d'échelle.
+	r0o2[compteur] = r0; //Je stocke dans la liste r0o2 à la clé associée à ce mobile ma distance initiale au centre de l'astre.
 
-	//calcul de grav
+	//--------------------------------Gravité à la surface--------------------------------
+
+	//Je récupère les cellules associée à cette gravité à la surface. 
 	gCell = document.getElementById("g");
 	gLabelCell = document.getElementById("gravtxt");
 
-	g=(G*M)/(Math.pow(r_phy,2)*9.81);
-	if(r_phy==0){
+  	g=(G*M)/(Math.pow(r_phy,2)*9.81); //Je la calcule.
+
+	if(r_phy==0){ //Dans le cas d'un trou noir je n'affiche pas la case.
 		document.getElementById("g").innerHTML=" ";
-		gCell.style.display='none';
-		gLabelCell.style.display='none';
+		gCell.style.display = 'none';
+		gLabelCell.style.display = 'none';
 	}
-	else{
+	else{ //Autrement je l'affiche avec la valeur. 
 		document.getElementById("g").innerHTML=g.toExponential(3);
-		gCell.style.display='';
-		gLabelCell.style.display='';
+		gCell.style.display = '';
+		gLabelCell.style.display = '';
 	}
+  
+	//--------------------------------Vitesse de libération--------------------------------
 
-	// Rayonnement de Hawking d’un trou noir
-
-	var TempTNLabelCell = document.getElementById("TempTrouNoirtxt");
-	var TempTNCell = document.getElementById("TempTN");
-	var tempsEvapLabelCell = document.getElementById("tempsEvaporationTrouNoirtxt");
-	var tempsEvapCell = document.getElementById("tempsEvapTN");
-
-	// 1. calcul température du trou noir
-	if (rs>r_phy){
-	M_soleil = 1.989e30						;		//masse du soleil en kg
-	Temp_trouNoir = 6.5e-8 * M_soleil/M		;		//en Kelvin
-	document.getElementById("TempTN").innerHTML=Temp_trouNoir.toExponential(3);
-
-	// 2. calcul temps d'évaporation de Hawking (calcul simplifié)
-	tempsEvaporation_trouNoir = 6.6e74*((M/M_soleil)**3); 		//en secondes
-	document.getElementById("tempsEvapTN").innerHTML=tempsEvaporation_trouNoir.toExponential(3);
-	TempTNCell.style.display='';
-	TempTNLabelCell.style.display='';
-	tempsEvapCell.style.display='';
-	tempsEvapLabelCell.style.display='';
-    }
-
-	else{//pas trou noir 
-		document.getElementById("TempTN").innerHTML=" ";
-		document.getElementById("tempsEvapTN").innerHTML = " ";
-		TempTNCell.style.display='none';
-		TempTNLabelCell.style.display='none';
-		tempsEvapCell.style.display='none';
-		tempsEvapLabelCell.style.display='none';
-	}
-	
-	// calcule de vitesse de liberation 
+	//Je récupère les cellules associée à la vitesse de libération. 
 	VlibLabelCell = document.getElementById("vitesseLibéra");
 	VlibCell = document.getElementById("Vlib");
 
-	Vlib=c*Math.pow(rs/r_phy,1/2);
-	if(r_phy>=rs){
-	  document.getElementById("Vlib").innerHTML=Vlib.toExponential(3);
-	  VlibCell.style.display='';
-	  VlibLabelCell.style.display='';
+	Vlib=c*Math.pow(rs/r_phy,1/2); //Je la calcule.
+
+	if(r_phy>=rs){ //Dans le cas où mon rayon physique est plus grand que le rayon de SCH j'affiche les cases avec la valeur.
+		document.getElementById("Vlib").innerHTML=Vlib.toExponential(3);
+		VlibLabelCell.style.display='';
+		VlibCell.style.display='';
 	}
-	else{document.getElementById("Vlib").innerHTML=" ";
-		VlibCell.style.display='none';
-		VlibLabelCell.style.display='none';
+	else{ //Dans le cas contraire je n'affiche pas les cases. 
+		document.getElementById("Vlib").innerHTML=" ";
+		VlibCell.style.display = "none";
+		VlibLabelCell.style.display = "none";
+	
 	}
 
+	//--------------------------------Rayonnement de Hawking d'un trou noir & temps d'évaporation du trou noir--------------------------------
+	
+	//Je récupère les cellules associées :
+	TempTrouNoirLabelCell=document.getElementById("TempTrouNoirtxt");
+	TempTrouNoirCell=document.getElementById("TempTN");
+	tempsEvapTNCell=document.getElementById("tempsEvapTN");
+	tempsEvapTNLabelCell=document.getElementById("tempsEvaporationTrouNoirtxt");
+
+	if(r_phy<rs){ //Dans le cas où le rayon physique de l'astre est plus petit que le rayon de Schwarzschild. 
+
+		M_soleil = 1.989e30	; //Masse du soleil en kg.
+		Temp_trouNoir = 6.5e-8 * M_soleil/M; //Température du trou noir en K. 
+		tempsEvaporation_trouNoir = 6.6e74*((M/M_soleil)**3); //Temps d'évaporation du trou noir en secondes. (Calcul simplifié.)
+
+		//J'affiche les cases avec les valeurs :
+		document.getElementById("TempTN").innerHTML=Temp_trouNoir.toExponential(3);
+		document.getElementById("tempsEvapTN").innerHTML=tempsEvaporation_trouNoir.toExponential(3);
+        TempTrouNoirLabelCell.style.display = '';
+        TempTrouNoirCell.style.display = '';
+		tempsEvapTNCell.style.display = '';
+		tempsEvapTNLabelCell.style.display = '';
+	}
+	else{ //Autrement je n'affiche pas les cases car vides.
+		document.getElementById("TempTN").innerHTML=" ";
+		document.getElementById("tempsEvapTN").innerHTML = " ";
+
+		TempTrouNoirLabelCell.style.display = 'none';
+		TempTrouNoirCell.style.display = 'none';
+		tempsEvapTNCell.style.display = 'none';
+		tempsEvapTNLabelCell.style.display = 'none';
+	}
+
+	//--------------------------------Graphe--------------------------------
+
+	//Jusqu'à 2 mobiles je peux afficher les entrées sur le graphe. 
 	if (compteur==1){
-		vphiblab=c;
-		vrblab=phi0*180/Math.PI;
+		vphiblab=c; //Je récupère la vitesse initiale.
+		vrblab=phi0*180/Math.PI; //Je récupère l'angle de la position initiale en degrés. 
 	}
 	if(compteur==2){
-		vphi2i = c;
-		vr2i = phi0*180/Math.PI;
+		vphi2i = c; //Je récupère la vitesse initiale. 
+		vr2i = phi0*180/Math.PI; //Je récupère l'angle de la position initiale en degrés. 
 	}
 
-	boutonAvantLancement();
-	canvasAvantLancement();
+	boutonAvantLancement(); //J'associe aux différents boutons les fonctions associées d'avant le lancement. 
+	canvasAvantLancement(); //J'affiche l'échelle du canvas avant le début de la simulation. 
 
-  	return mobile;
+	return mobile; //Je récupère au final de cette fonction l'objet mobile correctement initialisé.
 }  
 
 // -------------------------------------{fonction verifnbr}--------------------------------------------
@@ -538,8 +566,8 @@ function verifnbr() {//fonction qui affiche un message d'erreur si des valeurs n
 	var sddsdsddss = Number(document.getElementById("nombredefusees").value);
 	for (countetttt = 1; countetttt <= sddsdsddss; countetttt += 1) {
 			var r0verifnbr = Number(document.getElementById("r0"+countetttt.toString()+"").value); 
-			var vphiverifnbr = vphi;
-			var vrverifnbr = vr;
+			var vphiverifnbr =  Number(document.getElementById("phi0"+count.toString()+"").value);
+			var vrverifnbr = Number(document.getElementById("teta"+count.toString()+"").value);
 			if(isNaN(r0verifnbr)){
 				onebolean=true;
 			}
@@ -1427,8 +1455,6 @@ function test_inte() {
 	var nbrdefuseestestinte = Number(document.getElementById("nombredefusees").value);
 	for (countetttt = 1; countetttt <= nbrdefuseestestinte; countetttt += 1) {
 		var r0testinte = Number(document.getElementById("r0"+countetttt.toString()+"").value); 
-		var vrtestinte = vphi; 
-		var vphitestinte = vr; 
 		if(r0testinte<0){
 			onebol=true;
 		}
@@ -1438,7 +1464,7 @@ function test_inte() {
 		if(r0testinte<r_phy){
 			threebol=true;
 		}
-		if(vrtestinte==0 && vphitestinte==0){
+		if(vr==0 && dphi_sur_dlambda==0){
 			fourbol=true;
 		}
   }

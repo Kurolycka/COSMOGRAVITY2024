@@ -21,6 +21,8 @@ var input=0;
 var compteurVitesseAvantLancement = 0;
 var distance_parcourue_totale=0; //Manon
 var ns_avant_lancement=0;
+var c = 299792458;
+var G = 6.67385 * Math.pow(10, -11);
 
 
 
@@ -70,137 +72,57 @@ function pressionBouttonMobile2() {
 	}
 }
 
+//----------------------------------------------------{initialisation}----------------------------------------------------
 
+/**
+ * Fonction qui permet la récupération des valeurs remplies par l'utilisateur et en fonction le calcul et l'affichage du premier tableau fixe de constantes avant le début de la simulation.
+ */
 function initialisation(){
 
-	var texte = o_recupereJson();
+	var texte = o_recupereJson(); //Cela me permettra de récupérer le texte pour les infobulles. 
 
-	c = 299792458;
-	G = 6.67385 * Math.pow(10, -11);
-	r0 = Number(document.getElementById("r0").value);
-	M = Number(document.getElementById("M").value);
-	J = Number(document.getElementById("J").value);
-	v0 = Number(document.getElementById("v0").value);
-	teta = Number(document.getElementById("teta").value);
-	phi0=Number(document.getElementById("phi0").value);
+	//Je récupère les différentes valeurs rentrées par l'utilisateur :
+	M = Number(document.getElementById("M").value); //Masse de l'astre.
+	r0 = Number(document.getElementById("r0").value); //Distance initiale au centre de l'astre.
+	v0= Number(document.getElementById("v0").value); //Vitesse initiale du mobile.
+	phi0 = Number(document.getElementById("phi0").value); //Angle initiale phi de la position du mobile.
+	teta = Number(document.getElementById("teta").value); // Angle initiale phi de la vitesse du mobile.
+	J = Number(document.getElementById("J").value); //Moment angulaire du trou noir. 
+
+	//Je convertis les angles en radians : 
 	phi0=phi0*Math.PI/180;
+	tetarad=teta*Math.PI/180
 
-	nombre_de_g_calcul=0; //ManonV5
-	vitesse_precedente_nombre_g=0; //ManonV5
-
+	//Je calcule le rayon de Schwarzschild correspondant : 
+	m = G * M / Math.pow(c, 2); 
+	rs = 2 * m;
+	//Et le paramètre de spin : 
+	a = J / (c * M);
 
 	if(v0>c){
-		alert("V0 supérieur à c");
+		alert(texte.pages_trajectoire.alerte_v0_superieure_c);
 		return;
 	}
 
-	m = G * M / Math.pow(c, 2); //moitié du rayon de Schwarzchild
-	rs = 2 * m;
-	a = J / (c * M);
-	E=c*Math.sqrt((r0-rs)/(r0*(c**2-v0**2)));
-	L=(-1)*(a*c*rs/Math.sqrt(r0)-v0*Math.sin(teta*Math.PI/180)*Math.sqrt(r0*delta(r0)))/Math.sqrt((c**2-v0**2)*(r0-rs));
-	if(a==0 && teta==180){L=0};
+	E=c*Math.sqrt((r0-rs)/(r0*(c**2-v0**2))); //Je calcule la constante d'intégration sans dimension E.
+	L=(-1)*(a*c*rs/Math.sqrt(r0)-v0*Math.sin(tetarad)*Math.sqrt(r0*delta(r0)))/Math.sqrt((c**2-v0**2)*(r0-rs)); //Je calcule L la constante d'intégration. 
+	vr=v0*Math.cos(tetarad)*c*Math.sqrt(delta(r0))/(r0*Math.sqrt(c**2-v0**2)); //Je calcule dr/dtau
+
+	deltam_sur_m = 0; //J'initialise la valeur du rapport d'énergie consommée pendant le pilotage.
+	puissance_consommee_calcul=0; //J'initialise la valeur de la puissance consommée pendant le pilotage.
+	nombre_de_g_calcul = 0; // Pareil pour le nombre de g ressenti. 
+	vitesse_precedente_nombre_g = 0; //Pareil pour la vitesse précédent le pilotage. 
+
+	//Je calcule Rh+ (rhp), Rh- (rhm) et rh (qui sert au calcul de rmax) :
+	rh = G * M / Math.pow(c, 2) * (1 + Math.sqrt(1 - Math.pow(J * c / (G * M * M), 2))); //Rayon de Kerr.
+	rhp = 0.5*(rs+Math.sqrt((rs**2)-4*(a**2)));
+    rhm = 0.5*(rs-Math.sqrt((rs**2)-4*(a**2)));
 	
-	vr=v0*Math.cos(teta*Math.PI/180)*c*Math.sqrt(delta(r0))/(r0*Math.sqrt(c**2-v0**2)); 
-	vphi=v0*Math.sin(teta*Math.PI/180)*c*Math.sqrt(Math.abs(r0*(r0-rs))/Math.sqrt(delta(r0)*(c**2-v0**2))); 
-	if(teta==180 || teta==0){vphi=0;}
-	if(teta==90){vr=0;}
-	rh = G * M / Math.pow(c, 2) * (1 + Math.sqrt(1 - Math.pow(J * c / (G * M * M), 2))); //rayon de Kerr
-	rhp = 0.5 * ( (2 * G * M / Math.pow(c, 2)) + Math.sqrt(Math.pow( (2 * G * M / Math.pow(c, 2)), 2) - 4 * Math.pow( (J / (c * M)) , 2)));     //RH+
-    rhm = 0.5 * ( (2 * G * M / Math.pow(c, 2)) - Math.sqrt(Math.pow( (2 * G * M / Math.pow(c, 2)), 2) - 4 * Math.pow( (J / (c * M)) , 2)));     //RH-
-	gravSurface = 0.5 * Math.pow(c, 2) * (Math.pow(rhp, 2) - Math.pow(a, 2)) / (Math.pow(rhp, 2) + Math.pow(a, 2))/rhp; 			//gravité de surface Kerr
+	//Je calcule la gravité de surface théorique pour R=Rh+.
+	gravSurface = 0.5 * Math.pow(c, 2) * (Math.pow(rhp, 2) - Math.pow(a, 2)) / (Math.pow(rhp, 2) + Math.pow(a, 2))/rhp;
 
-	Y_orbites = (rs/2)*Math.pow(r0,5); //ManonCirculaire
-
-
-	E_prograde = (Math.pow(r0,3)*(r0-rs)+a*Math.sqrt(Y_orbites))/(Math.pow(r0,2)*Math.sqrt(Math.pow(r0,3)*(r0-(3/2)*rs)+2*a*Math.sqrt(Y_orbites))); //ManonCirculaire
-	E_retrograde = (Math.pow(r0,3)*(r0-rs)-a*Math.sqrt(Y_orbites))/(Math.pow(r0,2)*Math.sqrt(Math.pow(r0,3)*(r0-(3/2)*rs)-2*a*Math.sqrt(Y_orbites))); //ManonCirculaire
-
-	if (isNaN(E_prograde)){ //ManonCirculaire
-		vitesse_orbite_circulaire_prograde_bar = NaN;
-	}else{
-		vitesse_orbite_circulaire_prograde_bar = c*Math.sqrt(1-(1-(rs/r0))/Math.pow(E_prograde,2))
-	}
-
-	if (isNaN(E_retrograde)){ //ManonCirculaire
-		vitesse_orbite_circulaire_retrograde_bar = NaN;
-	}else{
-		vitesse_orbite_circulaire_retrograde_bar = c*Math.sqrt(1-(1-(rs/r0))/Math.pow(E_retrograde,2))
-	}
-
-
-
-	r_stabilite = (-3*rs*Math.pow((L-a*E),2))/(Math.pow(a,2)*(Math.pow(E,2)-1)-Math.pow(L,2)); //ManonCirculaire
-	vitesse_orbite_criculaire_prograde_bar_limite_stabilite = (c*Math.sqrt(2*rs*Math.pow(r_stabilite,5)*delta(r_stabilite))) / (2*Math.pow(r_stabilite,4) - 2*Math.pow(r_stabilite,3)*rs + a*Math.sqrt(2*rs*Math.pow(r_stabilite,5))); //ManonCirculaire
-	vitesse_orbite_criculaire_retrograde_bar_limite_stabilite = (c*Math.sqrt(2*rs*Math.pow(r_stabilite,5)*delta(r0))) / (2*Math.pow(r_stabilite,4) - 2*Math.pow(r_stabilite,3)*rs - a*Math.sqrt(2*rs*Math.pow(r_stabilite,5))); //ManonCirculaire
-
-	
-	
-	textegravetetc_Kerr();						   
-	document.getElementById("a").innerHTML = a.toExponential(3);
-	document.getElementById("m").innerHTML = rs.toExponential(3);
-	document.getElementById("L").innerHTML = L.toExponential(3);
-	document.getElementById("E").innerHTML = E.toExponential(3);
-
-
-	if (!isNaN(E_prograde)){ //ManonCirculaire
-		if (vitesse_orbite_circulaire_prograde_bar >= vitesse_orbite_criculaire_prograde_bar_limite_stabilite){
-			document.getElementById("circulaire_prograde_res_bar").title=texte.pages_trajectoire.orbite_circulaire_instable;
-		}else{
-			document.getElementById("circulaire_prograde_res_bar").title=texte.pages_trajectoire.orbite_circulaire_stable;
-		}
-	}else{
-		document.getElementById("circulaire_prograde_res_bar").removeAttribute("title");
-	}
-
-	if (!isNaN(E_retrograde)){ //ManonCirculaire
-		if (vitesse_orbite_circulaire_retrograde_bar >= vitesse_orbite_criculaire_retrograde_bar_limite_stabilite){
-			document.getElementById("circulaire_retrograde_res_bar").title=texte.pages_trajectoire.orbite_circulaire_instable;
-		}else{
-			document.getElementById("circulaire_retrograde_res_bar").title=texte.pages_trajectoire.orbite_circulaire_stable;
-		}
-	}else{
-		document.getElementById("circulaire_retrograde_res_bar").removeAttribute("title");
-	}
-
-	CirculaireProgradeBarLabelCell = document.getElementById("circulaire_prograde_bar");
-	CirculaireProgradeBarCell = document.getElementById("circulaire_prograde_res_bar");
-
-	if (isNaN(E_prograde)){
-		document.getElementById("circulaire_prograde_res_bar").innerHTML=""; //ManonCirculaire
-		CirculaireProgradeBarCell.style.display='none';
-		CirculaireProgradeBarLabelCell.style.display='none';
-	}else{
-		document.getElementById("circulaire_prograde_res_bar").innerHTML=vitesse_orbite_circulaire_prograde_bar.toExponential(4); //ManonCirculaire
-		CirculaireProgradeBarCell.style.display='';
-		CirculaireProgradeBarLabelCell.style.display='';
-	}
-
-	CirculaireRetrogradeBarLabelCell = document.getElementById("circulaire_retrograde_bar");
-	CirculaireRetrogradeBarCell = document.getElementById("circulaire_retrograde_res_bar");
-
-	if (isNaN(E_retrograde)){
-		document.getElementById("circulaire_retrograde_res_bar").innerHTML=""; //ManonCirculaire
-		CirculaireRetrogradeBarCell.style.display='none';
-		CirculaireRetrogradeBarLabelCell.style.display='none';
-	}else{
-		document.getElementById("circulaire_retrograde_res_bar").innerHTML=vitesse_orbite_circulaire_retrograde_bar.toExponential(4); //ManonCirculaire
-		CirculaireRetrogradeBarCell.style.display='';
-		CirculaireRetrogradeBarLabelCell.style.display='';
-	}
-	
-	
-	if (isNaN(rhp)){document.getElementById("rhp").innerHTML = 0;}
-	else {  document.getElementById("rhp").innerHTML = rhp.toExponential(3);}
-
-	if (isNaN(rhm)){document.getElementById("rhm").innerHTML = 0;}
-	else { document.getElementById("rhm").innerHTML = rhm.toExponential(3);}
-
-	document.getElementById("gravS").innerHTML = gravSurface.toExponential(3);
-	
-
-    /* Calcul de rmax */
- 	if( (E>0.99999 && E<1.00001) && (Math.pow(L,4)- Math.pow(2*rs*(L-a),2)) > 0 ){ 
+	//Je calcule la distance radiale maximale que je pourrais atteindre : 
+	if( (E>0.99999 && E<1.00001) && (Math.pow(L,4)- Math.pow(2*rs*(L-a),2)) > 0 ){ 
 		rmax=1.1*r0;	
    	} 
 	else if (E==1 && L==0) {rmax=2*r0;} 
@@ -208,33 +130,127 @@ function initialisation(){
 		calcul_rmax(); 
 		if(rmax<r0) {rmax=r0 ;}
 	} 
-	if (r0 <= rs){
-		alert("r0 inférieur à rs");
+
+
+	if (r0 <= rs){//Dans le cas où le r0 choisit est inférieure à rs j'affiche une alerte.
+		alert(texte.pages_trajectoire.alerte_r0_inferieure_rs);
 		return;
 	} 
 
-	boutonAvantLancement();
+	//--------------------------------Calcul des vitesses pour les orbites circulaires--------------------------------
 
-}  // fin fonction initialisation
+
+	Y_orbites = (rs/2)*Math.pow(r0,5); //Intermédiaire de calculs.
+
+	//Calcul des E pour les orbites progrades et rétrogrades : 
+	E_prograde = (Math.pow(r0,3)*(r0-rs)+a*Math.sqrt(Y_orbites))/(Math.pow(r0,2)*Math.sqrt(Math.pow(r0,3)*(r0-(3/2)*rs)+2*a*Math.sqrt(Y_orbites))); //ManonCirculaire
+	E_retrograde = (Math.pow(r0,3)*(r0-rs)-a*Math.sqrt(Y_orbites))/(Math.pow(r0,2)*Math.sqrt(Math.pow(r0,3)*(r0-(3/2)*rs)-2*a*Math.sqrt(Y_orbites))); //ManonCirculaire
+
+	//Si je n'ai pas de E alors l'orbite correspondante n'existe pas sinon je calcule la vitesse correspondante :
+	//Cas de l'orbite prograde :
+	if (isNaN(E_prograde)){ //ManonCirculaire
+		vitesse_orbite_circulaire_prograde_bar = NaN;
+	}else{
+		vitesse_orbite_circulaire_prograde_bar = c*Math.sqrt(1-(1-(rs/r0))/Math.pow(E_prograde,2))
+	}
+	//Cas de l'orbite rétrograde :
+	if (isNaN(E_retrograde)){ //ManonCirculaire
+		vitesse_orbite_circulaire_retrograde_bar = NaN;
+	}else{
+		vitesse_orbite_circulaire_retrograde_bar = c*Math.sqrt(1-(1-(rs/r0))/Math.pow(E_retrograde,2))
+	}
+
+	//Je calcule mes limites de stabilités pour les orbites progrades et rétrogrades : 
+	r_stabilite = (-3*rs*Math.pow((L-a*E),2))/(Math.pow(a,2)*(Math.pow(E,2)-1)-Math.pow(L,2)); 
+	vitesse_orbite_criculaire_prograde_bar_limite_stabilite = (c*Math.sqrt(2*rs*Math.pow(r_stabilite,5)*delta(r_stabilite))) / (2*Math.pow(r_stabilite,4) - 2*Math.pow(r_stabilite,3)*rs + a*Math.sqrt(2*rs*Math.pow(r_stabilite,5))); 
+	vitesse_orbite_criculaire_retrograde_bar_limite_stabilite = (c*Math.sqrt(2*rs*Math.pow(r_stabilite,5)*delta(r0))) / (2*Math.pow(r_stabilite,4) - 2*Math.pow(r_stabilite,3)*rs - a*Math.sqrt(2*rs*Math.pow(r_stabilite,5))); 
+
+	if (!isNaN(E_prograde)){ //Dans les cas où j'ai bien une orbite prograde.
+		//En fonction de la stabilité j'affiche une infobulle sur la vitesse : 
+		if (vitesse_orbite_circulaire_prograde_bar >= vitesse_orbite_criculaire_prograde_bar_limite_stabilite){
+			document.getElementById("circulaire_prograde_res_bar").title=texte.pages_trajectoire.orbite_circulaire_instable;
+		}else{
+			document.getElementById("circulaire_prograde_res_bar").title=texte.pages_trajectoire.orbite_circulaire_stable;
+		}
+	}else{ //Si je n'ai pas d'orbite prograde j'enlève l'infobulle.
+		document.getElementById("circulaire_prograde_res_bar").removeAttribute("title");
+	}
+
+	if (!isNaN(E_retrograde)){ //Dans le cas où j'ai bien une orbite rétrograde.
+		//En fonction de la stabilité j'affiche une infobulle sur la vitesse :
+		if (vitesse_orbite_circulaire_retrograde_bar >= vitesse_orbite_criculaire_retrograde_bar_limite_stabilite){
+			document.getElementById("circulaire_retrograde_res_bar").title=texte.pages_trajectoire.orbite_circulaire_instable;
+		}else{
+			document.getElementById("circulaire_retrograde_res_bar").title=texte.pages_trajectoire.orbite_circulaire_stable;
+		}
+	}else{ //Si je n'ai pas d'orbite rétrograde j'enlève l'infobulle.
+		document.getElementById("circulaire_retrograde_res_bar").removeAttribute("title");
+	}
+
+	//Je récupère les cellules liées aux orbites prograde et rétrograde :
+	CirculaireProgradeBarLabelCell = document.getElementById("circulaire_prograde_bar");
+	CirculaireProgradeBarCell = document.getElementById("circulaire_prograde_res_bar");
+	CirculaireRetrogradeBarLabelCell = document.getElementById("circulaire_retrograde_bar");
+	CirculaireRetrogradeBarCell = document.getElementById("circulaire_retrograde_res_bar");
+
+	if (isNaN(E_prograde)){ //Si il n'y a pas d'orbite prograde je n'affiche pas les cases liées :
+		document.getElementById("circulaire_prograde_res_bar").innerHTML="";
+		CirculaireProgradeBarCell.style.display='none';
+		CirculaireProgradeBarLabelCell.style.display='none';
+	}else{ //Sinon je les affiches avec la valeur de la vitesse nécessaire.
+		document.getElementById("circulaire_prograde_res_bar").innerHTML=vitesse_orbite_circulaire_prograde_bar.toExponential(4); 
+		CirculaireProgradeBarCell.style.display='';
+		CirculaireProgradeBarLabelCell.style.display='';
+	}
+
+	if (isNaN(E_retrograde)){ //Si il n'y a pas d'orbite rétrograde je n'affiche pas les cases liées :
+		document.getElementById("circulaire_retrograde_res_bar").innerHTML=""; 
+		CirculaireRetrogradeBarCell.style.display='none';
+		CirculaireRetrogradeBarLabelCell.style.display='none';
+	}else{ //Sinon je les affiches avec la valeur de la vitesse nécessaire.
+		document.getElementById("circulaire_retrograde_res_bar").innerHTML=vitesse_orbite_circulaire_retrograde_bar.toExponential(4); 
+		CirculaireRetrogradeBarCell.style.display='';
+		CirculaireRetrogradeBarLabelCell.style.display='';
+	}
+
+	//--------------------------------Affichage--------------------------------
+	
+	//J'affiche sur la page le paramètre de spin, le rayon de SCH, les constantes E et L et gravité de surface. 
+	document.getElementById("a").innerHTML = a.toExponential(3);
+	document.getElementById("m").innerHTML = rs.toExponential(3);
+	document.getElementById("L").innerHTML = L.toExponential(3);
+	document.getElementById("E").innerHTML = E.toExponential(3);
+	document.getElementById("gravS").innerHTML = gravSurface.toExponential(3);
+
+	if (isNaN(rhp)){ //Si je n'ai pas de Rh+ j'affiche 0.
+		document.getElementById("rhp").innerHTML = 0;
+	}else{ //Sinon j'affiche la valeur calculée.
+		document.getElementById("rhp").innerHTML = rhp.toExponential(3);
+	}
+
+	if (isNaN(rhm)){ //Si je n'ai pas de Rh- j'affiche 0.
+		document.getElementById("rhm").innerHTML = 0;
+	}else{ //Sinon j'affiche la valeur calculée.
+		document.getElementById("rhm").innerHTML = rhm.toExponential(3);
+	}
+
+	textegravetetc_Kerr(); //Pour afficher les infobulles des tableaux etc.
+	boutonAvantLancement(); //J'associe aux différents boutons les fonctions associées d'avant le lancement. 
+} 
+
+//----------------------------------------------------{verifnbr}----------------------------------------------------
 
 function verifnbr() {
 
 	r0 = document.getElementById("r0").value;
-	//vphi = document.getElementById("vphi").value;
 	M = document.getElementById("M").value;
-	//vr = document.getElementById("vr").value;
 	J = document.getElementById("J").value;
 
 	if (isNaN(r0)){
 		alert ("Veuillez vérifier vos saisie en r0");}
-	if (isNaN(vphi)){
-		alert ("Veuillez vérifier vos saisie en Vphi");
-	}
+
 	if (isNaN(M)){
 		alert ("Veuillez vérifier vos saisie en M");
-	}
-	if (isNaN(vr)){
-		alert ("Veuillez vérifier vos saisie en Vr");
 	}
 	if (isNaN(J)){
 		alert ("Veuillez vérifier vos saisie en J");

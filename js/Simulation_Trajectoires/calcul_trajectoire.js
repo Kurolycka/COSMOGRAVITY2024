@@ -467,7 +467,7 @@ function initialisation(compteur){
 	rs=2*m;
 
 	if(v0>c){ //Je vérifie si la vitesse initiale est supérieure à la vitesse de la lumière.
-		alert("V0 supérieur à c"); //Si c'est le cas j'ai une alerte et la simulation ne peut pas débuter.
+		alert(texte.pages_trajectoire.alerte_v0_superieure_c); //Si c'est le cas j'ai une alerte et la simulation ne peut pas débuter.
 		return;
 	}
     
@@ -518,7 +518,6 @@ function initialisation(compteur){
 	//J'associe à mon mobile des strings associés à mon graphe de potentiel : 
 	mobile["pointsvg"]="pointg"+compteur.toString();
 	mobile["graphesvg"]="#grsvg_"+compteur.toString();
-
 
 	//J'associe les variables permettant de déclarer si je suis arrêtée ou pas et si je peux relancer la simulation à mon objet mobile :
 	mobile["onestarrete"]=0;
@@ -587,7 +586,6 @@ function initialisation(compteur){
 	tempsEvapTNCell=document.getElementById("tempsEvapTN");
 	tempsEvapTNLabelCell=document.getElementById("tempsEvaporationTrouNoirtxt");
 
-	// 1. calcul température du trou noir
 	if(r_phy<rs){ //Dans le cas où le rayon physique de l'astre est plus petit que le rayon de Schwarzschild. 
 
 		M_soleil = 1.989e30	; //Masse du soleil en kg.
@@ -646,7 +644,7 @@ function verifnbr() {//fonction qui affiche un message d'erreur si des valeurs n
 			var r0verifnbr = Number(document.getElementById("r0"+count.toString()+"").value); 
 			var vphiverifnbr = Number(document.getElementById("phi0"+count.toString()+"").value); //vphi; <-------- JPC
 			var vrverifnbr = Number(document.getElementById("teta"+count.toString()+"").value); //vr;  <----------- JPC
-				if(isNaN(r0verifnbr)){
+			if(isNaN(r0verifnbr)){
 				onebolean=true;
 			}
 			if(isNaN(vphiverifnbr)){

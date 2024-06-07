@@ -4,11 +4,12 @@ var z_obs=0;
 var title = "V(r)/c² - 1";
 var clicks = 0;
 const DIAMETRE_PART = 1;
-const c = 299792458;
+var c = 299792458;
 var nzoom=0;
 var ns_avant_lancement=0;
 var facteurDeMalheur;
 var fact_defaut;
+var G = 6.6742 * Math.pow(10, -11);
 
 // liste de couleurs en hexa
 const COULEUR_NOIR = '#2F2D2B';
@@ -382,66 +383,63 @@ function genereHtml(){
 	 
 }
 
+//----------------------------------------------------{initialisation}----------------------------------------------------
+
+/**
+ * Fonction qui permet la récupération des valeurs remplies par l'utilisateur et en fonction le calcul et l'affichage du premier tableau fixe de constantes avant le début de la simulation.
+ * @param {Number} compteur : renseigne sur le numéro du mobile qu'on initialise.
+ * @returns {Object} mobile : objet contenant toutes les informations sur un mobile/fusée/particule... 
+ */
 function initialisation(compteur){
 
-	var texte = o_recupereJson();
+	var texte = o_recupereJson(); //Cela me permettra de récupérer le texte pour les infobulles. 
 
-	G = 6.6742 * Math.pow(10, -11);
-	M = Number(document.getElementById("M").value);
-	r_phy = Number(document.getElementById("r_phy").value);
-	m = G * M / Math.pow(c, 2); 
-	rs=2*m;
-	r0 = Number(document.getElementById("r0"+compteur.toString()).value);
-	phi0 = Number(document.getElementById("phi0"+compteur.toString()).value); //angle de départ
-	teta = Number(document.getElementById("teta"+compteur.toString()).value); // angle de la vitesse
-	teta1=teta;
+	//Je récupère les différentes valeurs rentrées par l'utilisateur :
+	M = Number(document.getElementById("M").value); //Masse de l'astre.
+	r_phy = Number(document.getElementById("r_phy").value); //Rayon physique de l'astre.
+	r0 = Number(document.getElementById("r0"+compteur.toString()).value); //Distance initiale au centre de l'astre.
+	phi0 = Number(document.getElementById("phi0"+compteur.toString()).value); //Angle initiale phi de la position du mobile.
+	teta = Number(document.getElementById("teta"+compteur.toString()).value); // Angle initiale phi de la vitesse du mobile.
+
+	teta1=teta; //Je garde une trace de l'angle en degrés avant de le convertir en radians.
+	//Je convertis les deux angles obtenus en degrés en radians :
 	phi0=(phi0*Math.PI)/180;
 	teta=(teta*Math.PI)/180;
-	
-	if(r0 > r_phy) { 
-		vphi=Math.sin(teta)*c/Math.sqrt(1-rs/r0);
-		vr=Math.cos(teta)*c;
+
+	//Je calcule le rayon de Schwarzschild correspondant : 
+	m = G * M / Math.pow(c, 2); 
+	rs=2*m;
+
+	E=1; //La constante d'intégration sans dimension E.
+
+	if(r0 > r_phy) {//Dans le cas de la métrique extérieure :
+		dphi_sur_dlambda=Math.sin(teta)*c/(Math.sqrt(1-rs/r0)*r0); //Je calcule dphi/dlambda.
+		vr=Math.cos(teta)*c; //Je calcule dr/dlambda. 
 	} 
-	else{ 
-		vphi=Math.sin(teta)*c/beta(r0);
-		vr=Math.cos(teta)*Math.sqrt(alpha(r0))*c/beta(r0);
-		
-	}
-	if(teta1==180){vphi=0;}
-	if(teta1==90){vr=0;}
-
-	//pr majFondFixe
-	if(compteur==1){
-		vphiblab = c;
-		vrblab = phi0*180/Math.PI;
-	}
-	if (compteur==2) {
-		vphi2i = c;
-		vr2i = phi0*180/Math.PI;
+	else{ //Dans le cas de la métrique intérieure : 
+		dphi_sur_dlambda=Math.sin(teta)*c/(beta(r0)*r0); //Je calcule dphi/dlambda.
+		vr=Math.cos(teta)*Math.sqrt(alpha(r0))*c/beta(r0); //Je calcule dr/dlambda. 
 	}
 
-   	if(r0 > r_phy) { 
-		L = vphi * r0 / c;
-		E = Math.sqrt(Math.pow(vr / c, 2) + (1 - rs / r0)* Math.pow(L / r0, 2));
-  	} 
-  	else { 
-		L = vphi * r0 / c;
-		E = Math.sqrt(Math.pow(beta(r0)/c,2)*(Math.pow(vr,2)/alpha(r0)+Math.pow(vphi,2)));
-	}
+	L = (dphi_sur_dlambda*(r0**2))/c; //Je calcule L la constante d'intégration.
 
-	limite_haute = (3/2)*rs;
-	limite_basse = (9/8)*rs;
+	//Limites vis à vis de r_phy pour qu'on ai une orbite circulaire à l'intérieure : 
+	limite_haute = (3/2)*rs; 
+	limite_basse = (9/8)*rs;  
 
+	//Je récupère les cases associées à la distance r pour qu'on ai une orbite circulaire à l'intérieure de l'astre : 
 	rCircIntResCell = document.getElementById("r_circ_int_res"+compteur.toString());
 	rCircIntLabelCell = document.getElementById("rayon_orb_circ_int_photon_nonBar"+compteur.toString());
 
-	if (r_phy > limite_basse && r_phy < limite_haute){
+	if (r_phy > limite_basse && r_phy < limite_haute){ //Dans ce cas on peut avoir une orbite circulaire. 
+		//Je calcule cette distance à l'astre pour avoir l'orbite circulaire et je l'affiche dans une case visible : 
 		r_circ_int = (1/3)*r_phy*((Math.sqrt(r_phy*(8*r_phy - 9*rs)))/(Math.sqrt(rs*(r_phy-rs))));
 		document.getElementById("r_circ_int_res"+compteur.toString()).innerHTML = r_circ_int.toExponential(10);
 		document.getElementById("r_circ_int_res"+compteur.toString()).title = texte.pages_trajectoire.orbite_circulaire_stable;
 		rCircIntLabelCell.style.display='';
 		rCircIntResCell.style.display='';
-	}else{
+	}else{ //On ne peut pas avoir une orbite circulaire à l'intérieur.
+		//Je ne fais pas apparaître les cases liées :
 		r_circ_int="";
 		document.getElementById("r_circ_int_res"+compteur.toString()).innerHTML = r_circ_int;
 		document.getElementById("r_circ_int_res"+compteur.toString()).removeAttribute("title");
@@ -449,98 +447,128 @@ function initialisation(compteur){
 		rCircIntResCell.style.display='none';
 	}
 
+	//Je récupère les cases associées à la distance r pour qu'on ai une orbite circulaire à l'extérieure de l'astre : 
 	rCircExtResCell = document.getElementById("r_circ_ext_res"+compteur.toString());
 	rCircExtLabelCell = document.getElementById("rayon_orb_circ_ext_photon_nonBar"+compteur.toString());
 
-	r_circ_ext = (3/2)*rs;
-	if (r_circ_ext >= r_phy){
+	r_circ_ext = (3/2)*rs; //Je calcule cette distance r.
+
+	if (r_circ_ext >= r_phy){ //Si je suis bien à l'extérieure de l'astre j'affiche cette distance r. 
 		document.getElementById("r_circ_ext_res"+compteur.toString()).innerHTML = r_circ_ext.toExponential(10);
 		document.getElementById("r_circ_ext_res"+compteur.toString()).title = texte.pages_trajectoire.orbite_circulaire_instable;
 		rCircExtLabelCell.style.display='';
 		rCircExtResCell.style.display='';
-	}else{
+	}else{ //Si ce n'est pas le cas alors je ne fais pas apparaître les cases liées :
 		document.getElementById("r_circ_ext_res"+compteur.toString()).innerHTML = "";
 		document.getElementById("r_circ_ext_res"+compteur.toString()).removeAttribute("title");
 		rCircExtLabelCell.style.display='none';
 		rCircExtResCell.style.display='none';
 	}
 
+	//J'affiche dans le tableau les valeurs calculée de L, E, rs :
 	document.getElementById("L"+compteur.toString()).innerHTML = L.toExponential(3);
 	document.getElementById("E"+compteur.toString()).innerHTML = E.toExponential(3);
 	document.getElementById("m").innerHTML = rs.toExponential(3);
 
+	//Je récupère mon facteur d'échelle : 
 	scale_factor = Number(document.getElementById("scalefactor").value);
-	mobile = { r0:r0, vphi:vphi, vr:vr, L:L, E:E , phi0 : phi0}; 
-	
-	mobile["pointsvg"]="pointg"+compteur.toString();
-	mobile["graphesvg"]="#grsvg_"+compteur.toString();
 
-	mobile["onestarrete"]=0;
-	mobile["peuxonrelancer"]=true;
-
-	/* Calcul de rmax */
+	//Je calcule la distance radiale maximale que je pourrais atteindre : 
 	if( E==1 && (L >= 2*rs || L <=-2*rs ) ){ 
-		//rmax= 1/(2*rs)*(Math.pow(L,2)+ Math.sqrt(Math.pow(L,4)-4*Math.pow(rs*L,2))); calcule rentré par les ancienne promo pas de comentaire et posse probleme si vous comprener modifier
 		rmax=r0;
 		if(rmax<r0) {rmax=2*r0;}
-	}
-	else {
+	}else {
 		calcul_rmax(L,E,vr,r0,1) ;  
 		if(rmax<r0) {rmax=r0 ;} 
 	} 
-
 	if(r0 < r_phy) {rmax=1.5*r_phy;}
 
-	mobile["rmax"]=rmax; //mobile.rmax
+	//--------------------------------Initialisation de mon objet mobile--------------------------------
+
+	mobile = { r0:r0, dphi_sur_dlambda:dphi_sur_dlambda, vr:vr, L:L, E:E , phi0 : phi0}; //Je créé un objet mobile dans lequel je stocke différentes valeurs initiales associées à ce mobile.
+	
+	//J'associe à mon mobile des strings associés à mon graphe de potentiel : 
+	mobile["pointsvg"]="pointg"+compteur.toString();
+	mobile["graphesvg"]="#grsvg_"+compteur.toString();
+
+	//J'associe les variables permettant de déclarer si je suis arrêtée ou pas et si je peux relancer la simulation à mon objet mobile :
+	mobile["onestarrete"]=0;
+	mobile["peuxonrelancer"]=true;
+
+	//J'initialise et j'associe d'autres variables à mon objet mobile : 
+	mobile["rmax"]=rmax; //Ma position radiale maximale atteinte. 
 	mobile["blups"]=0;
-	rmaxjson[compteur]=rmax;
-	mobilefactor[compteur]=scale_factor;
-	r0o2[compteur] = r0;
-	mobile["pause"]=true; //mobile.pause
-	mobile["debut"]=true; //mobile.debut
+	mobile["pause"]=true; //Si je suis en pause, initialement oui. 
+	mobile["debut"]=true; //Si je suis au début de ma simulation, initialement oui.
 	couleurs = generateurCouleur();
-	mobile["couleur"]="rgb("+couleurs[0]+", "+couleurs[1]+", "+couleurs[2]+")";//mobile.couleur
+	mobile["couleur"]="rgb("+couleurs[0]+", "+couleurs[1]+", "+couleurs[2]+")";//La couleur générée aléatoirement associée à mon mobile.
+	//Les nombres rgb associés à cette couleurs : 
 	mobile["red"]=couleurs[0];
 	mobile["green"]=couleurs[1];
 	mobile["blue"]=couleurs[2];
 
-  //calcul de grav
-	gCell=document.getElementById("g");
-	gLabelCell=document.getElementById("gravtxt");
+	rmaxjson[compteur]=rmax; // Je stocke dans la liste rmaxjson à la clé associée à ce mobile la position radiale maximale atteinte.
+	mobilefactor[compteur]=scale_factor; //Je stocke dans la liste mobilefactor à la clé associée à ce mobile le facteur d'échelle.
+	r0o2[compteur] = r0; //Je stocke dans la liste r0o2 à la clé associée à ce mobile ma distance initiale au centre de l'astre.
 
-  	g=(G*M)/(Math.pow(r_phy,2)*9.81);
-	if(r_phy==0){
+	//--------------------------------Gravité à la surface--------------------------------
+
+	//Je récupère les cellules associée à cette gravité à la surface. 
+	gCell = document.getElementById("g");
+	gLabelCell = document.getElementById("gravtxt");
+
+  	g=(G*M)/(Math.pow(r_phy,2)*9.81); //Je la calcule.
+
+	if(r_phy==0){ //Dans le cas d'un trou noir je n'affiche pas la case.
 		document.getElementById("g").innerHTML=" ";
-		gCell.style.display='none';
-		gLabelCell.style.display='none';
+		gCell.style.display = 'none';
+		gLabelCell.style.display = 'none';
 	}
-	else{
+	else{ //Autrement je l'affiche avec la valeur. 
 		document.getElementById("g").innerHTML=g.toExponential(3);
-		gCell.style.display='';
-		gLabelCell.style.display='';
-	}	
-	
-	// calcule de vitesse de liberation
-	VlibCell=document.getElementById("Vlib");
-	VlibLabelCell=document.getElementById("vitesseLibéra");
-	
-	Vlib=c*Math.pow(rs/r_phy,1/2);
-	if(r_phy>=rs){
+		gCell.style.display = '';
+		gLabelCell.style.display = '';
+	}
+
+	//--------------------------------Vitesse de libération--------------------------------
+
+	//Je récupère les cellules associée à la vitesse de libération. 
+	VlibLabelCell = document.getElementById("vitesseLibéra");
+	VlibCell = document.getElementById("Vlib");
+
+	Vlib=c*Math.pow(rs/r_phy,1/2); //Je la calcule.
+
+	if(r_phy>=rs){ //Dans le cas où mon rayon physique est plus grand que le rayon de SCH j'affiche les cases avec la valeur.
 		document.getElementById("Vlib").innerHTML=Vlib.toExponential(3);
-		VlibCell.style.display='';
 		VlibLabelCell.style.display='';
+		VlibCell.style.display='';
 	}
-	else{
+	else{ //Dans le cas contraire je n'affiche pas les cases. 
 		document.getElementById("Vlib").innerHTML=" ";
-		VlibCell.style.display='none';
-		VlibLabelCell.style.display='none';
+		VlibCell.style.display = "none";
+		VlibLabelCell.style.display = "none";
+	
 	}
 
-    boutonAvantLancement();
-	canvasAvantLancement();
-	return mobile;
-}  // fin fonction initialisation
+	//--------------------------------Graphe--------------------------------
 
+	//Jusqu'à 2 mobiles je peux afficher les entrées sur le graphe. 
+	if (compteur==1){
+		vphiblab=c; //Je récupère la vitesse initiale.
+		vrblab=phi0*180/Math.PI; //Je récupère l'angle de la position initiale en degrés. 
+	}
+	if(compteur==2){
+		vphi2i = c; //Je récupère la vitesse initiale. 
+		vr2i = phi0*180/Math.PI; //Je récupère l'angle de la position initiale en degrés. 
+	}
+
+	boutonAvantLancement(); //J'associe aux différents boutons les fonctions associées d'avant le lancement. 
+	canvasAvantLancement(); //J'affiche l'échelle du canvas avant le début de la simulation. 
+
+	return mobile; //Je récupère au final de cette fonction l'objet mobile correctement initialisé.
+} 
+
+// -------------------------------------{fonction verifnbr}--------------------------------------------
 
 function verifnbr() {//fonction qui affiche un message d'erreur si des valeurs ne sont pas donnée dans l'une des cases
   

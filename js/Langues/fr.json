@@ -336,8 +336,9 @@
 		"puissance_reacteur_label":"P (W/kg) =",
 		"puissance_reacteur_infobulle":"Puissance du réacteur par unité de masse.",
 		"puissance_consommee_label":"P<sub>consommée</sub> (W/kg)",
-		"puissance_consommee_infobulle":"Puissance totale consommée par les réacteurs en W/kg."
-
+		"puissance_consommee_infobulle":"Puissance totale consommée par les réacteurs en W/kg.",
+		"alerte_v0_superieure_c" : "Attention votre vitesse v0 est supérieure à c.",
+		"alerte_r0_inferieure_rs" : "Attention votre distance initiale au centre de l'astre r0 est plus petite que le rayon de Schwarzschild."
 	},
 
 	"page_trajectoire_massive":{
