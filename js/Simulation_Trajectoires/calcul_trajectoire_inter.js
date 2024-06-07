@@ -581,7 +581,7 @@ function initialisation(compteur){
 		vr2i =phi0*180/Math.PI;
 	}
 
-	boutonAvantLancement(true);
+	boutonAvantLancement();
 	canvasAvantLancement();
   	return mobile;
 }  // fin fonction initialisation
@@ -648,7 +648,7 @@ function trajectoire(compteur,mobile) {
 		//Pour rendre visible le paneau de zoom.
 		//document.getElementById("panneau_mobile2").style.visibility='visible';
 		// pour savoir si on affiche l'information pour les touches claviers ou non
-		estUnMobile();
+		SurTelephone();
 
 		// permet de griser les cases de saisie pour éviter de changer les valeurs pendant la simulation
 		// conseillé car toutes les exceptions ne sont pas gérées
@@ -967,9 +967,9 @@ function trajectoire(compteur,mobile) {
 		//On supprime dans un premier temps les eventListener lié au canvas avant lancement
 
 	
-		document.getElementById('moinszoom').removeEventListener('click',function(){foncPourZoomMoinsAvantLancement(true)}, false);
+		document.getElementById('moinszoom').removeEventListener('click',foncPourZoomMoinsAvantLancement, false);
 
-		document.getElementById('pluszoom').removeEventListener('click',function(){foncPourZoomPlusAvantLancement(true)}, false);
+		document.getElementById('pluszoom').removeEventListener('click',foncPourZoomPlusAvantLancement, false);
 
 		document.getElementById('moinszoom').addEventListener('click', function() {
 			var retour=bouttons.zoom(false,mobile,canvas,mobilefactor,compteur); 
@@ -1113,9 +1113,9 @@ function trajectoire(compteur,mobile) {
 function animate(compteur,mobile,mobilefactor) {	
 	mobilefactor[compteur] = factGlobalAvecClef
 	// on vérifie le type de trajectoire sélectionné
-	estUnMobile();
+	SurTelephone();
 	element = document.getElementById('traject_type');
-	choixTrajectoire(compteur,context,mobile,mobilefactor,rmaxjson,maximum);
+	choixTrajectoire(compteur,context,mobilefactor,rmaxjson,maximum);
 
 	element2=document.getElementById('traject_type2');
 	blyo=Number(document.getElementById('nombredefusees').value)//ManonGeneralisation
@@ -1679,8 +1679,6 @@ function pausee() {
 		}
 	}
 
-
-
 function rafraichir2(context,mobilefactor,rmaxjson,r0ou2,compteur) {
 	majFondFixe();
 	creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur);
@@ -1735,19 +1733,6 @@ function enregistrer() {
 		alert(texte.pages_trajectoire.message_enregistrer);
 	}
 }}
-
-function choixTrajectoire(compteur,context,mobile,mobilefactor,rmaxjson,r0ou2) {
-	if (element.value == 'simple') {
-		majFondFixe();
-		// Tracé du Rayon de Schwarzchild,...
-		creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur);
-		diametre_particule = DIAMETRE_PART*2;
-	}
-	else if (element.value == 'complete') {
-		diametre_particule = DIAMETRE_PART;
-	}
-
-}
 
 function commandes(){
 	var texte = o_recupereJson();
@@ -2009,6 +1994,23 @@ function canvasAvantLancement(){
 
 }
 
+function foncPourZoomPlusAvantLancement(){
+	
+		factGlobalAvecClef = factGlobalAvecClef*1.2;
+		nzoom+=1;
+		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
+		canvasAvantLancement();
+	
+}
+
+function foncPourZoomMoinsAvantLancement(){
+	
+		factGlobalAvecClef = factGlobalAvecClef/1.2;
+		nzoom-=1;
+		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
+		canvasAvantLancement();
+}
+
 function MAJGraphePotentiel(data1,data2,compteur,mobile){
 	data1 = []
 	for (r = 0.7*mobile.r_part; r < 1.3*mobile.r_part; r += mobile.dr) {
@@ -2022,9 +2024,52 @@ function MAJGraphePotentiel(data1,data2,compteur,mobile){
 
 //----------------------------------------------------{Recuperation}----------------------------------------------------
 
-function recuperation(){ //ManonV4
-    if (document.getElementById('trace_present').value != "1") {
-        load_schwarshild_massif_nonBar();
-        initialisationGenerale(lenbdefusees);
+function recuperation(lenbdefusees){
+	if(document.getElementById('trace_present').value!="1"){
+		load_schwarshild_massif_nonBar();
+		initialisationGenerale(lenbdefusees);
+	}
+}
+
+function boutonAvantLancement(){
+    //Gestion de l'accélération/décélération de la simu
+    document.getElementById("panneau_mobile").style.visibility='visible';
+    
+    // Gestion des bouttons Zoom moins
+    document.getElementById("panneau_mobile2").style.visibility='visible';
+    
+    document.getElementById('moinszoom').addEventListener('click',foncPourZoomMoinsAvantLancement, false);
+    document.getElementById('pluszoom').addEventListener('click',foncPourZoomPlusAvantLancement, false);
+    document.getElementById('plusvite').addEventListener('click',foncPourVitAvantLancement,false);
+    document.getElementById('plusvite').myParam = true
+    document.getElementById('moinsvite').addEventListener('click',foncPourVitAvantLancement,false);
+    document.getElementById('moinsvite').myParam = false
+}
+
+function foncPourVitAvantLancement(){
+	if(accelerer.currentTarget.myParam){
+		compteurVitesseAvantLancement += 1
+	}
+	else{
+		compteurVitesseAvantLancement -= 1
+	}
+	document.getElementById('nsimtxt').innerHTML= "ns="+ compteurVitesseAvantLancement.toString();
+}
+
+/**
+ * Fonction qui permet de préparer le canvas de la simulation en fonction de si on choisit une trajectoire complète ou simple. 
+ * @param {Number} compteur : numéro de la fusée entre 0 et le nombre de fusées total, sans dimension. 
+ * @param {object} context : objet de contexte de rendu 2D obtenu à partir d'un élément <canvas> en HTML. Cet objet de contexte de rendu 2D contient toutes les méthodes et propriétés nécessaires pour dessiner la simulation en terme de graphes.
+ * @param {Number} mobilefactor : le facteur d'échelle lié à ce mobile, sans dimension.
+ * @param {Number} rmaxjson : valeur maximale de la coordonnée radiale, en m.   
+ * @param {Number} r0ou2 : distance initiale au centre de l'astre qui est la plus grande parmi les différentes mobiles, en m.  
+ */
+function choixTrajectoire(compteur,context,mobilefactor,rmaxjson,r0ou2) {
+    if (element.value == 'simple') {
+		majFondFixe();
+        creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur);
+		diametre_particule = DIAMETRE_PART*2;
+	}else if (element.value=='complete'){
+        diametre_particule = DIAMETRE_PART;
     }
 }

@@ -29,31 +29,6 @@ function testvaleur(x) {
 	return x ;
 }
 
-//----------------------------------------------------{siTrajectoireSimple}----------------------------------------------------
-
-/** 
- * Fonction qui appelle les fonction majFondFixe() et creations_blocs(context) puis fixe le diamètre de la particule à 2 si l'utilisateur a choisi une trajectoire simple au lieu de complète. C
- * Cela permet de faire en sorte que seule la position de la particule à l'instant t apparaissent sur le canva et pas ses précédentes positions.
- */
-function siTrajectoireSimple() {
-	if (element.value == 'simple') {
-		majFondFixe();
-		creation_blocs(context);
-		diametre_particule = DIAMETRE_PART*2;
-	}
-}
-
-//----------------------------------------------------{siTrajectoireComplete}----------------------------------------------------
-
-/**
- * Fonction qui permet d'avoir le diamètre de la particule/mobile à 1 lorsque l'utilisateur choisit d'avoir une trajectoire complète. 
- */
-function siTrajectoireComplete() {
-	if (element.value == 'complete') {
-		diametre_particule = DIAMETRE_PART;
-	}
-}
-
 
 //----------------------------------------------------{traceEstAbsent}----------------------------------------------------
 
@@ -64,13 +39,13 @@ function traceEstAbsent(){
 	document.getElementById('trace_present').value="0";
 }
 
-//----------------------------------------------------{estUnMobile}----------------------------------------------------
+//----------------------------------------------------{SurTelephone}----------------------------------------------------
 
 /**
  * Fonction qui vérifie si la largeur de l'écran est inférieure ou égale à 960 pixels et ajuste la visibilité (cachée ou non) d'un élément HTML avec l'ID "bouton_info" en conséquence. 
  * Si l'écran fait moins ou égal à 960 pixels alors l'élement sera caché et sinon il sera visible.
  */
-function estUnMobile(){
+function SurTelephone(){
 	var x = window.matchMedia("(max-width: 960px)")
 	if(x.matches){
 		document.getElementById("bouton_info").style.visibility='hidden';
@@ -212,18 +187,6 @@ var calculs = calculs || (function() {
 })()
 
 
-//----------------------------------------------------{arret}----------------------------------------------------
-
-/**
- * Fonction qui permet l'arrêt d'un mobile dans la métrique de Schwarzschild. 
- * A distinguer de la fonction pause pausee(), la fonction arret ne permet pas de relancer la simulation ensuite.
- * @param {Object} mobile : Indique quel est le mobile (objet) que l'on souhaite arrêter.
- */
-function arret(mobile) {
-	mobile.pause = true;
-    clearInterval(mobile.myInterval);
-	document.getElementById("indic_calculs").innerHTML=texte.pages_trajectoire.calcul_termine;
-}
 
 //----------------------------------------------------{arretKerr}----------------------------------------------------
 
@@ -316,82 +279,6 @@ function rendreVisibleNbG() {
     }
 }
 
-//----------------------------------------------------{foncPourVitAvantLancement}----------------------------------------------------
-
-/**
- * Fonction qui permet de voir avant le lancement si l'utilisateur souhaite accélérer ou décélérer la simulation.
- * En fonction l'affichage de ns est modifié.
- * @param {*} accelerer 
- */
-function foncPourVitAvantLancement(accelerer){
-	if(accelerer.currentTarget.myParam){
-		compteurVitesseAvantLancement += 1
-	}
-	else{
-		compteurVitesseAvantLancement -= 1
-	}
-	document.getElementById('nsimtxt').innerHTML= "ns="+ compteurVitesseAvantLancement.toString();
-}
-
-//----------------------------------------------------{foncPourZoomMoinsAvantLancement}----------------------------------------------------
-
-/**
- * Fonction qui permet de dézoomer le graphe avant que la simulation ne démarre.
- * @param {boolean} SCH : indique si je suis dans le cas de la métrique de Schwarzschild ou si false dans la métrique de Kerr.
- */
-function foncPourZoomMoinsAvantLancement(SCH){
-    if (SCH){
-        factGlobalAvecClef = factGlobalAvecClef/1.2;
-        nzoom-=1;
-        document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
-        canvasAvantLancement();
-    }else{
-        input -= 1
-        document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString();
-    }
-}
-
-//----------------------------------------------------{foncPourZoomPlusAvantLancement}----------------------------------------------------
-
-function foncPourZoomPlusAvantLancement(SCH){
-	if (SCH){
-        factGlobalAvecClef = factGlobalAvecClef*1.2;
-        nzoom+=1;
-        document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
-        canvasAvantLancement();
-    }else{
-        input +=1
-		document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString();
-    }
-}
-
-//----------------------------------------------------{boutonAvantLancement}----------------------------------------------------
-
-/**
- * Fonction qui gère et initialise les différents boutons de la simulation avant le début de cette simulation (comme les boutons pour accélérer et zoomer par exemple).
- * @param {boolean} SCH : indique si je suis dans le cas de la métrique de Schwarzschild ou si false dans la métrique de Kerr.
- */
-function boutonAvantLancement(SCH){
-    //Gestion de l'accélération/décélération de la simu
-    document.getElementById("panneau_mobile").style.visibility='visible';
-    
-    // Gestion des bouttons Zoom moins
-    document.getElementById("panneau_mobile2").style.visibility='visible';
-    
-    if(SCH){
-        document.getElementById('moinszoom').addEventListener('click',function(){foncPourZoomMoinsAvantLancement(true)}, false);
-        document.getElementById('pluszoom').addEventListener('click',function(){foncPourZoomPlusAvantLancement(true)}, false);
-    }else{
-        document.getElementById('moinszoom').addEventListener('click',function(){foncPourZoomMoinsAvantLancement(false)}, false);
-        document.getElementById('pluszoom').addEventListener('click',function(){foncPourZoomPlusAvantLancement(false)}, false);
-    }
-
-    document.getElementById('plusvite').addEventListener('click',foncPourVitAvantLancement,false);
-    document.getElementById('plusvite').myParam = true
-    document.getElementById('moinsvite').addEventListener('click',foncPourVitAvantLancement,false);
-    document.getElementById('moinsvite').myParam = false
-}
-
 //----------------------------------------------------{clavierEvenement}----------------------------------------------------
 
 /**
@@ -429,3 +316,31 @@ function clavierEvenement(SCH){
 
 	});
 }
+
+//----------------------------------------------------{choixTrajectoire}----------------------------------------------------
+
+/**
+ * Fonction qui permet de préparer le canvas de la simulation en fonction de si on choisit une trajectoire complète ou simple. 
+ * @param {Number} compteur : numéro de la fusée entre 0 et le nombre de fusées total, sans dimension. 
+ * @param {object} context : objet de contexte de rendu 2D obtenu à partir d'un élément <canvas> en HTML. Cet objet de contexte de rendu 2D contient toutes les méthodes et propriétés nécessaires pour dessiner la simulation en terme de graphes.
+ * @param {Number} mobilefactor : le facteur d'échelle lié à ce mobile, sans dimension.
+ * @param {Number} rmaxjson : valeur maximale de la coordonnée radiale, en m.   
+ * @param {Number} r0ou2 : distance initiale au centre de l'astre qui est la plus grande parmi les différentes mobiles, en m.  
+ * @param {boolean} SCH : indique si je suis dans la métrique de Schwarzschild et sinon si false je suis en métrique de Kerr.
+ */
+/*function choixTrajectoire(compteur,context,mobilefactor,rmaxjson,r0ou2, SCH) {
+    if (element.value == 'simple') {
+		majFondFixe();
+		// Tracé du Rayon de Schwarzchild,...
+        if (SCH){
+            creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur);
+        }else{
+            creation_blocs(context);
+        }
+		diametre_particule = DIAMETRE_PART*2;
+	}else if (element.value=='complete'){
+        diametre_particule = DIAMETRE_PART;
+    }
+}*/
+
+

@@ -122,7 +122,7 @@ function initialisation(){
 	else { document.getElementById("rhm").innerHTML = rhm.toExponential(3);;}
 
 	document.getElementById("gravS").innerHTML = gravSurface.toExponential(3);
-	boutonAvantLancement(false);
+	boutonAvantLancement();
 
 }
 
@@ -162,7 +162,7 @@ function trajectoire() {
 
 		//Pour rendre visible le paneau de zoom.
 		//document.getElementById("panneau_mobile2").style.visibility='visible';
-		estUnMobile();
+		SurTelephone();
 		// permet de griser les cases de saisie pour éviter de changer les valeurs pendant la simulation
 		// conseillé car toutes les exceptions ne sont pas gérées
 		document.getElementById('M').disabled = true;
@@ -480,9 +480,9 @@ function trajectoire() {
 
 function animate() {
     onestarrete=0;
-    estUnMobile();
+    SurTelephone();
     element = document.getElementById('traject_type');
-    choixTrajectoire();
+    choixTrajectoire(context);
     element2=document.getElementById('traject_type2');
 
     if (r0 != 0.0) {
@@ -878,11 +878,6 @@ function enregistrer(){
 	}
 }
 
-function choixTrajectoire() {
-	siTrajectoireSimple();
-	siTrajectoireComplete();
-}
-
 function commandes(){
 	var texte = o_recupereJson();
 	alert(texte.pages_trajectoire.commandes_horsSchwarMassif);
@@ -1215,3 +1210,60 @@ function CubicSolve(a, b, c, d){
 }
 
 	
+	function foncPourZoomPlusAvantLancement(){
+		
+			input +=1
+			document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString();
+		
+	}
+	
+	function foncPourZoomMoinsAvantLancement(){
+		
+			input -= 1
+			document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString();
+	}
+	
+
+	function boutonAvantLancement(){
+		//Gestion de l'accélération/décélération de la simu
+		document.getElementById("panneau_mobile").style.visibility='visible';
+		
+		// Gestion des bouttons Zoom moins
+		document.getElementById("panneau_mobile2").style.visibility='visible';
+		
+		document.getElementById('moinszoom').addEventListener('click',foncPourZoomMoinsAvantLancement, false);
+		document.getElementById('pluszoom').addEventListener('click',foncPourZoomPlusAvantLancement, false);
+		document.getElementById('plusvite').addEventListener('click',foncPourVitAvantLancement,false);
+		document.getElementById('plusvite').myParam = true
+		document.getElementById('moinsvite').addEventListener('click',foncPourVitAvantLancement,false);
+		document.getElementById('moinsvite').myParam = false
+	}
+	
+	function foncPourVitAvantLancement(){
+		if(accelerer.currentTarget.myParam){
+			compteurVitesseAvantLancement += 1
+		}
+		else{
+			compteurVitesseAvantLancement -= 1
+		}
+		document.getElementById('nsimtxt').innerHTML= "ns="+ compteurVitesseAvantLancement.toString();
+	}
+	
+	/**
+	 * Fonction qui permet de préparer le canvas de la simulation en fonction de si on choisit une trajectoire complète ou simple. 
+	 * @param {Number} compteur : numéro de la fusée entre 0 et le nombre de fusées total, sans dimension. 
+	 * @param {object} context : objet de contexte de rendu 2D obtenu à partir d'un élément <canvas> en HTML. Cet objet de contexte de rendu 2D contient toutes les méthodes et propriétés nécessaires pour dessiner la simulation en terme de graphes.
+	 * @param {Number} mobilefactor : le facteur d'échelle lié à ce mobile, sans dimension.
+	 * @param {Number} rmaxjson : valeur maximale de la coordonnée radiale, en m.   
+	 * @param {Number} r0ou2 : distance initiale au centre de l'astre qui est la plus grande parmi les différentes mobiles, en m.  
+	 */
+	function choixTrajectoire(context) {
+		if (element.value == 'simple') {
+			majFondFixe();
+			// Tracé du Rayon de Schwarzchild,...
+			creation_blocs(context);
+			diametre_particule = DIAMETRE_PART*2;
+		}else if (element.value=='complete'){
+			diametre_particule = DIAMETRE_PART;
+		}
+	}
