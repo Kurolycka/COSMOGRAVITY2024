@@ -72,10 +72,10 @@ function calcu(path) {
   h = Number(document.getElementById("h_p").value);
   k = Number(document.getElementById("k_p").value);
   typeannee = document.getElementById("typeannee").value;
-  t0 = Number(document.getElementById("T0_annexes").value);
-  h0 = Number(document.getElementById("H0_annexes").value);
-  omegam0 = Number(document.getElementById("omegam0_annexes").value);
-  omegalambda0 = Number(document.getElementById("omegalambda0_annexes").value);
+  t0 = Number(document.getElementById("T0").value);
+  h0 = Number(document.getElementById("H0").value);
+  omegam0 = Number(document.getElementById("omegam0").value);
+  omegalambda0 = Number(document.getElementById("omegalambda0").value);
   omegak0 = Number(document.getElementById("resultat_omegak0_annexes").value);
   Or = Number(document.getElementById("resultat_omegar0_annexes").value);
   Ie = Number(document.getElementById("i_e").value);

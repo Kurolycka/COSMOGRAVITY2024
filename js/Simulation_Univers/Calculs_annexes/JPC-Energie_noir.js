@@ -87,10 +87,10 @@ function calc_energie_noire() {
   h = Number(document.getElementById("h_p").value);
   k = Number(document.getElementById("k_p").value);
   typeannee = document.getElementById("typeannee").value;
-  t0 = Number(document.getElementById("T0_annexes").value);
-  h0 = Number(document.getElementById("H0_annexes").value);
-  omegam0 = Number(document.getElementById("omegam0_annexes").value);
-  omegaDE0 = Number(document.getElementById("omegaDE0_annexes").value);
+  t0 = Number(document.getElementById("T0").value);
+  h0 = Number(document.getElementById("H0").value);
+  omegam0 = Number(document.getElementById("omegam0").value);
+  omegaDE0 = Number(document.getElementById("omegaDE0").value);
   omegak0 = Number(document.getElementById("resultat_omegak0_annexes").innerHTML);
   Ie = Number(document.getElementById("i_e").value);
   
@@ -98,8 +98,8 @@ function calc_energie_noire() {
   document.getElementById("tempsReception_alert").innerHTML = "";
   
   //Energie Noire
-  w0 = Number(document.getElementById("omega0_annexes").value);
-  w1 = Number(document.getElementById("omega1_annexes").value);
+  w0 = Number(document.getElementById("omega0").value);
+  w1 = Number(document.getElementById("omega1").value);
 
 
   //création d'une liste qui va prendre les résultats des calculs avant qu'elles soient arrondis
@@ -556,8 +556,8 @@ function cv_Enoire_temps(l, omegam0, omegaDE0, Or) {
 
 
 function Ya(x) {  console.log("Energie558",w0,w1);
-  w0 = Number(document.getElementById("omega0_annexes").value);
-  w1 = Number(document.getElementById("omega1_annexes").value); 
+  w0 = Number(document.getElementById("omega0").value);
+  w1 = Number(document.getElementById("omega1").value); 
 
 
   return Math.exp(-3 * (w1 + w0 + 1) * Math.log(1 / (1 + x)) - (3 * w1 * (1 - (1 / (1 + x)))));
@@ -801,10 +801,10 @@ function Tracer(path) {
   h = Number(document.getElementById("h_p").value);
   k = Number(document.getElementById("k_p").value);
   typeannee = document.getElementById("typeannee").value;
-  t0 = Number(document.getElementById("T0_annexes").value);
-  h0 = Number(document.getElementById("H0_annexes").value);
-  omegam0 = Number(document.getElementById("omegam0_annexes").value);
-  omegaDE0 = Number(document.getElementById("omegaDE0_annexes").value);
+  t0 = Number(document.getElementById("T0").value);
+  h0 = Number(document.getElementById("H0").value);
+  omegam0 = Number(document.getElementById("omegam0").value);
+  omegaDE0 = Number(document.getElementById("omegaDE0").value);
   omegak0 = Number(document.getElementById("resultat_omegak0_annexes").innerHTML);
   Ie = Number(document.getElementById("i_e").value);
   
@@ -812,8 +812,8 @@ function Tracer(path) {
   document.getElementById("tempsReception_alert").innerHTML = "";
 
     //Energie Noire
-	w0 = Number(document.getElementById("omega0_annexes").value);
-	w1 = Number(document.getElementById("omega1_annexes").value);
+	w0 = Number(document.getElementById("omega0").value);
+	w1 = Number(document.getElementById("omega1").value);
   
 	//recuperation des valeurs
   pas = Number(document.getElementById("pas_pour_z").value);
@@ -1516,8 +1516,8 @@ function calculDeDs_EN(abscissa) {
 	var min_graph;
 	var integ_1;
 
-	w0 = Number(document.getElementById("omega0_annexes").value);
-	w1 = Number(document.getElementById("omega1_annexes").value);
+	w0 = Number(document.getElementById("omega0").value);
+	w1 = Number(document.getElementById("omega1").value);
 
 
 		abscissa.forEach(i => {   
@@ -1633,10 +1633,10 @@ function calcul_temps_EN(abscissa){
 	zArr = [];
 	tempsArr=[];
 	temps_0=0;
-	w0 = Number(document.getElementById("omega0_annexes").value);
-	w1 = Number(document.getElementById("omega1_annexes").value);
+	w0 = Number(document.getElementById("omega0").value);
+	w1 = Number(document.getElementById("omega1").value);
 
-	h0 = Number(document.getElementById("H0_annexes").value); 
+	h0 = Number(document.getElementById("H0").value); 
 	if(h0<0) {temps_0=simpson_simple_degre2_EN(fonction_integrale_EN, 0, omegam0, Number(omegaDE0), Number(Or),w0,w1); temps_0=-temps_0;}
 	
 	abscissa.forEach(i => {
@@ -1752,8 +1752,8 @@ function calcul_omegas_EN(abscissa){
     olArr = [];
     orArr = [];
     okArr = [];
-	w0 = Number(document.getElementById("omega0_annexes").value);
-	w1 = Number(document.getElementById("omega1_annexes").value);
+	w0 = Number(document.getElementById("omega0").value);
+	w1 = Number(document.getElementById("omega1").value);
 
     abscissa.forEach(i => {
 

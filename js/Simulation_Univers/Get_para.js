@@ -318,10 +318,10 @@ function transfert_simu_mono() {
 }
 
 function transfert_calcu(update1, choix) {
-  document.getElementById("T0_annexes").value = sessionStorage.getItem("T0");
-  document.getElementById("H0_annexes").value = sessionStorage.getItem("H0");
-  document.getElementById("omegam0_annexes").value = sessionStorage.getItem("Om");
-  document.getElementById("resultat_omegar0_annexes").value = sessionStorage.getItem("Or");
+  document.getElementById("T0").value = sessionStorage.getItem("T0");
+  document.getElementById("H0").value = sessionStorage.getItem("H0");
+  document.getElementById("omegam0").value = sessionStorage.getItem("Om");
+  document.getElementById("resultat_omegar0_annexes").value = sessionStorage.getItem("rfc");
   document.getElementById("resultat_omegak0_annexes").value = sessionStorage.getItem("Ok");
   document.getElementById("k_p").value = sessionStorage.getItem("k");
   document.getElementById("h_p").value = sessionStorage.getItem("h");
@@ -336,12 +336,12 @@ function transfert_calcu(update1, choix) {
 
   // choix=1 correspond à l'univers sans énergie sombre, 2 avec énergie sombre
   if (choix == 1) {
-    document.getElementById("omegalambda0_annexes").value = sessionStorage.getItem("Ol");
+    document.getElementById("omegalambda0").value = sessionStorage.getItem("Ol");
     document.getElementById("lambda_cosmo_const").value = sessionStorage.getItem("const_cosmo");
   } else {
-    document.getElementById("omegaDE0_annexes").value = sessionStorage.getItem("Ol");
-    document.getElementById("omega0_annexes").value = sessionStorage.getItem("w0");
-    document.getElementById("omega1_annexes").value = sessionStorage.getItem("w1");
+    document.getElementById("omegaDE0").value = sessionStorage.getItem("Ol");
+    document.getElementById("omega0").value = sessionStorage.getItem("w0");
+    document.getElementById("omega1").value = sessionStorage.getItem("w1");
   }
   // si la case univers plat est cochée alors on renvoie la case cochée
   var univPlat = sessionStorage.getItem("univ_plat");
@@ -456,20 +456,20 @@ function afficheSerie() {
 // size="10"
 
 function afficheValeurs_calcul_mono() {
-  document.getElementById("affichage").innerHTML = "&Omega;<sub>m0</sub> = " + document.getElementById("omegam0_annexes").value +
+  document.getElementById("affichage").innerHTML = "&Omega;<sub>m0</sub> = " + document.getElementById("omegam0").value +
     " ; " + "&Omega;<sub>r0</sub> = " + document.getElementById("resultat_omegar0_annexes").value + "<br/>" +
-    "&Omega;<sub>Λ0</sub> = " + document.getElementById("omegalambda0_annexes").value + " ; " + "&Omega;<sub>k0</sub> = " +
-    document.getElementById("resultat_omegak0_annexes").value + "<br/>" + "H<sub>0</sub> = " + document.getElementById("H0_annexes").value + " km.s<sup>-1</sup>.Mpc<sup>-1</sup>" +
-    "<br/>" + "T<sub>0</sub> = " + document.getElementById("T0_annexes").value + " K";
+    "&Omega;<sub>Λ0</sub> = " + document.getElementById("omegalambda0").value + " ; " + "&Omega;<sub>k0</sub> = " +
+    document.getElementById("resultat_omegak0_annexes").value + "<br/>" + "H<sub>0</sub> = " + document.getElementById("H0").value + " km.s<sup>-1</sup>.Mpc<sup>-1</sup>" +
+    "<br/>" + "T<sub>0</sub> = " + document.getElementById("T0").value + " K";
 }
 
 function afficheValeurs_calcul_mono_noire() {
-  document.getElementById("affichage").innerHTML = "&Omega;<sub>m0</sub> = " + document.getElementById("omegam0_annexes").value +
+  document.getElementById("affichage").innerHTML = "&Omega;<sub>m0</sub> = " + document.getElementById("omegam0").value +
     " ; " + "&Omega;<sub>r0</sub> = " + document.getElementById("resultat_omegar0_annexes").value + "<br/>" +
-    "&Omega;<sub>DE0</sub> = " + document.getElementById("omegaDE0_annexes").value + " ; " + "&Omega;<sub>k0</sub> = " +
-    document.getElementById("resultat_omegak0_annexes").value + "<br/>" + "H<sub>0</sub> = " + document.getElementById("H0_annexes").value + " km.s<sup>-1</sup>.Mpc<sup>-1</sup>" +
-    "<br/>w<sub>0</sub> = " + document.getElementById("omega0_annexes").value + " ; w<sub>1</sub> = " + document.getElementById("omega1_annexes").value +
-    "<br/>T<sub>0</sub> = " + document.getElementById("T0_annexes").value + " K";
+    "&Omega;<sub>DE0</sub> = " + document.getElementById("omegaDE0").value + " ; " + "&Omega;<sub>k0</sub> = " +
+    document.getElementById("resultat_omegak0_annexes").value + "<br/>" + "H<sub>0</sub> = " + document.getElementById("H0").value + " km.s<sup>-1</sup>.Mpc<sup>-1</sup>" +
+    "<br/>w<sub>0</sub> = " + document.getElementById("omega0").value + " ; w<sub>1</sub> = " + document.getElementById("omega1").value +
+    "<br/>T<sub>0</sub> = " + document.getElementById("T0").value + " K";
 }
 
 // affiche l'image en fonction du modèle monofluide selectionné

@@ -11,7 +11,7 @@ function temps(x,omegam0, omegalambda0, Or) {
 
 
 
-//formule utilis�e pour le calcul de l'age de l'univers
+//formule utilisée pour le calcul de l'age de l'univers
 function fonction_integrale(x, omegam0, omegalambda0, Or) {
 	return  (1 / H0enannee) *(1. / (1. + x)) *												
 		Math.pow(Or * Math.pow(1. + x, 4) +
@@ -20,7 +20,7 @@ function fonction_integrale(x, omegam0, omegalambda0, Or) {
 			omegalambda0, -1. / 2);
 }
 
-//formule utilis�e pour le calcul de distance metrique
+//formule utilisée pour le calcul de distance metrique
 function fonction_dm(x, omegam0, omegalambda0, Or) {
 	return 1. / Math.pow((Or * Math.pow((1. + x), 4) +
 		omegam0 * Math.pow((1 + x), 3) + (1 - Or - omegam0 - omegalambda0) *

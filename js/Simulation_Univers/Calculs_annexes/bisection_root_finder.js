@@ -4,23 +4,22 @@
 
 function inverse(){
 
-	au=149597870700;
+	//AU=149597870700;
 	c = Number(document.getElementById("c_p").value);
 	G = Number(document.getElementById("G_p").value);
 	h = Number(document.getElementById("h_p").value);
 	k = Number(document.getElementById("k_p").value);
-	h0 = Number(document.getElementById("H0_annexes").value);
-	omegam0 = Number(document.getElementById("omegam0_annexes").value);
-	omegalambda0 = Number(document.getElementById("omegalambda0_annexes").value);
+	h0 = Number(document.getElementById("H0").value);
+	omegam0 = Number(document.getElementById("omegam0").value);
+	omegalambda0 = Number(document.getElementById("omegalambda0").value);
 	omegak0=(1-omegam0-omegalambda0-Or);
-	H0parsec = h0*1000/((au*(180*3600))/Math.PI*Math.pow(10, 6));
+	H0parsec = h0*1000/((AU*(180*3600))/Math.PI*Math.pow(10, 6));
 	z_negatif_inverse = document.getElementById("z_negatif_check").checked;
 
 //definition du type d'annee
 	if(typeannee == "Sidérale"){
 		nbrjours = 365.256363051;
 		}else if(typeannee == "Julienne"){
-			
 		nbrjours = 365.25;
 		}else if(typeannee == "Tropique (2000)"){
 		nbrjours = 365.242190517;
@@ -29,7 +28,7 @@ function inverse(){
 	}
 
 	//calcul de h0 par secondes et par gigaannees
-	H0parsec = h0*1000/((au*(180*3600))/Math.PI*Math.pow(10, 6));
+	H0parsec = h0*1000/((AU*(180*3600))/Math.PI*Math.pow(10, 6));
 	H0enannee = H0parsec*(3600*24*nbrjours);
 	H0engannee = H0enannee*Math.pow(10, 9);
 
@@ -41,17 +40,18 @@ function inverse(){
 		Or =(8*Math.PI*G*rho_r)/(3*Math.pow(H0parsec, 2));
 		Or=1.68*Or;
 		Or = Or.toExponential();
-		} else if (document.getElementById("resultat_omegar0_annexes").value=="Matière, Lambda et RFC") {
+	} else if (document.getElementById("resultat_omegar0_annexes").value=="Matière, Lambda et RFC") {
 		sigma = (2*Math.pow(Math.PI, 5)*Math.pow(k, 4))/(15*Math.pow(h, 3)*Math.pow(c, 2));
 		rho_r = (4*sigma*Math.pow(t0, 4))/(Math.pow(c, 3));
 		Or =(8*Math.PI*G*rho_r)/(3*Math.pow(H0parsec, 2));
 		Or = Or.toExponential();
-		} else {
-			Or = 0;
+	} else {
+		Or = 0;
 	}
 
 
-	  eps = 1e-6;    //tolérence d'erreur pour les intégrales
+
+	eps = 1e-6;    //tolérence d'erreur pour les intégrales
 
 	get_root_dm();
 	get_root_t();
@@ -109,29 +109,29 @@ function get_root_t(){// omega est omegalambda0 en cas de constante cosmo et ome
 	var texte = o_recupereJson();
 	eps=1e-6;
 	t_max=simpson_simple_degre2(fonction_integrale, 0, omegam0, Number(omegalambda0), Number(Or));
-
 	t_em = (document.getElementById("t_racine_em").value);
 	if(t_em <=0 ){
-		messagebox(texte.page_univers_calculs.erreur,"te" + texte.page_univers_calculs.t_negatif);z_em=NaN;}
+		messagebox(texte.page_univers_calculs.erreur,"te" + texte.page_univers_calculs.t_negatif);z_em=NaN;}/*Remy a enlever
 	else if (t_em > t_max-1){
 		messagebox(texte.page_univers_calculs.erreur,texte.page_univers_calculs.t_trop_grand + "\u0020(" + (t_max).toExponential(4) + "  a)");
-		z_em=NaN;}
-	else{
-	z_em = bisection_method_t(t_em, omegam0, omegalambda0, Or, eps);
+		z_em=NaN;}*/
+	else{//remy change le bisection par sa fonction
+		//z_em = bisection_method_t(t_em, omegam0, omegalambda0, Or, eps);
+		z_em = calcul_t_inverse(t_em,fonction_E) ;
 	}
-	document.getElementById("z_racine_t_em").innerHTML= z_em;
-	
+	document.getElementById("z_racine_t_em").innerHTML= z_em.toExponential(5);
 	
 	t_rec = (document.getElementById("t_racine_rec").value);
 	if(t_rec <=0){
-		messagebox(texte.page_univers_calculs.erreur, "tr" + texte.page_univers_calculs.t_negatif);z_rec=NaN;}
+		messagebox(texte.page_univers_calculs.erreur, "tr" + texte.page_univers_calculs.t_negatif);z_rec=NaN;}/*
 	else if(t_rec > t_max-1){
 		messagebox(texte.page_univers_calculs.erreur,texte.page_univers_calculs.t_trop_grand + "\u0020(" + (t_max).toExponential(4) + "  a)");
-		z_rec=NaN;}
+		z_rec=NaN;}*/
 	else{
-	z_rec = bisection_method_t(t_rec, omegam0, omegalambda0, Or, eps);
+		//z_rec = bisection_method_t(t_rec, omegam0, omegalambda0, Or, eps);
+		z_rec = calcul_t_inverse(t_rec,fonction_E);
 	}
-	document.getElementById("z_racine_t_rec").innerHTML= z_rec;
+	document.getElementById("z_racine_t_rec").innerHTML= z_rec.toExponential(5);
 }
 
 
@@ -154,10 +154,11 @@ function bisection_method_dm (dm, omegam0, omegalambda0, Or, eps){
 	//cette variable possède 2 valeurs [nouveau_zb, contrainte] contrainte =0 ou 1. 0 pour absence de contrainte
 
 	contrainte = Number(reconditionneur[1]);
+	console.log(contrainte);
 	dm_za = f_x(za, omegam0, omegalambda0, Or, eps);
 	dm_zb = f_x(zb, omegam0, omegalambda0, Or, eps);
 	if (Number(dm)===0){
-	  	return 0;
+		return 0;
 	}
 
 	if (omegak0 <=0){
@@ -166,7 +167,6 @@ function bisection_method_dm (dm, omegam0, omegalambda0, Or, eps){
 			while (dm > dm_zb && limit<100){
 				zb = zb*10;
 				dm_zb = f_x(zb, omegam0, omegalambda0, Or, eps);
-				console.log(dm_zb);
 				limit+=1;
 			}
 			if (limit>=100){
@@ -200,8 +200,7 @@ function bisection_method_dm (dm, omegam0, omegalambda0, Or, eps){
 				return NaN;
 			}
 			return dichotomie(0, zb, f_x, dm, ex);
-		}
-		else if((integB>Math.PI/2) && (integB<Math.PI)){
+		}else if((integB>Math.PI/2) && (integB<Math.PI)){
 			z_Pi_div_2 = dichotomie(0, zb, Integral_dm, Math.PI/2, ex);
 			z_sol_1 = dichotomie(0, z_Pi_div_2, f_x, dm, ex);
 			if (dm>dm_zb){
@@ -251,7 +250,7 @@ function espacedefinie(omegam0, omegalambda0, Or){
 				res = [racines[1],1];
 				return res;
 			}
-			//au moins 2 solutions existent sur l'axe des abscisses. Une est possitive, l'autre est négative. Celle qui est possitive délimite la zone pour la distance métrique
+			//au moins 2 solutions existent sur l'axe des abscisses. Une est positive, l'autre est négative. Celle qui est possitive délimite la zone pour la distance métrique
 			else if ((racines[0]>0) && (racines[1]<0)){
 				res = [racines[0],1];
 				return res;
@@ -317,10 +316,6 @@ function espacedefinie(omegam0, omegalambda0, Or){
 
 
 
-
-
-
-
 //########### DICHOTOMIE     outil mathématique fondamental:   DICHOTOMIE  POUR "T"
 
 function dichotomie(BornInf, BornSup, fonction, cible, ex){
@@ -362,8 +357,6 @@ function dichotomie(BornInf, BornSup, fonction, cible, ex){
             }
         }
 }
-
-
 
 //fonction définit du produit de  l'intégral de la fonction "fonction_dm" avec abs(omegak0)^0.5   Ceci sert à  trouver le z correspondant a pi/2 ou pi pour cette fonction
 
@@ -426,43 +419,43 @@ function dichotomie_L(BornInf, BornSup, cible, ex){
 	dm_z_inf = simpson(0, 0.99999, cv_fonction_integrale, omegam0, Number(omegalambda0), Number(Or),Eps);
 
 	initial_a = Number(z_sup);
-   	dm_z_sup = simpson(0, 0.99999, cv_fonction_integrale, omegam0, Number(omegalambda0), Number(Or),Eps);
+	dm_z_sup = simpson(0, 0.99999, cv_fonction_integrale, omegam0, Number(omegalambda0), Number(Or),Eps);
 
-   	 j = 0;
-   	 while (j<500){
-   	         zc = (z_inf+z_sup)/2.0;
+	j = 0;
+	while (j<500){
+		zc = (z_inf+z_sup)/2.0;
 
-   	         initial_a = Number(zc);
-   	         dm_zc = simpson(0, 0.99999, cv_fonction_integrale, omegam0, Number(omegalambda0), Number(Or),Eps);
-   	         //alert("za : " + z_inf + " dm_za: " + dm_z_inf + " zb: " + z_sup + " dm_zb: " + dm_z_sup + " zc: " + zc+ "  dm_zc " + dm_zc +"    " +(1./H0enannee));
-   	         if (((z_sup-z_inf)/2)<ex){
-   	             if (Math.abs(zc/ex) < 100){
+		initial_a = Number(zc);
+		dm_zc = simpson(0, 0.99999, cv_fonction_integrale, omegam0, Number(omegalambda0), Number(Or),Eps);
+		//alert("za : " + z_inf + " dm_za: " + dm_z_inf + " zb: " + z_sup + " dm_zb: " + dm_z_sup + " zc: " + zc+ "  dm_zc " + dm_zc +"    " +(1./H0enannee));
+		if (((z_sup-z_inf)/2)<ex){
+			if (Math.abs(zc/ex) < 100){
 
-   	                 ex = ex*1e-5;
-   	             }
-   	             else{
-   	                 zc = zc.toExponential(5);
-   	                 return zc;
-   	             }
-   	         }
-   	         else if(isNaN(dm_zc)){
-   	             return NaN;
-   	         }
+				ex = ex*1e-5;
+			}
+			else{
+				zc = zc.toExponential(5);
+				return zc;
+			}
+		}
+		else if(isNaN(dm_zc)){
+			return NaN;
+		}
 
-   	         else if ((dm_zc-cible)*(dm_z_sup-cible)< 0){
-   	             z_inf = zc;
-   	             dm_z_inf = dm_zc;
-   	             j+=1;
-   	         }
-   	         else{
-   	             z_sup = zc;
-   	             dm_z_sup = dm_zc;
-   	             j+=1;
-   	         }
+		else if ((dm_zc-cible)*(dm_z_sup-cible)< 0){
+			z_inf = zc;
+			dm_z_inf = dm_zc;
+			j+=1;
+		}
+		else{
+			z_sup = zc;
+			dm_z_sup = dm_zc;
+			j+=1;
+		}
+}
+	if (j==500){
+	return "non existant";
 	}
-   	     if (j==500){
-   	       return "non existant";
-   	     }
 }
 
 
@@ -523,22 +516,21 @@ function bisection_method_t (t, omegam0, omegalambda0, Or, eps){
 		return dichotomie_L(za, zb, t, ext);
 
 	}else{
-		h0 = Number(document.getElementById("H0_annexes").value);  //  em km par seconde et par mégaparsec
+		h0 = Number(document.getElementById("H0").value);  //  em km par seconde et par mégaparsec
 		typeannee = document.getElementById("typeannee").value;
 		switch (typeannee) {
-		case 'Sidérale':
-			nbrJours = 365.256363051;
-		case 'Julienne':
-			nbrJours =365.25;
-	 	case 'Tropique (2000)':
-			nbrJours = 365.242190517;
-		default:
-			nbrJours = 365.2425;
+			case 'Sidérale':
+				nbrJours = 365.256363051;
+			case 'Julienne':
+				nbrJours =365.25;
+			case 'Tropique (2000)':
+				nbrJours = 365.242190517;
+			default:
+				nbrJours = 365.2425;
 		}
 		H0parsec = h0 * 1000 / ((AU * (180 * 3600)) / Math.PI * Math.pow(10, 6));
 		H0enannee = H0parsec * (3600 * 24 * nbrJours);
-
-		if(Or==0){
+		if(Or===0){
 			return((Math.pow(2/(3*H0enannee*t*Math.pow(omegam0,1/2)),2/3)-1).toExponential(4))
 		}
 		else{
@@ -567,7 +559,7 @@ function espace_definie(omegam0, omegalambda0, Or){
 	e = 1;
 
 	//on cherche les racines d'un polynôme d'ordre 4
-	if (a!=0 && (Math.abs(a/b)>1e-3 || Math.abs(a/c)>1e-3 )){
+	if (a!=0 && (Math.abs(a/b)>1e-3 || Math.abs(a/C)>1e-3 )){
 		racines = fourth_order_solver(omegam0, omegalambda0, Or);
 		//racines existantes
 		if (racines.length>=2){
@@ -667,19 +659,19 @@ function fourth_order_solver(omegam0, omegalambda0, Or){
 	array_roots = [x1, x2, x3, x4];
 
 	for(var i = array_roots.length - 1; i >= 0; i--) {
-    		if(isNaN(array_roots[i])) {
-       			array_roots.splice(i, 1);
-    		}
+		if(isNaN(array_roots[i])) {
+			array_roots.splice(i, 1);
+		}
 	}
 	array_roots.sort(function(a, b){return b-a});
-    	return array_roots;
+	return array_roots;
 
 }
 
 
 //équivalent de la fonction Espace définie mais pour une autre équation
 function cubic_root_searcher(){
-	var Ua = -2*p/6;     console.log("674 p",p);
+	var Ua = -2*p/6;    
 	var Ub = 5e10;
 	ex = 0.0000001;
 	eps=1e-6;

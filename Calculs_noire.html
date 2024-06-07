@@ -187,6 +187,13 @@
 
         <br/>
 
+        <div class="choix_z_negatif">
+            <label for="z_negatif_check">z&lt 0</label>
+            <input type="checkbox" name="z_negatif_check" id="z_negatif_check">
+        </div>
+
+        <br>
+
         <div class="desact_retour">
             <label for="dm_racine_dm">d<sub>m</sub> =</label>
             <input id="dm_racine_dm" value="0" maxlength="26" type="text"><span style="font-size:smaller"> (m)</span>
@@ -219,6 +226,7 @@
             <input id="boutonCalculInverse" type="button" onclick="inverse_EN();ga('send', 'event', 'button', 'click', 'Calcul Annexe Inverse');"  value="Calcul"></input> <!--;-->
         </div>
 
+        
     </div>
 
 
@@ -258,84 +266,114 @@
 
                 </div>
 
-            <!-- bouton pour tracer graphes en fonction de z -->
-            <div>
+                <!-- bouton pour tracer graphes en fonction de z -->
+                <div>
 
-                <div style="padding:10px">
-                    <label for="boutonGraphe_distances">
-                    <span id="txt_graphe_d">Tracer d<sub>i</sub>(z)</span>
-                    </label>
-                    <input id="boutonGraphe_distances" type="button" onclick="lance_calc2(1);" value="Tracer" >
-                </div>  				
+                    <div style="padding:10px">
+                        <label for="boutonGraphe_distances">
+                        <span id="txt_graphe_d">Tracer d<sub>i</sub>(z)</span>
+                        </label>
+                        <input id="boutonGraphe_distances" type="button" onclick="lance_calc2(1);" value="Tracer" >
+                    </div>  				
 
-                <div style="padding:10px">
-                    <label for="boutonGraphe_omega">
-                    <span id="txt_graphe_omega">Tracer Ω<sub>i</sub>(z)</span>
-                    </label>
-                    <input id="boutonGraphe_omega" type="button" onclick="lance_calc2(2);" value="Tracer">
+                    <div style="padding:10px">
+                        <label for="boutonGraphe_omega">
+                        <span id="txt_graphe_omega">Tracer Ω<sub>i</sub>(z)</span>
+                        </label>
+                        <input id="boutonGraphe_omega" type="button" onclick="lance_calc2(2);" value="Tracer">
+                    </div>
+                    <div style="padding:10px">
+                        <label for="boutonGraphe_t">
+                        <span id="txt_graphe_t">Tracer t(z)</span>
+                        </label>
+                        <input id="boutonGraphe_t" type="button" onclick="lance_calc2(3);" value="Tracer">
+                    </div>
                 </div>
-                <div style="padding:10px">
-                    <label for="boutonGraphe_t">
-                    <span id="txt_graphe_t">Tracer t(z)</span>
-                    </label>
-                    <input id="boutonGraphe_t" type="button" onclick="lance_calc2(3);" value="Tracer">
+                <!-- bouton pour tracer graphes en fonction de t -->
+                <div>
+
+                    <div style="padding:10px">
+                        <label for="boutonGraphe_distances_t">
+                        <span id="txt_graphe_d_t">Tracer d<sub>i</sub>(t)</span>
+                        </label>
+                        <input id="boutonGraphe_distances_t" type="button" onclick="lance_calc2(4);" value="Tracer">
+                    </div>  
+
+                    <div style="padding:10px">
+                        <label for="boutonGraphe_omega_t">
+                        <span id="txt_graphe_omega_t">Tracer Ω<sub>i</sub>(t)</span>
+                        </label>
+                        <input id="boutonGraphe_omega_t" type="button" onclick="lance_calc2(5);" value="Tracer">
+                    </div>
+
+                    <div style="padding:10px">
+                        <label for="boutonGraphe_z_t">
+                        <span id="txt_graphe_z_t">Tracer z(t)</span> <!--S Ici pour mettre le string devant le button-->
+                        </label>
+                        <input id="boutonGraphe_z_t" type="button" onclick="lance_calc2(6);" value="Tracer"> <!--La value des autres boutons est donc changer autre part? ... Pourquoi ne pas directement mettre le bon nom? :( )-->
+                    </div>
+                    
                 </div>
+
+                <!-- bouton forme checkbox pour tracer les graphes en echelle log de d et omega-->
+                <div>
+                    <div style="padding:10px 13px">
+                        <label for="d_checkbox">
+                        <span id="txt_echelle_log_d">Échelle log</span>
+                        </label>
+                        <input type="checkbox" name="d_checkbox" id="d_checkbox" value="Calcul">
+                    </div>
+
+                    <div style="padding:15px">
+                        <label for="omega_checkbox">
+                        <span id="txt_echelle_log_omega">Échelle log</span>
+                        </label>
+                        <input type="checkbox" name="omega_checkbox" id="omega_checkbox" value="Calcul">
+                    </div>
+
+                <!-- bouton forme checkbox pour tracer les graphes en echelle log de t-->
+                <!--S C'est le bouton en vis-à-vis de t(z) Tracer et z(t) Tracer-->
+                    <div style="padding:12px 15px">
+                        <label for="t_checkbox">
+                        <span id="txt_echelle_log_t">Échelle log</span>
+                        </label>
+                        <input type="checkbox" name="t_checkbox" id="t_checkbox" value="Calcul">
+                    </div>
+                    
+                </div>
+
+                <div>
+                    <div style="padding:12px 15px">
+                        <label for="omegade_normalise">
+                        <span id="txt_omegadr_normalise">Ω<sub>DE normalisé</sub></span>
+                        </label>
+                        <input type="checkbox" id="omegade_normalise" checked>
+                    </div>
+                </div>
+        </div>
+    </div>
+    <div id="calcul_horizon" class="border">
+        <div>
+            <span id="titre_calcul_horizon" style="font-weight:bold;font-size:18px">Calcul horizons cosmologiques à un temps t</span>
+        </div>
+        <br>
+        <div style="display:flex">
+            <div style="padding:10px">
+                <label>t=</label>
+                <input id="t_pour_calcul_horizon" type="Number" value="0">
             </div>
-            <!-- bouton pour tracer graphes en fonction de t -->
-            <div>
-
-                <div style="padding:10px">
-                    <label for="boutonGraphe_distances_t">
-                    <span id="txt_graphe_d_t">Tracer d<sub>i</sub>(t)</span>
-                    </label>
-                    <input id="boutonGraphe_distances_t" type="button" onclick="lance_calc2(4);" value="Tracer">
-                </div>  
-
-                <div style="padding:10px">
-                    <label for="boutonGraphe_omega_t">
-                    <span id="txt_graphe_omega_t">Tracer Ω<sub>i</sub>(t)</span>
-                    </label>
-                    <input id="boutonGraphe_omega_t" type="button" onclick="lance_calc2(5);" value="Tracer">
-                </div>
-
-                <div style="padding:10px">
-                    <label for="boutonGraphe_z_t">
-                    <span id="txt_graphe_z_t">Tracer z(t)</span> <!--S Ici pour mettre le string devant le button-->
-                    </label>
-                    <input id="boutonGraphe_z_t" type="button" onclick="lance_calc2(6);" value="Tracer"> <!--La value des autres boutons est donc changer autre part? ... Pourquoi ne pas directement mettre le bon nom? :( )-->
-                </div>
-                
+            <div style="padding: 10px;">
+                <input type="button" value="Calcul" id="bouton_clacul_horizon_annexe" onclick="calcul_horizons_annexe_noire()">
             </div>
-
-            <!-- bouton forme checkbox pour tracer les graphes en echelle log de d et omega-->
-            <div>
-                <div style="padding:10px 13px">
-                    <label for="d_checkbox">
-                    <span id="txt_echelle_log_d">Échelle log</span>
-                    </label>
-                    <input type="checkbox" name="d_checkbox" id="d_checkbox" value="Calcul">
-                </div>
-
-                <div style="padding:15px">
-                    <label for="omega_checkbox">
-                    <span id="txt_echelle_log_omega">Échelle log</span>
-                    </label>
-                    <input type="checkbox" name="omega_checkbox" id="omega_checkbox" value="Calcul">
-                </div>
-
-            <!-- bouton forme checkbox pour tracer les graphes en echelle log de t-->
-            <!--S C'est le bouton en vis-à-vis de t(z) Tracer et z(t) Tracer-->
-                <div style="padding:12px 15px">
-                    <label for="t_checkbox">
-                    <span id="txt_echelle_log_t">Échelle log</span>
-                    </label>
-                    <input type="checkbox" name="t_checkbox" id="t_checkbox" value="Calcul">
-                </div>
-                
+            <div style="padding:10px">
+                <label>d<sub>e</sub>=</label>
+                <span id="resultat_dm_evenement_t"></span> GAL
+                <label>d<sub>p</sub>=</label>
+                <span id="resultat_dm_particule_t"></span> GAL
             </div>
         </div>
-</div>
     </div>
+</div>
 
 
     <div id="box1"><!--</div>tabs-1"> -->
@@ -347,31 +385,31 @@
         <br>
 
         <div>
-          <label for="T0_annexes">T<sub>0</sub> =</label>
-          <output id="T0_annexes" style="color:blue" onChange="update_omegar0_calc_noir();" type="text"></output> K
+          <label for="T0">T<sub>0</sub> =</label>
+          <output id="T0" style="color:blue" onChange="update_omegar0_calc_noir();" type="text"></output> K
         </div>
   
         <div>
-          <label for="H0_annexes">H<sub>0</sub> =</label>
-          <output id="H0_annexes" style="color:blue" onChange="update_omegar0_calc_noir();" type="text"></output> km.s<sup>-1</sup>.Mpc<sup>-1</sup>
+          <label for="H0">H<sub>0</sub> =</label>
+          <output id="H0" style="color:blue" onChange="update_omegar0_calc_noir();" type="text"></output> km.s<sup>-1</sup>.Mpc<sup>-1</sup>
         </div>
   
         <div>
-          <label for="omegam0_annexes">&Omega;<sub>m0</sub> =</label>
-          <output id="omegam0_annexes" style="color:blue" onChange="update_omegar0_calc_noir();" type="text"></output>
+          <label for="omegam0">&Omega;<sub>m0</sub> =</label>
+          <output id="omegam0" style="color:blue" onChange="update_omegar0_calc_noir();" type="text"></output>
         </div>
   
         <div>
-          <label for="omegaDE0_annexes">&Omega;<sub>DE0</sub> =</label>
-          <output id="omegaDE0_annexes" style="color:blue" value="0.6911" onChange="update_omegar0_calc_noir();" type="text"></output>
+          <label for="omegaDE0">&Omega;<sub>DE0</sub> =</label>
+          <output id="omegaDE0" style="color:blue" value="0.6911" onChange="update_omegar0_calc_noir();" type="text"></output>
         </div>
   
         <div>
-          <label for="omega0_annexes">w<sub>0</sub> =</label>
-          <output id="omega0_annexes" style="color:blue" value="-1" type="text"></output>
+          <label for="omega0">w<sub>0</sub> =</label>
+          <output id="omega0" style="color:blue" value="-1" type="text"></output>
   
-          <label for="omega1_annexes">w<sub>1</sub> =</label>
-          <output id="omega1_annexes" style="color:blue" value="0" type="text"></output>
+          <label for="omega1">w<sub>1</sub> =</label>
+          <output id="omega1" style="color:blue" value="0" type="text"></output>
         </div>
         </div>
 
@@ -923,13 +961,18 @@
             <br/>
     </div>	
 
-      <!-- Chargement des valeurs-->
-      <script>
-        // Recuperations des valeurs de la page simulation.
-        transfert_calcu(update_omegar0_calc_noir, 2);
-        calculs = 0;
-        texteUniversCalculs();
-      </script>
+    <!-- Chargement des valeurs-->
+    <script>
+    // Recuperations des valeurs de la page simulation.
+    transfert_calcu(update_omegar0_calc_noir, 2);
+    calculs = 0;
+    texteUniversCalculs();
+    texteUniversCalculsNoire();
+    </script>
+    <script src="js/functions/fonction_utilitaire.js"></script>
+    <script src="js/Simulation_Univers/MéthodesNumériques.js"></script>
+    <script src="js/Simulation_Univers/Fonctions_utiles.js"></script>
+    <script src="js/Simulation_Univers/calcul_facteur_echelle_DE.js"></script>
 
 </body>
 

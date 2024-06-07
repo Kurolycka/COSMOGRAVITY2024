@@ -88,10 +88,10 @@ function calc_energie_noire() {
   h = Number(document.getElementById("h_p").value);
   k = Number(document.getElementById("k_p").value);
   typeannee = document.getElementById("typeannee").value;
-  t0 = Number(document.getElementById("T0_annexes").value);
-  h0 = Number(document.getElementById("H0_annexes").value);
-  omegam0 = Number(document.getElementById("omegam0_annexes").value);
-  omegaDE0 = Number(document.getElementById("omegaDE0_annexes").value);
+  t0 = Number(document.getElementById("T0").value);
+  h0 = Number(document.getElementById("H0").value);
+  omegam0 = Number(document.getElementById("omegam0").value);
+  omegaDE0 = Number(document.getElementById("omegaDE0").value);
   omegak0 = Number(document.getElementById("resultat_omegak0_annexes").innerHTML);
   Ie = Number(document.getElementById("i_e").value);
   
@@ -99,8 +99,8 @@ function calc_energie_noire() {
   document.getElementById("tempsReception_alert").innerHTML = "";
   
   //Energie Noire
-  w0 = Number(document.getElementById("omega0_annexes").value);
-  w1 = Number(document.getElementById("omega1_annexes").value);
+  w0 = Number(document.getElementById("omega0").value);
+  w1 = Number(document.getElementById("omega1").value);
 
 
   //création d'une liste qui va prendre les résultats des calculs avant qu'elles soient arrondis
@@ -253,43 +253,43 @@ avertissement();
     }
   // formule analytique pour les cas hors Lambda et Matiere pour les z>1e12
     else if(Or!=0 && (z1>=1e12 && z2>=1e12) ){
-      agebetween=(1/(2*Math.pow(Or,0.5)*H0enannee))*(Math.pow(1+Number(z2),-2)
+    agebetween=(1/(2*Math.pow(Or,0.5)*H0enannee))*(Math.pow(1+Number(z2),-2)
         -Math.pow(1+Number(z1),-2));
     }
   // autres cas
     else{
-      agebetween=tempsReception-tempsEmission;
+    	agebetween=tempsReception-tempsEmission;
     }
 
     agebetween_sec=agebetween*H0enannee/H0parsec;
 
 // z1
-  Tz1 = t0 * (1 + Number(z1));
-  Tz1 = Tz1.toExponential(8);
-  Omz1 = omegam0 * Math.pow(1 + Number(z1), 3) / fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1);
-  Omz1 = Omz1.toExponential(8);
-  Olz1 = omegaDE0 * Ya(Number(z1))*(1/(1+z1))	/ fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1);
-  Olz1 = Olz1.toExponential(8);
-  Orz1 = Or * Math.pow(1 + Number(z1), 4) / fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1);
-  Orz1 = Orz1.toExponential(8);
-  Okz1 = omegak0 * Math.pow(1 + Number(z1), 2) / fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1);
-  Okz1 = Okz1.toExponential(8);
-  Hz1 = h0 * Math.pow(fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1),0.5);
-  Hz1 = Hz1.toExponential(8);
+	Tz1 = t0 * (1 + Number(z1));
+	Tz1 = Tz1.toExponential(8);
+	Omz1 = omegam0 * Math.pow(1 + Number(z1), 3) / fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1);
+	Omz1 = Omz1.toExponential(8);
+	Olz1 = omegaDE0 * Ya(Number(z1))*(1/(1+z1))	/ fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1);
+	Olz1 = Olz1.toExponential(8);
+	Orz1 = Or * Math.pow(1 + Number(z1), 4) / fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1);
+	Orz1 = Orz1.toExponential(8);
+	Okz1 = omegak0 * Math.pow(1 + Number(z1), 2) / fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1);
+	Okz1 = Okz1.toExponential(8);
+	Hz1 = h0 * Math.pow(fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1),0.5);
+	Hz1 = Hz1.toExponential(8);
 
 //z2
-  Tz2 = t0 * (1 + Number(z2));
-  Tz2 = Tz2.toExponential(8);
-  Omz2 = omegam0 * Math.pow(1 + Number(z2), 3) / fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1);
-  Omz2 = Omz2.toExponential(8);
-  Olz2 = omegaDE0 * Ya(Number(z1))*(1/(1+z2))	/ fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1);
-  Olz2 = Olz2.toExponential(8);
-  Orz2 = Or * Math.pow(1 + Number(z2), 4) / fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1);
-  Orz2 = Orz2.toExponential(8);
-  Okz2 = omegak0 * Math.pow(1 + Number(z2), 2) / fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1);
-  Okz2 = Okz2.toExponential(8);
-  Hz2 = h0 * Math.pow(fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1), 0.5);
-  Hz2 = Hz2.toExponential(8);
+	Tz2 = t0 * (1 + Number(z2));
+	Tz2 = Tz2.toExponential(8);
+	Omz2 = omegam0 * Math.pow(1 + Number(z2), 3) / fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1);
+	Omz2 = Omz2.toExponential(8);
+	Olz2 = omegaDE0 * Ya(Number(z1))*(1/(1+z2))	/ fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1);
+	Olz2 = Olz2.toExponential(8);
+	Orz2 = Or * Math.pow(1 + Number(z2), 4) / fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1);
+	Orz2 = Orz2.toExponential(8);
+	Okz2 = omegak0 * Math.pow(1 + Number(z2), 2) / fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1);
+	Okz2 = Okz2.toExponential(8);
+	Hz2 = h0 * Math.pow(fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1), 0.5);
+	Hz2 = Hz2.toExponential(8);
 
    //calcul de la distance du diametre apparent et distance lumiere(dm et photometrie)
   dda = dm1 / (1 + Number(z1));
@@ -557,16 +557,16 @@ function cv_Enoire_temps(l, omegam0, omegaDE0, Or) {
 // Ya(x)
 
 function Ya_a(x) {
-  w0 = Number(document.getElementById("omega0_annexes").value);
-  w1 = Number(document.getElementById("omega1_annexes").value);
+  w0 = Number(document.getElementById("omega0").value);
+  w1 = Number(document.getElementById("omega1").value);
 
 
   return Math.exp(-3 * (w1 + w0 + 1) * Math.log(x) - (3 * w1 * (1 - x)));
 }
 
 function Ya(x) {    
-  w0 = Number(document.getElementById("omega0_annexes").value);
-  w1 = Number(document.getElementById("omega1_annexes").value);
+  w0 = Number(document.getElementById("omega0").value);
+  w1 = Number(document.getElementById("omega1").value);
 
   return Math.exp(-3 * (w1 + w0 + 1) * Math.log(1 / (1 + x)) - (3 * w1 * (1 - (1 / (1 + x)))));
 }
@@ -809,10 +809,10 @@ function Tracer(path) {
   h = Number(document.getElementById("h_p").value);
   k = Number(document.getElementById("k_p").value);
   typeannee = document.getElementById("typeannee").value;
-  t0 = Number(document.getElementById("T0_annexes").value);
-  h0 = Number(document.getElementById("H0_annexes").value);
-  omegam0 = Number(document.getElementById("omegam0_annexes").value);
-  omegaDE0 = Number(document.getElementById("omegaDE0_annexes").value);
+  t0 = Number(document.getElementById("T0").value);
+  h0 = Number(document.getElementById("H0").value);
+  omegam0 = Number(document.getElementById("omegam0").value);
+  omegaDE0 = Number(document.getElementById("omegaDE0").value);
   omegak0 = Number(document.getElementById("resultat_omegak0_annexes").innerHTML);
   Ie = Number(document.getElementById("i_e").value);
   
@@ -820,8 +820,8 @@ function Tracer(path) {
   document.getElementById("tempsReception_alert").innerHTML = "";
 
     //Energie Noire
-	w0 = Number(document.getElementById("omega0_annexes").value);
-	w1 = Number(document.getElementById("omega1_annexes").value);
+	w0 = Number(document.getElementById("omega0").value);
+	w1 = Number(document.getElementById("omega1").value);
   
 	//recuperation des valeurs
   pas = Number(document.getElementById("pas_pour_z").value);
@@ -1124,7 +1124,7 @@ function Tracer(path) {
 		yanchor: 'bottom',
 		text: 'T<sub>0</sub>: '+t0.toExponential(3)+'   H<sub>0</sub>:'+h0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+omegam0.toExponential(3)+'   \Ω<sub>DE0</sub>:  '+omegaDE0+'   \Ω<sub>r0</sub>: ' +Or+'  \Ω<sub>k0</sub>:   '+omegak0.toExponential(3),
 		showarrow: false}] ;
-		let val_graph = calcul_temps_EN(abscissa_t);
+		let val_graph = new_calcul_temps(abscissa_t);
 
 		if(t_checkbox.checked && axeAbscicceEnZPlus1){	//gère le cas du décalage des absicces pour que tout tienne sur le graph quand on utilise l'échelle log
 			for(i=0;i<val_graph[0].length;i++){//Dans val_graph[0] se trouve les z, les abscicces pour le tracé des graphes, on le décale ici
@@ -1200,17 +1200,11 @@ function Tracer(path) {
 			plot_type = 'scatter'
 
 			var abscissa_d = linear_scale(zmin, zmax, pas);
-
-
 		}
 
 
-		var val_abscissa = calcul_temps_EN(abscissa_d);
+		var val_abscissa = new_calcul_temps(abscissa_d);
 
-		if(!(d_checkbox.checked)){
-			abscissa_d = (obtenir_linearScale_pour_t_EN(val_abscissa[0],val_abscissa[1],pas,omegam0,omegaDE0,Or,H0enannee,w0,w1))//A SUPPRIMER
-			val_abscissa = calcul_temps_EN(abscissa_d)
-		}
 
 		let val_graph = calculDeDs_EN(abscissa_d);
 		let annots =  [{xref: 'paper',
@@ -1309,12 +1303,7 @@ function Tracer(path) {
 		}
 	
 
-		var val_abscissa = calcul_temps_EN(abscissa_omega);
-
-		if(!(omega_checkbox.checked)){
-			abscissa_omega = (obtenir_linearScale_pour_t_EN(val_abscissa[0],val_abscissa[1],pas,omegam0,omegaDE0,Or,H0enannee,w0,w1))//A SUPPRIMER
-			val_abscissa = calcul_temps_EN(abscissa_omega)
-		}
+		var val_abscissa = new_calcul_temps(abscissa_omega);
 
 		let val_graph = calcul_omegas_EN(abscissa_omega);
 		let annots = [{xref: 'paper',
@@ -1340,7 +1329,7 @@ function Tracer(path) {
 
 				type: 'scatter',
 
-				name: '<b>Ω<sub>DE</sub><b>'
+				name: '<b>Ω<sub>DEN</sub><b>'
 			},
 			{
 				x: val_abscissa[1],
@@ -1418,11 +1407,14 @@ function Tracer(path) {
 			var abscissa_z = linear_scale(zmin, zmax, pas);
 		} 
 
-		let val_graph = calcul_temps_EN(abscissa_z);
-		if(!(t_checkbox.checked)){
-			abscissa_z = obtenir_linearScale_pour_t_EN(val_graph[0],val_graph[1],pas,omegam0,omegaDE0,Or,H0enannee,w0,w1)
-			val_graph = calcul_temps_EN(abscissa_z)	
-		}
+		let val_graph = new_calcul_temps(abscissa_z);
+		let amin=1/(1+zmax);
+		let amax=1/(1+zmin);
+		let res = calcul_facteur_echelle_DE(amin,amax,equa_diff_1_DE, equa_diff_2_DE, fonction_F)[0];
+		let ordonnee = res[1].map((x) => (1-x)/x);
+		ordonnee=ordonnee.reverse();
+		let abscisse = res[0].map((x) => x*1e9);
+		abscisse=abscisse.reverse() ;
 
 		let annots = [{xref: 'paper',
 		yref: 'paper',
@@ -1520,29 +1512,17 @@ function calculDeDs_EN(abscissa) {
 	var min_graph;
 	var integ_1;
 
-	w0 = Number(document.getElementById("omega0_annexes").value);
-	w1 = Number(document.getElementById("omega1_annexes").value);
+	w0 = Number(document.getElementById("omega0").value);
+	w1 = Number(document.getElementById("omega1").value);
 
 
 		abscissa.forEach(i => {   
 		
 		// calcul de la distance mètrique 
-
-		if (omegak0>0){
-		integ_1 = Math.sqrt( Math.abs(omegak0)) * simpson_EN(0, Number(i), fonction_dm_EN, omegam0, Number(omegaDE0), Number(Or),Eps,w0,w1);  // sans unité
-		dm1=(c/(H0parsec*Math.sqrt( Math.abs(omegak0) ))) * Math.sin(integ_1);  // distance mètrique en mètres
-		}
-		else if (omegak0==0){
-		dm1=(c/(H0parsec) * simpson_EN(0, Number(i), fonction_dm_EN, omegam0, Number(omegaDE0), Number(Or),Eps,w0,w1));
-		}
-		else{
-		integ_1 = Math.sqrt( Math.abs(omegak0)) * simpson_EN(0, Number(i), fonction_dm_EN, omegam0, Number(omegaDE0), Number(Or),Eps,w0,w1);
-		dm1=(c/(H0parsec*Math.sqrt( Math.abs(omegak0) ))) * Math.sinh(integ_1) ;
-		}
+		dm1=DistanceMetrique(fonction_F,0,i,true);
 
 		//  temps en secondes
-		temps = simpson_simple_degre2_EN(fonction_integrale_EN, Number(i), omegam0, Number(omegaDE0), Number(Or),w0,w1);
-		temps = temps * H0enannee / H0parsec;
+		temps = calcul_ages(fonction_F,H0parsec,.0000001,1/(1+i));
 
 		dlt = temps * c;
 		dlt = dlt * LUMIERE_INV;
@@ -1566,12 +1546,6 @@ function calculDeDs_EN(abscissa) {
 		zArr.push(i); 
 	});
 
-
-	/*console.log(dlArr)  ;
-	console.log(daArr)  ;
-	console.log(dmArr)  ;
-	console.log(zArr)  ;
-	console.log(dltArr)  ;*/
 	return [dlArr,daArr,dmArr,zArr,dltArr];
 }
 
@@ -1641,10 +1615,10 @@ function calcul_temps_EN(abscissa){
 	zArr = [];
 	tempsArr=[];
 	temps_0=0;
-	w0 = Number(document.getElementById("omega0_annexes").value);
-	w1 = Number(document.getElementById("omega1_annexes").value);
+	w0 = Number(document.getElementById("omega0").value);
+	w1 = Number(document.getElementById("omega1").value);
 
-	h0 = Number(document.getElementById("H0_annexes").value); 
+	h0 = Number(document.getElementById("H0").value); 
 	if(h0<0) {temps_0=simpson_simple_degre2_EN(fonction_integrale_EN, 0, omegam0, Number(omegaDE0), Number(Or),w0,w1); temps_0=-temps_0;}
 	
 	abscissa.forEach(i => {
@@ -1671,7 +1645,16 @@ function calcul_temps_EN(abscissa){
 	return [zArr,tempsArr];
 }
 
-
+//Remy 28/05/2024
+function new_calcul_temps(abscissa){
+	zArr=[];
+	tempsArr=[];
+	abscissa.forEach(i => {
+		tempsArr.push(calcul_ages(fonction_F,H0enannee,0.000000001,1/(1+i)));
+		zArr.push(i)
+	});
+	return [zArr,tempsArr];
+};
 
 
 function obtenir_linearScale_pour_t_EN(zArr,tArr,pas,omegam0,omegaDE0,Or,H0enannee,w0,w1){// Fonction utilisant la dérivé première et seconde de t(z) (Soit fonction intégrable et sa première dérivé) : fait pour ne marcher qu'ici
@@ -1760,56 +1743,48 @@ function calcul_omegas_EN(abscissa){
     olArr = [];
     orArr = [];
     okArr = [];
-	w0 = Number(document.getElementById("omega0_annexes").value);
-	w1 = Number(document.getElementById("omega1_annexes").value);
+	w0 = Number(document.getElementById("omega0").value);
+	w1 = Number(document.getElementById("omega1").value);
 
     abscissa.forEach(i => {
 
-        Omz = omegam0 * Math.pow(1 + Number(i), 3) / fonction_E(Number(i), omegam0, Number(omegaDE0), Or,w0,w1);
+        Omz = omegam0 * Math.pow(1 + Number(i), 3) / fonction_F(Number(i), true);
         Omz = Omz.toExponential(8);
         omArr.push(Omz);
 
-        Olz = Number(omegaDE0) / fonction_E(Number(i), omegam0, Number(omegaDE0), Or,w0,w1);
-
+		if (document.getElementById("omegade_normalise").checked){
+			Olz = Number(omegaDE0) * fonction_Y(1/(1+i)) / fonction_F(Number(i),true);
+		}else{
+			Olz=Number(omegaDE0/fonction_F(Number(i),true));
+		};
         Olz = Olz.toExponential(8); 
         olArr.push(Olz);
 
-        Orz = Or * Math.pow(1 + Number(i), 4) / fonction_E(Number(i), omegam0, Number(omegaDE0), Or,w0,w1);
+        Orz = Or * Math.pow(1 + Number(Number(i)), 4) / fonction_F(Number(i), true);
         Orz = Orz.toExponential(8);
         orArr.push(Orz);
 
-        Okz = omegak0 * Math.pow(1 + Number(i), 2) / fonction_E(Number(i), omegam0, Number(omegaDE0), Or,w0,w1);
+        Okz = omegak0 * Math.pow(1 + Number(i), 2) / fonction_F(Number(i), true);
         Okz = Okz.toExponential(8);
         okArr.push(Okz);
         
         zArr.push(i);
-        
     });
 
     return [omArr,olArr,orArr,okArr,zArr];
 }
 
-/*
-
-function fonction_integrale_EN(x, omegam0, omegaDE0, Or) {
-	//let omegak0 = 1 - Or - omegam0 - omegaDE0;
-	return (1 / (H0enannee * (1.0 + x))) * Math.pow(omegaDE0 *  Math.exp(-3 * (1 + w0 + w1) * Math.log(1/(1 + x)) - 3 * w1 * (1 - 1/(1 + x))) + omegak0 * (Math.pow((1 + x), 2)) + omegam0 * (Math.pow((1 + x), 3)) + Or * (Math.pow((1 + x), 4)) ,(-1.0 / 2));
-  }
-
-function cv_fonction_integrale_EN(l, omegam0, omegalambda0, Or) {
-	x = initial_a + l / (1 - l);
-	return fonction_integrale_EN(x, omegam0, omegalambda0, Or) * 1 / Math.pow(1 - l, 2);
-  }
-  
-
-function fonction_dm_EN(x, omegam0, omegaDE0, Or) { // c'est bizarre mais c'est F(x)^-1/2
-	return Math.pow(omegaDE0 *  Math.exp(-3 * (1 + w0 + w1) * Math.log(1/(1 + x)) - 3 * w1 * (1 - 1/(1 + x))) + omegak0 * (Math.pow((1 + x), 2)) + omegam0 * (Math.pow((1 + x), 3)) + Or * (Math.pow((1 + x), 4)) ,(-1.0 / 2));
-  }
-  
-
-function derive_fonction_F(x, omegam0, omegaDE0, Or){
-	let omegak0 = 1 - Or - omegam0 - omegaDE0;
-  return omegaDE0 * (Math.exp(-3 * (1 + w0 + w1) * Math.log(1/(1 + x)) - 3 * w1 * (1 - 1/(1 + x)))*(x+1)*(3*(1+w0+w1)-3*w1*(x+1))) +2* omegak0 * (1 + x) + 3*omegam0 * (Math.pow((1 + x), 2)) + 4*Or * (Math.pow((1 + x), 3));
-
+//Remy 27/05/2024
+function calcul_horizons_annexe_noire(){
+	if (t_pour_horizon<=0){
+		document.getElementById("resultat_dm_particule_t").innerHTML=NaN;
+		document.getElementById("resultat_dm_evenement_t").innerHTML=NaN;
+	}else{
+		z_pour_horizon=calcul_t_inverse(t_pour_horizon,fonction_F);
+		let dm_horizon_particule_m=calcul_horizon_particule(fonction_F,z_pour_horizon);
+		let dm_horizon_particule_Ga=m_vers_AL(dm_horizon_particule_m)/1e9;
+		let dm_horizon_evenement_m=calcul_horizon_evenements(fonction_F,z_pour_horizon);
+		let dm_horizon_evenement_Ga=m_vers_AL(dm_horizon_evenement_m)/1e9;
+		document.getElementById("resultat_dm_particule_t").innerHTML=dm_horizon_particule_Ga.toExponential(4);
+		document.getElementById("resultat_dm_evenement_t").innerHTML=dm_horizon_evenement_Ga.toExponential(4);}
 }
-*/

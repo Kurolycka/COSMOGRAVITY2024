@@ -43,7 +43,7 @@ function calcul_Omegar(h, c, k, t0, H0parsec) {
     sigma = (2 * Math.pow(Math.PI, 5) * Math.pow(k, 4)) / (15 * Math.pow(h, 3) * Math.pow(c, 2));  //OK
 
     // Matière Lambda, RFC et neutrinos
-     if (document.getElementById("liste").options[0].selected) {
+    if (document.getElementById("liste").options[0].selected) {
         rho_r = (4 * sigma * Math.pow(t0, 4)) / (Math.pow(c, 3));
         Or = (8 * Math.PI * G * rho_r) / (3 * Math.pow(H0parsec, 2));
         Or = 1.6913 * Or;  // neutrinos
@@ -81,7 +81,7 @@ function calcul() { // fonction principale de cosmogravity
     omegalambda0 = Number(document.getElementById("omegalambda0").value);
     texte = o_recupereJson();
     nbrjours = nbJoursParAn();
-    //calcule des H0 par seconde par anneee et par gigaannee
+    //calcule des H0 par seconde par annee et par gigaannee
     H0parsec = calcul_H0parsec(H0);
     adetau1bis=1;
     ibis=0;

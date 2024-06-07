@@ -27,7 +27,7 @@ function parametres() {
   texte = o_recupereJson();
   nbrjours = nbJoursParAn();
   //calcule des h0 par seconde par anneee et par gigaannee
-  H0parsec = calcul_H0parsec(h0);
+  H0parsec = H0_parSecondes(h0);
   H0enannee = calcul_H0enannee(H0parsec, nbrjours);
   H0engannee = calcul_H0engannee(H0parsec, nbrjours);
 

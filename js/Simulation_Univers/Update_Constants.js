@@ -25,9 +25,9 @@ function update_rho(path){
 	G = Number(document.getElementById("G_p").value);
 	h = Number(document.getElementById("h_p").value);
 	k = Number(document.getElementById("k_p").value);
-	t0 = Number(document.getElementById("T0_annexes").value);
-	h0 = Number(document.getElementById("H0_annexes").value);
-	omegam0 = Number(document.getElementById("omegam0_annexes").value);
+	t0 = Number(document.getElementById("T0").value);
+	h0 = Number(document.getElementById("H0").value);
+	omegam0 = Number(document.getElementById("omegam0").value);
 		
 	sigma = (2*Math.pow(Math.PI, 5)*Math.pow(k, 4))/(15*Math.pow(h, 3)*Math.pow(c, 2));
 	rho_r = (4*sigma*Math.pow(t0, 4))/(Math.pow(c, 3));
@@ -39,12 +39,12 @@ function update_rho(path){
 	
 	
 	if(path==1){
-		omegaDE0 = Number(document.getElementById("omegaDE0_annexes").value);
+		omegaDE0 = Number(document.getElementById("omegaDE0").value);
 		rho_lambda = omegaDE0 *3 * Math.pow(h0*1e3,2) / Math.pow(3.085677581*1e22,2)/ (8 * pi() * G); 
 		rho_lambda = rho_lambda.toExponential(4);
 		document.getElementById("rholambda").innerHTML = rho_lambda;
 	}else if(path==0){
-		omegalambda0 = Number(document.getElementById("omegalambda0_annexes").value);
+		omegalambda0 = Number(document.getElementById("omegalambda0").value);
 		rho_lambda = omegalambda0 *3 * Math.pow(h0*1e3,2)/ Math.pow(3.085677581*1e22,2) / (8 * pi() * G);  
 		rho_lambda = rho_lambda.toExponential(4);
 		document.getElementById("rholambda").innerHTML = rho_lambda;
@@ -245,8 +245,8 @@ function update_omegar0_calc(){
 	G = Number(document.getElementById("G_p").value);
 	h = Number(document.getElementById("h_p").value);
 	k = Number(document.getElementById("k_p").value);
-	t0 = Number(document.getElementById("T0_annexes").value);
-	h0 = Number(document.getElementById("H0_annexes").value);
+	t0 = Number(document.getElementById("T0").value);
+	h0 = Number(document.getElementById("H0").value);
 	const_cosmo = Number(document.getElementById("lambda_cosmo_const").value);
 
 	//on recupere le bon nombre de jour par an.
@@ -283,9 +283,9 @@ function update_omegar0_calc(){
 
 
 function update_omegak0_calc(){
-	omegam0 = Number(document.getElementById("omegam0_annexes").value);
+	omegam0 = Number(document.getElementById("omegam0").value);
 	Or= Number(document.getElementById("Orr").innerHTML);
-	omegalambda0 =Number(document.getElementById("omegalambda0_annexes").value);
+	omegalambda0 =Number(document.getElementById("omegalambda0").value);
 
 	zld=espacedefinie(omegam0,omegalambda0,Or);
 	ztl=espace_definie(omegam0,omegalambda0,Or);
@@ -296,17 +296,17 @@ function update_omegak0_calc(){
 		omegak0=0;
 		la = 1 - Or - omegam0;
 		la = la.toExponential(4);
-		document.getElementById("omegalambda0_annexes").value = la;
+		document.getElementById("omegalambda0").value = la;
 	}
 	else{
 		omegalambda0=	omegalambda0.toExponential(4);
-		document.getElementById("omegalambda0_annexes").value = omegalambda0;
+		document.getElementById("omegalambda0").value = omegalambda0;
 	}
 
 	omegak0= omegak0.toExponential(4);
 	document.getElementById("resultat_omegak0_annexes").innerHTML = omegak0;
 	omegam0= omegam0.toExponential(4);
-	document.getElementById("omegam0_annexes").value = omegam0;
+	document.getElementById("omegam0").value = omegam0;
 	za=-0.99;
 
 	if(omegalambda0<=0){
@@ -350,11 +350,11 @@ function update_omegak0_calc(){
 function Omegak0_plat_calc(){
 	if(document.getElementById("univ_plat").checked){
 		Or= Number(document.getElementById("Orr").innerHTML);
-		omegam0 = Number(document.getElementById("omegam0_annexes").value);
+		omegam0 = Number(document.getElementById("omegam0").value);
 		omegalambda0= 1- Or -omegam0;
 		omegalambda0 = omegalambda0.toExponential(4);
 		document.getElementById("resultat_omegak0_annexes").innerHTML = 0;
-		document.getElementById("omegalambda0_annexes").value = omegalambda0;
+		document.getElementById("omegalambda0").value = omegalambda0;
 	}
 }
 
@@ -365,8 +365,8 @@ function update_omegar0_calc_noir(){
 	G = Number(document.getElementById("G_p").value);
 	h = Number(document.getElementById("h_p").value);
 	k = Number(document.getElementById("k_p").value);
-	t0 = Number(document.getElementById("T0_annexes").value);
-	h0 = Number(document.getElementById("H0_annexes").value);
+	t0 = Number(document.getElementById("T0").value);
+	h0 = Number(document.getElementById("H0").value);
 
 	//on recupere le bon nombre de jour par an.
 	nbrjours= nbJoursParAn()
@@ -401,9 +401,9 @@ function update_omegar0_calc_noir(){
 
 
 function update_omegak0_calc_noir(){
-	omegam0 = Number(document.getElementById("omegam0_annexes").value);
+	omegam0 = Number(document.getElementById("omegam0").value);
 	Or= Number(document.getElementById("Orr").innerHTML);
-	omegaDE0 =Number(document.getElementById("omegaDE0_annexes").value);
+	omegaDE0 =Number(document.getElementById("omegaDE0").value);
 
 	omegak0 = 1 - Or - omegam0 - omegaDE0;
 	// verfie si univers plat coché
@@ -411,27 +411,27 @@ function update_omegak0_calc_noir(){
 		omegak0=0;
 		la = 1 - Or - omegam0;
 		la = la.toExponential(4);
-		document.getElementById("omegaDE0_annexes").value = la;
+		document.getElementById("omegaDE0").value = la;
 	}
 	else{
 		omegaDE0 = omegaDE0.toExponential(4);
-		document.getElementById("omegaDE0_annexes").value = omegaDE0;
+		document.getElementById("omegaDE0").value = omegaDE0;
 	}
 	omegak0= omegak0.toExponential(4);
 	document.getElementById("resultat_omegak0_annexes").innerHTML = omegak0;
 	omegam0= omegam0.toExponential(4);
-	document.getElementById("omegam0_annexes").value = omegam0;
+	document.getElementById("omegam0").value = omegam0;
 }
 
 function Omegak0_plat_calc_noir(){
 	if(document.getElementById("univ_plat").checked){
 	Or= Number(document.getElementById("Orr").innerHTML);
-	omegam0 = Number(document.getElementById("omegam0_annexes").value);
+	omegam0 = Number(document.getElementById("omegam0").value);
 
 	omegaDE0= 1- Or -omegam0;
 	omegaDE0 = omegaDE0.toExponential(4);
 	document.getElementById("resultat_omegak0_annexes").innerHTML = 0;
-	document.getElementById("omegaDE0_annexes").value = omegaDE0;
+	document.getElementById("omegaDE0").value = omegaDE0;
 	}
 }
 
@@ -496,7 +496,7 @@ function updateTemperatureWeinberg(){
 		h = Number(document.getElementById("h_p").value);
 		k = Number(document.getElementById("k_p").value);
 		h0 = Number(document.getElementById("H0calc").value);
-		h0=calcul_H0parsec(h0); //fonction présente dans Monofluides/calcul_lambda_CDM.js
+		h0=H0_parSecondes(h0); //fonction présente dans Monofluides/calcul_lambda_CDM.js
 		num=puis(45*puis(c,5)*puis(h,3),1/4)*puis(h0,1/2);
 		denom=puis(64*puis(pi(),6)*G*puis(k,4),1/4);
 		calc=(num/denom).toExponential(4);
@@ -523,7 +523,7 @@ function updateValeursCanvas(){
 			document.getElementById("H0").value = h0;
 		}
 		else {
-			document.getElementById("T0_annexes").value=t0;
-			document.getElementById("H0_annexes").value=h0;
+			document.getElementById("T0").value=t0;
+			document.getElementById("H0").value=h0;
 		}
 	}

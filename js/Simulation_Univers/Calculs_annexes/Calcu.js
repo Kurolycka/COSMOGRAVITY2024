@@ -4,11 +4,11 @@
 const ORDRE_ARRONDI=4;
 const LUMIERE = 9460730472580800;  // une année lumière en mètres
 const LUMIERE_INV= 1/LUMIERE;
-// const AU = 149597870700; // unite astronomique en mètres
+AU = 149597870700; // unite astronomique en mètres
 var dz1
 var dz2
 var Hz1enannee
-var Hz2enannee
+var Hz2enannees
 
 function messagebox(titre,message){
     Swal.fire({
@@ -118,11 +118,11 @@ function calcu(path) {
 	G = Number(document.getElementById("G_p").value);
 	h = Number(document.getElementById("h_p").value);
 	k = Number(document.getElementById("k_p").value);
-	t0 = Number(document.getElementById("T0_annexes").value);
-	h0 = Number(document.getElementById("H0_annexes").value);  //  em km par seconde et par mégaparsec
+	t0 = Number(document.getElementById("T0").value);
+	h0 = Number(document.getElementById("H0").value);  //  em km par seconde et par mégaparsec
 	cosmo_const = Number(document.getElementById("lambda_cosmo_const").value);
-	omegam0 = Number(document.getElementById("omegam0_annexes").value);
-	omegalambda0 = Number(document.getElementById("omegalambda0_annexes").value);
+	omegam0 = Number(document.getElementById("omegam0").value);
+	omegalambda0 = Number(document.getElementById("omegalambda0").value);
 	omegalambda0 = omegalambda0.toExponential();
 	omegak0 = Number(document.getElementById("resultat_omegak0_annexes").innerHTML);
 	Ie = Number(document.getElementById("i_e").value);
@@ -177,10 +177,10 @@ function calcu(path) {
 	//on recupere les valeurs de z1 et z2
 	z1 = Number(document.getElementById("z1").value);
 	z2 = Number(document.getElementById("z2").value);
-    if (z1<=-1) {stop_spin();//C'est pour arrêter le GIF spin à côté du bouton calcule
-	return messagebox(texte.page_univers_calculs.message_z1_incorrect,"z1 >-1");}
+		if (z1<=-1) {stop_spin();//C'est pour arrêter le GIF spin à côté du bouton calcule
+		return messagebox(texte.page_univers_calculs.message_z1_incorrect,"z1 >-1");}
 	if (z2<=-1) {stop_spin();
-	return messagebox(texte.page_univers_calculs.message_z2_incorrect,"z2 >-1");}
+		return messagebox(texte.page_univers_calculs.message_z2_incorrect,"z2 >-1");}
 	avertissement();
 
 	// permet de contourner le problème du dm (tend vers la même valeur sur l'infini)
@@ -239,7 +239,6 @@ function calcu(path) {
 
 
 	// TEMPS
-	//
 	// Calcul du temps de réception
 	if (Number(z2) <= 1e12) {
 		tempsReception = simpson_simple_degre2(fonction_integrale, Number(z2), omegam0, Number(omegalambda0), Number(Or));
@@ -255,6 +254,8 @@ function calcu(path) {
 		}
 
 	}
+	console.log(calcul_ages(fonction_E,H0enannee,1e-15,1/(1+z2)));
+	console.log(tempsReception);
 	if (isNaN(tempsReception)) {
 		tempsReception = NaN;
 	}
@@ -528,8 +529,6 @@ function calcu(path) {
 			return messagebox(texte.page_univers_calculs.message_zmax_incorrect,"zmax >-1");}
 		
 	    if (path == 1 && modele==0) {
-			
-								
 		if (sessionStorage.getItem("LANGUE") == "fr") {frtitle="al";
 		}else{frtitle="ly";} 
 	
@@ -543,9 +542,6 @@ function calcu(path) {
 		
 		
 		if(d_checkbox.checked) {
-			
-
-			
 			document.getElementById("graph_container_log_d_z").style.display = "contents"; //display graph
 			plot_title = "Échelle log d<sub>m</sub>  d<sub>L</sub>  d<sub>a</sub>  d<sub>LT</sub>"
 			plot_type = 'log'
@@ -576,7 +572,6 @@ function calcu(path) {
 		text:'T<sub>0</sub>: '+t0.toExponential(3)+'   H<sub>0</sub>:'+h0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+omegam0.toExponential(3)+'   \Ω<sub>Λ0</sub>:  '+omegalambda0+'   \Ω<sub>r0</sub>: ' +Or+'  \Ω<sub>k0</sub>:   '+omegak0.toExponential(3),
 		showarrow: false}];
 		let val_graph = calculDeDs(abscissa_d);
-
 
 
 		if(d_checkbox.checked && axeAbscicceEnZPlus1){	//gère le cas du décalage des absicces pour que tout tienne sur le graph quand on utilise l'échelle log
@@ -808,7 +803,7 @@ function calcu(path) {
 		yanchor: 'bottom',
 		text: 'T<sub>0</sub>: '+t0.toExponential(3)+'   H<sub>0</sub>:'+h0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+omegam0.toExponential(3)+'   \Ω<sub>Λ0</sub>:  '+omegalambda0+'   \Ω<sub>r0</sub>: ' +Or+'  \Ω<sub>k0</sub>:   '+omegak0.toExponential(3),
 		showarrow: false}] ;
-		let val_graph = calcul_temps(abscissa_t);
+		let val_graph = new_calcul_temps(abscissa_t);
 
 		if(t_checkbox.checked && axeAbscicceEnZPlus1){	//gère le cas du décalage des absicces pour que tout tienne sur le graph quand on utilise l'échelle log
 			for(i=0;i<val_graph[0].length;i++){//Dans val_graph[0] se trouve les z, les abscicces pour le tracé des graphes, on le décale ici
@@ -884,17 +879,9 @@ function calcu(path) {
 			plot_type = 'scatter'
 
 			var abscissa_d = linear_scale(zmin, zmax, pas);
-
-
 		}
 
-
-		var val_abscissa = calcul_temps(abscissa_d);
-
-		if(!(d_checkbox.checked)){
-			abscissa_d = (obtenir_linearScale_pour_t(val_abscissa[0],val_abscissa[1],pas,omegam0,omegalambda0,Or,H0enannee))//A SUPPRIMER
-			val_abscissa = calcul_temps(abscissa_d)
-		}
+		var val_abscissa = new_calcul_temps(abscissa_d);
 
 		let val_graph = calculDeDs(abscissa_d);
 		let annots =  [{xref: 'paper',
@@ -959,7 +946,7 @@ function calcu(path) {
 
 				type : "scatter",
 
-				title: frtitle,
+				title: "ly",  //attnetion titre temporaire
 				titlefont:{family:"Time New Roman, sans-serif",size:16,color:"#111111"},
 				showline: true
 			},
@@ -993,12 +980,7 @@ function calcu(path) {
 		}
 	
 
-		var val_abscissa = calcul_temps(abscissa_omega);
-
-		if(!(omega_checkbox.checked)){
-			abscissa_omega = (obtenir_linearScale_pour_t(val_abscissa[0],val_abscissa[1],pas,omegam0,omegalambda0,Or,H0enannee))//A SUPPRIMER
-			val_abscissa = calcul_temps(abscissa_omega)
-		}
+		var val_abscissa = new_calcul_temps(abscissa_omega);
 
 		let val_graph = calcul_omegas(abscissa_omega);
 		let annots = [{xref: 'paper',
@@ -1084,92 +1066,103 @@ function calcu(path) {
 
 	}
 	else if(path == 6 && modele == 0){ //S modele=0 quand l'univers à un âge déf. (un bool serait préférable... ou au moins un nom de variable explicite :))
-		//Il faut vraiment réduire tout ça à une seule checkbox ... la redondance du code pour chaque cas de figure rend le tout illisible( ou bien usage fonction, je sais pas?)
-	
-			if (sessionStorage.getItem("LANGUE") == "fr") {frtemp="t(a)";
-		}else{frtemp="t(y)";} 
-	
-		t_checkbox = document.getElementById("t_checkbox");				
-		if(t_checkbox.checked) {
-			document.getElementById("graph_container_log_z").style.display = "contents"; //display graph
-			plot_title = "Échelle log z(t)"
-			plot_type = 'log'
+	//Il faut vraiment réduire tout ça à une seule checkbox ... la redondance du code pour chaque cas de figure rend le tout illisible( ou bien usage fonction, je sais pas?)
 
-			var abscissa_z = log_scale(zmin, zmax, pas);
+	if (sessionStorage.getItem("LANGUE") == "fr") {frtemp="t(a)";
+	}else{frtemp="t";} 
 
-		}
-		else{
-			document.getElementById("graph_container_z").style.display = "contents"; //display graph
-			plot_title = "z(t)"
-			plot_type = 'scatter'
+	t_checkbox = document.getElementById("t_checkbox");				
+	if(t_checkbox.checked) {
+		document.getElementById("graph_container_log_z").style.display = "contents"; //display graph
+		plot_title = "Échelle log z(t)"
+		plot_type = 'log'
 
-			var abscissa_z = linear_scale(zmin, zmax, pas);
-		} 
+		var abscissa_z = log_scale(zmin, zmax, pas);
 
-		let val_graph = calcul_temps(abscissa_z);
-		if(!(t_checkbox.checked)){
-			abscissa_z = obtenir_linearScale_pour_t(val_graph[0],val_graph[1],pas,omegam0,omegalambda0,Or,H0enannee)
-			val_graph = calcul_temps(abscissa_z)	
-		}
+	}
+	else{
+		document.getElementById("graph_container_z").style.display = "contents"; //display graph
+		plot_title = "z(t)"
+		plot_type = 'scatter'
 
-		let annots = [{xref: 'paper',
-		yref: 'paper',
-		x: 0.725,
-		xanchor: 'right',
-		y: 1,
-		yanchor: 'bottom',
-		text: 'T<sub>0</sub>: '+t0.toExponential(3)+'   H<sub>0</sub>:'+h0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+omegam0.toExponential(3)+'   \Ω<sub>Λ0</sub>:  '+omegalambda0+'   \Ω<sub>r0</sub>: ' +Or+'  \Ω<sub>k0</sub>:   '+omegak0.toExponential(3),
-		showarrow: false}] ;
+		var abscissa_z = linear_scale(zmin, zmax, pas);
+	} 
 
-		let data = [
-			{
-				x: val_graph[1],
-				y: val_graph[0],
+	let val_graph = new_calcul_temps(abscissa_z);
+	/*
+	if(!(t_checkbox.checked)){
+		abscissa_z = obtenir_linearScale_pour_t(val_graph[0],val_graph[1],pas,omegam0,omegalambda0,Or,H0enannee)
+		val_graph = new_calcul_temps(abscissa_z)	
+	}*/
 
-				type: 'scatter',
+	let amin=1/(1+zmax);
+	let amax=1/(1+zmin);
+	let res = calcul_facteur_echelle_LCDM(amin,amax,equa_diff_1_LCDM, equa_diff_2_LCDM, fonction_E)[0];
+	let ordonnee = res[1].map((x) => (1-x)/x);
+	ordonnee=ordonnee.reverse();
+	let abscisse = res[0].map((x) => x*1e9);
+	abscisse=abscisse.reverse() ;
 
-				line: {
-					simplify: false
-				},
-				name: 'z(t)'
-			}
-		];
-		let layout = {  width: 1325 , height:450 , 
 
-			title: "z(t)",
-			titlefont:{family:"Time New Roman, sans-serif",size:20,color:"#111111"},
-			xaxis: {
 
-				type : plot_type,
+	let annots = [{xref: 'paper',
+	yref: 'paper',
+	x: 0.725,
+	xanchor: 'right',
+	y: 1,
+	yanchor: 'bottom',
+	text: 'T<sub>0</sub>: '+t0.toExponential(3)+'   H<sub>0</sub>:'+h0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+omegam0.toExponential(3)+'   \Ω<sub>Λ0</sub>:  '+omegalambda0+'   \Ω<sub>r0</sub>: ' +Or+'  \Ω<sub>k0</sub>:   '+omegak0.toExponential(3),
+	showarrow: false}] ;
 
-				autorange: true,
-				title: frtemp,
-				titlefont:{family:"Time New Roman, sans-serif",size:16,color:"#111111"},
-				showline: true
-			},
+	let data = [
+		{
+			x: abscisse,
+			y: ordonnee,
 
-			yaxis: {
-				type : "scatter",
-				autorange: true,
-				title: 'z',titlefont:{family:"Time New Roman, sans-serif",size:16,color:"#111111"},
-				showline: true
-			},
+			type: 'scatter',
 
-			newshape: {
 			line: {
-					width: 6
-				},
+				simplify: false
 			},
-
-			annotations: annots,
-		};
-
-		if(t_checkbox.checked) {
-			graphique_creation("graphique_log_z", ['graphique_log_z', data, layout, {displaylogo: false}]);
+			name: 'z(t)'
 		}
-		else{
-			graphique_creation("graphique_z", ['graphique_z', data, layout, {displaylogo: false}]);
-		}
+	];
+	let layout = {  width: 1325 , height:450 , 
+
+		title: "z(t)",
+		titlefont:{family:"Time New Roman, sans-serif",size:20,color:"#111111"},
+		xaxis: {
+
+			type : plot_type,
+
+			autorange: true,
+			title: frtemp,
+			titlefont:{family:"Time New Roman, sans-serif",size:16,color:"#111111"},
+			showline: true
+		},
+
+		yaxis: {
+			type : "scatter",
+			autorange: true,
+			title: 'z',titlefont:{family:"Time New Roman, sans-serif",size:16,color:"#111111"},
+			showline: true
+		},
+
+		newshape: {
+		line: {
+				width: 6
+			},
+		},
+
+		annotations: annots,
+	};
+
+	if(t_checkbox.checked) {
+		graphique_creation("graphique_log_z", ['graphique_log_z', data, layout, {displaylogo: false}]);
+	}
+	else{
+		graphique_creation("graphique_z", ['graphique_z', data, layout, {displaylogo: false}]);
+	}
 
 
 
@@ -1177,6 +1170,8 @@ function calcu(path) {
 
 
 	}
+
+
 	time_affiche2 = document.getElementById("resul_tps2");
 	// Temps calcul
 	fin = new Date().getTime() - deb;
@@ -1288,7 +1283,7 @@ function linear_scale(zmin, zmax, nb_pts) {
 }
 
 
-
+//!partie tracer graphique
 function calculDeDs(abscissa) {
 	Eps = Number(0.001);  //0.00001
 //	var pas = (zmax - zmin)/dt;	
@@ -1302,32 +1297,14 @@ function calculDeDs(abscissa) {
 	var dmArr = [];
 	var dlt;
 	var dltArr = [];
-	var max_graph;
-	var min_graph;
-	var integ_1;
 
-
-		abscissa.forEach(i => {   
-		
+	abscissa.forEach(i => {   
 		// calcul de la distance mètrique 
-
-		if (omegak0>0){
-		integ_1 = Math.sqrt( Math.abs(omegak0)) * simpson(0, Number(i), fonction_dm, omegam0, Number(omegalambda0), Number(Or),Eps);  // sans unité
-		dm1=(c/(H0parsec*Math.sqrt( Math.abs(omegak0) ))) * Math.sin(integ_1);  // distance mètrique en mètres
-		}
-		else if (omegak0==0){
-		dm1=(c/(H0parsec) * simpson(0, Number(i), fonction_dm, omegam0, Number(omegalambda0), Number(Or),Eps));
-		}
-		else{
-		integ_1 = Math.sqrt( Math.abs(omegak0)) * simpson(0, Number(i), fonction_dm, omegam0, Number(omegalambda0), Number(Or),Eps);
-		dm1=(c/(H0parsec*Math.sqrt( Math.abs(omegak0) ))) * Math.sinh(integ_1) ;
-		}
-
+		dm1=DistanceMetrique(fonction_E,0,i,true);		
 
 		//  temps en secondes
-		temps = simpson_simple_degre2(fonction_integrale, Number(i), omegam0, Number(omegalambda0), Number(Or));
-		temps = temps * H0enannee / H0parsec;
-
+		temps = calcul_ages(fonction_E,H0parsec,.0000001,1/(1+i));
+		
 		dlt = temps * c;
 		dlt = dlt * LUMIERE_INV;
 
@@ -1349,7 +1326,6 @@ function calculDeDs(abscissa) {
 
 		zArr.push(i); 
 	});
-
 	return [dlArr,daArr,dmArr,zArr,dltArr];
 }
 
@@ -1387,12 +1363,11 @@ function calcul_omegas(abscissa){
 }
 
 
-
 function calcul_temps(abscissa){
 	zArr = [];
 	tempsArr=[];
 	temps_0=0;
-	h0 = Number(document.getElementById("H0_annexes").value); 
+	h0 = Number(document.getElementById("H0").value); 
 	if(h0<0) {temps_0=simpson_simple_degre2(fonction_integrale, 0, omegam0, Number(omegalambda0), Number(Or)); temps_0=-temps_0;}
 	
 	abscissa.forEach(i => {
@@ -1419,6 +1394,16 @@ function calcul_temps(abscissa){
 	return [zArr,tempsArr];
 }
 
+//Remy 28/05/2024
+function new_calcul_temps(abscissa){
+	zArr=[];
+	tempsArr=[];
+	abscissa.forEach(i => {
+		tempsArr.push(calcul_ages(fonction_E,H0enannee,0.000000001,1/(1+i)));
+		zArr.push(i)
+	});
+	return [zArr,tempsArr];
+};
 
 function obtenir_linearScale_pour_t(zArr,tArr,pas,omegam0,omegalambda0,Or,H0enannee){// Fonction utilisant la dérivé première et seconde de t(z) (Soit fonction intégrable et sa première dérivé) : fait pour ne marcher qu'ici
 	tArr.sort(function(a, b){return a-b}); // Linéairement décroissante? ( t(z))
@@ -1468,7 +1453,6 @@ function obtenir_linearScale_pour_t(zArr,tArr,pas,omegam0,omegalambda0,Or,H0enan
 	//Ci-dessous, on emploieune bisection
 
 	for(k = 0; k < localisationDes_tArrLinear_surSegmentReduit.length;k++){
-		//console.log("\n")
 		if(localisationDes_tArrLinear_surSegmentReduit[k] != undefined){ //vérifie juste qu'il y a bien des t à trouver sur le segment de z considéré
 			
 			
@@ -1562,4 +1546,22 @@ function onlyOne(checkbox) {
 		window.document.getElementById("theta").value = "";
 		window.document.getElementById("diametrekpc").value = "";
 	})
+}
+
+
+//Remy 27/05/2024
+function calcul_horizons_annexe(){
+	let t_pour_horizon= Number(document.getElementById("t_pour_calcul_horizon").value);
+	if (t_pour_horizon<=0){
+		document.getElementById("resultat_dm_particule_t").innerHTML=NaN;
+		document.getElementById("resultat_dm_evenement_t").innerHTML=NaN;
+	}else{
+		z_pour_horizon=calcul_t_inverse(t_pour_horizon,fonction_E);
+		console.log(z_pour_horizon);
+		let dm_horizon_particule_m=calcul_horizon_particule(fonction_E,z_pour_horizon);
+		let dm_horizon_particule_Ga=m_vers_AL(dm_horizon_particule_m)/1e9;
+		let dm_horizon_evenement_m=calcul_horizon_evenements(fonction_E,z_pour_horizon);
+		let dm_horizon_evenement_Ga=m_vers_AL(dm_horizon_evenement_m)/1e9;
+		document.getElementById("resultat_dm_particule_t").innerHTML=dm_horizon_particule_Ga.toExponential(4);
+		document.getElementById("resultat_dm_evenement_t").innerHTML=dm_horizon_evenement_Ga.toExponential(4);}
 }

@@ -29,10 +29,8 @@
 	<script src="./js/Simulation_Univers/integrale.js"></script>
 	<script src="./js/Simulation_Univers/Noir/rungekutta_noire.js"></script>
 	<script src="./js/Simulation_Univers/Update_Constants.js"></script>
-	<!-- début du remplacement par les nouveau dichier de 2024 -->
-	<script src="./js/functions/equation.js"></script>
+	<!-- début du remplacement par les nouveau fichier de 2024 -->
 	<script src="./js/functions/fonction_utilitaire.js"></script>	
-	<script src="./js/Simulation_Univers/MéthodesNumériques.js"></script>
 	<script src="./js/Simulation_Univers/MéthodesNumériques.js"></script>
 
 
@@ -270,14 +268,14 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
 			<span id="resultat_dureeuniv">res</span>
 			<!-- partie horizon cosmologiques -->
 			<div id="div_horizon_cosmologique">
-				<span id="DmHorizonEvenement_label">d<sub>p0</sub>=</span>
+				<span id="DmHorizonEvenement_label">d<sub>e0</sub>=</span>
 				<span id="resultat_DmHorizonEvenement"></span> GAL
-				<span id="ZHorizonEvenement_label">z<sub>p0</sub>=</span>
+				<span id="ZHorizonEvenement_label">z<sub>e0</sub>=</span>
 				<span id="resultat_ZHorizonEvenement"></span>
 				<br>
-				<span id="DmHorizonParticule_label">d<sub>e0</sub>=</span>
+				<span id="DmHorizonParticule_label">d<sub>p0</sub>=</span>
 				<span id="resultat_DmHorizonParticule"></span> GAL
-				<span id="ZHorizonParticule_label">z<sub>e0</sub>=</span>
+				<span id="ZHorizonParticule_label">z<sub>p0</sub>=</span>
 				<span id="resultat_ZHorizonParticule"></span>
 			</div>
 
@@ -324,7 +322,7 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
 
 	<!-- GRAPHIQUE-->
 	<div style="margin-top: 100px;">
-		<div id="graphique_sombre">
+		<div id="graphique_sombre" style="width: 800px; height: 800px">
 		</div>
 	</div>
 	<div style="display:none;" id="graphique_enr"></div>
@@ -374,7 +372,7 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
 
 
 			//genere le premier graphique des generatrices et lance le 1er calcul
-			Lancer_calc();
+			//Lancer_calc();
 		</script>
 		<br/>
 
@@ -400,6 +398,8 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
 		<script src="./js/Simulation_Univers/MéthodesNumériques.js"></script>
 		<script src="js/Simulation_Univers/calcul_facteur_echelle_DE.js"></script>
 		<script src="js/Simulation_Univers/Fonctions_utiles.js"></script>
+
+		<script defer>affichage_site_DE()</script>
 </body>
 
 </html>
