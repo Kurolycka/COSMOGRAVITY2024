@@ -424,7 +424,7 @@ function trajectoire() {
 
 						L = L + L*Delta_L_sur_L; //Calcul du nouveau L associé à ce mobile.
 						E = E + E*Delta_E_sur_E //Calcul du nouveau E associé à ce mobile. 
-						deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E)*Math.pow(c,2); //Calcul de l'énergie ΔE/E consommée au total.
+						deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E); //Calcul de l'énergie ΔE/E consommée au total.
 						temps_total_reacteur = Math.abs(joy.GetPhi()*temps_allumage_reacteur); //Calcul du temps total durant lequel les réacteurs sont allumés.
 						puissance_consommee_calcul = (deltam_sur_m/temps_total_reacteur)*Math.pow(c,2); //Calcul de la puissance consommée au total en W/kg. 
 

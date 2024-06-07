@@ -330,7 +330,8 @@
 	"temps_allumage_infobulle":"Engine ignition time when V\u1D69+ or V\u1D69- is clicked.",
 	"puissance_reacteur_label":"P (W/kg) =",
 	"puissance_reacteur_infobulle":"Reactor power per unit mass.",
-	"puissance_consommee_label":"P<sub>consumed</sub> (W/kg)"
+	"puissance_consommee_label":"P<sub>consumed</sub> (W/kg)",
+	"puissance_consommee_infobulle":"Total power consumed by reactors in W/kg."
 },
 
 "page_trajectoire_massive":{
