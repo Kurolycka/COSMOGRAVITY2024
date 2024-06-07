@@ -313,7 +313,7 @@ function genereHtml(){
 					<th id="vitesseuphi`+countt.toString()+`" title="" class="tg-aicv"  >V<SUB>&phi;</SUB>(m.s<sup>-1</sup>)</th>
 					<th id="temps_obs`+countt.toString()+`" class="tg-aicv"></th>
 					<th id="v_total`+countt.toString()+`" title="" class="tg-aicv">  V<SUB>physique</SUB> (m.s<sup>-1</sup>)</th>
-					<th id="distance_metrique`+countt.toString()+`" title="" class="tg-aicv"></th>`; //ManonGeneralisation
+					<th id="distance_metrique`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>`; //ManonGeneralisation
 
 		var newRow2=document.getElementById('tableauresultatsimu').insertRow();
 
@@ -325,7 +325,7 @@ function genereHtml(){
 					<td class="tg-3ozo" id="vp_sc_mas`+countt.toString()+`">res</td>
 					<td class="tg-3ozo" id="to`+countt.toString()+`">res</td>
 					<td class="tg-3ozo" id="v_tot`+countt.toString()+`">res</td>
-					<td class="tg-3ozo" id="distance_parcourue`+countt.toString()+`">res</td>`; //ManonGeneralisation
+					<td class="tg-3ozo" id="distance_parcourue`+countt.toString()+`" style="display: none;">res</td>`; //ManonGeneralisation
 
 	}
 
@@ -625,6 +625,26 @@ function trajectoire(compteur,mobile) {
 
 		element2=document.getElementById('traject_type2'); //Récupère la valeur de si on est en mode observateur ou en mode photon.
 
+		var distance_metrique_cell = document.querySelectorAll('[id^="distance_metrique"]'); //Permet d'identifier toutes les cellules de label de la distance métrique.
+		var distance_metrique_res_cell = document.querySelectorAll('[id^="distance_parcourue"]'); //Permet d'identifier toutes les cellules de la distance métrique.
+
+		if (element2.value == "mobile") { //Si en mode photon, permet de révéler les cases de la distance métrique.
+			distance_metrique_cell.forEach(function(cell) { 
+				cell.style.display = ''; 
+			});
+			distance_metrique_res_cell.forEach(function(cell) {
+				cell.style.display = ''; 
+			});
+		} else {
+			distance_metrique_cell.forEach(function(cell) {
+				cell.style.display = 'none';
+			});
+			distance_metrique_res_cell.forEach(function(cell) {
+				cell.style.display = 'none'; 
+			});
+		}
+		
+
     	document.getElementById('trace_present').value="true"; //Permet de déclarer qu'il y a un tracé. 
 
     	mobile.pause = false; //Permet de dire que nous ne sommes pas en pause.
@@ -679,8 +699,6 @@ function trajectoire(compteur,mobile) {
 			A_init_obs = mobile.vr*(1-rs/mobile.r0)/mobile.E; //Je multiplie par dτ/dt pour passer le dr/dτ en observateur dans la métrique extérieure.
 			A_part_obs=A_init_obs; 
         	mobile["A_part_obs"]=A_part_obs; 
-			vrobs=A_init_obs; 
-			vphiobs=mobile.vphi*(1-rs/mobile.r0)/mobile.E; //J'utilise le même principe que pour A_init_obs et je multiplie par dτ/dt.
 		}
 		else{ //Quand on débute à l'intérieur de l'astre
 			r_init_obs = mobile.r0; 
@@ -688,9 +706,7 @@ function trajectoire(compteur,mobile) {
         	mobile["r_part_obs"]=r_part_obs; 
 			A_init_obs = mobile.vr*Math.pow(beta(mobile.r0),2)/mobile.E; //Je multiplie par dτ/dt pour passer le dr/dτ en observateur dans la métrique intérieure.
 			A_part_obs=A_init_obs; 
-        	mobile["A_part_obs"]=A_part_obs; 
-			vrobs=A_init_obs; 
-			vphiobs= mobile.vphi*Math.pow(beta(mobile.r0),2)/mobile.E;	//J'utilise le même principe que pour A_init_obs et je multiplie par dτ/dt.						
+        	mobile["A_part_obs"]=A_part_obs; 					
 		}
 
 		distance_parcourue_totale=0; //J'initialise la distance parcourue totale par le mobile dans son propre référentiel. 
@@ -703,7 +719,7 @@ function trajectoire(compteur,mobile) {
 
     	clavierEvenement(true);	//Permet une fois démarrée de gérer la simulation avec les touches du clavier.
 	
-		dtau=rmax/c*1e-2; //Je fixe le pas de temps à une fraction de la distance radiale maximale.
+		dtau=rmax/c*1e-3; //Je fixe le pas de temps à une fraction de la distance radiale maximale.
 		mobile["dtau"]=dtau;
 
 		//--------------------------------Positions de départ du mobile--------------------------------
@@ -934,6 +950,8 @@ function trajectoire(compteur,mobile) {
 	document.getElementById('pause/resume').style.display ="inline-block"; //Une fois la simulation démarrée le bouton pause/resume apparaît. 
 
 }  
+
+
 
 //----------------------------------------------------{animate}----------------------------------------------------
 

@@ -784,6 +784,7 @@ function texteTrajectoirePhotonNonBar(nbrderockets) {
 
 function texteTrajectoireMassiveKerr() {
   var texte = o_recupereJson();
+  document.getElementById("clear").title = texte.pages_trajectoire.bouton_stop_bulleInfo;
   document.getElementById("txt_titre").innerHTML = texte.page_trajectoire_massive_kerr.titre;
   document.getElementById("moinsvi").title = texte.pages_trajectoire.bouton_moins;
   document.getElementById("plusvi").title = texte.pages_trajectoire.bouton_plus;
@@ -815,6 +816,7 @@ function texteTrajectoireMassiveKerr() {
 
   document.getElementById("circulaire_prograde_bar").title=texte.pages_trajectoire.vitesse_orbite_circulaire_kerr_prograde;
   document.getElementById("circulaire_retrograde_bar").title=texte.pages_trajectoire.vitesse_orbite_circulaire_kerr_retrograde;
+  document.getElementById("puissance_consommee_label").innerHTML = texte.pages_trajectoire.puissance_consommee_label; //ManonV3
 
 }
 
@@ -840,10 +842,13 @@ function texteTrajectoireMassiveKerrGrand() {  // ne sert pas
   document.getElementById("temps_obs").innerHTML = texte.pages_trajectoire.temps_obs;
   document.getElementById("boutton_recup").innerHTML = texte.pages_trajectoire.boutton_recup;
   document.getElementById("decal_spect").innerHTML = texte.pages_trajectoire.decal_spect;
+  document.getElementById("puissance_consommee_label").innerHTML = texte.pages_trajectoire.puissance_consommee_label; //ManonV3
 
 }
+
 function texteTrajectoirePhotonKerr() {
   var texte = o_recupereJson();
+  document.getElementById("clear").title = texte.pages_trajectoire.bouton_stop_bulleInfo;
   document.getElementById("txt_titre").innerHTML = texte.page_trajectoire_photon_kerr.titre;
   document.getElementById("moinsvi").title = texte.pages_trajectoire.bouton_moins;
   document.getElementById("plusvi").title = texte.pages_trajectoire.bouton_plus;

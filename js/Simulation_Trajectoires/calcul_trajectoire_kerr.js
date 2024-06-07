@@ -20,6 +20,7 @@ var z_obs=0;
 var input=0;
 var compteurVitesseAvantLancement = 0;
 var distance_parcourue_totale=0; //Manon
+var ns_avant_lancement=0;
 
 
 
@@ -83,6 +84,9 @@ function initialisation(){
 	teta = Number(document.getElementById("teta").value);
 	phi0=Number(document.getElementById("phi0").value);
 	phi0=phi0*Math.PI/180;
+
+	nombre_de_g_calcul=0; //ManonV5
+	vitesse_precedente_nombre_g=0; //ManonV5
 
 
 	if(v0>c){
@@ -254,455 +258,364 @@ function trajectoire() {
 
 		estUnMobile(); //Affichage de l'information sur les touches claviers en fonction de la taille de l'écran.
 
-		// permet de griser les cases de saisie pour éviter de changer les valeurs pendant la simulation
-		// conseillé car toutes les exceptions ne sont pas gérées
+		//Interdiction de changer les valeurs de M, r0, J, teta, phi0 une fois la simulation lancée : 
 		document.getElementById('M').disabled = true;
 		document.getElementById('r0').disabled = true;
 		document.getElementById('J').disabled = true;
 		document.getElementById('teta').disabled = true;
 		document.getElementById('phi0').disabled = true;
 
-		//joystick
+		element2=document.getElementById('traject_type2'); //Récupère la valeur de si on est en mode observateur ou en mode spationaute.
 
-		element2=document.getElementById('traject_type2');
-		if(element2.value == "mobile") { 	
+		if(element2.value == "mobile") { //Dans le cas spationaute. 
+			//Permet de faire apparaître les options de pilotages et les cases reliées concernant le nombre de g ressenti ainsi que la distance parcourue :
 			document.getElementById("joyDiv").style.visibility='visible';
-			document.getElementById("nb_g").style.visibility='visible'; //Manon
-			document.getElementById("g_ressenti").style.visibility='visible'; //Manon
-			document.getElementById("dernier_g").style.visibility='visible'; //ManonV2
-			document.getElementById("dernier_g_res").style.visibility='visible'; //ManonV2
-		}else{
-			document.getElementById("g_ressenti").style.display='none'; //Manon
-			document.getElementById("nb_g").style.display='none'; //Manon
-			document.getElementById("dernier_g").style.display='none'; //ManonV2
-			document.getElementById("dernier_g_res").style.display='none'; //ManonV2
-
+			document.getElementById("nb_g").style.visibility='visible'; 
+			document.getElementById("g_ressenti").style.visibility='visible'; 
+			document.getElementById("dernier_g").style.visibility='visible'; 
+			document.getElementById("dernier_g_res").style.visibility='visible'; 
+			document.getElementById("puissance_consommee").style.display='';
+			document.getElementById("puissance_consommee_label").style.display='';
+			document.getElementById("distance_metrique").style.display='';
+			document.getElementById("distance_parcourue").style.display='';
+		}else{ //Dans le cas observateur distant.
+			//Permet de faire disparaître les cases concernant le nombre de g ressenti et la distance parcourue :
+			document.getElementById("g_ressenti").style.display='none'; 
+			document.getElementById("nb_g").style.display='none'; 
+			document.getElementById("dernier_g").style.display='none'; 
+			document.getElementById("dernier_g_res").style.display='none'; 
+			document.getElementById("puissance_consommee").style.display='none';
+			document.getElementById("puissance_consommee_label").style.display='none';
+			document.getElementById("distance_metrique").style.display='none';
+			document.getElementById("distance_parcourue").style.display='none';
 		}
 
-		//empecher de passer d'observateur a mobile ou inversement pendant la simulation
-		document.getElementById('r3').disabled = true;
-		document.getElementById('r4').disabled = true;
+		//Interdiction de changer les valeurs des modes observateur et spationaute une fois la simulation lancée : 
+		document.getElementById('r3').disabled = true; //Observateur
+		document.getElementById('r4').disabled = true; //Spationaute.
 
-		// permet de controler si il y a un tracé ou non pour l'enregistrement
-		document.getElementById('trace_present').value="1";
-		pause = false;
-		debut = false;
-		scale_factor = 280;				   
-		//-------- Nos variables Globales ( de c à L) --------//
+		document.getElementById('trace_present').value="true"; //Permet de déclarer qu'il y a un tracé. 
+
+		pause = false; //Permet de dire que nous ne sommes pas en pause.
+		debut = false; //Permet de dire que nous ne sommes plus au début de la simulation.
+
+		scale_factor = 280;	//Fixe un facteur d'échelle initiale/par défaut.
 		
-		initialisation();
+		initialisation(); //Permet d'initialiser la simulation en calculant différentes valeurs liées aux paramètres initiaux.
+		//Prépare aussi les boutons d'avant lancement.
 
-		//--------------------------------------------------------------------------------------//
-		//Cette Partie traite le calcul de la trajectoire de la particule, dans son référentiel propre, et aussi dans celui de l'observateur//
+		//--------------------------------Calcul de la trajectoire en elle-même--------------------------------
 
-		phi = phi0;
-		phi_obs = phi0;
+		//Je stocke dans les différentes variables de la trajectoire les valeurs initiales pour le début de la simulation :
+
+		phi = phi0; //Angle de la position du mobile dans son référentiel.
+		phi_obs = phi0; //Angle de la position du mobile dans le référentiel de l'observateur distant.
+		A_init = vr; //dr/dτ initiale du mobile dans son référentiel.
+		r_init = r0; //Position radiale initiale du mobile dans son référentiel. 
+		A_part = A_init; //dr/dτ du mobile dans son référentiel.
+		r_part = r_init; //Position radiale du mobile dans son référentiel. 	 
+		A_init_obs = vr*delta(r0)/( (Math.pow(r0,2)+Math.pow(a,2)+rs*Math.pow(a,2)/r0)*E - rs*a*L/r0 ); //dr/dt initiale du mobile dans le référentiel de l'observateur distant.
+		A_part_obs=A_init_obs; //dr/dt du mobile dans le référentiel de l'observateur distant. 												   
+		r_init_obs = r0; //Position radiale initiale du mobile dans le référentiel de l'observateur distant. 
+		r_part_obs=r_init_obs; //Position radiale du mobile dans le référentiel de l'observateur distant. 	
+
+		temps_particule = 0; //Temps du mobile dans son référentiel propre.
+		temps_observateur = 0; //Temps de l'observateur distant. 
+
+		temps_chute_libre = (Math.PI * r0 * Math.sqrt(r0 / (2 * G * M)) / 2); //Calcul du temps de chute libre.
+		dtau= temps_chute_libre*1e-3; //Je fixe le pas de temps à une fraction du temps de chute libre.
+
+		deltam_sur_m = 0; //ΔE/E consommé pendant le pilotage.
 		temps_chute_libre = (Math.PI * r0 * Math.sqrt(r0 / (2 * G * M)) / 2);
-		A_init = vr;
-		r_init = r0;
-		A_part = A_init;
-		r_part = r_init;			 
-		A_init_obs = vr*delta(r0)/( (Math.pow(r0,2)+Math.pow(a,2)+rs*Math.pow(a,2)/r0)*E - rs*a*L/r0 );
-		A_part_obs=A_init_obs;												
-		vrobs=A_init_obs; 
-		vphiobs=vphi*delta(r0)/( (Math.pow(r0,2)+Math.pow(a,2)+rs*Math.pow(a,2)/r0)*E - rs*a*L/r0 );		   
-		r_init_obs = r0; 
-		r_part_obs=r_init_obs;												
-		//data1 = [];
-		//data2 = [];
-		temps_particule = 0;
-		temps_observateur = 0;
-		bool = true;
-		deltam_sur_m = 0;
 	
+		clavierEvenement(false); //Permet une fois démarrée de gérer la simulation avec les touches du clavier.
 
-		// permet de gérer les touches du clavier pour certaines actions
-		clavierEvenement(false);
+		//--------------------------------Positions de départ du mobile--------------------------------
 
-		scale_factor = 280;  
-		//dtau=r0*1e7/(Math.sqrt(vrobs*vrobs+vphiobs*vphiobs)+1e-20);
-		//if(dtau>temps_chute_libre/500.){dtau= temps_chute_libre;} 	
-		dtau= temps_chute_libre*1e-3;		
+		x1part = scale_factor * r0 * Math.cos(phi) / rmax; //x dans le référentiel du mobile.
+		y1part = scale_factor * r0 * Math.sin(phi) / rmax; //y dans le référentiel du mobile.
+		x1obs = scale_factor * r0 * Math.cos(phi_obs) / rmax; //x dans le référentiel de l'observateur distant.
+		y1obs = scale_factor * r0 * Math.sin(phi_obs) / rmax; //y dans le référentiel de l'observateur distant. 
 
-		// Ici, les positions de départ de la particule, dans son référentiel et dans celui de l'observateur//
-		x1part = scale_factor * r0 * Math.cos(phi) / rmax;
-		y1part = scale_factor * r0 * Math.sin(phi) / rmax;
-		x1obs = scale_factor * r0 * Math.cos(phi_obs) / rmax;
-		y1obs = scale_factor * r0 * Math.sin(phi_obs) / rmax;
+		//--------------------------------Gestion du canvas--------------------------------
 
 		canvas = document.getElementById("myCanvas");
-		if (!canvas) {
+		if (!canvas) { //Si je n'ai pas de canvas récupérable pour la simulation alors message d'alerte et simulation impossible. 
 			alert(texte.pages_trajectoire.impossible_canvas);
 			return;
 		}
 
 		context = canvas.getContext("2d");
-		if (!context) {
+		if (!context) { //Si je n'ai pas de context de récupérable (interface permettant de dessiner sur le canvas) alors message d'alerte et simulation impossible. 
 			alert(texte.pages_trajectoire.impossible_context);
 			return;
 		}
 
 		canvas22 = document.getElementById("myCanvas22");
-		if (!canvas22) {
+		if (!canvas22) { //Si je n'ai pas le canvas22 de récupérable pour la simulation alors message d'alerte et simulation impossible. 
 			alert(texte.pages_trajectoire.impossible_canvas);
 			return;
 		}
 
 		context22 = canvas22.getContext("2d");
-		if (!context22) {
+		if (!context22) { //Si je n'ai pas le context du canvas22 de récupérable pour la simulation alors message d'alerte et simulation impossible. 
 			alert(texte.pages_trajectoire.impossible_context);
 			return;
 		}
 
-		majFondFixe();
-		majFondFixe22();
+		majFondFixe(); //J'efface le canvas et je le remplace par un fond blanc avec le texte visible sur la gauche avec les paramètres d'entrée.
+		majFondFixe22(); //J'efface tout ce qui est lié à la trajectoire d'un mobile spécifique. 
 
-		diametre_particule = DIAMETRE_PART;
+		diametre_particule = DIAMETRE_PART; //Je fixe le diamètre de la particule. 
 
-		// La position de départ est le milieu de la fenêtre d'affichage auquel on ajoute la position initiale de la particule.
-
-		posX1 = (canvas.width / 2.0) + x1part;
-		posY1 = (canvas.height / 2.0) + y1part;
-
-		posX2 = (canvas.width / 2.0) + x1obs;
-		posY2 = (canvas.height / 2.0) + y1obs;
-
+		//Position du centre du canvas :
 		posX3 = (canvas.width / 2.0);
-		posY3 = (canvas.height / 2.0);
+    	posY3 = (canvas.height / 2.0);
 
-		// Ici on va créer l'animation avec setinerval, laquelle prend comme paramètres la fonction animate() définie ci-après et qui calcul les coordonnées de la particule à cahque instant.
+		//Je définis la position du mobile sur le canvas, vis à vis de son centre, dans le référentiel du mobile :
+		posX1 = posX3 + x1part;
+		posY1 = posY3 + y1part;
 
-		// les dtau1 et 2 permettent de contenir le dtau pour obtenir une simulation hors controle
-		// à voir, l'utilisation du settimeout à la place de setinterval. Ca permettrait de remplacer le 10/6 par une variable dt_simu pouvant être modifiée à la place du pas dtau utilisé dans rungekutta
-		// lorsqu'on est dans le setinterval, il est impossible ce modifier ce 10/6 par une variable qu'on pourrait incrémenter. Il utilise la valeur initiale avant l'entrée dans setinterval
-		myInterval = setInterval(animate, 10 / 6);
-		Dtau1 = 1e8*temps_chute_libre ;
-		Dtau2 = temps_chute_libre / 1e8;
+		//Je définis la position du mobile sur le canvas, vis à vis de son centre, dans le référentiel de l'observateur distant :
+		posX2 = posX3 + x1obs;
+		posY2 = posY3 + y1obs;
 
+		myInterval = setInterval(animate, 10 / 6); //La fonction animate est exécutée toutes les 10/6 ms pour créer la simulation;
+
+		//Associe au bouton pause la fonction pausee permettant de mettre la simulation en pause : 
 		document.getElementById('bouton_pause').addEventListener('click', function() {
 			pausee();
 		}, false);
-	
-	
-			
-	
-					if(element2.value == "mobile") { // spationaute
-	setInterval(function(){
-		
-		if (Number(deltam_sur_m) <= 0.03) {
-			document.getElementById('DivClignotantePilot').innerHTML = " <img src='./Images/diodever.gif' height='14px' />";
-			document.getElementById('DivClignotantePilot').style.color = "green";
-		} 
-		else if (0.3 < Number(deltam_sur_m) && Number(deltam_sur_m) < 0.05) {
-			document.getElementById('DivClignotantePilot').innerHTML = " <img src='./Images/diodejaune.gif' height='14px' />";
-			document.getElementById('DivClignotantePilot').style.color = "yellow";
-		} 
-		else if (Number(deltam_sur_m) >= 0.05) {
-			document.getElementById('DivClignotantePilot').innerHTML = " <img src='./Images/dioderouge.gif' height='14px' />";
-			document.getElementById('DivClignotantePilot').style.color = "red";
-		} 
-		
-		var temps_allumage_reacteur = Number(document.getElementById("temps_allumage").value); //ManonV3
-		temps_allumage_reacteur = temps_allumage_reacteur*Math.pow(10,-3); //Remettre en secondes
-		var puissance_reacteur = Number(document.getElementById("puissance_reacteur").value); //ManonV3
-		
-		if(joy.GetPhi()<0){
 
-			if (isNaN(vtot)){ //Manon
-				joy.GetPhi()=0; //Manon
-			}else{ //Manon
+		//--------------------------------Gestion du pilotage--------------------------------
 
-			vitesse_précédente_nombre_g = vtot; //Manon
-
-			Delta_E_sur_E = joy.GetPhi()*(puissance_reacteur*temps_allumage_reacteur)/Math.pow(c,2); //ManonV3
-			Delta_L_sur_L = Delta_E_sur_E; //ManonV3
-
-			L = L + L*Delta_L_sur_L; //ManonV3
-			E = E + E*Delta_E_sur_E //ManonV3
-			deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E)*Math.pow(c,2); //ManonV3
-
-			/*Delta_L=joy.GetPhi()*Math.log10(10+Math.abs(L))*Math.log10(10+Math.abs(vtot))*Math.log10(10+r_part)/Math.log10(Math.sqrt(1-(vtot/c)^2))*1e-3;
-			L=L+Delta_L ;
-			Delta_E=(1-rs/r_part)*L*Delta_L/E/Math.pow(r_part,2);
-			E=E+Delta_E; 
-			deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/E);*/
-				
-			
-			document.getElementById("E").innerHTML = E.toExponential(3);
-			document.getElementById("L").innerHTML = L.toExponential(3);
-			document.getElementById("decal").innerHTML = deltam_sur_m.toExponential(3);}
-
-		}else if(joy.GetPhi()>0){
-
-			if (isNaN(vtot)){ //Manon
-				joy.GetPhi()=0; //Manon
-			}else{ //Manon
+		var temps_allumage_reacteur = Number(document.getElementById("temps_allumage").value); //Récupération du temps d'allumage des réacteurs à chaque click. 
+		temps_allumage_reacteur = temps_allumage_reacteur*Math.pow(10,-3); //Conversion des ms du temps d'allumage des réacteurs en s.
+		var puissance_reacteur = Number(document.getElementById("puissance_reacteur").value); //Récupération de la puissance des réacteurs en W/kg.
+		var temps_total_reacteur=0; //Initialisation du temps total d'allumage des réacteurs au cours du pilotage. 
 
 
-			vitesse_précédente_nombre_g = vtot //Manon
+		if (element2.value=="mobile"){//Dans le cas spationaute
+			setInterval(function(){ //J'effectue les actions suivantes toutes les 50 ms. 
 
-			Delta_E_sur_E = joy.GetPhi()*(puissance_reacteur*temps_allumage_reacteur)/Math.pow(c,2); //ManonV3
-			Delta_L_sur_L = Delta_E_sur_E; //ManonV3
+				if (Number(deltam_sur_m) <= 0.03) { //Si je consomme moins de ΔE/E=0.03 la led près du décalage spectrale est verte.
+					document.getElementById('DivClignotantePilot').innerHTML = " <img src='./Images/diodever.gif' height='14px' />";
+					document.getElementById('DivClignotantePilot').style.color = "green";
+				}
+				else if (0.3 < Number(deltam_sur_m) && Number(deltam_sur_m) < 0.05) { //Si je consomme entre ΔE/E=0.03 et ΔE/E=0.05 la led près du décalage spectrale est orange.
+					document.getElementById('DivClignotantePilot').innerHTML = " <img src='./Images/diodejaune.gif' height='14px' />";
+					document.getElementById('DivClignotantePilot').style.color = "yellow";
+				} 
+				else if (Number(deltam_sur_m) >= 0.05) { //Si je consomme plus de ΔE/E=0.05 la led près du décalage spectrale est rouge. 
+					document.getElementById('DivClignotantePilot').innerHTML = " <img src='./Images/dioderouge.gif' height='14px' />";
+					document.getElementById('DivClignotantePilot').style.color = "red";
+				}
 
-			mobile.L = mobile.L + mobile.L*Delta_L_sur_L; //ManonV3
-			mobile.E_tot = mobile.E + mobile.E*Delta_E_sur_E //ManonV3
-			deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E)*Math.pow(c,2); //ManonV3
+				if (joy.GetPhi()!=0){ //Contrôle du pilotage
 
-			/*Delta_L=joy.GetPhi()*Math.log10(10+Math.abs(L))*Math.log10(10+Math.abs(vtot))*Math.log10(10+r_part)/Math.log10(Math.sqrt(1-(vtot/c)^2))*1e-3;
-			L=L+Delta_L ;
-			Delta_E=(1-rs/r_part)*L*Delta_L/E/Math.pow(r_part,2) ;
-			E=E+Delta_E; 
-			deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/E);*/
-														
-	
-			document.getElementById("E").innerHTML = E.toExponential(3);
-			document.getElementById("L").innerHTML = L.toExponential(3);
-			document.getElementById("decal").innerHTML = deltam_sur_m.toExponential(3);
-			
-		}
-														
-		}}, 50)	
+					if (isNaN(vtot)){ //Dans le cas où je n'ai pas de vitesse une fois rs dépassée je ne dois pas pouvoir piloter.
+						joy.GetPhi()=0; 
+					}else{ //Autrement il est possible de piloter.
 
+						vitesse_precedente_nombre_g = vtot; //Stockage de la vitesse précédent l'accélération pour le calcul du nombre de g ressenti. 
+
+						Delta_E_sur_E = joy.GetPhi()*(puissance_reacteur*temps_allumage_reacteur)/Math.pow(c,2); //Calcul du ΔE/E en fonction de la puissance et du temps d'allumage des réacteurs.
+						Delta_L_sur_L = Delta_E_sur_E; 
+
+						L = L + L*Delta_L_sur_L; //Calcul du nouveau L associé à ce mobile.
+						E = E + E*Delta_E_sur_E //Calcul du nouveau E associé à ce mobile. 
+						deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E)*Math.pow(c,2); //Calcul de l'énergie ΔE/E consommée au total.
+						temps_total_reacteur = Math.abs(joy.GetPhi()*temps_allumage_reacteur); //Calcul du temps total durant lequel les réacteurs sont allumés.
+						puissance_consommee_calcul = (deltam_sur_m/temps_total_reacteur)*Math.pow(c,2); //Calcul de la puissance consommée au total en W/kg. 
+
+						document.getElementById("E").innerHTML = E.toExponential(3); //Affichage sur le site du nouveau E. 
+						document.getElementById("L").innerHTML = L.toExponential(3); //Affichage sur le site du nouveau L. 
+						document.getElementById("decal").innerHTML = deltam_sur_m.toExponential(3); //Affichage sur le site de l'énergie consommée.
+						document.getElementById("puissance_consommee").innerHTML = puissance_consommee_calcul.toExponential(3); //Affichage sur le site de la puissance consommée. 
 					}
-	
 
-		if(element2.value=="mobile"){		
-			setInterval(function(){
-				MAJGraphePotentiel();
-			},100);
+				}
+			}, 50);
 		}
-
-
-
 		
+		
+		//--------------------------------Gestion des boutons d'accélération/décélération--------------------------------
 
+		document.getElementById('plusvite').removeEventListener('click',foncPourVitAvantLancement,false); //Je désassocie la fonction foncPourVitAvantLancement du bouton pour accélérer une fois la simulation commencée.
+		document.getElementById('moinsvite').removeEventListener('click',foncPourVitAvantLancement,false); //Je désassocie la fonction foncPourVitAvantLancement du bouton pour décélérer une fois la simulation commencée.
 
+		Dtau1 = 1e8*temps_chute_libre ; //Pour permettre une accélération.
+		Dtau2 = temps_chute_libre / 1e8; //Pour permettre une décélération.
 
-		if(Number.isInteger(input)){
-			if(input>0){
-			scale_factor*= math.pow(1.2,input);	
-			posX1 = scale_factor * r_part * (Math.cos(phi) / rmax) + (canvas.width / 2);
-			posY1 = scale_factor * r_part * (Math.sin(phi) / rmax) + (canvas.height / 2);
-			posX2 = scale_factor * r_part_obs * (Math.cos(phi_obs) / rmax) + (canvas.width / 2);
-			posY2 = scale_factor * r_part_obs * (Math.sin(phi_obs) / rmax) + (canvas.height / 2);
-		}
-			else{
-			scale_factor/=math.pow(1.2,-input);	;
-			posX1 = scale_factor * r_part * (Math.cos(phi) / rmax) + (canvas.width / 2);
-			posY1 = scale_factor * r_part * (Math.sin(phi) / rmax) + (canvas.height / 2);
-			posX2 = scale_factor * r_part_obs * (Math.cos(phi_obs) / rmax) + (canvas.width / 2);
-			posY2 = scale_factor * r_part_obs * (Math.sin(phi_obs) / rmax) + (canvas.height / 2);
-			}}
-	//Gestion des bouttons accélerer et decélerer	
-	document.getElementById('plusvite').removeEventListener('click',foncPourVitAvantLancement,false)
-
-	document.getElementById('moinsvite').removeEventListener('click',foncPourVitAvantLancement,false)
-															 
-		document.getElementById('plusvite').addEventListener('click', function() {
-			if (dtau >= Dtau1) {
-				dtau = Dtau1;
-			} 
-			else {
+		document.getElementById('plusvite').addEventListener('click', function() { //J'associe le bouton accélérer à la fonction suivante une fois la simulation lancée. 
+			if (dtau >= Dtau1) { //Je mets une limite à mon accélération possible qui est Dtau1.
+				dtau = Dtau1;} 
+			else { //Autrement j'accélére et j'incrèmente le clicks qui comptabilise les accélération/décélération.
 				dtau += dtau;
 				clicks += 1 ;
 			}
-			document.getElementById('nsimtxt').innerHTML= "ns="+ clicks.toString();
+			document.getElementById('nsimtxt').innerHTML= "ns="+ clicks.toString(); //J'affiche le ns correspondant sur le site.
 		}, false);
 
-		document.getElementById('moinsvite').addEventListener('click', function() {
-			if (dtau <= Dtau2) {
+
+		document.getElementById('moinsvite').addEventListener('click', function() {//J'associe le bouton décélérer à la fonction suivante une fois la simulation lancée. 
+			if (dtau <= Dtau2) { //Je mets une limite à ma décélération possible qui est Dtau2.
 				dtau = Dtau2;
-			} else {
+			}else{ //Autrement je décélère et j'incrèmente le clicks qui comptabilise les accélération/décélération.
 				dtau /= 2;
 				clicks -= 1 ;
 			}
-			document.getElementById('nsimtxt').innerHTML= "ns="+ clicks.toString();
-
+			document.getElementById('nsimtxt').innerHTML= "ns="+ clicks.toString(); //J'affiche le ns correspondant sur le site.
 		}, false);
-		//Ici on prend en compte tous les +vite / -vite enregistré sur les bouton
-	if(compteurVitesseAvantLancement>=0){
-		for(i=0;i<compteurVitesseAvantLancement;i++){
-			if (dtau >= Dtau1) {
-				dtau = Dtau1;
-			} 
-			else {
-				dtau += dtau;
-				clicks += 1 ;
+
+	
+		if(compteurVitesseAvantLancement>=0){ //Permet de prendre en compte tous les clics sur accélérer fait avant le début de la simulation. 
+			for(i=0;i<compteurVitesseAvantLancement;i++){
+				if (dtau >= Dtau1) {
+					dtau = Dtau1;
+				}else{
+					dtau += dtau;
+					clicks += 1 ;
+				}
+			}
+		}else{ //Permet de prendre en compte tous les clics sur décélérer fait avant le début de la simulation.
+			for(i=0;i>compteurVitesseAvantLancement;i--){
+				if (dtau <= Dtau2) {
+					dtau = Dtau2;
+				}else{
+					dtau /= 2;
+					clicks -= 1 ;
+				}
 			}
 		}
-	}
-	else{
-		for(i=0;i>compteurVitesseAvantLancement;i--){
-			if (dtau <= Dtau2) {
-				dtau = Dtau2;
-			} else {
-				dtau /= 2;
-				clicks -= 1 ;
-			}
-		}
-	}
 
-	// Gestion des boutons Zoom 
-	document.getElementById('moinszoom').removeEventListener('click',function(){foncPourZoomMoinsAvantLancement(false)}, false);
+		//--------------------------------Gestion des boutons de zoom--------------------------------
 
-	document.getElementById('pluszoom').removeEventListener('click',function(){foncPourZoomPlusAvantLancement(false)}, false);
+		document.getElementById('moinszoom').removeEventListener('click',function(){foncPourZoomMoinsAvantLancement(false)}, false); //Je désassocie foncPourZoomMoinsAvantLancement du bouton pour dézoomer une fois la simulation commencée.
+		document.getElementById('pluszoom').removeEventListener('click',function(){foncPourZoomPlusAvantLancement(false)}, false); //Je désassocie foncPourZoomPlusAvantLancement du bouton pour zoomer une fois la simulation commencée.
 
-		document.getElementById('moinszoom').addEventListener('click', function() {
+		document.getElementById('moinszoom').addEventListener('click', function() { //J'associe le bouton dézoomer à la fonction suivante une fois la simulation lancée.
 			scale_factor /= 1.2;
+			//J'ajuste les positions sur le canvas avec le nouveau facteur d'échelle :
 			posX1 = scale_factor * r_part * (Math.cos(phi) / rmax) + (canvas.width / 2);
 			posY1 = scale_factor * r_part * (Math.sin(phi) / rmax) + (canvas.height / 2);
 			posX2 = scale_factor * r_part_obs * (Math.cos(phi_obs) / rmax) + (canvas.width / 2);
 			posY2 = scale_factor * r_part_obs * (Math.sin(phi_obs) / rmax) + (canvas.height / 2);	
-			majFondFixe22();																			   
-			rafraichir2();
+			majFondFixe22(); //Je mets à jour tout ce qui est relié au dessin du mobile.																		   
+			rafraichir2(context); //Redessine les rayons Rh+, Rh- et rs un fond blanc avec les entrées à gauche. 
 			input-=1;
-			document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString();
-
-
+			document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString(); //Mets à jour l'affichage du zoom sur le site. 
 		}, false);
 
-		document.getElementById('pluszoom').addEventListener('click', function() {
-			
+
+		document.getElementById('pluszoom').addEventListener('click', function() { //J'associe le bouton zoomer à la fonction suivante une fois la simulation lancée.
+			//J'ajuste les positions sur le canvas avec le nouveau facteur d'échelle :
 			scale_factor *= 1.2;
 			posX1 = scale_factor * r_part * (Math.cos(phi) / rmax) + (canvas.width / 2);
 			posY1 = scale_factor * r_part * (Math.sin(phi) / rmax) + (canvas.height / 2);
 			posX2 = scale_factor * r_part_obs * (Math.cos(phi_obs) / rmax) + (canvas.width / 2);
 			posY2 = scale_factor * r_part_obs * (Math.sin(phi_obs) / rmax) + (canvas.height / 2);
-			majFondFixe22();																				  
-			rafraichir2();
+			majFondFixe22(); //Je mets à jour tout ce qui est relié au dessin du mobile.																						  
+			rafraichir2(context); //Redessine les rayons Rh+, Rh- et rs un fond blanc avec les entrées à gauche. 
 			input+=1;
-			document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString();
-			
-
+			document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString(); //Mets à jour l'affichage du zoom sur le site.
 		}, false);
 
-		document.getElementById('initialiser').addEventListener('click', function() {
-			scale_factor =280 ;
+
+		document.getElementById('initialiser').addEventListener('click', function() { //Associe le bouton pour initialiser le zoom à la fonction suivante. 
+			scale_factor =280 ; //Je récupère le facteur d'échelle initial.
+			//J'ajuste les positions sur le canvas avec le nouveau facteur d'échelle :
 			posX1 = scale_factor * r_part * (Math.cos(phi) / rmax) + (canvas.width / 2);
 			posY1 = scale_factor * r_part * (Math.sin(phi) / rmax) + (canvas.height / 2);
 			posX2 = scale_factor * r_part_obs * (Math.cos(phi_obs) / rmax) + (canvas.width / 2);
 			posY2 = scale_factor * r_part_obs * (Math.sin(phi_obs) / rmax) + (canvas.height / 2);	
-			majFondFixe22();																			   
-			rafraichir2();
+			majFondFixe22(); //Je mets à jour tout ce qui est relié au dessin du mobile.																		   
+			rafraichir2(context); //Redessine les rayons Rh+, Rh- et rs un fond blanc avec les entrées à gauche. 
 			input=0;
-			document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString();
+			document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString(); //Mets à jour l'affichage du zoom sur le site.
 		}, false);
 
-		function rafraichir2() {
-			majFondFixe();
-			creation_blocs(context);
-		}							
-		//Pour ouvrir le pop up qui nous si on veut afficher le graphe de potentiel ou pas
-		function CentrerPopPotentiel() {
-			document.getElementById("bloc_resultats").style.display= "block";
+		//Partie qui permet de mettre à l'échelle le dessin de l'astre et du rayon de SCH vis à vis des zooms avant le lancement de la simulation : 
+		if (ns_avant_lancement < 0) {
+			for (incr = 0; incr > ns_avant_lancement; incr -= 1) {
+				scale_factor = scale_factor / 1.2;
+			}
+		} else if (ns_avant_lancement > 0) {
+			for (incr = 0; incr < ns_avant_lancement; incr += 1) {
+				scale_factor = scale_factor * 1.2;
+			}
+		}
+
+		//--------------------------------Graphe du potentiel--------------------------------
+				
+		document.getElementById("bloc_resultats").style.display= "block"; //Permet d'afficher le graphe du potentiel en-dessous de la simulation de la trajectoire. 
+
+		function DisparitionGraphesPotentiels() { //Fonction qui permet de faire disparaître tous les graphes de potentiel lorsque la case est décochée.
 			var node = document.getElementById('grsvg_2');
 			if (node.parentNode){
 				node.parentNode.removeChild(node);
 			}
 		}
 
-		if (document.getElementById("toggle").checked==false) {
-			CentrerPopPotentiel();
+		if (document.getElementById("toggle").checked==false) { //Lorsque la case pour afficher les graphes de potentiel est décochée j'appelle la fonction définie précédemment. 
+			DisparitionGraphesPotentiels();
 		}
 
-		//Ici le bout de code pour le bouton Reset, quand on clique dessus, la fonction appelé efface le canvas en entier.
-		document.getElementById('clear').addEventListener('click', function() {
+		//--------------------------------Gestion du canvas--------------------------------
+
+		document.getElementById('clear').addEventListener('click', function() { //Lorsque j'appuie sur le bouton reset la fenêtre est rechargée et le mode observateur est choisit par défaut. 
 			rafraichir();
-		}, false);
-
-		// Tracé du Rayon de Schwarzchild.
-		context.fill();
-		creation_blocs(context);
-
-		$(document.params.traj[0]).change(function() {
-			// Tracé du Rayon de Schwarzchild si on change en cours de simulation
-			creation_blocs(context);
-		});
-
-
-
-		element2=document.getElementById('traject_type2');
-		
-		
-//  on trace le graphe du potentiel
+		}, false);		
+	
+		creation_blocs(context); //Je trace Rh+, Rh- et rs. 
 	  
-		setInterval(function(){    // <----------------------------------												
-		data1=[]; data2=[];
-
-	$('#grsvg_2').empty();																	
+		setInterval(function(){ //Fonction qui permet d'avoir un graphe de potentiel dynamique. Ce graphe est renouvelé toutes les 300ms. 												
+			$('#grsvg_2').empty(); //Je vide le contenue du canvas du potentiel. 
+			data1=[]; 
+			data2=[];																
  		  								
-   
-	if (element2.value == "observateur"){	//  observateur		
-		dr = 0.6*r_part_obs/ 50;
+			if (element2.value == "observateur"){ //Dans le cas de l'observateur distant. 
+
+				dr = 0.6*r_part_obs/ 50; //Je calcule l'incrément dr.
 		
-    for (r = 0.7*r_part_obs; r < 1.3*r_part_obs; r += dr) {   
-      V = Vr_obs(r);
-      data1.push({date: r, close: V });
-    }
+   				for (r = 0.7*r_part_obs; r < 1.3*r_part_obs; r += dr) { //Je parcours une gamme de valeurs de r centrée autour de mobile.r_part_obs en incrémentant de mobile.dr .
+      				V = Vr_obs(r); //Je calcule le potentiel pour chaque r.
+      				data1.push({date: r, close: V }); //Je stocke dans data1 les valeurs de r et V.
+    			}
 	
-    V = Vr_obs(r_part_obs);
-    data2.push({date: r_part_obs, close: V }); 
+    			V = Vr_obs(r_part_obs); //Je calcule le potentiel à la position actuelle.
+    			data2.push({date: r_part_obs, close: V }); //Je stocke dans data2 les valeurs de r et V de la position actuelle.
 
-	 }else{  //  spationaute
-	 
+			}else{ //Dans le cas du mobile je procède de manière identique.
 
-	 dr = 0.6*r_part/ 50;
+				dr = 0.6*r_part/ 50;
 	 
-	for (r = 0.7*r_part; r < 1.3*r_part; r += dr) { 								   
-     V = Vr_mob(r);
-      data1.push({date: r, close: V });
-    }
-    V = Vr_mob(r_part);
-    data2.push({date: r_part, close: V });  
+				for (r = 0.7*r_part; r < 1.3*r_part; r += dr) { 								   
+     				V = Vr_mob(r);
+      				data1.push({date: r, close: V });
+    			}
+
+    			V = Vr_mob(r_part);
+    			data2.push({date: r_part, close: V });  
   
-	 }
-	 graphique_creation_pot(0,data1,data2,null,null);
+	 		}
+
+			graphique_creation_pot(0,data1,data2,null,null); //Trace le graphe du potentiel.
 	
-	},300);	
+		},300);	
 	
-	
+	} else { //Dans le cas où ce n'est pas le début de la simulation et où je ne suis pas en pause.
+    	myInterval = setInterval(animate, 10/6); //La fonction animate est exécutée toutes les 10/6 ms pour créer la simulation;
+	}  
 
-	
+	document.getElementById("pause/resume").addEventListener("click", function() {pausee()}); //J'associe le bouton pause à la fonction pausee.
 
+	document.getElementById('start').style.display = "none"; //Une fois la simulation démarrée le bouton start/débuter disparaît.
+	document.getElementById('pause/resume').style.display ="inline-block"; //Une fois la simulation démarrée le bouton pause/resume apparaît. 
 
-/*		dr = rmax / 100;
-		if (element2.value != "mobile"){	
+}
 
-
-		
-			for (r = rhp; r < rmax * 1.2; r += dr) {
-				V = Vr_obs(r);
-				data1.push({date: r, close: V });
-				}
-				V = Vr_obs(r0);
-				data2.push({date: r0, close: V });
-				graphique_creation_pot();
-		
-		}
-		else{  
-			for (r = rhp; r < rmax * 1.2; r += dr) {									   
-				V = Vr_mob(r);
-				data1.push({date: r, close: V });
-			}
-			V = Vr_mob(r0);
-			data2.push({date: r0, close: V });
-			graphique_creation_pot();
-		}*/
-
-
-	
-  } else {
-    myInterval = setInterval(animate, 10);			
-	}  // fin if(pause....
-
-	document.getElementById("pause/resume").addEventListener("click", function() {
-        pausee()}); 
-	// apres start on affiche le bouton pause/resume avec la fonction pausee
-	document.getElementById('start').style.display = "none";
-	document.getElementById('pause/resume').style.display ="inline-block";
-	//infobulle de reset	
-	document.getElementById("clear").title = texte.pages_trajectoire.bouton_stop_bulleInfo;
-}  // fin fonction trajectoire
+//----------------------------------------------------{animate}----------------------------------------------------
 
 
 // tracé du trajet de la particule
@@ -737,7 +650,6 @@ function animate() {
 				vtot=resulta[0];
 				vr_3_obs=resulta[1]*Math.sign(A_part_obs);
 				vp_3_obs= resulta[2]; 
-				distance_parcourue_totale+=vtot*(dtau*delta(r_part_obs)/( (Math.pow(r_part_obs,2)+Math.pow(a,2)+rs*Math.pow(a,2)/r_part_obs)*E - rs*a*L/r_part_obs )); //ManonCorrection
 			}
 
 			posX2 = scale_factor * r_part_obs * (Math.cos(phi_obs) / rmax) + (canvas.width / 2.);
@@ -774,7 +686,7 @@ function animate() {
 
 				if(joy.GetPhi()!=0){ //Manon
 
-					nombre_de_g_calcul = (Math.abs(vtot-vitesse_précédente_nombre_g)/(temps_allumage_reacteur))/9.80665 //ManonV3
+					nombre_de_g_calcul = (Math.abs(vtot-vitesse_precedente_nombre_g)/(temps_allumage_reacteur))/9.80665 //ManonV3
 					nombre_de_g_calcul_memo = nombre_de_g_calcul;
 				}else{
 					nombre_de_g_calcul_memo = 0;
@@ -1168,7 +1080,7 @@ function enregistrer(){
 	// ces 2 fonctions sont issues des biblios saveSvgAsPng.js et canvas-to-image.js
 	var texte = o_recupereJson();
 
-	if(document.getElementById('trace_present').value=="1") {
+	if(document.getElementById('trace_present').value=="true") {
 		var nomFichier = prompt(texte.pages_trajectoire.message_nomFichier, "traject_Kerr_B_B");
 
 		if (nomFichier !== null && nomFichier.trim() !== '') {
@@ -1504,16 +1416,14 @@ function MAJGraphePotentiel(){
 
 
 function foncPourZoomPlusAvantLancement(){
-	
-		input +=1
-		document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString();
+		ns_avant_lancement+=1;
+		document.getElementById('nzoomtxt').innerHTML= "nz="+ ns_avant_lancement.toString();
 		
 }
 
 function foncPourZoomMoinsAvantLancement(){
-	
-		input -= 1
-		document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString();
+		ns_avant_lancement-=1;
+		document.getElementById('nzoomtxt').innerHTML= "nz="+ ns_avant_lancement.toString();
 }
 
 function boutonAvantLancement(){
@@ -1559,3 +1469,8 @@ function choixTrajectoire(context) {
         diametre_particule = DIAMETRE_PART;
     }
 }
+
+function rafraichir2(context) {
+	majFondFixe();
+	creation_blocs(context);
+}	

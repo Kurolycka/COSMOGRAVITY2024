@@ -246,6 +246,10 @@ function rendreVisibleNbG() {
 	var puissance_consommee_label_Cells = document.querySelectorAll('[id^="puissance_consommee_label"]'); 
 
 	var puissance_consommee_Cells = document.querySelectorAll('[id^="puissance_consommee"]'); 
+
+    var distance_metrique_cell = document.querySelectorAll('[id^="distance_metrique"]'); 
+
+    var distance_metrique_res_cell = document.querySelectorAll('[id^="distance_parcourue"]'); 
     
     // Si element2.value est "mobile" et que y a que 1 mobile, rend les cellules visibles, sinon les cache
     if (element2.value == "mobile" && blyo==1) {
@@ -256,35 +260,47 @@ function rendreVisibleNbG() {
             cell.style.display = ''; // Rend visible la cellule g_ressenti
         });
 		dernier_g_Cells.forEach(function(cell) {
-            cell.style.display = ''; // Rend visible la cellule derniger_g
+            cell.style.display = ''; 
         });
 		dernier_g_res_Cells.forEach(function(cell) {
-            cell.style.display = ''; // Rend visible la cellule dernier_g_res
+            cell.style.display = ''; 
         });
 		puissance_consommee_label_Cells.forEach(function(cell) {
-            cell.style.display = ''; // Rend visible la cellule dernier_g_res
+            cell.style.display = ''; 
         });
 		puissance_consommee_Cells.forEach(function(cell) {
-            cell.style.display = ''; // Rend visible la cellule dernier_g_res
+            cell.style.display = ''; 
+        });
+        distance_metrique_cell.forEach(function(cell) {
+            cell.style.display = ''; 
+        });
+        distance_metrique_res_cell.forEach(function(cell) {
+            cell.style.display = ''; 
         });
     } else {
         nbGCells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule nb_g
+            cell.style.display = 'none';
         });
 		gRessCells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule g_ressenti
+            cell.style.display = 'none'; 
         });
 		dernier_g_Cells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule dernier_g
+            cell.style.display = 'none'; 
         });
 		dernier_g_res_Cells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule dernier_g_res
+            cell.style.display = 'none';
         });
 		puissance_consommee_Cells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule dernier_g_res
+            cell.style.display = 'none';
         });
 		puissance_consommee_label_Cells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule dernier_g_res
+            cell.style.display = 'none'; 
+        });
+        distance_metrique_cell.forEach(function(cell) {
+            cell.style.display = 'none'; 
+        });
+        distance_metrique_res_cell.forEach(function(cell) {
+            cell.style.display = 'none'; 
         });
     }
 }

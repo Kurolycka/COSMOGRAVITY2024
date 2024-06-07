@@ -358,7 +358,7 @@ function genereHtml(){
 		<th id="temps_obs`+countt.toString()+`" class="tg-aicv"></th>
 		<th id="decal_spect`+countt.toString()+`" title="" class="tg-aicv"></th>
 		<th id="v_total`+countt.toString()+`" title="" class="tg-aicv">   V<SUB>physique</SUB> (m.s<sup>-1</sup>) </th>
-		<th id="distance_metrique`+countt.toString()+`" title="" class="tg-aicv"></th> 
+		<th id="distance_metrique`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th> 
 		<th id="nb_g`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>
 		<th id="dernier_g`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>
 		<th id ="puissance_consommee_label`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>`; //ManonV3
@@ -375,7 +375,7 @@ function genereHtml(){
 		<td class="tg-3ozo" id="to`+countt.toString()+`">res</td>
 		<td class="tg-3ozo" id="decal`+countt.toString()+`">res</td>
 		<td class="tg-3ozo" id="v_tot`+countt.toString()+`">res</td>
-		<td class="tg-3ozo" id="distance_parcourue`+countt.toString()+`">res</td>
+		<td class="tg-3ozo" id="distance_parcourue`+countt.toString()+`" style="display: none;">res</td>
 		<td class="tg-3ozo" id="g_ressenti`+countt.toString()+`" style="display: none;">0</td>
 		<td class="tg-3ozo" id="dernier_g_res`+countt.toString()+`" style="display: none;">0</td>
 		<td class="tg-3ozo" id="puissance_consommee`+countt.toString()+`" style="display: none;">0</td>`; //ManonV3
@@ -475,6 +475,8 @@ function initialisation(compteur){
 	
 	deltam_sur_m = 0;
 	puissance_consommee_calcul=0; //ManonV3
+	nombre_de_g_calcul = 0; //ManonV5
+	vitesse_precedente_nombre_g = 0; //ManonV5
 
 	v_rotation = c*Math.sqrt(rs/(2*(r0-rs))); //ManonCirculaire
 
@@ -757,8 +759,6 @@ function trajectoire(compteur,mobile) {
 		A_init_obs = mobile.vr*(1-rs/mobile.r0)/mobile.E; //Je multiplie par dτ/dt pour passer le dr/dτ en observateur. 
    		A_part_obs=A_init_obs; 
 		mobile["A_part_obs"]=A_part_obs; 
-		vrobs=A_init_obs; 
-		vphiobs=mobile.vphi*(1-rs/mobile.r0)/mobile.E; //J'utilise le même principe que pour A_init_obs et je multiplie par dτ/dt.
 
 		distance_parcourue_totale=0; //J'initialise la distance parcourue totale par le mobile dans son propre référentiel. 
 		mobile["distance_parcourue_totale"]=distance_parcourue_totale; //La distance totale parcourue devient une valeur spécifique au mobile. 
@@ -863,7 +863,7 @@ function trajectoire(compteur,mobile) {
 		setInterval(function(){ //Fonction effectuée toutes les 50 ms, qui est le temps de réaction du système fixé. 
 			if(joy.GetPhi()!=0){ 
 
-					vitesse_précédente_nombre_g = vtotal //Stockage de la vitesse précédent l'accélération pour le calcul du nombre de g ressenti. 
+					vitesse_precedente_nombre_g = vtotal //Stockage de la vitesse précédent l'accélération pour le calcul du nombre de g ressenti. 
 
 					Delta_E_sur_E = joy.GetPhi()*(puissance_reacteur*temps_allumage_reacteur)/Math.pow(c,2); //Calcul du ΔE/E en fonction de la puissance et du temps d'allumage des réacteurs.
 					Delta_L = ((mobile.E)/(mobile.L))*Math.pow(mobile.r_part,2)*Delta_E_sur_E*mobile.E*(1/(1-rs/mobile.r_part));
@@ -875,7 +875,7 @@ function trajectoire(compteur,mobile) {
 
 					mobile.L = mobile.L + Delta_L;
 					mobile.E = mobile.E + mobile.E*Delta_E_sur_E;
-					deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E); //Calcul de l'énergie en J/kg consommée au total. 
+					deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E); //Calcul de l'énergie ΔE/E consommée au total. 
 					temps_total_reacteur = Math.abs(joy.GetPhi()*temps_allumage_reacteur); //Calcul du temps total durant lequel les réacteurs sont allumés.
 					puissance_consommee_calcul = (deltam_sur_m/temps_total_reacteur)*Math.pow(c,2); //Calcul de la puissance consommée au total en W/kg. 
 									
@@ -1013,7 +1013,6 @@ function trajectoire(compteur,mobile) {
 
 				V = Vr_obs(mobile.E,mobile.L,mobile.r_part_obs)-1; //Je calcule le potentiel à la position actuelle.
 				data2.push({date: mobile.r_part_obs,close: V}); //Je stocke dans data2 les valeurs de r et V de la position actuelle.
-				mobile.point = graphique_creation_pot(0,data1,data2,compteur,mobile); //Trace le graphe du potentiel.
 
 			} else{ //Dans le cas du mobile je procède de manière identique.
 
@@ -1026,8 +1025,10 @@ function trajectoire(compteur,mobile) {
 				
 				V = Vr_mob(mobile.L,mobile.r_part)-1; 
 				data2.push({date: mobile.r_part,close: V}); 
-				mobile.point = graphique_creation_pot(0,data1,data2,compteur,mobile); 
 			}
+
+			mobile.point = graphique_creation_pot(0,data1,data2,compteur,mobile); //Trace le graphe du potentiel.
+
 		},300);  
   	} 
 	else { //Dans le cas où ce n'est pas le début de la simulation et où je ne suis pas en pause. 
@@ -1078,8 +1079,6 @@ function animate(compteur,mobile,mobilefactor) {
 			mobile.position.posX2 = mobilefactor[compteur] * mobile.r_part_obs * (Math.cos(mobile.phi_obs) / rmax) + (canvas.width / 2.);  // rmax pas mobile.rmax <-----  JPC
 			mobile.position.posY2 = mobilefactor[compteur] * mobile.r_part_obs * (Math.sin(mobile.phi_obs) / rmax) + (canvas.height / 2.);  // rmax pas mobile.rmax <-----  JPC
 
-			if (mobile.r_part > r_phy){
-			mobile.distance_parcourue_totale += vtotal*(mobile.dtau*(1-rs/mobile.r_part_obs)/(mobile.E));} //ManonCorrection
 			
 			
 		}
@@ -1111,7 +1110,7 @@ function animate(compteur,mobile,mobilefactor) {
 			}
 
 			if(joy.GetPhi()!=0 && blyo==1){ //Manon
-				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_précédente_nombre_g)/temps_allumage_reacteur)/9.80665 //ManonV3
+				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_precedente_nombre_g)/temps_allumage_reacteur)/9.80665 //ManonV3
 				nombre_de_g_calcul_memo = nombre_de_g_calcul;
 			}else{
 				nombre_de_g_calcul_memo = 0;
