@@ -234,7 +234,7 @@
 	"gravtitle":"Surface gravity in g",
 	"decalageSpec_EnergyReserve":"If on Distant observer, Spectral Shift is shown. If there is only one spaceman, the energy consumed is displayed.",
 	"r3":"it is (by default) in a direction perpendicular to the plane of the orbit (and of the screen) and has a constant distance d at the same time >> rS and << H0/c²",
-	"ctreastre":"Initial distance of the projectile from the centre of the celestial body",
+	"ctreastre":"Initial distance of the projectile from the center of the celestial body",
 	"rayonschwars":"Schwarzschild's radius",
 	"vitesse_orbite_circulaire":"Circular orbit speed for this r0 (ɸ₀ = 90°)",
 	"orbite_circulaire_stable":"stable",
@@ -330,7 +330,10 @@
 	"temps_allumage_infobulle":"Engine ignition time when V\u1D69+ or V\u1D69- is clicked.",
 	"puissance_reacteur_label":"P (W/kg) =",
 	"puissance_reacteur_infobulle":"Reactor power per unit mass.",
-	"puissance_consommee_label":"P<sub>consumed</sub> (W/kg)"
+	"puissance_consommee_label":"P<sub>consumed</sub> (W/kg)",
+	"puissance_consommee_infobulle":"Total power consumed by reactors in W/kg.",
+	"alerte_v0_superieure_c" : "Be careful, your speed v0 is greater than c.",
+	"alerte_r0_inferieure_rs" : "Be careful, your initial distance from the center of the celestial body r0 is smaller than the Schwarzschild's radius."
 },
 
 "page_trajectoire_massive":{

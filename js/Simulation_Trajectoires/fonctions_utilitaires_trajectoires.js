@@ -33,18 +33,19 @@ function testvaleur(x) {
 //----------------------------------------------------{traceEstAbsent}----------------------------------------------------
 
 /**
- * Fonction qui fixe la valeur de l'élément d'ID "trace_present" à 0, cela permet de déclarer qu'aucune trajectoire n'a encore été tracée. 
+ * Fonction qui fixe la valeur de l'élément d'ID "trace_present" à false, cela permet de déclarer qu'aucune trajectoire n'a encore été tracée. 
  */
 function traceEstAbsent(){
-	document.getElementById('trace_present').value="0";
+	document.getElementById('trace_present').value=false;
 }
 
-//----------------------------------------------------{SurTelephone}----------------------------------------------------
+//----------------------------------------------------{surTelephone}----------------------------------------------------
 
 /**
  * Fonction qui vérifie si la largeur de l'écran est inférieure ou égale à 960 pixels et ajuste la visibilité (cachée ou non) d'un élément HTML avec l'ID "bouton_info" en conséquence. 
  * Si l'écran fait moins ou égal à 960 pixels alors l'élement sera caché et sinon il sera visible.
  */
+
 function SurTelephone(){
 	var x = window.matchMedia("(max-width: 960px)")
 	if(x.matches){
@@ -235,6 +236,10 @@ function rendreVisibleNbG() {
 	var puissance_consommee_label_Cells = document.querySelectorAll('[id^="puissance_consommee_label"]'); 
 
 	var puissance_consommee_Cells = document.querySelectorAll('[id^="puissance_consommee"]'); 
+
+  var distance_metrique_cell = document.querySelectorAll('[id^="distance_metrique"]'); 
+
+  var distance_metrique_res_cell = document.querySelectorAll('[id^="distance_parcourue"]'); 
     
     // Si element2.value est "mobile" et que y a que 1 mobile, rend les cellules visibles, sinon les cache
     if (element2.value == "mobile" && blyo==1) {
@@ -245,35 +250,47 @@ function rendreVisibleNbG() {
             cell.style.display = ''; // Rend visible la cellule g_ressenti
         });
 		dernier_g_Cells.forEach(function(cell) {
-            cell.style.display = ''; // Rend visible la cellule derniger_g
+            cell.style.display = ''; 
         });
 		dernier_g_res_Cells.forEach(function(cell) {
-            cell.style.display = ''; // Rend visible la cellule dernier_g_res
+            cell.style.display = ''; 
         });
 		puissance_consommee_label_Cells.forEach(function(cell) {
-            cell.style.display = ''; // Rend visible la cellule dernier_g_res
+            cell.style.display = ''; 
         });
 		puissance_consommee_Cells.forEach(function(cell) {
-            cell.style.display = ''; // Rend visible la cellule dernier_g_res
+            cell.style.display = ''; 
+        });
+        distance_metrique_cell.forEach(function(cell) {
+            cell.style.display = ''; 
+        });
+        distance_metrique_res_cell.forEach(function(cell) {
+            cell.style.display = ''; 
         });
     } else {
         nbGCells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule nb_g
+            cell.style.display = 'none';
         });
 		gRessCells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule g_ressenti
+            cell.style.display = 'none'; 
         });
 		dernier_g_Cells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule dernier_g
+            cell.style.display = 'none'; 
         });
 		dernier_g_res_Cells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule dernier_g_res
+            cell.style.display = 'none';
         });
 		puissance_consommee_Cells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule dernier_g_res
+            cell.style.display = 'none';
         });
 		puissance_consommee_label_Cells.forEach(function(cell) {
-            cell.style.display = 'none'; // Cache la cellule dernier_g_res
+            cell.style.display = 'none'; 
+        });
+        distance_metrique_cell.forEach(function(cell) {
+            cell.style.display = 'none'; 
+        });
+        distance_metrique_res_cell.forEach(function(cell) {
+            cell.style.display = 'none'; 
         });
     }
 }
