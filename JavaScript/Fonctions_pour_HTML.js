@@ -212,18 +212,26 @@ window.onload = ajouterEcouteurs;
  */
 function updateUnivers() {
     document.getElementById("Omégak0").value = Omega_k(0).toExponential(4)
+    document.getElementById("Ok_enregistrer").innerHTML = "&Omega;<sub>k<sub>0</sub></sub> = " + Omega_k(0).toExponential(4)
 
     if (document.getElementById("Omégal0")) {
         document.getElementById("Omégal0").value = Omega_l(0).toExponential(4)
+        document.getElementById("Ol_enregistrer").innerHTML = "&Omega;<sub>&Lambda;<sub>0</sub></sub> = " + Omega_l(0).toExponential(4)
     }
 
     if (document.getElementById("OmégaDE0")) {
         document.getElementById("OmégaDE0").value = Omega_DE(0).toExponential(4)
+        document.getElementById("ODE_enregistrer").innerHTML = "&Omega;<sub>DE<sub>0</sub></sub> = " + Omega_DE(0).toExponential(4)
     }
 
     document.getElementById("Omégar0").value = Omega_r(0).toExponential(4)
+    document.getElementById("Or_enregistrer").innerHTML = "&Omega;<sub>r<sub>0</sub></sub> = " + Omega_r(0).toExponential(4)
 
     document.getElementById("Omégam0").value = Omega_m(0).toExponential(4)
+    document.getElementById("Om_enregistrer").innerHTML = "&Omega;<sub>m<sub>0</sub></sub> = " + Omega_m(0).toExponential(4)
+
+    document.getElementById("tdébut_enregistrer").innerHTML = "t<sub>i</sub> = " + document.getElementById("début").innerHTML
+    document.getElementById("tfin_enregistrer").innerHTML = "t<sub>f</sub> = " + document.getElementById("fin").innerHTML
 }
 
 /**
@@ -263,11 +271,11 @@ function enregistrer() {
     let nom = document.getElementById("nom_fichier").value
     let element;
     if (document.getElementById("graphique_LCDM")) {
-        element = document.getElementById("graphique_LCDM")
+        element = document.getElementById("panneauGraphe")
     }
 
     if (document.getElementById("graphique_DE")) {
-        element = document.getElementById("graphique_LCDM")
+        element = document.getElementById("panneauGraphe")
     }
 
     html2canvas(element).then(canvas => {

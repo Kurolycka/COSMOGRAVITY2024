@@ -271,7 +271,7 @@ function texte_univers_DE() {
     document.getElementById("infoNomFichier").title = texte.univers.infoNomFichier
     document.getElementById("labelNom_fichier").insertAdjacentHTML("beforeend", texte.univers.labelNom)
     document.getElementById("nom_fichier").value = texte.univers.nomDéfautDE
-    document.getElementById("bouttonEnregistrer").value = texte.univers.bouttonEnregistrer
+    document.getElementById("bouttonEnregistrer").innerHTML = texte.univers.bouttonEnregistrer
 }
 
 function texte_constantes() {

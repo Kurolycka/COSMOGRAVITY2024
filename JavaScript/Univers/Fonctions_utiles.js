@@ -700,6 +700,8 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
     if (document.getElementById("graphique_DE")) {
         Plotly.newPlot("graphique_DE", donnee, apparence, configuration);
     }
+
+    updateUnivers()
 }
 
 
