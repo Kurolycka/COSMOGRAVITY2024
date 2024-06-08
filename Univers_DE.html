@@ -27,7 +27,7 @@
 <div class="grillePrincipale">
     <div id="positionNav" class="Nav"></div>
     <!--Fenêtre entrée-->
-    <button onclick=toggleEntreeSortie("panneauEntree") class="petitBoutton" style="display:block; top: 60px; left:10px; position: absolute">☰</button>
+    <button onclick="toggleEntreeSortie('panneauEntree')" class="petitBoutton" style="display:block; top: 60px; left:10px; position: absolute">☰</button>
     <div id="panneauEntree" class="Entree">
         <div class="boiteEntree">
             <div id="Entrées"></div>
@@ -187,7 +187,7 @@
     </div>
 
     <!--Fenêtre sortie-->
-    <button onclick=toggleEntreeSortie("panneauSortie") class="petitBoutton" style="display:block; top: 60px; right:10px; position: absolute">☰</button>
+    <button onclick="toggleEntreeSortie('panneauSortie')" class="petitBoutton" style="display:block; top: 60px; right:10px; position: absolute">☰</button>
     <div id="panneauSortie" class="Sortie">
         <div class="boiteSortie">
             <div id="Sorties"></div>
@@ -224,9 +224,19 @@
 
             <div id="horizons"></div>
 
-            <div id="horizonEvenement" class="résultats" style="display: flex"></div>
+            <div id="horizonEvenement" class="résultats" style="display: flex">
+                <span id="DmHorizonEvenement_label">d<sub>e0</sub>=</span>
+				<span id="resultat_DmHorizonEvenement"></span> GAL
+				<span id="ZHorizonEvenement_label">z<sub>e0</sub>=</span>
+				<span id="resultat_ZHorizonEvenement"></span>
+            </div>
 
-            <div id="horizonParticule" class="résultats" style="display: flex"></div>
+            <div id="horizonParticule" class="résultats" style="display: flex">
+                <span id="DmHorizonParticule_label">d<sub>p0</sub>=</span>
+				<span id="resultat_DmHorizonParticule"></span> GAL
+				<span id="ZHorizonParticule_label">z<sub>p0</sub>=</span>
+				<span id="resultat_ZHorizonParticule"></span>
+            </div>
         </div>
 
         <div class="boiteSortie">
@@ -262,6 +272,7 @@
     </div>
 </div>
 
+    <script src="./JavaScript/fonction_utilitaire.js"></script>
     <script src="./JavaScript/Langues/gestion_langues.js"></script>
     <script src="./JavaScript/Univers/Fonctions_utiles.js"></script>
     <script src="./JavaScript/Univers/calcul_facteur_echelle_DE.js"></script>
