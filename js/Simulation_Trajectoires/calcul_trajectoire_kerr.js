@@ -114,12 +114,12 @@ function initialisation(){
 	vitesse_precedente_nombre_g = 0; //Pareil pour la vitesse précédent le pilotage. 
 
 	//Je calcule Rh+ (rhp), Rh- (rhm) et rh (qui sert au calcul de rmax) :
-	rh = G * M / Math.pow(c, 2) * (1 + Math.sqrt(1 - Math.pow(J * c / (G * M * M), 2))); //Rayon de Kerr.
+	rh = m * (1 + Math.sqrt(1 - Math.pow(J * c / (G * M * M), 2))); //Rayon de Kerr.
 	rhp = 0.5*(rs+Math.sqrt((rs**2)-4*(a**2)));
     rhm = 0.5*(rs-Math.sqrt((rs**2)-4*(a**2)));
 	
 	//Je calcule la gravité de surface théorique pour R=Rh+.
-	gravSurface = 0.5 * Math.pow(c, 2) * (Math.pow(rhp, 2) - Math.pow(a, 2)) / (Math.pow(rhp, 2) + Math.pow(a, 2))/rhp;
+	gravSurface = 0.5 * Math.pow(c, 2) * (Math.pow(rhp, 2) - Math.pow(a, 2)) / ((Math.pow(rhp, 2) + Math.pow(a, 2))*rhp);
 
 	//Je calcule la distance radiale maximale que je pourrais atteindre : 
 	if( (E>0.99999 && E<1.00001) && (Math.pow(L,4)- Math.pow(2*rs*(L-a),2)) > 0 ){ 
@@ -215,7 +215,7 @@ function initialisation(){
 
 	//--------------------------------Affichage--------------------------------
 	
-	//J'affiche sur la page le paramètre de spin, le rayon de SCH, les constantes E et L et gravité de surface. 
+	//J'affiche sur la page le paramètre de spin, le rayon de SCH, les constantes E et L et gravité de surface :
 	document.getElementById("a").innerHTML = a.toExponential(3);
 	document.getElementById("m").innerHTML = rs.toExponential(3);
 	document.getElementById("L").innerHTML = L.toExponential(3);
