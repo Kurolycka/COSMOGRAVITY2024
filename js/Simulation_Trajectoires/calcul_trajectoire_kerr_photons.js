@@ -147,28 +147,41 @@ function initialisation(){
 
 //----------------------------------------------------{verifnbr}----------------------------------------------------
 
-
+/**
+ * Fonction qui affiche un message d'erreur si une saisie n'est pas un nombre dans un des champs. 
+ */
 function verifnbr() {
-	r0 = document.getElementById("r0").value;
-	vphi = document.getElementById("phi0").value;
-	vr = document.getElementById("teta").value;
-	M = document.getElementById("M").value;
-	J = document.getElementById("J").value;
 
-	
-	if (isNaN(r0)){
-		alert ("Veuillez vérifier vos saisie en r0");}
-	if (isNaN(vr)){
-		alert ("Veuillez vérifier vos saisie en Vr"); }
-	if (isNaN(vphi)){
-		alert ("Veuillez vérifier vos saisie en Vphi");  
-	}
+	var texte = o_recupereJson(); //Pour les messages d'alerte.
+
+	//Je récupère les données remplies par l'utilisateur : 
+	M = document.getElementById("M").value; //La masse de l'astre. 
+	r0 = document.getElementById("r0").value; //La distance initiale au centre.
+	J = document.getElementById("J").value; //Le moment angulaire.
+	phi0 = document.getElementById("phi0").value; //L'angle de la position initiale.
+	teta = document.getElementById("teta").value; //L'angle de la vitesse initiale. 
+
+	//Si un des champs a pour saisie autre chose que un nombre j'affiche un message d'alerte :
 	if (isNaN(M)){
-		alert ("Veuillez vérifier vos saisie en M");																						 							  																														  	  														   
+		alert (texte.pages_trajectoire.alerte_verifier_M);
+		document.getElementById("M").value=2e30.toExponential(0);
+	}
+	if (isNaN(r0)){
+		alert (texte.pages_trajectoire.alerte_verifier_r0);
+		document.getElementById("r0").value=4455;
 	}
 	if (isNaN(J)){
-		alert ("Veuillez vérifier vos saisie en J");
-	}						   
+		alert (texte.pages_trajectoire.alerte_verifier_J);
+		document.getElementById("J").value=8.5e41.toExponential(1);
+	}
+	if (isNaN(phi0)){
+		alert (texte.pages_trajectoire.alerte_verifier_phi0);
+		document.getElementById("phi0").value=0;
+	}
+	if (isNaN(teta)){
+		alert (texte.pages_trajectoire.alerte_verifier_teta);
+		document.getElementById("teta").value=128;
+	}					   
 }
 
 //----------------------------------------------------{trajectoire}----------------------------------------------------

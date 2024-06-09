@@ -553,46 +553,65 @@ function initialisation(compteur){
 	return mobile; //Je récupère au final de cette fonction l'objet mobile correctement initialisé.
 }  
 
-// -------------------------------------{fonction verifnbr}--------------------------------------------
+//----------------------------------------------------{verifnbr}----------------------------------------------------
 
-function verifnbr() {//fonction qui affiche un message d'erreur si des valeurs ne sont pas donnée dans l'une des cases
+/**
+ * Fonction qui affiche un message d'erreur si une saisie n'est pas un nombre dans un des champs. 
+ */
+function verifnbr() {
+
+	var texte = o_recupereJson(); //Pour les messages d'alerte.
   
-	r_phy = document.getElementById("r_phy").value;
-	M = document.getElementById("M").value;
-	var onebolean=false;
-	var twobolean=false;
-	var threebolean=false;
+	//Je récupère les données remplies par l'utilisateur :
+	r_phy = document.getElementById("r_phy").value; //Le rayon physique.
+	M = document.getElementById("M").value; //La masse de l'astre. 
+	nbredefuseesverifnbr = Number(document.getElementById("nombredefusees").value); //Le nombre de mobiles. 
 
-	var sddsdsddss = Number(document.getElementById("nombredefusees").value);
-	for (countetttt = 1; countetttt <= sddsdsddss; countetttt += 1) {
-			var r0verifnbr = Number(document.getElementById("r0"+countetttt.toString()+"").value); 
-			var vphiverifnbr =  Number(document.getElementById("phi0"+count.toString()+"").value);
-			var vrverifnbr = Number(document.getElementById("teta"+count.toString()+"").value);
-			if(isNaN(r0verifnbr)){
-				onebolean=true;
+	//Pour stocker dans des variables si un des champs n'est pas un nombre pour un mobile :
+	var oneboolean=false;
+	var twoboolean=false;
+	var threeboolean=false;
+	var indice = 0; //Pour récupérer sur quel mobile il y a une erreur de saisie.
+
+	for (count = 1; count <= nbredefuseesverifnbr; count += 1) { //Pour chaque mobile :
+			//Je récupère la distance initiale au centre de l'astre r0, l'angle de la position et l'angle de la vitesse : 
+			var r0verifnbr = Number(document.getElementById("r0"+count.toString()+"").value); 
+			var phi0verifnbr =  Number(document.getElementById("phi0"+count.toString()+"").value);
+			var tetaverifnbr = Number(document.getElementById("teta"+count.toString()+"").value);
+
+			if(isNaN(r0verifnbr)){ //Si un seul des mobiles n'a pas de nombre pour r0 alors oneboolean est true. 
+				oneboolean=true;
+				indice=count;
 			}
-			if(isNaN(vphiverifnbr)){
-				twobolean=true;
+			if(isNaN(phi0verifnbr)){ //Si un seul des mobiles n'a pas de nombre pour l'angle de position initiale alors twoboolean est true.
+				twoboolean=true;
+				indice=count;
 			}
-			if(isNaN(vrverifnbr)){
-				threebolean=true;
+			if(isNaN(tetaverifnbr)){ //Si un seul des mobiles n'a pas de nombre pour l'angle de vitesse initiale alors threeboolean est true.
+				threeboolean=true;
+				indice=count;
 			}
 	}
 
-	if (onebolean){
-		alert ("Veuillez vérifier vos saisie en r0");}
-
-	if (twobolean){
-		alert ("Veuillez vérifier vos saisie en Vphi");
+	if (oneboolean){ //Si un seul des mobiles n'a pas un nombre pour r0.
+		alert(texte.pages_trajectoire.alerte_verifier_r0);
+		document.getElementById("r0"+indice.toString()).value=1.7685e11.toExponential(4);
 	}
-	if (threebolean){
-		alert ("Veuillez vérifier vos saisie en Vr");
+	if (twoboolean){ //Si un seul des mobiles n'a pas un nombre pour phi0.
+		alert(texte.pages_trajectoire.alerte_verifier_phi0);
+		document.getElementById("phi0"+indice.toString()).value=-10;
 	}
-	if (isNaN(r_phy)){
-		alert ("Veuillez vérifier vos saisie en r physique");
+	if (threeboolean){ //Si un seul des mobiles n'a pas un nombre pour teta.
+		alert(texte.pages_trajectoire.alerte_verifier_teta);
+		document.getElementById("teta"+indice.toString()).value=190;
 	}
-	if (isNaN(M)){
-		alert ("Veuillez vérifier vos saisie en M");																
+	if (isNaN(r_phy)){ //Si il n'y a pas un nombre pour le rayon physique de l'astre.
+		alert(texte.pages_trajectoire.alerte_verifier_rphy);
+		document.getElementById("r_phy").value=0;
+	}
+	if (isNaN(M)){ //Si il n'y a pas un nombre pour la masse de l'astre.
+		alert(texte.pages_trajectoire.alerte_verifier_M);		
+		document.getElementById("M").value=8e36.toExponential(0);													
 	}
   
 }

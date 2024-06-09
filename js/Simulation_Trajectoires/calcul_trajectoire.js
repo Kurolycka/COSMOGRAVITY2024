@@ -636,45 +636,74 @@ function initialisation(compteur){
 
 //----------------------------------------------------{verifnbr}----------------------------------------------------
 
-function verifnbr() {//fonction qui affiche un message d'erreur si des valeurs ne sont pas donnée dans l'une des cases
+/**
+ * Fonction qui affiche un message d'erreur si une saisie n'est pas un nombre dans un des champs. 
+ */
+function verifnbr() {
+
+	var texte = o_recupereJson(); //Pour les messages d'alerte.
 	
-	r_phy = document.getElementById("r_phy").value;
-	M = document.getElementById("M").value;
+	//Je récupère les données remplies par l'utilisateur : 
+	r_phy = document.getElementById("r_phy").value; //Le rayon physique.
+	M = document.getElementById("M").value; //La masse de l'astre. 
+	nbrdefuseesverifnbr = Number(document.getElementById("nombredefusees").value); //Le nombre de mobiles. 
 
-	var onebolean=false;
-	var twobolean=false;
-	var threebolean=false;
+	//Pour stocker dans des variables si un des champs n'est pas un nombre pour un mobile :
+	var oneboolean=false;
+	var twoboolean=false;
+	var threeboolean=false;
+	var fourboolean=false;
+	var indice = 0; //Pour récupérer sur quel mobile il y a une erreur de saisie.
 
-	var nbrdefuseesverifnbr = Number(document.getElementById("nombredefusees").value);
-	for (count = 1; count <= nbrdefuseesverifnbr; count += 1) {
+	for (count = 1; count <= nbrdefuseesverifnbr; count += 1) { //Pour chaque mobile :
+			//Je récupère la distance initiale au centre de l'astre r0, l'angle de la position et l'angle de la vitesse, ainsi que la vitesse : 
 			var r0verifnbr = Number(document.getElementById("r0"+count.toString()+"").value); 
-			var vphiverifnbr = Number(document.getElementById("phi0"+count.toString()+"").value); //vphi; <-------- JPC
-			var vrverifnbr = Number(document.getElementById("teta"+count.toString()+"").value); //vr;  <----------- JPC
-			if(isNaN(r0verifnbr)){
-				onebolean=true;
+			var phi0verifnbr = Number(document.getElementById("phi0"+count.toString()+"").value); 
+			var tetaverifnbr = Number(document.getElementById("teta"+count.toString()+"").value);
+			var v0verifnbr = Number(document.getElementById("v0"+count.toString()+"").value);
+
+			if(isNaN(r0verifnbr)){ //Si un seul des mobiles n'a pas de nombre pour r0 alors oneboolean est true. 
+				oneboolean=true;
+				indice=count;
 			}
-			if(isNaN(vphiverifnbr)){
-				twobolean=true;
+			if(isNaN(phi0verifnbr)){ //Si un seul des mobiles n'a pas de nombre pour l'angle de position initiale alors twoboolean est true.
+				twoboolean=true;
+				indice=count;
 			}
-			if(isNaN(vrverifnbr)){
-				threebolean=true;
+			if(isNaN(tetaverifnbr)){ //Si un seul des mobiles n'a pas de nombre pour l'angle de vitesse initiale alors threeboolean est true.
+				threeboolean=true;
+				indice=count;
+			}
+			if(isNaN(v0verifnbr)){ //Si un seul des mobiles n'a pas de nombre pour la vitesse initiale.
+				fourboolean=true;
+				indice=count;
 			}
 	}
 
-	if (onebolean){
-		alert ("Veuillez vérifier vos saisie en r0");}
-
-	if (twobolean){
-		alert ("Veuillez vérifier vos saisie en Vphi");
+	//Si un des champs a pour saisie autre chose que un nombre j'affiche un message d'alerte et je remets la valeur par défaut :
+	if (oneboolean){ 
+		alert (texte.pages_trajectoire.alerte_verifier_r0);
+		document.getElementById("r0"+indice.toString()).value=2e13.toExponential(0);
 	}
-	if (threebolean){
-		alert ("Veuillez vérifier vos saisie en Vr");
+	if (twoboolean){ 
+		alert (texte.pages_trajectoire.alerte_verifier_phi0);
+		document.getElementById("phi"+indice.toString()).value=0;
+	}
+	if (threeboolean){ 
+		alert (texte.pages_trajectoire.alerte_verifier_teta);
+		document.getElementById("teta"+indice.toString()).value=90;
+	}
+	if (fourboolean){ 
+		alert (texte.pages_trajectoire.alerte_verifier_v0);
+		document.getElementById("v0"+indice.toString()).value=7.75e7.toExponential(2);
 	}
 	if (isNaN(r_phy)){
-		alert ("Veuillez vérifier vos saisie en r physique");
+		alert (texte.pages_trajectoire.alerte_verifier_rphy);
+		document.getElementById("r_phy").value=0; 
 	}
-	if (isNaN(M)){
-		alert ("Veuillez vérifier vos saisie en M");															
+	if (isNaN(M)){ 
+		alert (texte.pages_trajectoire.alerte_verifier_M);	
+		document.getElementById("M").value=2e39;														
 	}
 
 }

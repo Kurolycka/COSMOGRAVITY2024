@@ -339,7 +339,14 @@
 		"puissance_consommee_label":"P<sub>consommée</sub> (W/kg)",
 		"puissance_consommee_infobulle":"Puissance totale consommée par les réacteurs en W/kg.",
 		"alerte_v0_superieure_c" : "Attention votre vitesse v0 est supérieure à c.",
-		"alerte_r0_inferieure_rs" : "Attention votre distance initiale au centre de l'astre r0 est plus petite que le rayon de Schwarzschild."
+		"alerte_r0_inferieure_rs" : "Attention votre distance initiale au centre de l'astre r0 est plus petite que le rayon de Schwarzschild.",
+		"alerte_verifier_r0" : "Attention, veuillez vérifier la saisie en r₀.",
+		"alerte_verifier_M" : "Attention, veuillez vérifier la saisie en M.",
+		"alerte_verifier_v0" : "Attention, veuillez vérifier la saisie en v₀.",
+		"alerte_verifier_phi0" : "Attention, veuillez vérifier la saisie de l'angle de la position initiale.",
+		"alerte_verifier_teta" : "Attention, veuillez vérifier la saisie en ɸ₀.",
+		"alerte_verifier_rphy" : "Attention, veuillez vérifier la saisie du rayon physique.",
+		"alerte_verifier_J" : "Attention, veuillez vérifier la saisie du moment angulaire J."
 	},
 
 	"page_trajectoire_massive":{
