@@ -192,3 +192,9 @@ var Pilotage = (function(container, parameters)
 
 	
 });
+
+/*
+Une ancienne version du Joystick avait été développée à l'aide du projet GitHub suivant : https://github.com/bobboteck/JoyStick .
+Il a été supprimé au profit de cette version de Pilotage car certaines directions du joystick (à gauche ou droite) n'étaient pas utiles.
+Il nous a semblé intéressant de garder le lien du github si cela pouvait à l'avenir être utile.
+*/

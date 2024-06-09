@@ -127,7 +127,7 @@ function calcul_facteur_echelle_DE(a_min,a_max,equa_diff_1, equa_diff_2, fonctio
     }
 
     // On calcule le temps associé à l'instant présent et si il n'est pas définis on le met à zéro
-    let t_0 = calcul_ages(fonction_simplifiant_1, H0parsec, 1e-10, 1);
+    let t_0 = calcul_ages(fonction_simplifiant_1, H0_parSecondes(H0), 1e-10, 1);
 
     if (isNaN(t_0) || Math.abs(t_0) === Infinity) {
         console.log("t0 théorique est NaN")

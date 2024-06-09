@@ -1,3 +1,4 @@
+
 // const AU = 149597870000; // unite astronomique
 
 function lance_calc_LCDM() {
@@ -1090,6 +1091,3 @@ function simpson_simple_degre2(fonction,bornInf, omegam0, omegalambda0, Or){
 function monoSitter(h0, temps) {
     return Math.exp(h0 * temps);
 }
-
-
-

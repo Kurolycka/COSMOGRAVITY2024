@@ -1,6 +1,22 @@
+/* ce fichier a ete adapté par Khaled pour etre utilisé dans Kerr et SCH 
+ c'est pour ça que les arguments sont tout "null" au debut 
+ Kerr et SCH sont programmé differament */
+
 function graphique_creation_pot(Onresize=0,data1,data2,compteur,mobile) {
+  
   if(data2 !== undefined && data1 !== undefined && data2[0]!==undefined){
   var texte = o_recupereJson();
+  titre = texte.pages_trajectoire.titre_graphe //KERR
+  graphe_svg="#grsvg_2"  //KERR
+  graphe_point="line-point" //KERR
+  //pour Kerr
+  //condition ajouté par Khaled pour SCH
+  if(mobile!=null)
+  {titre = titre+" "+ compteur.toString() ;
+    graphe_svg=mobile.graphesvg;
+    graphe_point=mobile.pointsvg
+    
+  }
   //d3.selectAll("svg > *").remove();
   // Set the dimensions of the canvas / graph
   var margin = {
@@ -75,7 +91,7 @@ function graphique_creation_pot(Onresize=0,data1,data2,compteur,mobile) {
 
   // Adds the svg canvas
 
-  var svg = d3.select(mobile.graphesvg)
+  var svg = d3.select(graphe_svg)
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.bottom + margin.top * 2)
     .append("g")
@@ -99,7 +115,7 @@ function graphique_creation_pot(Onresize=0,data1,data2,compteur,mobile) {
     .call(xAxis);
 
 
- /*svg.selectAll("line.x")
+/*  svg.selectAll("line.x")
     .data(x.ticks(6))
     .enter().append("line")
     .attr("class", "x")
@@ -117,15 +133,15 @@ function graphique_creation_pot(Onresize=0,data1,data2,compteur,mobile) {
     .attr("x2", width)
     .attr("y1", y)
     .attr("y2", y)
-    .style("stroke", "#ccc");*/
-
+    .style("stroke", "#ccc");
+ */
 
   // Add the Y Axis
   svg.append("g")
     .style("font-size", "" + taille_carac + "px")
     .attr("class", "y axis")
     .call(yAxis);
-  titre = texte.pages_trajectoire.titre_graphe +" "+ compteur.toString() ;
+  
 
 
   svg.append("text")
@@ -164,7 +180,7 @@ function graphique_creation_pot(Onresize=0,data1,data2,compteur,mobile) {
     .attr('fill', 'none');
 
   point = svg.append("g")
-    .attr("class", mobile.pointsvg);
+    .attr("class", graphe_point);
 
     
   point.selectAll('circle')
@@ -177,14 +193,21 @@ function graphique_creation_pot(Onresize=0,data1,data2,compteur,mobile) {
     .attr('stroke', 'red');
 
   }
+  //condition ajouté par Khaled pour SCH
+  if(mobile!=null)
+    {
+     mobile.point = [point,x,y];
+     mobile.blups=1;
+     return [point,x,y];
+    }
 
-  mobile.point = [point,x,y];
-  mobile.blups=1;
-  return [point,x,y];
 }
 
 
-function update_graphique_2(pointxy,data2,mobile) {
+function update_graphique_2(pointxy,data2,mobile) 
+{
+  if(mobile!=null)//SCH
+  {
   if(pointxy[1](data2[0].date)>=0 && !isNaN(pointxy[1](data2[0].date)) && !isNaN(pointxy[2](data2[0].close))){
    
   $('.'+mobile.pointsvg).empty();
@@ -198,8 +221,22 @@ function update_graphique_2(pointxy,data2,mobile) {
     .attr('stroke', 'red');
   }
 }
-function resize() {
-  $('mobile.graphesvg').empty();
-	$('#grsvg_1').empty();					 
-  //graphique_creation_pot();
-}				   
+
+else //KERR
+{
+  if(x(data2[0].date)>=0 && !isNaN(x(data2[0].date)) && !isNaN(y(data2[0].close))){
+    $('.line-point').empty();
+    
+    point.selectAll('circle')
+      .data(data2)
+      .enter().append('circle')
+      .attr("cx", x(data2[0].date))
+      .attr("cy", y(data2[0].close))
+      .attr("r", 4)
+      .style("fill", "red")
+      .attr('stroke', 'red');
+    } 
+}
+
+}
+

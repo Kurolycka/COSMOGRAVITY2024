@@ -1094,7 +1094,7 @@ function calcu(path) {
 
 	let amin=1/(1+zmax);
 	let amax=1/(1+zmin);
-	let res = calcul_facteur_echelle_LCDM(amin,amax,equa_diff_1_LCDM, equa_diff_2_LCDM, fonction_E);
+	let res = calcul_facteur_echelle_LCDM(amin,amax,equa_diff_1_LCDM, equa_diff_2_LCDM, fonction_E)[0];
 	let ordonnee = res[1].map((x) => (1-x)/x);
 	ordonnee=ordonnee.reverse();
 	let abscisse = res[0].map((x) => x*1e9);
