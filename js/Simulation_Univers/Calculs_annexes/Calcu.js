@@ -155,7 +155,7 @@ function calcu(path) {
 		sigma = (2 * Math.pow(Math.PI, 5) * Math.pow(k, 4)) / (15 * Math.pow(h, 3) * Math.pow(c, 2));
 		rho_r = (4 * sigma * Math.pow(t0, 4)) / (Math.pow(c, 3));
 		Or = (8 * Math.PI * G * rho_r) / (3 * Math.pow(H0parsec, 2));
-		Or = 1.68 * Or;
+		Or = 1.6913 * Or;
 		Or = Or.toExponential(4);
 	} else if (document.getElementById("resultat_omegar0_annexes").value=="Matière, Lambda et RFC") {
 		sigma = (2 * Math.pow(Math.PI, 5) * Math.pow(k, 4)) / (15 * Math.pow(h, 3) * Math.pow(c, 2));
@@ -254,8 +254,6 @@ function calcu(path) {
 		}
 
 	}
-	console.log(calcul_ages(fonction_E,H0enannee,1e-15,1/(1+z2)));
-	console.log(tempsReception);
 	if (isNaN(tempsReception)) {
 		tempsReception = NaN;
 	}
@@ -264,7 +262,6 @@ function calcu(path) {
 	// Calcul du temps d'émission
 	if (Number(z1) <= 1e12) {
 		tempsEmission = simpson_simple_degre2(fonction_integrale, Number(z1), omegam0, Number(omegalambda0), Number(Or));
-		
 	}
 
 	else {
@@ -1286,9 +1283,7 @@ function linear_scale(zmin, zmax, nb_pts) {
 //!partie tracer graphique
 function calculDeDs(abscissa) {
 	Eps = Number(0.001);  //0.00001
-//	var pas = (zmax - zmin)/dt;	
 	var zArr = [];
-//	var i = zmin;
 	var daArr = [];
 	var da;
 	var dlArr = [];

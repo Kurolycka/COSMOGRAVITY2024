@@ -52,6 +52,26 @@ function H0_parSecondes(H0) {
  * @param H0 {number} H0 en kilomètre par seconde par Mégaparsec
  * @return {number} H0 en par GigaAnnées
  */
+function H0_parAnnees(H0) {
+    // Conversion des kilomètre en mètre
+    let H0_convertis = H0 * 1000
+
+    // Conversion des Mégaparsec en mètres
+    H0_convertis = H0_convertis / ( (648000 / Math.PI ) * AU * 1000000)
+
+    // Conversion des secondes en Années
+    let nombreDeJours = nbrJours()
+    let secondesParAns = nombreDeJours * 24 * 3600 
+    H0_convertis = H0_convertis * secondesParAns
+
+    return H0_convertis
+}
+
+/**
+ * Fonction permettant de convertir H0 des km / s / Mpc vers les Ga
+ * @param H0 {number} H0 en kilomètre par seconde par Mégaparsec
+ * @return {number} H0 en par GigaAnnées
+ */
 function H0_parGAnnees(H0) {
     // Conversion des kilomètre en mètre
     let H0_convertis = H0 * 1000
@@ -93,10 +113,10 @@ function Omega_r(z) {
             omega_r = 0
         }
     }else{
-        if (document.getElementById("resultat_omegar0_annexes")==="Matière, Lambda, RFC et Neutrinos") {
+        if (document.getElementById("resultat_omegar0_annexes").innerHTML==="Matière, Lambda, RFC et Neutrinos") {
             omega_r = omega_r * 1.6913
         }
-        if (document.getElementById("resultat_omegar0_annexes")==="Matière et Lambda") {
+        if (document.getElementById("resultat_omegar0_annexes").innerHTML==="Matière et Lambda") {
             omega_r = 0
         }
     }
@@ -696,7 +716,7 @@ function Sk(x,OmegaK){
  * @param {*} z_utilisé
  * @returns 
  */
-function DistanceMetrique(fonction,Zemission,Zreception, z_utilisé=false){
+function DistanceMetrique(fonction,Zemission,Zreception, z_utilisé=false,precision_nb_pas=1e3){
     if (z_utilisé){
         function fonction_a_integrer(x){
             return Math.pow(fonction(x,true),-0.5);
@@ -706,7 +726,7 @@ function DistanceMetrique(fonction,Zemission,Zreception, z_utilisé=false){
             return Math.pow(fonction(x),-0.5)/Math.pow(x,2);
         };
     };
-    return c/(H0_parSecondes(H0)*Math.pow(Math.abs(Omega_k(0)),0.5))*Sk(Math.pow(Math.abs(Omega_k(0)),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,1e3),Omega_k(0))
+    return c/(H0_parSecondes(H0)*Math.pow(Math.abs(Omega_k(0)),0.5))*Sk(Math.pow(Math.abs(Omega_k(0)),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,precision_nb_pas),Omega_k(0))
 };
 
 //Remy 26/05/24
@@ -727,6 +747,9 @@ function calcul_horizon_particule(fonction,z_emission=0){
     };
     console.log(simpson_simple_degre2(fonction_a_integrer,0,Omega_m(0), Omega_l(0), Omega_r(0)));
     return DistanceMetrique(fonction,1e-4,a_emission);
+=======
+    return DistanceMetrique(fonction,1e-12,a_emission);
+>>>>>>> Stashed changes
 };
 
 /**

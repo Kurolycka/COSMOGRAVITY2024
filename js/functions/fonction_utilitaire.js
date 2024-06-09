@@ -24,18 +24,32 @@ function nbJoursParAn() {
     }
 }
 
+function arrondie_affichage(nombre,chiffre_significatif){
+    if (nombre<1e4){
+        return nombre.toFixed(4)
+    }else{;
+        return nombre.toExponential(chiffre_significatif);
+    };
+}
+
 /**
- * Arrondis les valeurs au 4 chiffre après la virugle sous la forme d'une exponentiel
- * @param {*} valeur valeur à arrondire (exemple : 432563,43)
- * @returns valeur arrondie (exemple : 4.325e+5)
+ * Linear Scale
+ * @param {*} zmin 
+ * @param {*} zmax 
+ * @param {*} nb_pts 
+ * @returns points for the x-axis
  */
-function ajustePrecision(valeur) { 
-    if (valeur != 0) {
-        valeur = parseFloat(valeur).toExponential(4);
-    } else {
-        valeur = 0;
-    }
-    return valeur;
+function linear_scale(zmin, zmax, nb_pts) {
+	let pas = (zmax - zmin) / nb_pts;
+	let abscisse = [];
+	for (let i=zmin; i<=zmax; i+=pas) {
+		abscisse.push(i);
+	}
+	if(abscisse[abscisse.length - 1] != zmax){ //Pour gérér le cas particulier ou zmax n'apparait pas dans la liste par la faute du pas
+		abscisse.push(zmax)
+	}
+
+	return abscisse;
 }
 
 

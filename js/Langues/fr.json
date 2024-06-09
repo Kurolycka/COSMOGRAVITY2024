@@ -101,6 +101,7 @@
 	},
 
 	"page_univers_calculs":{
+		"yaxis_distance": "Disancte (Année lumière)",
 		"titre": "Calculette Cosmologique",
 		"t_trop_grand":"Durée supérieure à la valeur maximale \r pour cet espace-temps",
 		"t_negatif":" doit être un nombre positif(> 0).",

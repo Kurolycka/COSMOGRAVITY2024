@@ -427,6 +427,10 @@ function texteUnivers() {
 
 function texteUniversCalculs() {//Beaucoup des redondants, il faut gérer tout ça 
   var texte = o_recupereJson();
+  yaxis_distance=texte.page_univers_calculs.yaxis_distance
+  yaxis_omega=texte.page_univers_calculs.yaxis_omega;
+  yaxis_temps=texte.page_univers_calculs.yaxis_temps;
+  yaxis_decalage=texte.page_univers_calculs.yaxis_decalage;
   document.getElementById("bouton_retour").value = texte.page_univers_calculs.bouton_retour;
   document.getElementById("txt_titre").innerHTML = texte.page_univers_calculs.titre;
   document.getElementById("txt_valeursZ").innerHTML = texte.page_univers_calculs.valeursZ;

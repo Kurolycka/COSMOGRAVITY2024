@@ -151,7 +151,7 @@
             <!-- Bouton calcul -->
 
                 <div id="plus" style="padding:10px">
-                <input id="bcalc_ord" type="button" onclick="lance_calc(0);ga('send', 'event', 'button', 'click', 'Calcul Annexe normal');" value="Calcul">
+                <input id="bcalc_ord" type="button" onclick="lance_calc(0);ga('send', 'event', 'button', 'click', 'Calcul Annexe normal');affichage_des_z();generer_graphique_distance(true);" value="Calcul">
                 <span style="display:none;color:blue;" id="resul_tps">Le calcul a duré : 53 millisecondes !</span>
                 <div id="gif" style="position:relative;display: inline-block;margin-left: 13px;"></div>
                 </div>
@@ -1010,5 +1010,6 @@
         <script src="js/Simulation_Univers/MéthodesNumériques.js"></script>
         <script src="js/Simulation_Univers/Fonctions_utiles.js"></script>
         <script src="js/Simulation_Univers/calcul_facteur_echelle_LCDM.js"></script>
+        <script src="js/Simulation_Univers/new_calculette_Remy.js"></script>
     </body>
 </html>
