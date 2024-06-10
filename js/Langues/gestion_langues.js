@@ -415,7 +415,6 @@ function texteUnivers() {
   document.getElementById("txt_sorties").innerHTML = texte.page_univers_general.sorties;
   document.getElementById("txt_tempsBB").innerHTML = texte.page_univers_general.tempsBigBang;
   document.getElementById("txt_dureeeUniv").innerHTML = texte.page_univers_general.dureeUnivers;
-  document.getElementById("txt_distance_decalage_HorizonEvenement").innerHTML = texte.page_univers_general.DistanceDecalageHorizon;
   document.getElementById("txt_univplat").innerHTML = texte.page_univers.univers_plat;
   document.getElementById("txt_MLRFCN").innerHTML = texte.page_univers.matierelambdaRFCNeu;
   document.getElementById("txt_MLRFC").innerHTML = texte.page_univers.matierelambdaRFC;
@@ -428,9 +427,10 @@ function texteUnivers() {
 
 function texteUniversCalculs() {//Beaucoup des redondants, il faut gérer tout ça 
   var texte = o_recupereJson();
+  xaxis_temps=texte.page_univers_calculs.xaxis_temps;
   yaxis_distance=texte.page_univers_calculs.yaxis_distance
   yaxis_omega=texte.page_univers_calculs.yaxis_omega;
-  yaxis_temps=texte.page_univers_calculs.yaxis_temps;
+  yaxis_temps=texte.page_univers_calculs.yaxis_temps;//un peu la meme chose que xaxis mais je laisse dans le doute
   yaxis_decalage=texte.page_univers_calculs.yaxis_decalage;
   document.getElementById("bouton_retour").value = texte.page_univers_calculs.bouton_retour;
   document.getElementById("txt_titre").innerHTML = texte.page_univers_calculs.titre;

@@ -171,7 +171,6 @@ function calcu(path) {
 	modele=0;
 	age_ans= simpson_simple_degre2(fonction_integrale, Number(0), Number(omegam0), Number(omegalambda0), Number(Or));  // age en annees ou bien NaN
 	if(isNaN(age_ans)) {modele=1;}
-
 	if (path == 0) {
 
 	//on recupere les valeurs de z1 et z2
@@ -525,7 +524,7 @@ function calcu(path) {
 		if (zmax<=-1 ){
 			return messagebox(texte.page_univers_calculs.message_zmax_incorrect,"zmax >-1");}
 		
-	    if (path == 1 && modele==0) {
+		if (path == 1 && modele==0) {
 		if (sessionStorage.getItem("LANGUE") == "fr") {frtitle="al";
 		}else{frtitle="ly";} 
 	
@@ -653,7 +652,6 @@ function calcu(path) {
 		}
 		
 	} else if (path == 2 && modele==0) {
-
 		titreAbscicce = "z"
 		// Omega's charts in function of z
 		omega_checkbox = document.getElementById("omega_checkbox");
@@ -1228,12 +1226,10 @@ function calcultheta() {
 	var z1 = document.getElementById("z1_checkbox").checked;
 	var z2 = document.getElementById("z2_checkbox").checked;
 	if (z1 && dda !=0){
-		window.document.getElementById("theta").value = (206265 * window.document.getElementById("diametre").value /
-			Number(dda)).toExponential(2);
+		window.document.getElementById("theta").value = (206265 * window.document.getElementById("diametre").value /Number(dda)).toExponential(2);
 	}
 	else if(z2 && dda_2 !=0){
-		window.document.getElementById("theta").value = (206265 * window.document.getElementById("diametre").value /
-			Number(dda_2)).toExponential(2);
+		window.document.getElementById("theta").value = (206265 * window.document.getElementById("diametre").value /Number(dda_2)).toExponential(2);
 	}
 }
 
@@ -1266,7 +1262,7 @@ function linear_scale(zmin, zmax, nb_pts) {
  * @param {*} nb_pts 
  * @returns points for the x-axis
  */
- function log_scale(zmin, zmax, nb_pts) {
+function log_scale(zmin, zmax, nb_pts) {
 	let zmin_10 = Math.log10(zmin + 1);
 	let zmax_10 = Math.log10(zmax + 1);
 	let abscissa = linear_scale(zmin_10, zmax_10, nb_pts);

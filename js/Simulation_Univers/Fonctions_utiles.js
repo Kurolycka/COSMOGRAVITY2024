@@ -102,7 +102,7 @@ function Omega_r(z) {
         omega_r = ( 8 * Math.PI * G * rho_r) / ( 3 * Math.pow(H0_parSecondes(H0), 2) )
     }
     else {
-        omega_r = ( Omega_r(0) * Math.pow(1 + z, 4) ) / fonction_E(z);
+        omega_r = ( Omega_r(0) * Math.pow(1 + z, 4) ) / fonction_E(z,true);
     }
 
     if (document.getElementById("resultat_omegar0_annexes")===null){
@@ -135,7 +135,7 @@ function Omega_m(z) {
         omega_m = Number(document.getElementById("omegam0").value)
     }
     else {
-        omega_m = Omega_m(0) * Math.pow(1 + z, 3) / fonction_E(z);
+        omega_m = Omega_m(0) * Math.pow(1 + z, 3) / fonction_E(z,true);
     }
 
     return omega_m
@@ -153,7 +153,7 @@ function Omega_l(z) {
         omega_l = Number(document.getElementById("omegalambda0").value)
     }
     else {
-        omega_l = Omega_l(0) / fonction_E(z);
+        omega_l = Omega_l(0) / fonction_E(z,true);
     }
 
     if (document.getElementById("univ_plat").checked) {
@@ -175,7 +175,7 @@ function Omega_DE(z) {
         omega_de = Number(document.getElementById("omegaDE0").value)
     }
     else {
-        omega_de = Omega_DE(0) *  fonction_Y(z) * (1/(1+z))	/ fonction_F(z);
+        omega_de = Omega_DE(0) *  fonction_Y(z,true) * (1/(1+z))	/ fonction_F(z,true);
     }
 
     if (document.getElementById("univ_plat").checked) {

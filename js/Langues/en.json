@@ -103,9 +103,14 @@
 	},
 
 	"page_univers_calculs":{
-	    "t_trop_grand":"Time greater than the maximum value \r for this space-time",
+		"yaxis_distance": "Distance (Light-year)",
+		"yaxis_omega": "Density parameter",
+		"yaxis_temps":"time (year)",
+		"yaxis_decalage":"redshift z",
+		"xaxis_temps":"time (year)",
+		"t_trop_grand":"Time greater than the maximum value \r for this space-time",
 		"t_negatif":" should be a positif number(>0)",
-	   "dm_trop_grand":"Metric distance greater than the maximum value \r for this space-time",
+		"dm_trop_grand":"Metric distance greater than the maximum value \r for this space-time",
 		"titre": "Cosmological Calculator",
 		"bouton_retour":"Back",
 		"bouton_tracer":"Plot",

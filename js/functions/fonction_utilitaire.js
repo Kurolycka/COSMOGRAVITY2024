@@ -24,11 +24,11 @@ function nbJoursParAn() {
     }
 }
 
-function arrondie_affichage(nombre,chiffre_significatif){
-    if (nombre<1e4){
+function arrondie_affichage(nombre){
+    if (0.1<nombre && nombre<1e4){
         return nombre.toFixed(4)
     }else{;
-        return nombre.toExponential(chiffre_significatif);
+        return nombre.toExponential(5);
     };
 }
 
