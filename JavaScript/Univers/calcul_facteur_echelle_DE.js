@@ -55,16 +55,16 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
         // On calcule le pas qui sera utilisé
         if ( (isNaN(tau_min) || isNaN(tau_max)) && !isNaN(t_0) ) {
             console.log("Pas calculé avec t_0")
-            pas = t_0 * 1e-3
+            pas = t_0 * 1e-5
         } else {
             console.log("Pas calculé grossèrement")
-            pas = 1e-3
+            pas = 1e-4
         }
 
         let option = document.getElementById("optionsMonofluide").value
         if (!isNaN(tau_min) && !isNaN(tau_max) && option !== "optionLDE") {
             console.log("Pas calculé avec tau_min - tau_max")
-            pas = Math.abs(tau_max - tau_min) * 1e-3
+            pas = Math.abs(tau_max - tau_min) * 1e-5
         }
 
         console.log("les taus :", t_min, t_0, t_max)
@@ -83,7 +83,7 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
     let nombre_point = 0;
 
     // Résolution dans le sens négatif
-    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 10/Math.abs(pas)) {
+    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 100/Math.abs(pas)) {
         set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
         if (set_solution[1] >= a_min && set_solution[1] <= a_max) {
             taus.push(set_solution[0])
@@ -99,7 +99,7 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
     nombre_point = 0;
 
     // Résolution dans le sens positif
-    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 10/Math.abs(pas)) {
+    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 100/Math.abs(pas)) {
         set_solution = RungeKuttaEDO2(pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
         if (set_solution[1] >= a_min && set_solution[1] <= a_max) {
             taus.push(set_solution[0])
