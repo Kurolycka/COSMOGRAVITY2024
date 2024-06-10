@@ -177,7 +177,7 @@
 
 		<div id="boutons_actions">
 			<span id="buts">
-				<button type="button" class="myButton" id="start" onclick="test_inte();save_nbfusees_recupvaleurs();save_schwarshild_massif_nonBar(lenbdefusees);lancerDeFusees(lenbdefusees);"></button>
+				<button type="button" class="myButton" id="start" onclick="lancement()"></button>
 				<button type="button" class="myButton3" id="pause/resume" style="display: none;" >Pause</button>
 
 			</span>
@@ -264,6 +264,23 @@
 		
 		genereHtml();
 		initialisationGenerale(1);
+		//Fonction qui lance la simulation avec le button start si tout est bien validé 
+		function lancement(){
+			
+			//on lance si ya true en return
+			if(typeof test_inte() === 'boolean')
+			{
+				save_nbfusees_recupvaleurs();
+				save_schwarshild_massif_nonBar(lenbdefusees);
+				lancerDeFusees(lenbdefusees);
+			}
+			//sinon on affiche le message d'erreur
+			else
+			{
+				alert(test_inte());
+			}
+		}
+
 		function updatenbredefusees(){
 			var nbredefuseesupdatenbr = Number(document.getElementById("nombredefusees").value);	
 			lenbdefusees = nbredefuseesupdatenbr;	

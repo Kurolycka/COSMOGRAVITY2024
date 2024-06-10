@@ -1437,26 +1437,21 @@ function majFondFixe3(){
 
 // -------------------------------------{fonction text_inte}--------------------------------------------
 
-// Empeche le lancer si on part de l'interieur de l'horizon et si le rayon est négatif
+// Fonction de verification par rapport à R_phy r0 et rs avant lancement 
 function test_inte() {
-	var texte = o_recupereJson();
-	
-	c = 299792458;
-	G = 6.6742 * Math.pow(10, -11);
-	M = Number(document.getElementById("M").value);
-	r_phy = Number(document.getElementById("r_phy").value);
-	m = G * M / Math.pow(c, 2); 
-	rs=2*m;
-	
+
+	var texte = o_recupereJson(); //recuperer le texte du json
+
+	/*variables pours verifier 3 conditions differentes:*/
 	var onebol=false;
 	var twobol=false;
 	var threebol=false;
 	var fourbol=false;
 
-
-	var nbrdefuseestestinte = Number(document.getElementById("nombredefusees").value);
-	for (countetttt = 1; countetttt <= nbrdefuseestestinte; countetttt += 1) {
-		var r0testinte = Number(document.getElementById("r0"+countetttt.toString()+"").value); 
+	/*On boucle sur tout les fusees pour voir si tout est bon:*/
+	var nombre_de_fusees = Number(document.getElementById("nombredefusees").value);
+	for (count = 1; count <= nombre_de_fusees; count += 1) {
+		var r0testinte = Number(document.getElementById("r0"+count.toString()+"").value); 
 		if(r0testinte<0){
 			onebol=true;
 		}
@@ -1471,24 +1466,23 @@ function test_inte() {
 		}
   }
 
-	//le arret ici va etre appeler sans l'argument mobile et donc va crasher mais ce n'est pas grave, on ne veux pas lancer la simulation. 
-	var texte = o_recupereJson();
+	/*Si la condition r>r_phy>rs n'est pas verifié on renvoie un message d'erreur adapté à la situation*/
 	if (r_phy < 0 || onebol) {
-		alert(texte.pages_trajectoire.rayon_neg);
-		arret();
+		return texte.pages_trajectoire.rayon_neg;
 	} else if (r_phy <= rs && r_phy!=0)   {
-		alert(texte.pages_trajectoire.rayonPhyInfHorz);
-		arret();
+		return texte.pages_trajectoire.rayonPhyInfHorz;
 	} else if (twobol) {
-		alert(texte.pages_trajectoire.rayonHorzInfRayonSchw);
-		arret();
+		return texte.pages_trajectoire.rayonHorzInfRayonSchw;
 	} else if(threebol){
-		alert(texte.pages_trajectoire.lancerInterdit);
-		arret();
+		return texte.pages_trajectoire.lancerInterdit;
 	}
-	if(fourbol) {
-		alert(texte.pages_trajectoire.vitesses_initiales_nulles);
-		arret();
+	else if(fourbol) {
+		return texte.pages_trajectoire.vitesses_initiales_nulles;
+	}
+	//sinon on revoit un true pour lancer la simulation
+	else
+	{
+		return true;
 	}
   
 }

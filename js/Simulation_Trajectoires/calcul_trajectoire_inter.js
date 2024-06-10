@@ -1734,21 +1734,17 @@ function majFondFixe3(){
 	//console.log(canvas.width, canvas.height);
 }
 
-// Empeche le lancer si on part de l'interieur de l'horizon
+// Fonction de verification par rapport à R_phy r0 et rs avant lancement 
 function test_inte() {
-	c = 299792458;
-	G = 6.6742 * Math.pow(10, -11);
-	M = Number(document.getElementById("M").value);
-	r_phy = Number(document.getElementById("r_phy").value);
-	m = G * M / Math.pow(c, 2); 
-	rs=2*m;
-
+	
+	/*variables pours verifier 3 conditions differentes:*/
 	var onebol=false;
 	var twobol=false;
-	var nbrdefuseestestinte = Number(document.getElementById("nombredefusees").value);
+	var nombre_de_fusees = Number(document.getElementById("nombredefusees").value);
 
-	for (countetttt = 1; countetttt <= nbrdefuseestestinte; countetttt += 1) {
-		var r0testinte = Number(document.getElementById("r0"+countetttt.toString()+"").value); 
+	/*On boucle sur tout les fusees pour voir si tout est bon:*/
+	for (count = 1; count <= nombre_de_fusees; count += 1) {
+		var r0testinte = Number(document.getElementById("r0"+count.toString()+"").value); 
 		if(r0testinte==0){
 			onebol=true;
 		}
@@ -1757,22 +1753,24 @@ function test_inte() {
 		}
 	}
 
-  	var texte = o_recupereJson();
+  	var texte = o_recupereJson();//recuperer le texte du json
+	/*Si les conditions r>rs et r_phy pas tres proche de rs ne sont pas pas verifiées on renvoie un message d'erreur adapté à la situation*/
 	if(onebol) {
-		alert(texte.pages_trajectoire.r0egale0);
-		arret();
+		return texte.pages_trajectoire.r0egale0;
 	}
 	if (r_phy < 0 || twobol) {
-		alert(texte.pages_trajectoire.rayon_neg);
-		arret();
+		return texte.pages_trajectoire.rayon_neg;
 	} 
 	else if (r_phy <= rs ) {
-		alert(texte.pages_trajectoire.rayonPhyInfHorz);
-		arret();
+		return texte.pages_trajectoire.rayonPhyInfHorz;
 	} 
 	else if(r_phy < 1.15*rs ){
-		alert(texte.pages_trajectoire.rphysetrs);
-		arret();
+		return texte.pages_trajectoire.rphysetrs;
+	}
+	//sinon on revoit un true pour lancer la simulation
+	else
+	{
+		return true;
 	}
 }
 

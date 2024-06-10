@@ -793,10 +793,18 @@ function trajectoire(compteur,mobile) {
 
     	clavierEvenement(true); //Permet une fois démarrée de gérer la simulation avec les touches du clavier.
    
-		dtau=temps_chute_libre/1e3;	//Je fixe le pas de temps à une fraction du temps de chute libre. 
+		//dtau=temps_chute_libre/1e3;	//Je fixe le pas de temps à une fraction du temps de chute libre. 
+
+		/* MARCHE BIEN MASI TEMPORAIRE:*/
+		dtau3=temps_chute_libre/10**Math.floor(Math.log10(temps_chute_libre));	//on prend que la partie sans puissance
+		//dtau=r0*c**2*rs/(2*G*M*v0*1e1);
+		dtau=r0*rs*c**2/M/1e1; //marche pas mal
+
+		dtau=dtau3*10**Math.floor(Math.log10(dtau)) //on multiplie fois la partie puissance de dtau pour adapter le pas en fonction des parametres
+	
     	mobile["dtau"]=dtau;
-      
-      mobile["condition_trace"]=true //Cette condition c'est pour arreter le tracer et l'affichage quand on en a besoin.
+
+   	    mobile["condition_trace"]=true //Cette condition c'est pour arreter le tracer et l'affichage quand on en a besoin.
 
 		//--------------------------------Positions de départ du mobile--------------------------------
 
@@ -1095,7 +1103,7 @@ function animate(compteur,mobile,mobilefactor)
 				/*Cette condition gere la partie trou noir (R_phy=0), dans le cas d'un observateur lointain, on fait les calculs
 				jusqu'a rs puis au dela on met les valeurs aux quelles tendent les variables quand r tend vers rs. L'affichage et le tracé
 				s'arretent c'est pour ça que ya une variable pour cette condition, ya que temps_observateur qui continue*/
-				if (mobile.r_part_obs >rs)
+				if (mobile.r_part_obs >rs*1.0001)
 				{
 					//-----------------------------------------------------PARTIE CALCULE-------------------------------------------------
 
@@ -1142,6 +1150,7 @@ function animate(compteur,mobile,mobilefactor)
 					/*Cette conditions arrete les calculs et attribue les dernieres valeurs qu'il faut */
 					if(mobile.r_part_obs!=rs) //Comme ça on rentre qu'une seule fois dans cette condition 
 					{
+						console.log(mobile.r_part_obs)
 						mobile.r_part_obs=rs; //condition pour que r soit excatement rs 
 						/*Pour ce qui suit on met ça à la main car on sait que theoriquement ça tend vers ces valeurs */
 						vp_1_obs=0 ;
@@ -1775,21 +1784,17 @@ function majFondFixe3(){
 
 //----------------------------------------------------{test_inte}----------------------------------------------------
 
-// Empeche le lancer si on part de l'interieur de l'horizon
+// Fonction de verification par rapport à R_phy r0 et rs avant lancement 
 function test_inte() {
-	c = 299792458;
-	G = 6.6742 * Math.pow(10, -11);
-	M = Number(document.getElementById("M").value);
-	r_phy = Number(document.getElementById("r_phy").value);
-	m = G * M / Math.pow(c, 2); 
-	rs=2*m;
 	
+	/*variables pours verifier 3 conditions differentes:*/
 	var onebol=false;
 	var twobol=false;
 	var threebol=false;
-	var nbrdefuseestestinte = Number(document.getElementById("nombredefusees").value);
+	var nombre_de_fusees = Number(document.getElementById("nombredefusees").value);
 
-	for (count = 1; count <= nbrdefuseestestinte; count += 1) {
+	/*On boucle sur tout les fusees pour voir si tout est bon:*/
+	for (count = 1; count <= nombre_de_fusees; count += 1) {
 		var r0testinte = Number(document.getElementById("r0"+count.toString()+"").value); 
 		if(r0testinte<0){
 			onebol=true;
@@ -1802,23 +1807,25 @@ function test_inte() {
 		}
 	}
 
-	//le arret ici va etre appeler sans l'argument mobile et donc va crasher mais ce n'est pas grave, on ne veux pas lancer la simulation. 
-	var texte = o_recupereJson();
+	var texte = o_recupereJson();//recuperer le texte du json
+	
+	/*Si la condition r>r_phy>rs n'est pas verifié on renvoie un message d'erreur adapté à la situation*/
 	if (r_phy < 0 || onebol) {
-		alert(texte.pages_trajectoire.rayon_neg);
-		arret();
+		return texte.pages_trajectoire.rayon_neg;
 	} 
 	else if (r_phy <= rs && r_phy!=0)   {
-		alert(texte.pages_trajectoire.rayonPhyInfHorz);
-		arret();
+		return texte.pages_trajectoire.rayonPhyInfHorz;
 	} 
 	else if (twobol) {
-		alert(texte.pages_trajectoire.rayonHorzInfRayonSchw);
-		arret();
+		return texte.pages_trajectoire.rayonHorzInfRayonSchw;
 	} 
 	else if(threebol){
-		alert(texte.pages_trajectoire.lancerInterdit);
-		arret();
+		return texte.pages_trajectoire.lancerInterdit;
+	}
+	//sinon on revoit un true pour lancer la simulation
+	else
+	{
+		return true;
 	}
 }
 
