@@ -85,6 +85,7 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 10/Math.abs(pas)) {
         set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
         if (set_solution[1] >= a_min && set_solution[1] <= a_max) {
+            console.log(set_solution)
             taus.push(set_solution[0])
             facteur_echelle.push(set_solution[1])
         }
@@ -118,7 +119,7 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
         t_0 = t_0 / (nbrJours() * 24 * 3600 * 1e9)
     }
 
-    let debutEtFin = debut_fin_univers(equa_diff_2, t_0)
+    let debutEtFin = debut_fin_univers(equa_diff_2)
 
     taus = tauEnTemps(taus, debutEtFin[2])
 

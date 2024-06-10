@@ -418,10 +418,9 @@ function equa_diff_2_DE(t, a, ap) {
  * Fonction permettant de déterminer si l'univers à un début ou une fin. Si ce n'est pas le cas, renvoie un string
  * précisant pourquoi il n'y a pas de début/fin de l'univers
  * @param equa_diff {function} Fonction caractéristique de l'EDO2 du modèle
- * @param t_0 {number} Age actuel de l'univers
  * @return Soit les temps de naissance/mort soit un string explicant pourquoi il n'y a pas de naissance/mort
  */
-function debut_fin_univers(equa_diff, t_0) {
+function debut_fin_univers(equa_diff) {
     let texte = o_recupereJson()
     let H0 = Number(document.getElementById("H0").value);
 
@@ -429,8 +428,9 @@ function debut_fin_univers(equa_diff, t_0) {
     let set_solution = [0, 1 ,1]
     let save_set_solution;
     let pas = 1e-4 * H0 / Math.abs(H0)
-    let limite_derivee = Math.abs(100000 / pas)
+    let limite = Math.abs(1000000 / pas)
     let nombre_point = 0
+    let option = document.getElementById("optionsMonofluide").value
 
     let naissance_univers;
     let mort_univers;
@@ -438,7 +438,7 @@ function debut_fin_univers(equa_diff, t_0) {
     let age_fin;
 
 
-    // Recherche a = 0 / da/dtau = Infinity dans le sens négatif
+    // Recherche a = 0 ou da/dtau = Infinity dans le sens négatif
     while (set_solution[1] >= 0 && (Math.abs(set_solution[1]) <= +Infinity || Math.abs(set_solution[2]) <= +Infinity) && nombre_point <= 5/Math.abs(pas)) {
         save_set_solution = set_solution
         set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff)
@@ -452,44 +452,28 @@ function debut_fin_univers(equa_diff, t_0) {
     }
     console.log(set_solution)
 
-    /*
-    Si :
-        la valeur de a est plus grande que 1 (arbitraire)
-        et
-        la valeur de da/dtau est 10^11 fois plus grande que le pas
-    on :
-        Dit que l'univers n'a pas de point de naissance
+    // On récupère le maximum entre la valeur du facteur d'échelle et la dérivée du facteur d'échelle
+    let max = Math.max(Math.abs(set_solution[1]), Math.abs(set_solution[2]))
 
-    sinon :
-        On récupère le tau du set de solution et on le transforme en temps
-        Si :
-            c'est la valeur de a qui est plus petite ou égale a 1
-        on :
-            Dit que l'univers a commencé avec un BigBang
-
-        Si :
-            c'est la valeur de da/dtau qui est trop grande
-        on :
-            Dit que l'univers a commencé avec un BigFall
-    */
-
-    let option = document.getElementById("optionsMonofluide").value
-    if ( set_solution[1] > 1 &&
-        (Math.abs(set_solution[1]) <= limite_derivee || Math.abs(set_solution[2]) <= limite_derivee) || option === "optionLDE") {
+    if ( option === "optionLDE" || ( max <= limite && set_solution[1] > 1 ) ) {
         naissance_univers = texte.univers.pasDebut
     }
     else {
         age_debut = set_solution[0] / H0_parGAnnees(H0)
 
-        let option = document.getElementById("optionsMonofluide").value
         if (set_solution[1] <= 1) {
             naissance_univers = texte.univers.Debut + Math.abs(age_debut).toExponential(4) + texte.univers.Gannee + " (BigBang)"
         }
 
-        if ((Math.abs(set_solution[1]) >= limite_derivee || Math.abs(set_solution[2]) >= limite_derivee)) {
+        if ( max >= limite ) {
             naissance_univers = texte.univers.Debut + Math.abs(age_debut).toExponential(4) + texte.univers.Gannee + " (BigFall)"
         }
     }
+
+
+
+
+
 
     // On réinitialise
     set_solution = [0, 1, 1];
@@ -509,27 +493,10 @@ function debut_fin_univers(equa_diff, t_0) {
     }
     console.log(set_solution)
 
-    /*
-    Si :
-        la valeur de a est plus grande que 1 (arbitraire)
-        et
-        la valeur de da/dtau est 10^11 fois plus grande que le pas
-    on :
-        Dit que l'univers n'a pas de point de mort
+    // On récupère le maximum entre la valeur du facteur d'échelle et la dérivée du facteur d'échelle
+    max = Math.max(Math.abs(set_solution[1]), Math.abs(set_solution[2]))
 
-    sinon :
-        On récupère le tau du set de solution et on le transforme en temps
-        Si :
-            c'est la valeur de a qui est plus petite ou égale a 1
-        on :
-            Dit que l'univers se finit avec un BigCrunch
-
-        Si :
-            c'est la valeur de da/dtau qui est trop grande
-        on :
-            Dit que l'univers se finit avec un BigRip
-    */
-    if ( set_solution[1] > 1 && (Math.abs(set_solution[1]) <= limite_derivee || Math.abs(set_solution[2]) <= limite_derivee)) {
+    if ( option === "optionLDE" || ( max <= limite && set_solution[1] > 1 ) ) {
         mort_univers = texte.univers.pasMort
     }
     else {
@@ -539,7 +506,7 @@ function debut_fin_univers(equa_diff, t_0) {
             mort_univers = texte.univers.Mort + Math.abs(age_fin).toExponential(4) + texte.univers.Gannee + " (BigCrunch)"
         }
 
-        if ((Math.abs(set_solution[1]) >= limite_derivee || Math.abs(set_solution[2]) >= limite_derivee)) {
+        if ( max >= limite ) {
             mort_univers = texte.univers.Mort + Math.abs(age_fin).toExponential(4) + texte.univers.Gannee + " (BigRip)"
         }
     }
@@ -551,8 +518,6 @@ function debut_fin_univers(equa_diff, t_0) {
  * Fonction permettant de transformer les taux en temps
  * @param listeTaus {[number]} Liste des taux sous forme de nombre
  * @param t_debut {number} age de naissance de l'univers
- * @param t_fin {number} age de mort de l'univers
- * @param t_0 {number} age théorique actuel de l'univers
  * @return La liste des temps
  */
 function tauEnTemps(listeTaus, t_debut) {
@@ -568,6 +533,114 @@ function tauEnTemps(listeTaus, t_debut) {
     }
 
     return listeTaus
+}
+
+/**
+ * Fonction permettant de calculer l'âge de l'univers
+ * @param fonction {function} La fonction qui permet de simplifier l'écriture des relations,
+ * ne doit dépendre que d'une variable
+ * @param H0 {number} taux d'expansion actuel
+ * @param a1 {number}
+ * @param a2 {number}
+ * @return {number} âge de l'univers.
+ */
+function calcul_ages(fonction, H0, a1, a2) {
+    function integrande(u) {
+        let terme_1 = Math.pow(u, -1)
+        let terme_2 = Math.sqrt(fonction(u))
+
+        return terme_1 * Math.pow(terme_2 , -1);
+    }
+    return (1 / H0) * simpson_composite(integrande, a1, a2, 100);
+}
+
+//Partie Remy
+/** renvoie la fonction Sk pour calculer les distances cosmologiques en fontion de la courbure de l'espace
+ * (Univers,simple,DarkEnergy et monofluide)
+ * @param {*} x Paramètre d'entré
+ * @param {*} OmegaK paramètre de densité de courbure
+ * @returns
+ */
+function Sk(x,OmegaK){
+    if (OmegaK>0) { //si k=-1 alors omegaK positif
+        return Math.sinh(x);
+    }else if(OmegaK<0){//si k=1 alors omegaK négatif
+        return Math.sin(x);
+    }else{//si k=0 alors omegaK est nul
+        return x;
+    }
+}
+
+/** renvoie la distance métrique entre un photon émis avec un Zemission et recu a une coordonné r avec un Zreception \
+ * pour avoir la distance d'un objet observé avec un certain décalge Zemission=0 \
+ * pour avoir l'horizon cosmologique des particules Zreception=infini \
+ * pour avoir l'horizon cosmologique des évenement Zemission=-1 (dans le futur) \
+ * (Univers,simple) \
+ * Si les omega et H0 sont définis dans la page pas besoin de les mettre en paramètre : DistanceMetrique(Zemission,Zreception)
+ * @param fonction {function} fonction_E ou fonction_F en fonction de si c'est lcdm ou de
+ * @param Zemission {number} décalage spectral au moment ou le photon est émis
+ * @param Zreception {number} décalage spectral au moment ou le photon est reçu
+ * @param z_utilise {boolean} Pour savoir si le calcul est réalisé avec z ou a
+ * @returns
+ */
+function DistanceMetrique(fonction, Zemission, Zreception, z_utilise=false){
+    if (z_utilise){
+        function fonction_a_integrer(x){
+            return Math.pow(fonction(x,true),-0.5);
+        }
+    } else {
+        function fonction_a_integrer(x){
+            return Math.pow(fonction(x),-0.5)/Math.pow(x,2);
+        }
+    }
+    return c/(H0_parSecondes(H0)*Math.pow(Math.abs(Omega_k(0)),0.5))*Sk(Math.pow(Math.abs(Omega_k(0)),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,1e4),Omega_k(0))
+}
+
+/**
+ * Fonction qui renvoie la distance de l'horizon des particules cosmologiques (plus grande distance a laquelle on peut recevoir un signal emis à l'instant t)
+ * @param fonction {function} Fonction simplifiant les expressions
+ * @param {*} z_emission par defaut = 0 décalage spectral du moment où le signal est émis
+ * @returns
+ */
+function calcul_horizon_particule(fonction,z_emission=0){
+    let a_emission=1/(z_emission+1);
+    //formule 21 dans la théorie du 20/05/2024
+    return DistanceMetrique(fonction,1e-4,a_emission);
+}
+
+/**
+ * Fonction qui renvoie la distance de l'horizon des évenements cosmologiques (plus grande distance a laquelle on peut envoyer un signal emis à l'instant t)
+ * @param fonction {function} Fonction qui simplifie les expressions
+ * @param z_reception {number} par defaut = 0 décalage spectral du moment où le signal est reçu
+ * @returns
+ */
+function calcul_horizon_evenements(fonction,z_reception=0){
+    //formule 23 dans la théorie du 20/05/2024
+    console.log(DistanceMetrique(fonction,-.5,.3,true));
+    return DistanceMetrique(fonction,-.99999999,z_reception,true);
+}
+
+/**
+ * Inverse du calcul de l'age en fonction d'un z grâce a la fonction dichotomie (marche seulement pour des fonction absolument croissante)
+ * @param {*} temps valeur t
+ * @param {*} fonction fonction a rechercher
+ * @returns valeur de z
+ */
+function calcul_t_inverse(temps,fonction){
+    //Remy test
+    function a_dichotomer(x){
+        return calcul_ages(fonction,H0enannee,1e-15,x);
+    }
+    age_univers=a_dichotomer(1);
+
+    if (age_univers>=temps){
+        a_t=Dichotomie_Remy(a_dichotomer,temps,1e-15,1,temps*1e-12);
+    }else{
+        a_t=Dichotomie_Remy(a_dichotomer,temps,1,1e7,1e-12);
+
+    };
+
+    return (1-a_t)/a_t;
 }
 
 /**
@@ -603,8 +676,8 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
         }
     }
 
-    console.log("correction ordonnée gauche", a_min === 0)
-    if ( a_min === 0 && t_debut && facteur_debut < Math.abs(a_max - a_min)  ) {
+
+    if ( a_min === 0 && t_debut && facteur_debut < Math.abs(a_max - a_min) * 1e-1 ) {
         console.log("correction ordonnée gauche")
         if (H0 > 0) {
             abscisse[0] = 0
@@ -615,7 +688,7 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
         }
     }
 
-    if (a_min === 0 && t_fin && facteur_fin < Math.abs(a_max - a_min)) {
+    if (a_min === 0 && t_fin && facteur_fin < Math.abs(a_max - a_min) * 1e-1 ) {
         console.log("correction ordonné droite")
         if (H0 > 0) {
             ordonnee[ordonnee.length - 1] = 0
@@ -638,7 +711,7 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
         line: { color: 'purple' }
     }];
 
-    if (t_debut && facteur_debut > 0.5) {
+    if (t_debut && facteur_debut > Math.abs(a_max - a_min) * 1e-1 ) {
         console.log("test assymptote 1", t_debut, facteur_debut)
         donnee.push({
             type: 'line',
@@ -653,7 +726,7 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
         });
     }
 
-    if (t_fin && facteur_fin > 0.5) {
+    if (t_fin && facteur_fin > Math.abs(a_max - a_min) * 1e-1 ) {
         console.log("test assymptote 2", t_debut, Math.abs(ordonnee[ordonnee.length - 1]))
         let x_assymptote;
         if (t_fin && t_debut) {
@@ -726,109 +799,4 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
     updateUnivers()
 }
 
-/**
- * Fonction permettant de calculer l'âge de l'univers
- * @param fonction {function} La fonction qui permet de simplifier l'écriture des relations,
- * ne doit dépendre que d'une variable
- * @param H0 {number} taux d'expansion actuel
- * @param a1 {number}
- * @param a2 {number}
- * @return {number} âge de l'univers.
- */
-function calcul_ages(fonction, H0, a1, a2) {
-    function integrande(u) {
-        let terme_1 = Math.pow(u, -1)
-        let terme_2 = Math.sqrt(fonction(u))
 
-        return terme_1 * Math.pow(terme_2 , -1);
-    }
-    return (1 / H0) * simpson_composite(integrande, a1, a2, 100);
-}
-
-//Partie Remy
-/** renvoie la fonction Sk pour calculer les distances cosmologiques en fontion de la courbure de l'espace
- * (Univers,simple,DarkEnergy et monofluide)
- * @param {*} x Paramètre d'entré
- * @param {*} OmegaK paramètre de densité de courbure
- * @returns 
- */
-function Sk(x,OmegaK){
-    if (OmegaK>0) { //si k=-1 alors omegaK positif
-        return Math.sinh(x);
-    }else if(OmegaK<0){//si k=1 alors omegaK négatif
-        return Math.sin(x);
-    }else{//si k=0 alors omegaK est nul
-        return x;
-    }
-};  
-
-/** renvoie la distance métrique entre un photon émis avec un Zemission et recu a une coordonné r avec un Zreception \
- * pour avoir la distance d'un objet observé avec un certain décalge Zemission=0 \
- * pour avoir l'horizon cosmologique des particules Zreception=infini \
- * pour avoir l'horizon cosmologique des évenement Zemission=-1 (dans le futur) \
- * (Univers,simple) \
- * Si les omega et H0 sont définis dans la page pas besoin de les mettre en paramètre : DistanceMetrique(Zemission,Zreception)
- * @param {*} fonction fonction_E ou fonction_F en fonction de si c'est lcdm ou de
- * @param {*} Zemission décalage spectral au moment ou le photon est émis
- * @param {*} Zreception décalage spectral au moment ou le photon est reçu
- * @param {*} z_utilisé
- * @returns 
- */
-function DistanceMetrique(fonction,Zemission,Zreception, z_utilisé=false){
-    if (z_utilisé){
-        function fonction_a_integrer(x){
-            return Math.pow(fonction(x,true),-0.5);
-        };
-    }else{
-        function fonction_a_integrer(x){
-            return Math.pow(fonction(x),-0.5)/Math.pow(x,2);
-        };
-    };
-    return c/(H0_parSecondes(H0)*Math.pow(Math.abs(Omega_k(0)),0.5))*Sk(Math.pow(Math.abs(Omega_k(0)),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,1e4),Omega_k(0))
-};
-
-/**
- * Fonction qui renvoie la distance de l'horizon des particules cosmologiques (plus grande distance a laquelle on peut recevoir un signal emis à l'instant t)
- * @param fonction {function} Fonction simplifiant les expressions
- * @param {*} z_emission par defaut = 0 décalage spectral du moment où le signal est émis
- * @returns
- */
-function calcul_horizon_particule(fonction,z_emission=0){
-    let a_emission=1/(z_emission+1);
-    //formule 21 dans la théorie du 20/05/2024
-    return DistanceMetrique(fonction,1e-4,a_emission);
-}
-
-/**
- * Fonction qui renvoie la distance de l'horizon des évenements cosmologiques (plus grande distance a laquelle on peut envoyer un signal emis à l'instant t)
- * @param {*} z_reception par defaut = 0 décalage spectral du moment où le signal est reçu
- * @returns 
- */
-function calcul_horizon_evenements(fonction,z_reception=0){
-    //formule 23 dans la théorie du 20/05/2024
-    console.log(DistanceMetrique(fonction,-.5,.3,true));
-    return DistanceMetrique(fonction,-.99999999,z_reception,true);
-}
-
-/**
- * Inverse du calcul de l'age en fonction d'un z grâce a la fonction dichotomie (marche seulement pour des fonction absolument croissante)
- * @param {*} temps valeur t
- * @param {*} fonction fonction a rechercher
- * @returns valeur de z
- */
-function calcul_t_inverse(temps,fonction){
-	//Remy test
-	function a_dichotomer(x){
-		return calcul_ages(fonction,H0enannee,1e-15,x);
-	}
-	age_univers=a_dichotomer(1);
-	
-	if (age_univers>=temps){
-		a_t=Dichotomie_Remy(a_dichotomer,temps,1e-15,1,temps*1e-12);
-	}else{
-		a_t=Dichotomie_Remy(a_dichotomer,temps,1,1e7,1e-12);
-
-	};
-
-	return (1-a_t)/a_t;
-}

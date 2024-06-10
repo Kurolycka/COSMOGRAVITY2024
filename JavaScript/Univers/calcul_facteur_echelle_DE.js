@@ -3,8 +3,6 @@ Ce fichier est le javascript principal de la page constante cosmologique de la p
 le facteur d'échelle dans le cas du modèle DE.
  */
 
-
-
 /**
  * Fonction permettant de calculer le facteur d'échelle en fonction du temps
  * @param equa_diff_1 {function} Fonction qui décrit la première dérivée du facteur d'échelle en fonction de tau
@@ -13,7 +11,7 @@ le facteur d'échelle dans le cas du modèle DE.
  * @param fonction_simplifiant_2 Fonction utilisée dans le calcul des âges.
  * @return Liste des abscisses ou la fonction a été calculée et liste des valeurs de la fonction.
  */
-function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifiant_1, fonction_simplifiant_2) {
+function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifiant_1) {
     let texte = o_recupereJson();
 
     let H0 = document.getElementById("H0").value;
@@ -121,7 +119,7 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
         t_0 = t_0 / (nbrJours() * 24 * 3600 * 1e9)
     }
 
-    let debutEtFin = debut_fin_univers(equa_diff_2, t_0)
+    let debutEtFin = debut_fin_univers(equa_diff_2)
 
     taus = tauEnTemps(taus, debutEtFin[2])
 

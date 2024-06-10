@@ -233,12 +233,19 @@ function updateUnivers() {
     document.getElementById("tdébut_enregistrer").innerHTML = "t<sub>i</sub> = " + document.getElementById("début").innerHTML
     document.getElementById("tfin_enregistrer").innerHTML = "t<sub>f</sub> = " + document.getElementById("fin").innerHTML
 
-    let dm_horizon_particule = calcul_horizon_particule(fonction_E);
+    let fonction_simplifiante;
+    if (document.getElementById("Omégal0")) {
+        fonction_simplifiante = fonction_E
+    } else {
+        fonction_simplifiante = fonction_F
+    }
+
+    let dm_horizon_particule = calcul_horizon_particule(fonction_simplifiante);
     dm_horizon_particule = m_vers_AL(dm_horizon_particule)/1e9;
     document.getElementById("resultat_DmHorizonEvenement").innerHTML = dm_horizon_particule.toExponential(4)
     document.getElementById("hp_enregistrer").innerHTML = "d<sub>p<sub>0</sub></sub> = " + dm_horizon_particule.toExponential(4) + " GAL"
 
-    let dm_horizon_evenement = calcul_horizon_evenements(fonction_E);
+    let dm_horizon_evenement = calcul_horizon_evenements(fonction_simplifiante);
     dm_horizon_evenement = m_vers_AL(dm_horizon_evenement)/1e9;
     document.getElementById("resultat_DmHorizonParticule").innerHTML = dm_horizon_evenement.toExponential(4);
     document.getElementById("he_enregistrer").innerHTML = "d<sub>e<sub>0</sub></sub> = " + dm_horizon_evenement.toExponential(4) + " GAL"
