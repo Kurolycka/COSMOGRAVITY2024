@@ -144,15 +144,6 @@ function affichage_site_LCDM() {
     document.getElementById("fin").innerHTML = debutEtFin[1]
     console.log("Timeline :", debutEtFin, age_univers)
 
-    //Remy 26/05/24
-    dm_horizon_particule_m=calcul_horizon_particule(fonction_E);
-    dm_horizon_particule_Ga=m_vers_AL(dm_horizon_particule_m)/1e9;
-    dm_horizon_evenement_m=calcul_horizon_evenements(fonction_E);
-    dm_horizon_evenement_Ga=m_vers_AL(dm_horizon_evenement_m)/1e9;
-    document.getElementById("resultat_DmHorizonEvenement").innerHTML = dm_horizon_evenement_Ga.toExponential(4);
-    document.getElementById("resultat_ZHorizonEvenement").innerHTML = -1;
-    document.getElementById("resultat_DmHorizonParticule").innerHTML = dm_horizon_particule_Ga.toExponential(4);
-    document.getElementById("resultat_ZHorizonParticule").innerHTML = "∞";
 
     graphique_facteur_echelle(donnee, debutEtFin[2], debutEtFin[3])
 }

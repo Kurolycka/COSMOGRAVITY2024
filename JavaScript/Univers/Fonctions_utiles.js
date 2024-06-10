@@ -787,16 +787,17 @@ function DistanceMetrique(fonction,Zemission,Zreception, z_utilisé=false){
     return c/(H0_parSecondes(H0)*Math.pow(Math.abs(Omega_k(0)),0.5))*Sk(Math.pow(Math.abs(Omega_k(0)),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,1e4),Omega_k(0))
 };
 
-/** 
+/**
  * Fonction qui renvoie la distance de l'horizon des particules cosmologiques (plus grande distance a laquelle on peut recevoir un signal emis à l'instant t)
+ * @param fonction {function} Fonction simplifiant les expressions
  * @param {*} z_emission par defaut = 0 décalage spectral du moment où le signal est émis
- * @returns 
+ * @returns
  */
 function calcul_horizon_particule(fonction,z_emission=0){
     let a_emission=1/(z_emission+1);
     //formule 21 dans la théorie du 20/05/2024
     return DistanceMetrique(fonction,1e-4,a_emission);
-};
+}
 
 /**
  * Fonction qui renvoie la distance de l'horizon des évenements cosmologiques (plus grande distance a laquelle on peut envoyer un signal emis à l'instant t)
