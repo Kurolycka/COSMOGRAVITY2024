@@ -478,13 +478,77 @@ function calcul_horizons_annexe(){
 };
 //---------------------------------------
 
-
+dm_inverse();
 
 function dm_inverse(){
-    zmax= 1e10;
-    dmmax= DistanceMetrique(fonction_E,)
-};
+    //Si il n'y a pas de big bang impossible a calculer
+    // let T0 = Number(document.getElementById("T0").value);
+    // if (isNaN(debut_fin_univers(equa_diff_2_LCDM, T0)[2])){
+    //     return;
+    // };
+    z_negatif=false;
+    dmmax= calcul_horizon_particule(fonction_E);
+    dm = document.getElementById("dm_racine_dm").value;
+    if(dm>=dmmax){
+        document.getElementById("z_racine_dm").innerHTML= NaN;
+        return;
+    };
+    
 
+    //pour le cas particulier ou la courbure est négative il peut y avoir une seule solution seulement si la plus grande valeur dans le sin() de l'equation de la distance metrique est en dessous de pi/2 (strictement croissante)
+    function interieur_integ_distance(x){
+        function fonction_integ_distance(x){
+            return Math.pow(fonction_E(x),-0.5)/Math.pow(x,2);
+        };
+        return Math.pow(Math.abs(Omega_k(0)),0.5)*simpson_composite( fonction_integ_distance, x,1,1e3);
+    };
+    if (Omega_k(0)>=0 || interieur_integ_distance(1e-15)<Math.PI/2){
+        if (z_negatif){
+            function fonction_dm_dichotomie(x){
+                return DistanceMetrique(fonction_E,x,0,true);
+            };
+            z=Dichotomie_Remy(fonction_dm_dichotomie,dm,-1+1e-15,0,1e-15);
+        }else{
+            function fonction_dm_dichotomie(x){
+                return DistanceMetrique(fonction_E,x,1)
+            };
+            let a=Dichotomie_Remy(fonction_dm_dichotomie,dm,0,1,1e-15);
+            z=(1-a)/a;
+        };
+    }else if (interieur_integ_distance(1e-15)>Math.PI/2){// si courbure negatif il peut y avoir plusieurs solution au dessus de pi/2, par soucis de compréhension on ne garde que le cas où il y a maximum 2 solution 
+
+        // console.log(interieur_integ_distance(.5));
+        // console.log("sin "+Math.sin(interieur_integ_distance(.5)))
+        // console.log(interieur_integ_distance(.14366));
+        // console.log("sin "+Math.sin(interieur_integ_distance(.14366)))
+        // console.log(interieur_integ_distance(.0000001));
+        // console.log("sin "+Math.sin(interieur_integ_distance(.0000001)))
+
+
+        if (z_negatif){
+            function fonction_dm_dichotomie(x){
+                return DistanceMetrique(fonction_E,x,0,true);
+            };
+            z_pi_sur_2=Dichotomie_Remy(interieur_integ_distance,Math.PI/2,0,2*Math.PI);
+        }else{
+            function fonction_dm_dichotomie(x){
+                return DistanceMetrique(fonction_E,x,1)
+            };
+            let a=Dichotomie_Remy(fonction_dm_dichotomie,dm,0,1,1e-15);
+            z=(1-a)/a;
+            zpisur2=Dichotomie_Remy(interieur_integ_distance,Math.PI/2,1e-15,1,1e-15);
+            console.log(zpisur2)
+            dmpisur2=DistanceMetrique(fonction_E,zpisur2,1);
+            console.log(dmmax);
+            console.log(dmpisur2);
+            console.log(c/(H0_parSecondes(H0)*Math.pow(Math.abs(Omega_k(0)),0.5)));
+            a1=Dichotomie_Remy(fonction_dm_dichotomie,dm,1/(1+zpisur2),1,1e-15);
+            if (dm>c/(H0_parSecondes(H0)*Math.pow(Math.abs(Omega_k(0)),0.5))){//valeur maximal si sin=1 (maximal de la distance)
+
+            }
+        };
+    }
+};
 
 function t_inverse(){
 

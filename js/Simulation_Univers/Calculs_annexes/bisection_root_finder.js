@@ -154,7 +154,6 @@ function bisection_method_dm (dm, omegam0, omegalambda0, Or, eps){
 	//cette variable possède 2 valeurs [nouveau_zb, contrainte] contrainte =0 ou 1. 0 pour absence de contrainte
 
 	contrainte = Number(reconditionneur[1]);
-	console.log(contrainte);
 	dm_za = f_x(za, omegam0, omegalambda0, Or, eps);
 	dm_zb = f_x(zb, omegam0, omegalambda0, Or, eps);
 	if (Number(dm)===0){
@@ -203,7 +202,7 @@ function bisection_method_dm (dm, omegam0, omegalambda0, Or, eps){
 		}else if((integB>Math.PI/2) && (integB<Math.PI)){
 			z_Pi_div_2 = dichotomie(0, zb, Integral_dm, Math.PI/2, ex);
 			z_sol_1 = dichotomie(0, z_Pi_div_2, f_x, dm, ex);
-			if (dm>dm_zb){
+			if (dm>dm_zb){ 
 				z_sol_2 = dichotomie(z_Pi_div_2, zb, f_x, dm, ex);
 				return (z_sol_1+", " + z_sol_2);
 			}

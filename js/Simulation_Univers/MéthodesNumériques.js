@@ -102,16 +102,31 @@ function secante(fonction, x0, x1, precision) {
 function Dichotomie_Remy(fonction, cible, borneDebut, borneFin, precision){
     let iterations_max=100;
     let iterations=0
-    while (Math.abs(borneFin - borneDebut) > precision && iterations<iterations_max){
-        iterations = iterations+1;
-        var milieu = (borneDebut+borneFin)/2;
-        if (cible>fonction(milieu)){
-            borneDebut= milieu;
-        }else if (cible<fonction(milieu)){
-            borneFin = milieu;
-        }else{
-            return milieu
+
+    if (fonction(borneDebut)<fonction(borneFin)){
+        while (Math.abs(borneFin - borneDebut) > precision && iterations<iterations_max){
+            iterations = iterations+1;
+            var milieu = (borneDebut+borneFin)/2;
+            if (cible>fonction(milieu)){
+                borneDebut= milieu;
+            }else if (cible<fonction(milieu)){
+                borneFin = milieu;
+            }else{
+                return milieu
+            };
+        };
+    }else{//pour le cas où la fonction est décroissante
+        while (Math.abs(borneFin - borneDebut) > precision && iterations<iterations_max){
+            iterations = iterations+1;
+            var milieu = (borneDebut+borneFin)/2;
+            if (cible<fonction(milieu)){
+                borneDebut= milieu;
+            }else if (cible>fonction(milieu)){
+                borneFin = milieu;
+            }else{
+                return milieu
+            };
         };
     };
     return milieu;
-}
+};
