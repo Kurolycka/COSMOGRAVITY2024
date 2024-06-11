@@ -9,12 +9,14 @@ var G = 6.67385 * Math.pow(10, -11);
 var title = "V(r)/c²";		  
 var clicks = 0;
 var nzoom=0;
-var ns_avant_lancement=0;
+var nz_avant_lancement=0;
 var facteurDeMalheur;
 var fact_defaut;
 
 var factGlobalAvecClef ;//pour l'échelle avant lancement
 var compteurVitesseAvantLancement = 0;
+var compteurVitesse = 0;
+var compteurVitesseAvantLancement =0; 
 
 
 // -------------------------------------{Variables globales, key values}--------------------------------------------
@@ -318,8 +320,7 @@ function genereHtml(){
 					<th id="vitesseur`+countt.toString()+`" title="" class="tg-aicv"  >V<SUB>r</SUB>(m.s<sup>-1</sup>) </th>
 					<th id="vitesseuphi`+countt.toString()+`" title="" class="tg-aicv"  >V<SUB>&phi;</SUB>(m.s<sup>-1</sup>)</th>
 					<th id="temps_obs`+countt.toString()+`" class="tg-aicv"></th>
-					<th id="v_total`+countt.toString()+`" class="tg-aicv">V<SUB>physique</SUB> (m.s<sup>-1</sup>)</th>
-					<th id="distance_metrique`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>`; //ManonGeneralisation
+					<th id="v_total`+countt.toString()+`" class="tg-aicv">V<SUB>physique</SUB> (m.s<sup>-1</sup>)</th>`; 
 
 		var newRow2=document.getElementById('tableauresultatsimu').insertRow();
 
@@ -330,8 +331,7 @@ function genereHtml(){
 					<td class="tg-3ozo" id="vr_sc_mas`+countt.toString()+`">res</td>
 					<td class="tg-3ozo" id="vp_sc_mas`+countt.toString()+`">res</td>
 					<td class="tg-3ozo" id="to`+countt.toString()+`">res</td>
-					<td class="tg-3ozo" id="v_tot`+countt.toString()+`">res</td>
-					<td class="tg-3ozo" id="distance_parcourue`+countt.toString()+`" style="display: none;">res</td>`; //ManonGeneralisation
+					<td class="tg-3ozo" id="v_tot`+countt.toString()+`">res</td>`; 
 
 	}
 
@@ -676,25 +676,6 @@ function trajectoire(compteur,mobile) {
 
 		element2=document.getElementById('traject_type2'); //Récupère la valeur de si on est en mode observateur ou en mode photon.
 
-		var distance_metrique_cell = document.querySelectorAll('[id^="distance_metrique"]'); //Permet d'identifier toutes les cellules de label de la distance métrique.
-		var distance_metrique_res_cell = document.querySelectorAll('[id^="distance_parcourue"]'); //Permet d'identifier toutes les cellules de la distance métrique.
-
-		if (element2.value == "mobile") { //Si en mode photon, permet de révéler les cases de la distance métrique.
-			distance_metrique_cell.forEach(function(cell) { 
-				cell.style.display = ''; 
-			});
-			distance_metrique_res_cell.forEach(function(cell) {
-				cell.style.display = ''; 
-			});
-		} else {
-			distance_metrique_cell.forEach(function(cell) {
-				cell.style.display = 'none';
-			});
-			distance_metrique_res_cell.forEach(function(cell) {
-				cell.style.display = 'none'; 
-			});
-		}
-
     	document.getElementById('trace_present').value="true"; //Permet de déclarer qu'il y a un tracé. 
 
     	mobile.pause = false; //Permet de dire que nous ne sommes pas en pause.
@@ -748,9 +729,6 @@ function trajectoire(compteur,mobile) {
 		A_init_obs = mobile.vr*(1-rs/mobile.r0)/mobile.E; //Je multiplie par dτ/dt pour passer le dr/dτ en observateur. 
 		A_part_obs=A_init_obs; 
 		mobile["A_part_obs"]=A_part_obs; 
-
-		distance_parcourue_totale=0; //J'initialise la distance parcourue totale par le mobile dans son propre référentiel. 
-		mobile["distance_parcourue_totale"]=distance_parcourue_totale; //La distance totale parcourue devient une valeur spécifique au mobile. 
 	
     	temps_particule = 0; //J'initialise le temps dans le référentiel du mobile. 
     	mobile["temps_particule"]=temps_particule;
@@ -836,8 +814,8 @@ function trajectoire(compteur,mobile) {
 
 		//--------------------------------Gestion des boutons d'accélération/décélération--------------------------------
 
-		document.getElementById('plusvite').removeEventListener('click',foncPourVitAvantLancement,false); //Je désassocie la fonction foncPourVitAvantLancement du bouton pour accélérer une fois la simulation commencée.
-		document.getElementById('moinsvite').removeEventListener('click',foncPourVitAvantLancement,false) //Je désassocie la fonction foncPourVitAvantLancement du bouton pour décélérer une fois la simulation commencée.
+		document.getElementById('plusvite').removeEventListener('click',foncPourVitPlusAvantLancement,false); //Je désassocie la fonction foncPourVitAvantLancement du bouton pour accélérer une fois la simulation commencée.
+		document.getElementById('moinsvite').removeEventListener('click',foncPourVitMoinsAvantLancement,false) //Je désassocie la fonction foncPourVitAvantLancement du bouton pour décélérer une fois la simulation commencée.
 
 		Dtau1 = 1e8 * dtau ; //Pour permettre une accélération.
 		mobile["Dtau1"]=Dtau1; //Pour associer ce Dtau1 à un mobile spécifique.
@@ -848,14 +826,14 @@ function trajectoire(compteur,mobile) {
 		document.getElementById('plusvite').addEventListener('click', function() { //J'associe le bouton accélérer à la fonction suivante une fois la simulation lancée. 
 			mobile=bouttons.vitesse(mobile,true); //J'accélère grâce à la fonction vitesse du fichier bouttons. 
 			compteurVitesseAvantLancement+=1/nbredefusees;
-			document.getElementById('nsimtxt').innerHTML= "ns="+ Math.round(compteurVitesseAvantLancement).toString(); //J'affiche le ns correspondant sur le site.
+			document.getElementById('nsimtxt').innerHTML= "frame="+ Math.round(compteurVitesseAvantLancement).toString(); //J'affiche le ns correspondant sur le site.
 		}, false);
 
 
 		document.getElementById('moinsvite').addEventListener('click', function() { //J'associe le bouton décélérer à la fonction suivante une fois la simulation lancée. 
 			mobile=bouttons.vitesse(mobile,false); //Je décélère grâce à la fonction vitesse du fichier bouttons. 
 			compteurVitesseAvantLancement-=1/nbredefusees;
-			document.getElementById('nsimtxt').innerHTML= "ns="+ Math.round(compteurVitesseAvantLancement).toString(); //J'affiche le ns correspondant sur le site.
+			document.getElementById('nsimtxt').innerHTML= "frame="+ Math.round(compteurVitesseAvantLancement).toString(); //J'affiche le ns correspondant sur le site.
 		}, false);
 
 
@@ -883,7 +861,7 @@ function trajectoire(compteur,mobile) {
 			majFondFixe44(mobile); //Je mets à jour tout ce qui est relié au dessin du mobile.
 			rafraichir2(context,mobilefactor,rmaxjson,maximum,compteur); //Redessine le rayon de SCH et si besoin l'astre sur un fond blanc avec les entrées à gauche. 
 			nzoom-=1/nbredefusees;
-			document.getElementById('nzoomtxt').innerHTML= "nz="+ Math.round(nzoom).toString(); //Mets à jour l'affichage du zoom sur le site. 
+			document.getElementById('nzoomtxt').innerHTML= "zoom="+ Math.round(nzoom).toString(); //Mets à jour l'affichage du zoom sur le site. 
 		}, false);
 
 
@@ -895,7 +873,7 @@ function trajectoire(compteur,mobile) {
 			majFondFixe44(mobile); //Je mets à jour tout ce qui est relié au dessin du mobile.
 			rafraichir2(context,mobilefactor,rmaxjson,maximum,compteur); //Redessine le rayon de SCH et si besoin l'astre sur un fond blanc avec les entrées à gauche.
 			nzoom+=1/nbredefusees;
-			document.getElementById('nzoomtxt').innerHTML= "nz="+ Math.round(nzoom).toString(); //Mets à jour l'affichage du zoom sur le site. 
+			document.getElementById('nzoomtxt').innerHTML= "zoom="+ Math.round(nzoom).toString(); //Mets à jour l'affichage du zoom sur le site. 
 		}, false);
 
 
@@ -907,7 +885,7 @@ function trajectoire(compteur,mobile) {
 			majFondFixe44(mobile); //Je mets à jour tout ce qui est relié au dessin du mobile.
 			rafraichir2(context,mobilefactor,rmaxjson,maximum,compteur); //Redessine le rayon de SCH et si besoin l'astre sur un fond blanc avec les entrées à gauche. 
 			nzoom=0;
-			document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString(); //Mets à jour l'affichage du zoom sur le site. 
+			document.getElementById('nzoomtxt').innerHTML= "zoom="+ nzoom.toString(); //Mets à jour l'affichage du zoom sur le site. 
 		}, false);
 
 
@@ -938,12 +916,12 @@ function trajectoire(compteur,mobile) {
     	}, false);
 
 		//Partie qui permet de mettre à l'échelle le dessin de l'astre et du rayon de SCH vis à vis des zooms avant le lancement de la simulation : 
-		if (ns_avant_lancement < 0) {
-			for (incr = 0; incr > ns_avant_lancement; incr -= 1) {
+		if (nz_avant_lancement < 0) {
+			for (incr = 0; incr > nz_avant_lancement; incr -= 1) {
 				mobilefactor[cle] = mobilefactor[cle] / 1.2;
 			}
-		} else if (ns_avant_lancement > 0) {
-			for (incr = 0; incr < ns_avant_lancement; incr += 1) {
+		} else if (nz_avant_lancement > 0) {
+			for (incr = 0; incr < nz_avant_lancement; incr += 1) {
 				mobilefactor[cle] = mobilefactor[cle] * 1.2;
 			}
 		}
@@ -1140,9 +1118,8 @@ function animate(compteur,mobile,mobilefactor) {
 			document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3);
 			document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_2_obs.toExponential(3);
 			document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_2_obs.toExponential(3);
-			document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(8);
-			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation
-			
+			document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(8);			
+
 		} else {
 				mobile.temps_observateur_distant += mobile.dtau;
 				mobile.r_part_obs=rs;
@@ -1152,7 +1129,6 @@ function animate(compteur,mobile,mobilefactor) {
 				document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part_obs.toExponential(3);
 				document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_2_obs.toExponential(3);
 				document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_2_obs.toExponential(3); 
-				document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation
 
 		}
 	}
@@ -1166,13 +1142,11 @@ function animate(compteur,mobile,mobilefactor) {
             document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_2.toExponential(3);
 			document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(8);
 		    document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part.toExponential(3);
-			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation
 			
 			if(mobile.r_part<=rs){
 				document.getElementById("v_tot"+compteur.toString()).innerHTML ="";
 				document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = "";
 				document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = "";
-				document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation
 			}
 		} 
 		else {
@@ -1183,7 +1157,6 @@ function animate(compteur,mobile,mobilefactor) {
 				document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML="";
 				document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML="";  
 			}
-			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation				
       	}  
 	}
 	
@@ -1674,8 +1647,8 @@ function foncPourZoomPlusAvantLancement(){
 	
 		factGlobalAvecClef = factGlobalAvecClef*1.2;
 		nzoom+=1;
-		ns_avant_lancement+=1;
-		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
+		nz_avant_lancement+=1;
+		document.getElementById('nzoomtxt').innerHTML= "zoom="+ nzoom.toString();
 		canvasAvantLancement();
 	
 }
@@ -1686,8 +1659,8 @@ function foncPourZoomMoinsAvantLancement(){
 	
 		factGlobalAvecClef = factGlobalAvecClef/1.2;
 		nzoom-=1;
-		ns_avant_lancement-=1;
-		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
+		nz_avant_lancement-=1;
+		document.getElementById('nzoomtxt').innerHTML= "zoom="+ nzoom.toString();
 		canvasAvantLancement();
 }
 
@@ -1723,20 +1696,20 @@ function boutonAvantLancement(){
     
     document.getElementById('moinszoom').addEventListener('click',foncPourZoomMoinsAvantLancement, false);
     document.getElementById('pluszoom').addEventListener('click',foncPourZoomPlusAvantLancement, false);
-    document.getElementById('plusvite').addEventListener('click',foncPourVitAvantLancement,false);
-    document.getElementById('plusvite').myParam = true
-    document.getElementById('moinsvite').addEventListener('click',foncPourVitAvantLancement,false);
-    document.getElementById('moinsvite').myParam = false
+    document.getElementById('plusvite').addEventListener('click',foncPourVitPlusAvantLancement,false);
+    document.getElementById('moinsvite').addEventListener('click',foncPourVitMoinsAvantLancement,false);
 }
 
-function foncPourVitAvantLancement(){
-	if(accelerer.currentTarget.myParam){
-		compteurVitesseAvantLancement += 1
-	}
-	else{
-		compteurVitesseAvantLancement -= 1
-	}
-	document.getElementById('nsimtxt').innerHTML= "ns="+ compteurVitesseAvantLancement.toString();
+function foncPourVitMoinsAvantLancement(){
+	compteurVitesseAvantLancement -= 1
+	compteurVitesse-=1;
+	document.getElementById('nsimtxt').innerHTML= "frame="+ Math.round(compteurVitesse).toString();
+}
+
+function foncPourVitPlusAvantLancement(){
+	compteurVitesseAvantLancement += 1
+	compteurVitesse+=1;
+	document.getElementById('nsimtxt').innerHTML= "frame="+ Math.round(compteurVitesse).toString();
 }
 
 /**

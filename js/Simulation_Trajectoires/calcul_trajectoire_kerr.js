@@ -18,11 +18,12 @@ var scale_factor=280;
 var z=0;
 var z_obs=0;
 var input=0;
-var compteurVitesseAvantLancement = 0;
 var distance_parcourue_totale=0; //Manon
-var ns_avant_lancement=0;
+var nz_avant_lancement=0;
 var c = 299792458;
 var G = 6.67385 * Math.pow(10, -11);
+var compteurVitesse = 0;
+var compteurVitesseAvantLancement =0; 
 
 
 
@@ -481,8 +482,8 @@ function trajectoire() {
 		
 		//--------------------------------Gestion des boutons d'accélération/décélération--------------------------------
 
-		document.getElementById('plusvite').removeEventListener('click',foncPourVitAvantLancement,false); //Je désassocie la fonction foncPourVitAvantLancement du bouton pour accélérer une fois la simulation commencée.
-		document.getElementById('moinsvite').removeEventListener('click',foncPourVitAvantLancement,false); //Je désassocie la fonction foncPourVitAvantLancement du bouton pour décélérer une fois la simulation commencée.
+		document.getElementById('plusvite').removeEventListener('click',foncPourVitPlusAvantLancement,false); //Je désassocie la fonction foncPourVitAvantLancement du bouton pour accélérer une fois la simulation commencée.
+		document.getElementById('moinsvite').removeEventListener('click',foncPourVitMoinsAvantLancement,false); //Je désassocie la fonction foncPourVitAvantLancement du bouton pour décélérer une fois la simulation commencée.
 
 		Dtau1 = 1e8*temps_chute_libre ; //Pour permettre une accélération.
 		Dtau2 = temps_chute_libre / 1e8; //Pour permettre une décélération.
@@ -494,7 +495,7 @@ function trajectoire() {
 				dtau += dtau;
 				clicks += 1 ;
 			}
-			document.getElementById('nsimtxt').innerHTML= "ns="+ clicks.toString(); //J'affiche le ns correspondant sur le site.
+			document.getElementById('nsimtxt').innerHTML= "frame="+ clicks.toString(); //J'affiche le ns correspondant sur le site.
 		}, false);
 
 
@@ -505,7 +506,7 @@ function trajectoire() {
 				dtau /= 2;
 				clicks -= 1 ;
 			}
-			document.getElementById('nsimtxt').innerHTML= "ns="+ clicks.toString(); //J'affiche le ns correspondant sur le site.
+			document.getElementById('nsimtxt').innerHTML= "frame="+ clicks.toString(); //J'affiche le ns correspondant sur le site.
 		}, false);
 
 	
@@ -544,7 +545,7 @@ function trajectoire() {
 			majFondFixe22(); //Je mets à jour tout ce qui est relié au dessin du mobile.																		   
 			rafraichir2(context); //Redessine les rayons Rh+, Rh- et rs un fond blanc avec les entrées à gauche. 
 			input-=1;
-			document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString(); //Mets à jour l'affichage du zoom sur le site. 
+			document.getElementById('nzoomtxt').innerHTML= "zoom="+ input.toString(); //Mets à jour l'affichage du zoom sur le site. 
 		}, false);
 
 
@@ -558,7 +559,7 @@ function trajectoire() {
 			majFondFixe22(); //Je mets à jour tout ce qui est relié au dessin du mobile.																						  
 			rafraichir2(context); //Redessine les rayons Rh+, Rh- et rs un fond blanc avec les entrées à gauche. 
 			input+=1;
-			document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString(); //Mets à jour l'affichage du zoom sur le site.
+			document.getElementById('nzoomtxt').innerHTML= "zoom="+ input.toString(); //Mets à jour l'affichage du zoom sur le site.
 		}, false);
 
 
@@ -572,16 +573,16 @@ function trajectoire() {
 			majFondFixe22(); //Je mets à jour tout ce qui est relié au dessin du mobile.																		   
 			rafraichir2(context); //Redessine les rayons Rh+, Rh- et rs un fond blanc avec les entrées à gauche. 
 			input=0;
-			document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString(); //Mets à jour l'affichage du zoom sur le site.
+			document.getElementById('nzoomtxt').innerHTML= "zoom="+ input.toString(); //Mets à jour l'affichage du zoom sur le site.
 		}, false);
 
 		//Partie qui permet de mettre à l'échelle le dessin de l'astre et du rayon de SCH vis à vis des zooms avant le lancement de la simulation : 
-		if (ns_avant_lancement < 0) {
-			for (incr = 0; incr > ns_avant_lancement; incr -= 1) {
+		if (nz_avant_lancement < 0) {
+			for (incr = 0; incr > nz_avant_lancement; incr -= 1) {
 				scale_factor = scale_factor / 1.2;
 			}
-		} else if (ns_avant_lancement > 0) {
-			for (incr = 0; incr < ns_avant_lancement; incr += 1) {
+		} else if (nz_avant_lancement > 0) {
+			for (incr = 0; incr < nz_avant_lancement; incr += 1) {
 				scale_factor = scale_factor * 1.2;
 			}
 		}
@@ -1456,14 +1457,14 @@ function MAJGraphePotentiel(){
 
 
 function foncPourZoomPlusAvantLancement(){
-		ns_avant_lancement+=1;
-		document.getElementById('nzoomtxt').innerHTML= "nz="+ ns_avant_lancement.toString();
+		nz_avant_lancement+=1;
+		document.getElementById('nzoomtxt').innerHTML= "zoom="+ nz_avant_lancement.toString();
 		
 }
 
 function foncPourZoomMoinsAvantLancement(){
-		ns_avant_lancement-=1;
-		document.getElementById('nzoomtxt').innerHTML= "nz="+ ns_avant_lancement.toString();
+		nz_avant_lancement-=1;
+		document.getElementById('nzoomtxt').innerHTML= "zoom="+ nz_avant_lancement.toString();
 }
 
 function boutonAvantLancement(){
@@ -1475,20 +1476,20 @@ function boutonAvantLancement(){
     
     document.getElementById('moinszoom').addEventListener('click',foncPourZoomMoinsAvantLancement, false);
     document.getElementById('pluszoom').addEventListener('click',foncPourZoomPlusAvantLancement, false);
-    document.getElementById('plusvite').addEventListener('click',foncPourVitAvantLancement,false);
-    document.getElementById('plusvite').myParam = true
-    document.getElementById('moinsvite').addEventListener('click',foncPourVitAvantLancement,false);
-    document.getElementById('moinsvite').myParam = false
+    document.getElementById('plusvite').addEventListener('click',foncPourVitPlusAvantLancement,false);
+    document.getElementById('moinsvite').addEventListener('click',foncPourVitMoinsAvantLancement,false);
 }
 
-function foncPourVitAvantLancement(){
-	if(accelerer.currentTarget.myParam){
-		compteurVitesseAvantLancement += 1
-	}
-	else{
-		compteurVitesseAvantLancement -= 1
-	}
-	document.getElementById('nsimtxt').innerHTML= "ns="+ compteurVitesseAvantLancement.toString();
+function foncPourVitMoinsAvantLancement(){
+	compteurVitesseAvantLancement -= 1
+	compteurVitesse-=1;
+	document.getElementById('nsimtxt').innerHTML= "frame="+ Math.round(compteurVitesse).toString();
+}
+
+function foncPourVitPlusAvantLancement(){
+	compteurVitesseAvantLancement += 1
+	compteurVitesse+=1;
+	document.getElementById('nsimtxt').innerHTML= "frame="+ Math.round(compteurVitesse).toString();
 }
 
 /**
