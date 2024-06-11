@@ -122,6 +122,10 @@ function lancerDeFusees(fuseecompteur){
 	}
 	document.getElementById("pause/resume").addEventListener("click", function() {
         pausee()}); //ajouté Là par Khaled car le fonctionnement du button à ete changé
+	//Associe au bouton pause la fonction pausee permettant de mettre la simulation en pause : 
+	document.getElementById('bouton_pause').addEventListener('click', function() {
+		pausee();
+	});
 }
 
 
@@ -1369,7 +1373,7 @@ function pausee() {
         document.getElementById("pause/resume").innerHTML =texte.pages_trajectoire.bouton_resume;
 		//clearInterval(mobile.myInterval);
 	} 
-    else if(mobile.peuxonrelancer) {
+    else{
 		    Timer.paused = false;
 			mobile.pause = false;
             document.getElementById("pause/resume").innerHTML = texte.pages_trajectoire.bouton_pause;

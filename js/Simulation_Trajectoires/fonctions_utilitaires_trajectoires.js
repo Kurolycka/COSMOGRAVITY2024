@@ -198,6 +198,8 @@ function arretkerr() {
 	pause = true;
     clearInterval(myInterval);
 	document.getElementById("indic_calculs").innerHTML=texte.pages_trajectoire.calcul_termine;
+    document.getElementById("pause/resume").style.display='none';  //on enleve les 2 buttons pause
+	document.getElementById('bouton_pause').style.display='none'; 
 }
 
 //----------------------------------------------------{htmlDecode}----------------------------------------------------

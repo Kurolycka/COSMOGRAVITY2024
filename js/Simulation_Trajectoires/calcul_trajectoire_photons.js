@@ -136,6 +136,11 @@ function lancerDeFusees(fuseecompteur){
 
 	document.getElementById("pause/resume").addEventListener("click", function() {
         pausee()}); //ajouté Là par Khaled car le fonctionnement du button à ete changé
+
+	//Associe au bouton pause la fonction pausee permettant de mettre la simulation en pause : 
+	 document.getElementById('bouton_pause').addEventListener('click', function() {
+		pausee();
+	});
 }
 
 // -------------------------------------{fonction supprHtml}--------------------------------------------
@@ -1056,7 +1061,8 @@ function animate(compteur,mobile,mobilefactor) {
 			context.lineWidth = "1";//en choisissant la bonne largeur des traits
 			context.fill();//on le met sur le canva
 
-			majFondFixe44(mobile);
+			majFondFixe44(mobile);// on efface l'ancienne position de la boule
+			
 		    //On dessine la boule bleue avec les meme etapes
 			mobile["context22"].beginPath();
 			mobile["context22"].fillStyle = COULEUR_BLEU;
@@ -1092,7 +1098,8 @@ function animate(compteur,mobile,mobilefactor) {
 			if (Object.keys(Timer.instances).length === 0) 
 			{
 				document.getElementById("indic_calculs").innerHTML=texte.pages_trajectoire.calcul_termine; //on met que le calculé est fini (voir le Json)
-				document.getElementById("pause/resume").style.display='none';  //on enleve le button pause
+				document.getElementById("pause/resume").style.display='none';  //on enleve les 2 buttons pause
+				document.getElementById('bouton_pause').style.display='none'; 
 			}
 
 		}
@@ -1130,7 +1137,7 @@ function animate(compteur,mobile,mobilefactor) {
 			mobile.temps_observateur_distant += mobile.dtau //calcul temps_observateur
 
 			//-----------------------------------------------------PARTIE AFFICHAGE-------------------------------------------------
-			//------------------------------------------------------AVANT RS-------------------------------------------------
+		    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> AVANT RS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 			if(mobile.r_part>rs*1.000001) //pas exactement rs pour eviter les problemes de calculs 
 			{
 				document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3);//temps mobile
@@ -1142,7 +1149,8 @@ function animate(compteur,mobile,mobilefactor) {
 				document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3);//distance parcourue
 			}
 			
-			//----------------------------------------------------- APRES RS-------------------------------------------------	
+            //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> APRES RS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+			
 			/*On affiche les valeurs aux quelles tendent les variables theoriquement:*/
 			else
 			{
@@ -1163,7 +1171,8 @@ function animate(compteur,mobile,mobilefactor) {
 			context.lineWidth = "1";//en choisissant la bonne largeur des traits
 			context.fill();//on le met sur le canva
 			
-			majFondFixe44(mobile);
+			majFondFixe44(mobile);// on efface l'ancienne position de la boule
+
 			//On dessine la boule bleue avec les meme etapes
 			mobile["context22"].beginPath();
 			mobile["context22"].fillStyle = COULEUR_BLEU;
@@ -1182,10 +1191,10 @@ function animate(compteur,mobile,mobilefactor) {
 			//quand on arrive à la singularité on veut que r=0 
 			mobile.r_part=0;
 			document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part.toExponential(3); //et on l'affiche
+			//vu que dans le trou noir les equations font un peu n'importe quoi, du coup on efface la derrniére  position
+			mobile["context22"].clearRect(mobile.positionspatio.posX1, mobile.positionspatio.posY1 , 5, 0, Math.PI * 2);
 			//on stop la simulation quand on arrive à r=0
 			Timer.instances[compteur].stop();
-			document.getElementById("indic_calculs").innerHTML=texte.pages_trajectoire.calcul_termine; //on met que le calculé est fini (voir le Json)
-			document.getElementById("pause/resume").style.display='none';  //on enleve le button pause
 			
 		}  
 
@@ -1209,6 +1218,7 @@ function animate(compteur,mobile,mobilefactor) {
 			{
 				document.getElementById("indic_calculs").innerHTML=texte.pages_trajectoire.calcul_termine; //on met que le calculé est fini (voir le Json)
 				document.getElementById("pause/resume").style.display='none';  //on enleve le button pause
+				document.getElementById("pause/resume").style.display='none';  //on enleve les 2 buttons pause
 			}
 
 	}
@@ -1339,9 +1349,8 @@ function pausee() {
 		document.getElementById("pau").title = texte.pages_trajectoire.bouton_lecture;
         document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_enpause;
         document.getElementById("pause/resume").innerHTML =texte.pages_trajectoire.bouton_resume;
-		//clearInterval(mobile.myInterval);
 	} 
-    else if(mobile.peuxonrelancer) {
+    else{
 		    Timer.paused = false;
 			mobile.pause = false;
             document.getElementById("pause/resume").innerHTML = texte.pages_trajectoire.bouton_pause;

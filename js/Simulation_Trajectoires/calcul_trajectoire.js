@@ -169,6 +169,11 @@ function lancerDeFusees(fuseecompteur){
 	}
 	document.getElementById("pause/resume").addEventListener("click", function() {
         pausee()}); //ajouté Là par Khaled car le fonctionnement du button à ete changé
+
+ 	//Associe au bouton pause la fonction pausee permettant de mettre la simulation en pause : 
+	 document.getElementById('bouton_pause').addEventListener('click', function() {
+		pausee();
+	});
 }
 
 
@@ -856,11 +861,6 @@ function trajectoire(compteur,mobile) {
  
     	new Timer(() => animate(compteur,mobile,mobilefactor),compteur, 1, -1); //Créé un nouvel objet Timer qui répète la fonction animate toutes les 1s indéfiniment. 
 		//animate calcule les coordonnées de la particule à chaque instant. 
-	
-		//Associe au bouton pause la fonction pausee permettant de mettre la simulation en pause : 
-    	document.getElementById('bouton_pause').addEventListener('click', function() {
-    		pausee(compteur,mobile,mobilefactor);
-    	}, false);
 
 		document.getElementById('enregistrer2').addEventListener('click', function() { //Lorsque l'on clique sur enregistrer cela permet d'avoir la boule de la particule sur l'enregistrement.
         	element2z=document.getElementById('traject_type2');
@@ -1108,7 +1108,7 @@ function animate(compteur,mobile,mobilefactor)
 				//-----------------------------------------------------PARTIE CALCULE-------------------------------------------------
 
 				val_obs = rungekutta_obs(mobile.E,mobile.L,mobile.dtau, mobile.r_part_obs, mobile.A_part_obs); //calcul de l'equation differentielle avec RK4 ça donne le r et dr/dt
-				mobile.r_part_obs = val_obs[0]; 		///valeur de r calculée par RK (Runge Kutta)
+				mobile.r_part_obs = val_obs[0]; 		//valeur de r calculée par RK (Runge Kutta)
 				mobile.A_part_obs = val_obs[1]; 		//valeur de dr/dtau calculée par RK
 
 				/*Calcul des vitesses dans metrique externe de SCH qui retourne une liste de [v_tot,v_r,v_phi]  (Regarder le fichier 
@@ -1183,7 +1183,8 @@ function animate(compteur,mobile,mobilefactor)
 			context.lineWidth = "1"; //en choisissant la bonne largeur des traits
 			context.fill();		//on le met sur le canva
 			
-			majFondFixe44(mobile);
+			majFondFixe44(mobile); // on efface l'ancienne position de la boule
+
 			//On dessine la boule bleue avec les meme etapes
 			mobile["context22"].beginPath();
 			mobile["context22"].fillStyle = COULEUR_BLEU;
@@ -1263,12 +1264,13 @@ function animate(compteur,mobile,mobilefactor)
 			if (Object.keys(Timer.instances).length === 0) 
 				{
 					document.getElementById("indic_calculs").innerHTML=texte.pages_trajectoire.calcul_termine; //on met que le calculé est fini (voir le Json)
-					document.getElementById("pause/resume").style.display='none';  //on enleve le button pause
+					document.getElementById("pause/resume").style.display='none';  //on enleve les 2 buttons pause
+					document.getElementById('bouton_pause').style.display='none'; 
 				}
 		}
 
 		/*Le temps observateur est calculé meme quand on rentre dans le trou noir ( r < rs ) */
-		mobile.temps_observateur_distant += dtau //le calcul temps observateur est toujours calculé et affiché sauf si la simulation s'arrete
+		mobile.temps_observateur_distant += mobile.dtau //le calcul temps observateur est toujours calculé et affiché sauf si la simulation s'arrete
 		document.getElementById("to"+compteur.toString()).innerHTML = mobile.temps_observateur_distant.toExponential(3); //affichage
 		
 	}
@@ -1277,20 +1279,22 @@ function animate(compteur,mobile,mobilefactor)
 	else     
 	//Tout ce qui est dans cette condition concerne le cas du referentiel du spationaute
 	{   
-		if (mobile.r_part > 0) 
+		if (mobile.r_part >= 0) 
 		{
 			//-----------------------------------------------------PARTIE CALCULE-------------------------------------------------
 
 			var temps_allumage_reacteur = Number(document.getElementById("temps_allumage").value); //Recuperer la valeur du temps d'allumage du boutton html
-
+			/*Ce qui suit verifie si on a appuyé pour accelerer et adapte le pas de calcul pour RK:*/
 			if (joy.GetPhi()!=0)
 			{ 
+				/*Calcul avec RK4 avec un dtau de temps d'allumages des reacteurs dans le cas d'une acceleration de la part du spationaute */
 				val = rungekutta(mobile.L, temps_allumage_reacteur, mobile.r_part, mobile.A_part); 
-			} //Calcul avec RK4 avec un dtau de temps d'allumages des reacteurs dans le cas d'une acceleration de la part du spationaute
+			} 
 			else           
 			{ 
+				//calcul avec RK4 avec le dtau par defaut
 				val = rungekutta(mobile.L,mobile.dtau, mobile.r_part, mobile.A_part); 
-			} //calcul avec RK4 avec le dtau par defaut
+			} 
 
 			mobile.r_part = val[0]; //valeur de r calculée par RK
 			mobile.A_part = val[1]; //valeur de dr/dtau calculée par RK
@@ -1310,6 +1314,7 @@ function animate(compteur,mobile,mobilefactor)
 
 			
 			mobile.temps_particule+=mobile.dtau*(1-rs/mobile.r_part)/mobile.E; //calcul du temps propre de la particule
+			mobile.temps_observateur_distant += mobile.dtau
 
 			/*Calcul du gradient*/
 			gm = derivee_seconde_Schwarzchild_massif(mobile.L,mobile.r_part);
@@ -1338,8 +1343,9 @@ function animate(compteur,mobile,mobilefactor)
 
 			//-----------------------------------------------------PARTIE AFFICHAGE-------------------------------------------------
 
-			//----------------------------------------------------- AVANT RS-------------------------------------------------	
-			if(mobile.r_part<rs*1.000001)//pas exactement rs pour eviter les problemes de calculs 
+			//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> AVANT RS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+			
+			if(mobile.r_part>rs*1.000001)//pas exactement rs pour eviter les problemes de calculs 
 			{
 				document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3); //temps mobile
 				document.getElementById("to"+compteur.toString()).innerHTML = mobile.temps_observateur_distant.toExponential(3); //temps observateur
@@ -1352,16 +1358,17 @@ function animate(compteur,mobile,mobilefactor)
 				document.getElementById("g_ressenti"+compteur.toString()).innerHTML = nombre_de_g_calcul_memo.toExponential(3); //nombre de g ressenti par le pilote
 				document.getElementById("dernier_g_res"+compteur.toString()).innerHTML = nombre_de_g_calcul.toExponential(3);//dernier nombre de g affiché
 			}
-			//----------------------------------------------------- APRES RS-------------------------------------------------
+		    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> APRES RS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 			else
 			{
 				document.getElementById("r_par"+compteur.toString()).innerHTML =mobile.r_part.toExponential(3); 
+				document.getElementById("to"+compteur.toString()).innerHTML = 1/0; //temps observateur
 				document.getElementById("ga"+compteur.toString()).innerHTML =1/0;
 				document.getElementById("v_tot"+compteur.toString()).innerHTML ="";
 				document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = "";
 				document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = "";
 				document.getElementById("g_ressenti"+compteur.toString()).innerHTML = ""; 		 
-				document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=1/0;
+				document.getElementById("distance_parcourue"+compteur.toString()).innerHTML="";
 				document.getElementById("g_ressenti"+compteur.toString()).innerHTML = nombre_de_g_calcul_memo.toExponential(3); 
 			}
 
@@ -1372,19 +1379,14 @@ function animate(compteur,mobile,mobilefactor)
 			context.rect(mobile.positionspatio.posX1, mobile.positionspatio.posY1, 1, 1);
 			context.lineWidth = "1";
 			context.fill();
-			majFondFixe44(mobile);
-			//on dessine le mobile derriere le mobile
+
+			majFondFixe44(mobile); // on efface l'ancienne position de la boule
+			//on dessine le mobile au bout du trait
 			mobile["context22"].beginPath();
 			mobile["context22"].fillStyle = COULEUR_BLEU;
 			mobile["context22"].arc(mobile.positionspatio.posX1, mobile.positionspatio.posY1 , 5, 0, Math.PI * 2);
 			mobile["context22"].lineWidth = "1";
 			mobile["context22"].fill();
-
-			//vu que dans le trou noir les equations font un peu n'importe quoi, du coup on efface la derrniére  position
-			if(mobile.r_part<=0)
-			{
-				mobile["context22"].clearRect(mobile.positionspatio.posX1, mobile.positionspatio.posY1 , 5, 0, Math.PI * 2);
-			}
 
 			//-----------------------------------------------------PARTIE TRACÉ POTENTIEL -------------------------------------------------
 			V = Vr_mob(mobile.L,mobile.r_part)-1;//on stocke la valeur du (Poteniel-1) avec les valeurs actuelles
@@ -1397,13 +1399,13 @@ function animate(compteur,mobile,mobilefactor)
 		else
 		{
 			mobile.r_part=0; // on met quand on s'approche du milieu
+			//vu que dans le trou noir les equations font un peu n'importe quoi, du coup on efface la derrniére  position
+			mobile["context22"].clearRect(mobile.positionspatio.posX1, mobile.positionspatio.posY1 , 5, 0, Math.PI * 2);
 			//on affiche les derniéres valeurs avant l'arret de la simulation
 			document.getElementById("r_par"+compteur.toString()).innerHTML =mobile.r_part.toExponential(3); 
 			//on stop la simulation quand on arrive à r=0
 			Timer.instances[compteur].stop();
-			document.getElementById("indic_calculs").innerHTML=texte.pages_trajectoire.calcul_termine; //on met que le calculé est fini (voir le Json)
-			document.getElementById("pause/resume").style.display='none';  //on enleve le button pause
-	
+			
 		}
 		
 		//-----------------------------------------------------GESTION REBOND-------------------------------------------------
@@ -1452,8 +1454,7 @@ function animate(compteur,mobile,mobilefactor)
 				{
 					Timer.instances[compteur].stop();//on stope le timer concerné
 					textesfinarret();
-				}
-			
+				}		
 			}
 
 			else 
@@ -1463,14 +1464,14 @@ function animate(compteur,mobile,mobilefactor)
 				{
 					Timer.instances[compteur].stop(); //on stope le Timer du mobile concerné 	
 				}
-		
 			}
 
 			/*si tout les Timers relié aux mobiles sont supprimés on sait que ya plus de calculs en cours alors on met qu'on a fini la simulation*/
 			if (Object.keys(Timer.instances).length === 0) 
 			{
 				document.getElementById("indic_calculs").innerHTML=texte.pages_trajectoire.calcul_termine; //on met que le calculé est fini (voir le Json)
-				document.getElementById("pause/resume").style.display='none';  //on enleve le button pause
+				document.getElementById("pause/resume").style.display='none';  //on enleve les 2 buttons pause
+				document.getElementById('bouton_pause').style.display='none'; 
 			}
 		}
 			
@@ -1522,7 +1523,7 @@ function animate(compteur,mobile,mobilefactor)
 		/* Diode pour le nombre de g ressenti
 			g_ressenti < 4 ------- vert
 			4 < g_ressenti < 9------- jaune
-			g_ressenti > 0.5 -------  rouge
+			g_ressenti > 9 -------  rouge
 		*/ 
 		if (nombre_de_g_calcul_memo <= 4) 
 		{

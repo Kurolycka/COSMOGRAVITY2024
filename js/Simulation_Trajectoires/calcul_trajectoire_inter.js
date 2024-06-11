@@ -124,6 +124,11 @@ function lancerDeFusees(fuseecompteur){
 	
 	document.getElementById("pause/resume").addEventListener("click", function() {
         pausee()}); //ajouté Là par Khaled car le fonctionnement du button à ete changé
+
+	//Associe au bouton pause la fonction pausee permettant de mettre la simulation en pause : 
+	document.getElementById('bouton_pause').addEventListener('click', function() {
+		pausee();
+	});
 }
 
 function supprHtml(){
@@ -833,11 +838,6 @@ function trajectoire(compteur,mobile) {
 
 		new Timer(() => animate(compteur,mobile,mobilefactor), 1, -1); //Créé un nouvel objet Timer qui répète la fonction animate toutes les 1s indéfiniment. 
 		//animate calcule les coordonnées de la particule à chaque instant. 
-
-		//Associe au bouton pause la fonction pausee permettant de mettre la simulation en pause : 
-		document.getElementById('bouton_pause').addEventListener('click', function() {
-			pausee(compteur,mobile,mobilefactor);
-		}, false);
 
 		document.getElementById('enregistrer2').addEventListener('click', function() { //Lorsque l'on clique sur enregistrer cela permet d'avoir la boule de la particule sur l'enregistrement.
 			element2z=document.getElementById('traject_type2');
@@ -1614,7 +1614,7 @@ function pausee() {
         document.getElementById("pause/resume").innerHTML =texte.pages_trajectoire.bouton_resume;
 		//clearInterval(mobile.myInterval);
 	} 
-    else if(mobile.peuxonrelancer) {
+    else {
 		    Timer.paused = false;
 			mobile.pause = false;
             document.getElementById("pause/resume").innerHTML = texte.pages_trajectoire.bouton_pause;
