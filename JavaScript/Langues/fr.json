@@ -95,6 +95,16 @@
 		"reinitialiser": "Réinitialiser",
 		"retour": "Retour",
 		"alerteConstante": "Impossible de trouver la fenêtre parente"
+	},
+
+	"grapheSéparatrices": {
+		"plat": "Plat",
+		"ferme": "Fermé",
+		"ouvert": "Ouvert",
+		"BC": "BigCrunch",
+		"pBC": "Pas de BigCrunch",
+		"BB": "BigBang",
+		"pBB": "Pas de"
 	}
 }
 

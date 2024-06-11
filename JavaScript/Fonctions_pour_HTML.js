@@ -249,6 +249,8 @@ function updateUnivers() {
     dm_horizon_evenement = m_vers_AL(dm_horizon_evenement)/1e9;
     document.getElementById("resultat_DmHorizonParticule").innerHTML = dm_horizon_evenement.toExponential(4);
     document.getElementById("he_enregistrer").innerHTML = "d<sub>e<sub>0</sub></sub> = " + dm_horizon_evenement.toExponential(4) + " GAL"
+
+    update_graphe_interactif()
 }
 
 
@@ -280,9 +282,6 @@ function avertissement() {
 
 /**
  * Fonction qui permet d'enregistrer un élément html sous plusieurs formats
- * @param cible {string} Id du div à enregistrer
- * @param format {string} Id de la liste qui contient les formats d'enregistrement
- * @param nom {string} Id de l'input qui contient le nom du fichier
  */
 function enregistrer() {
     let format = document.getElementById("optionsEnregistrement").value
