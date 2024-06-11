@@ -244,6 +244,7 @@ function updateUnivers() {
     dm_horizon_particule = m_vers_AL(dm_horizon_particule)/1e9;
     document.getElementById("resultat_DmHorizonEvenement").innerHTML = dm_horizon_particule.toExponential(4)
     document.getElementById("hp_enregistrer").innerHTML = "d<sub>p<sub>0</sub></sub> = " + dm_horizon_particule.toExponential(4) + " GAL"
+    document.getElementById("")
 
     let dm_horizon_evenement = calcul_horizon_evenements(fonction_simplifiante);
     dm_horizon_evenement = m_vers_AL(dm_horizon_evenement)/1e9;

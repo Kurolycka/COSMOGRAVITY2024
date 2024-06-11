@@ -1,27 +1,38 @@
+const omegaM0Max = 3;
+const omegaM0Min = 0;
+const omegaL0Max = 3;
+const omegaL0Min = -1.5;
+
+// Ol est dans le sens des x
+/**
+ * Fonction permettant de convertir une valeur de oméga lambda en pixel
+ * @param value {number} Valeur de oméga
+ * @return {number} Valeur de oméga convertis en pixel sur le canvas
+ */
+function omegal0_to_px(value) {
+    let echelle = (canvas.width - 30) / Math.abs(omegaL0Max - omegaL0Min);
+    return echelle * (value - omegaL0Min) + 15;
+}
+
+// Om est dans le sens des y
+/**
+ * Fonction permettant de convertir une valeur de oméga matière en pixel
+ * @param value {number} Valeur de oméga
+ * @return {number} Valeur de oméga convertis en pixel sur le canvas
+ */
+function omegam0_to_px(value) {
+    let echelle = (canvas.height - 30) / Math.abs(omegaM0Max - omegaM0Min);
+    return (canvas.height - 15) - (echelle * (value - omegaM0Min));
+}
+
 function update_graphe_interactif() {
     let texte = o_recupereJson()
     let canvas = document.getElementById("canvas");
     let context = canvas.getContext("2d");
 
-    let omegaM0Max = 3;
-    let omegaM0Min = 0;
-    let omegaL0Max = 3;
-    let omegaL0Min = -1.5;
-
     context.fillStyle = "#ffffff";
     context.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Ol est dans le sens des x
-    function omegal0_to_px(value) {
-        let echelle = (canvas.width - 30) / Math.abs(omegaL0Max - omegaL0Min);
-        return echelle * (value - omegaL0Min) + 15;
-    }
-
-    // Om est dans le sens des y
-    function omegam0_to_px(value) {
-        let echelle = (canvas.height - 30) / Math.abs(omegaM0Max - omegaM0Min);
-        return (canvas.height - 15) - (echelle * (value - omegaM0Min));
-    }
 
     // Dessiner les axes
     context.beginPath();
@@ -195,3 +206,94 @@ function update_graphe_interactif() {
     context.fillText(texte.grapheSéparatrices.pBB, 0, 12);
     context.restore();
 }
+
+// Fonction pour convertir les coordonnées de pixels en valeurs Omega
+function px_to_omegam0(y) {
+    const pxMin = omegam0_to_px(omegaM0Min); // Position y du bord supérieur du graphique en pixels
+    const pxMax = omegam0_to_px(omegaM0Max); // Position y du bord inférieur du graphique en pixels
+
+    // Conversion des pixels en valeurs Omega
+    return omegaM0Min + ((y - pxMin) / (pxMax - pxMin)) * (omegaM0Max - omegaM0Min);
+}
+
+function px_to_omegalambda0(x) {
+    const pxMin = omegal0_to_px(omegaL0Min); // Position x du bord gauche du graphique en pixels
+    const pxMax = omegal0_to_px(omegaL0Max); // Position x du bord droit du graphique en pixels
+
+    // Conversion des pixels en valeurs Omega
+    return omegaL0Min + ((x - pxMin) / (pxMax - pxMin)) * (omegaL0Max - omegaL0Min);
+}
+
+function update_point() {
+    let canvas = document.getElementById("canvas");
+    let context = canvas.getContext("2d");
+
+    const omegam0 = parseFloat(document.getElementById("Omégam0").value);
+    let omegalDE0
+    if (document.getElementById("Omégal0")) {
+        omegalDE0 = parseFloat(document.getElementById("Omégal0").value);
+    } else {
+        omegalDE0 = parseFloat(document.getElementById("OmégaDE0").value);
+    }
+
+    const x = omegal0_to_px(omegalDE0);
+    const y = omegam0_to_px(omegam0);
+
+    //context.clearRect(0, 0, canvas.width, canvas.height);
+
+    context.beginPath();
+    context.arc(x, y, 2, 0, 2 * Math.PI);
+    context.fillStyle = "red";
+    context.fill();
+}
+
+let canvas = document.getElementById("canvas");
+canvas.addEventListener('click', function(event) {
+    // Récupérer les coordonnées du clic
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    // Convertir les coordonnées en valeurs Omega
+    const omegam0 = px_to_omegam0(y);
+    const omegalDE0 = px_to_omegalambda0(x);
+
+    // Afficher les valeurs récupérées
+    console.log("Omega_m0:", omegam0);
+    console.log("Omega_l0:", omegalDE0);
+
+    function update_omegas(omegalDE0, omegam0) {
+        document.getElementById("Omégam0").value = omegam0.toExponential(4)
+        if (document.getElementById("Omégal0")) {
+            document.getElementById("Omégal0").value = omegalDE0.toExponential(4)
+        } else {
+            document.getElementById("OmégaDE0").value = omegalDE0.toExponential(4)
+        }
+    }
+
+    update_graphe_interactif()
+    if (omegaM0Min <= omegam0 && omegam0 <= omegaM0Max
+        && omegaL0Min <= omegalDE0 && omegalDE0 <= omegaL0Max) {
+        update_omegas(omegalDE0, omegam0)
+    } else {
+        // Pour les bords
+        if (omegaM0Min > omegam0) {update_omegas(omegalDE0, omegaM0Min)}
+        if (omegam0 > omegaM0Max) {update_omegas(omegalDE0, omegaM0Max)}
+        if (omegaL0Min > omegalDE0) {update_omegas(omegaL0Min, omegam0)}
+        if (omegalDE0 > omegaL0Max) {update_omegas(omegaL0Max, omegam0)}
+        // Pour les coins
+        if (omegaM0Min > omegam0 && omegaL0Min > omegalDE0) {update_omegas(omegaL0Min, omegaM0Min)}
+        if (omegaM0Min > omegam0 && omegalDE0 > omegaL0Max) {update_omegas(omegaL0Max, omegaM0Min)}
+        if (omegam0 > omegaM0Max && omegaL0Min > omegalDE0) {update_omegas(omegaL0Min, omegaM0Max)}
+        if (omegam0 > omegaM0Max && omegalDE0 > omegaL0Max) {update_omegas(omegaL0Max, omegaM0Max)}
+    }
+    updateUnivers()
+    if (document.getElementById("Omégal0")) {
+        affichage_site_LCDM()
+    } else {
+        affichage_site_DE()
+    }
+    update_point()
+});
+
+

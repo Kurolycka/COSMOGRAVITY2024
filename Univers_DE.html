@@ -148,7 +148,7 @@
 
             <div class="paramètre">
                 <span></span>
-                <button id="bouttonTracer" class="grosBoutton" onclick="affichage_site_DE(); updateUnivers()"></button>
+                <button id="bouttonTracer" class="grosBoutton" onclick="updateUnivers(); affichage_site_DE()"></button>
                 <span></span>
             </div>
         </div>
@@ -230,17 +230,17 @@
             <div id="horizons"></div>
 
             <div id="horizonEvenement" class="résultats" style="display: flex">
-                <span id="DmHorizonEvenement_label">d<sub>e0</sub>=</span>
+                <span id="DmHorizonEvenement_label">d<sub>e0</sub> =</span>
                 <span id="resultat_DmHorizonEvenement"></span> GAL
-                <span id="ZHorizonEvenement_label">z<sub>e0</sub>=</span>
-                <span id="resultat_ZHorizonEvenement"></span>
+                <span id="ZHorizonEvenement_label">z<sub>e0</sub> =</span>
+                <span id="resultat_ZHorizonEvenement">-1</span>
             </div>
 
             <div id="horizonParticule" class="résultats" style="display: flex">
-                <span id="DmHorizonParticule_label">d<sub>p0</sub>=</span>
+                <span id="DmHorizonParticule_label">d<sub>p0</sub> =</span>
                 <span id="resultat_DmHorizonParticule"></span> GAL
-                <span id="ZHorizonParticule_label">z<sub>p0</sub>=</span>
-                <span id="resultat_ZHorizonParticule"></span>
+                <span id="ZHorizonParticule_label">z<sub>p0</sub> =</span>
+                <span id="resultat_ZHorizonParticule">+∞</span>
             </div>
         </div>
 
@@ -293,6 +293,7 @@
 
     updateUnivers()
     affichage_site_DE()
+    update_point()
 </script>
 </body>
 </html>
