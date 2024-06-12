@@ -50,7 +50,7 @@ var listejsonfusees={};
 //puis j'ai fait de sorte que ça remplace setinterval et ça marche 1000x mieux
 
 class Timer {
-    constructor(funct, delayMs, times) {
+    constructor(funct,compteur,delayMs, times) {
         if (times === undefined) times = -1;
         if (delayMs === undefined) delayMs = 10;
 
@@ -59,7 +59,8 @@ class Timer {
         this.timesCount = 0;
         this.ticks = (delayMs / 10) | 0;
         this.count = 0;
-        Timer.instances.push(this);
+		this.compteur=compteur
+        Timer.instances[this.compteur]=this;
     }
 
     tick() {
@@ -77,18 +78,15 @@ class Timer {
     }
 
     stop() {
-        const index = Timer.instances.indexOf(this);
-        Timer.instances.splice(index, 1);
-    }
-}
+        delete Timer.instances[this.compteur];}}
 
-Timer.instances = [];
+Timer.instances = {};
 Timer.paused = false;
 
 
 Timer.ontick = function () {
     if (!Timer.paused) {
-        for (const instance of Timer.instances) {
+        for (const instance of Object.values(Timer.instances)) {
             instance.tick();
         }
     }
@@ -799,7 +797,7 @@ function trajectoire(compteur,mobile) {
     	posY2 = posY3 + y1obs;
     	mobile["position"]={posX2:posX2, posY2:posY2} //mobile.position.posX2
 
-		new Timer(() => animate(compteur,mobile,mobilefactor), 1, -1); //Créé un nouvel objet Timer qui répète la fonction animate toutes les 1s indéfiniment. 
+		new Timer(() => animate(compteur,mobile,mobilefactor),compteur, 1, -1); //Créé un nouvel objet Timer qui répète la fonction animate toutes les 1s indéfiniment. 
 		//animate calcule les coordonnées de la particule à chaque instant. 
 
 		document.getElementById('enregistrer2').addEventListener('click', function() { //Lorsque l'on clique sur enregistrer cela permet d'avoir la boule de la particule sur l'enregistrement.
@@ -974,7 +972,7 @@ function trajectoire(compteur,mobile) {
 		},300);		
 	}
 	else { //Dans le cas où ce n'est pas le début de la simulation et où je ne suis pas en pause. 
-		new Timer(() => animate(compteur,mobile,mobilefactor), 1, -1); //Créé un nouvel objet Timer qui répète la fonction animate toutes les 1s indéfiniment. 
+		new Timer(() => animate(compteur,mobile,mobilefactor),compteur, 1, -1); //Créé un nouvel objet Timer qui répète la fonction animate toutes les 1s indéfiniment. 
 		//animate calcule les coordonnées de la particule à chaque instant. 
 	}
 	
@@ -1004,8 +1002,8 @@ function animate(compteur,mobile,mobilefactor) {
 			if(mobile.r_part > r_phy) {	// spationaute extérieur masse
 			
 																																														   
-			
-			
+		
+				r_precedent=mobile.r_part;
 				val = rungekutta_externe_photon(mobile.dtau, mobile.r_part, mobile.A_part,mobile.L);
 				mobile.r_part = val[0];
 				mobile.A_part = val[1];
@@ -1025,12 +1023,20 @@ function animate(compteur,mobile,mobilefactor) {
 			}else {  // spationaute intérieur masse
 			
 			
-			
+				r_precedent=mobile.r_part;
 				val = rungekutta_interne_photon(mobile.dtau, mobile.r_part, mobile.A_part,mobile.E,mobile.L);
 				mobile.r_part = val[0];
 				mobile.A_part = val[1];
-				varphi = c * mobile.L*mobile.dtau/ Math.pow(mobile.r_part, 2);
 				
+				varphi = c * mobile.L*mobile.dtau/ Math.pow(mobile.r_part, 2);
+				mobile.phi = mobile.phi + varphi;
+				
+				
+				var vitess_phys=calculs.MSC_In_vitess(mobile.E,mobile.L,mobile.r_part,rs,r_phy,true);
+				vtotal=vitess_phys[0];
+				vr_1=vitess_phys[1]*Math.sign(mobile.A_part);
+				vp_1=vitess_phys[2];  
+
 				if(mobile.r_part <= r_phy*5e-3 && varphi <= 1e-3) { 
 					if(mobile.posinterm > 0) {
 						mobile.phi=mobile.phi+Math.PI;
@@ -1040,17 +1046,37 @@ function animate(compteur,mobile,mobilefactor) {
 						mobile.A_part=-mobile.A_part; 
 						}
 						
-				}else{
-					mobile.phi = mobile.phi + varphi;
-					}
-				var vitess_phys=calculs.MSC_In_vitess(mobile.E,mobile.L,mobile.r_part,rs,r_phy,true);
-				vtotal=vitess_phys[0];
-				vr_1=vitess_phys[1]*Math.sign(mobile.A_part);
-				vp_1=vitess_phys[2];  
+				}
+				
 
 			}
+			
 			mobile.positionspatio.posX1 = mobilefactor[compteur] * mobile.r_part * (Math.cos(mobile.phi) / rmax) + (canvas.width / 2.);
     		mobile.positionspatio.posY1 = mobilefactor[compteur] * mobile.r_part * (Math.sin(mobile.phi) / rmax) + (canvas.height / 2.);
+			
+			r_precedent=Math.max(r_precedent, mobile.r_part);
+
+			if((mobile.r_part <= r_phy*5e-3 && varphi >= 5e-2 )|| r_precedent>mobile.r_part_obs*2 )
+				{ 
+					Timer.instances[compteur].stop();//puis on stope la simulation 
+	
+				}
+			else if (isNaN(mobile.r_part) )
+				{ 
+					Timer.instances[compteur].stop();//puis on stope la simulation 
+	
+				}
+	
+			/*si tout les Timers relié aux mobiles sont supprimés on sait que ya plus de calculs en cours alors on met qu'on a fini la simulation*/
+			if (Object.keys(Timer.instances).length === 0) 
+				{
+					document.getElementById("indic_calculs").innerHTML=texte.pages_trajectoire.calcul_termine; //on met que le calculé est fini (voir le Json)
+					document.getElementById("pause/resume").style.display='none';  //on enleve les 2 buttons pause
+					document.getElementById('bouton_pause').style.display='none'; 
+					alert(texte.pages_trajectoire.alerte_singularite_non_baryonique);
+				}
+
+			
 
 		}else{  // observateur
 			if(mobile.r_part_obs > r_phy) {   // observateur extérieur masse
@@ -1062,19 +1088,30 @@ function animate(compteur,mobile,mobilefactor) {
 				mobile.phi_obs=mobile.phi_obs+varphi_obs;
 				resultat=calculs.MSC_Ex_vitess(mobile.E,mobile.L,mobile.r_part_obs,rs,true); //voir fonctions.js
 				vtotal=resultat[0];
-				vr_1_obs=resultat[1]*Math.sign(mobile.A_part_obs);
 				//alert(vr_1_obs);
 				vp_1_obs=resultat[2]; 
 
 		
 			}else{    // observateur intérieur masse
-						
+				r_precedent=mobile.r_part_obs;
 				val = rungekutta_interne_photon_obs(mobile.dtau, mobile.r_part_obs, mobile.A_part_obs,mobile.E,mobile.L);
 				mobile.r_part_obs = val[0];
 				mobile.A_part_obs = val[1];
+				r_precedent=Math.max(r_precedent, mobile.r_part_obs);
+
 				
 				varphi_obs = c * mobile.L * mobile.dtau*Math.pow(beta(mobile.r_part_obs),2) / Math.pow(mobile.r_part_obs, 2)/mobile.E; 
+				mobile.phi_obs= mobile.phi_obs+varphi_obs;
 				
+			
+					
+				
+				 
+				var vitess_phys=calculs.MSC_In_vitess(mobile.E,mobile.L,mobile.r_part_obs,rs,r_phy,true);
+				vtotal=vitess_phys[0];
+				vr_1_obs=vitess_phys[1]*Math.sign(mobile.A_part_obs);
+				vp_1_obs=vitess_phys[2];
+
 				if(mobile.r_part_obs <= r_phy*5e-3 && varphi_obs <= 1e-3){
 					if(mobile.posintero > 0) {
 					mobile.phi_obs=Math.PI;
@@ -1085,19 +1122,34 @@ function animate(compteur,mobile,mobilefactor) {
 					
 					
 					
-				}else{
-				mobile.phi_obs= mobile.phi_obs+varphi_obs;
-				} 
-				var vitess_phys=calculs.MSC_In_vitess(mobile.E,mobile.L,mobile.r_part_obs,rs,r_phy,true);
-				vtotal=vitess_phys[0];
-				vr_1_obs=vitess_phys[1]*Math.sign(mobile.A_part_obs);
-				vp_1_obs=vitess_phys[2];
+				}
 
 				
 			}  // FIN observateur intérieur masse
 			
 			mobile.position.posX2 = mobilefactor[compteur] * mobile.r_part_obs * (Math.cos(mobile.phi_obs) / rmax) + (canvas.width / 2.);
     		mobile.position.posY2 = mobilefactor[compteur] * mobile.r_part_obs * (Math.sin(mobile.phi_obs) / rmax) + (canvas.height / 2.);
+
+			r_precedent=Math.max(r_precedent, mobile.r_part_obs);
+
+			if((mobile.r_part_obs <= r_phy*5e-3 && varphi_obs >= 5e-2 )|| r_precedent>mobile.r_part_obs*4  ) 
+			{ 
+				Timer.instances[compteur].stop();//puis on stope la simulation 
+
+			}
+			else if (isNaN(mobile.r_part_obs) )
+			{ 
+				Timer.instances[compteur].stop();//puis on stope la simulation 
+	
+			}
+			/*si tout les Timers relié aux mobiles sont supprimés on sait que ya plus de calculs en cours alors on met qu'on a fini la simulation*/
+			if (Object.keys(Timer.instances).length === 0) 
+				{
+					document.getElementById("indic_calculs").innerHTML=texte.pages_trajectoire.calcul_termine; //on met que le calculé est fini (voir le Json)
+					document.getElementById("pause/resume").style.display='none';  //on enleve les 2 buttons pause
+					document.getElementById('bouton_pause').style.display='none'; 
+					alert(texte.pages_trajectoire.alerte_singularite_non_baryonique);
+				}
 	}	
 
 	mobile.posinterm= mobilefactor[compteur] * mobile.r_part * (Math.cos(mobile.phi) / rmax);

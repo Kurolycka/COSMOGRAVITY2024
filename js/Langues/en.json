@@ -335,7 +335,8 @@
 	"puissance_consommee_label":"P<sub>consumed</sub> (W/kg)",
 	"puissance_consommee_infobulle":"Total power consumed by reactors in W/kg.",
 	"alerte_v0_superieure_c" : "Be careful, your speed v0 is greater than c.",
-	"alerte_r0_inferieure_rs" : "Be careful, your initial distance from the center of the celestial body r0 is smaller than the Schwarzschild's radius."
+	"alerte_r0_inferieure_rs" : "Be careful, your initial distance from the center of the celestial body r0 is smaller than the Schwarzschild's radius.",
+	"alerte_singularite_non_baryonique" : "Simulation stops, calculations are not stable."
 },
 
 "page_trajectoire_massive":{

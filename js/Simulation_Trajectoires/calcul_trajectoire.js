@@ -1313,8 +1313,8 @@ function animate(compteur,mobile,mobilefactor)
 			mobile.phi = mobile.phi + varphi; //calcul de la nouvelle valeur de l'angle
 
 			
-			mobile.temps_particule+=mobile.dtau*(1-rs/mobile.r_part)/mobile.E; //calcul du temps propre de la particule
-			mobile.temps_observateur_distant += mobile.dtau
+			mobile.temps_particule+=mobile.dtau  //calcul du temps propre de la particule
+			mobile.temps_observateur_distant += mobile.dtau*mobile.E/(1-rs/mobile.r_part);//calcul du temps observateur
 
 			/*Calcul du gradient*/
 			gm = derivee_seconde_Schwarzchild_massif(mobile.L,mobile.r_part);

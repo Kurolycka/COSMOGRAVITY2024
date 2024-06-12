@@ -49,7 +49,7 @@ var listejsonfusees={};
 //puis j'ai fait de sorte que ça remplace setinterval et ça marche 1000x mieux
 
 class Timer {
-    constructor(funct, delayMs, times) {
+    constructor(funct,compteur,delayMs, times) {
         if (times === undefined) times = -1;
         if (delayMs === undefined) delayMs = 10;
 
@@ -58,7 +58,8 @@ class Timer {
         this.timesCount = 0;
         this.ticks = (delayMs / 10) | 0;
         this.count = 0;
-        Timer.instances.push(this);
+		this.compteur=compteur
+        Timer.instances[this.compteur]=this;
     }
 
     tick() {
@@ -76,24 +77,22 @@ class Timer {
     }
 
     stop() {
-        const index = Timer.instances.indexOf(this);
-        Timer.instances.splice(index, 1);
-    }
-}
+        delete Timer.instances[this.compteur];}}
 
-Timer.instances = [];
+Timer.instances = {};
 Timer.paused = false;
 
 
 Timer.ontick = function () {
     if (!Timer.paused) {
-        for (const instance of Timer.instances) {
+        for (const instance of Object.values(Timer.instances)) {
             instance.tick();
         }
     }
 };
 
 window.setInterval(Timer.ontick, 1);
+
 //-----------------------------------------------------------KHALED--------------------------------------------------
 
 function initialisationGenerale(fuseecompteur){
@@ -836,7 +835,7 @@ function trajectoire(compteur,mobile) {
 		posY2 = posY3 + y1obs;
     	mobile["position"]={posX2:posX2, posY2:posY2} 
 
-		new Timer(() => animate(compteur,mobile,mobilefactor), 1, -1); //Créé un nouvel objet Timer qui répète la fonction animate toutes les 1s indéfiniment. 
+		new Timer(() => animate(compteur,mobile,mobilefactor),compteur, 1, -1); //Créé un nouvel objet Timer qui répète la fonction animate toutes les 1s indéfiniment. 
 		//animate calcule les coordonnées de la particule à chaque instant. 
 
 		document.getElementById('enregistrer2').addEventListener('click', function() { //Lorsque l'on clique sur enregistrer cela permet d'avoir la boule de la particule sur l'enregistrement.
@@ -1042,7 +1041,7 @@ function trajectoire(compteur,mobile) {
 		
 	}
 	else { //Dans le cas où ce n'est pas le début de la simulation et où je ne suis pas en pause.
-		new Timer(() => animate(compteur,mobile,mobilefactor), 1, -1); //Créé un nouvel objet Timer qui répète la fonction animate toutes les 1s indéfiniment. 
+		new Timer(() => animate(compteur,mobile,mobilefactor),compteur, 1, -1); //Créé un nouvel objet Timer qui répète la fonction animate toutes les 1s indéfiniment. 
 		//animate calcule les coordonnées de la particule à chaque instant.	
   	}  
 	
@@ -1111,10 +1110,11 @@ function animate(compteur,mobile,mobilefactor) {
 			}else{
 				val = rungekutta_interne_massif(mobile.dtau, mobile.r_part, mobile.A_part,mobile.E,mobile.L);
 			}
-
+			r_precedent=mobile.r_part_
 			mobile.r_part = val[0];
 			mobile.A_part = val[1];
 			varphi = c * mobile.L * mobile.dtau / Math.pow(mobile.r_part, 2);
+			mobile.phi = mobile.phi + varphi;
 
 			if(mobile.r_part <= r_phy*5e-3 && varphi <= 1e-3) { 
 				if(mobile.posinterm > 0) {
@@ -1125,9 +1125,10 @@ function animate(compteur,mobile,mobilefactor) {
 					mobile.A_part=-mobile.A_part; 
 					}
 					
-			}else { 
-			mobile.phi = mobile.phi + varphi;
 			}
+
+			
+			
 			resultat=calculs.MSC_In_vitess(mobile.E,mobile.L,mobile.r_part,rs,r_phy,false); //voir fonctions.js
 			//vtotal=resultat[0];
 			//vr_1=resultat[1]*Math.sign(mobile.A_part);  //<---------------------   Remarque quand E très proche de 1 calculs.MSC_In_vitess donne un résultat[1] faux 
@@ -1146,14 +1147,30 @@ function animate(compteur,mobile,mobilefactor) {
 			mobile.distance_parcourue_totale+=vtotal*(mobile.dtau*Math.pow(beta(mobile.r_part),2)/mobile.E); //ManonCorrection
 
 		}
-		
+		r_precedent=Math.max(r_precedent, mobile.r_part);
+
+		if((mobile.r_part <= r_phy*5e-3 && varphi >= 5e-2 )|| r_precedent>mobile.r_part*2  ) 
+			{ 
+				Timer.instances[compteur].stop();//puis on stope la simulation 
+
+			}
+
+			/*si tout les Timers relié aux mobiles sont supprimés on sait que ya plus de calculs en cours alors on met qu'on a fini la simulation*/
+			if (Object.keys(Timer.instances).length === 0) 
+				{
+					document.getElementById("indic_calculs").innerHTML=texte.pages_trajectoire.calcul_termine; //on met que le calculé est fini (voir le Json)
+					document.getElementById("pause/resume").style.display='none';  //on enleve les 2 buttons pause
+					document.getElementById('bouton_pause').style.display='none'; 
+					alert(texte.pages_trajectoire.alerte_singularite_non_baryonique);
+				}
 		
 		
 	}else{ // observateur
 			varphi_obs = c * mobile.L * mobile.dtau*Math.pow(beta(mobile.r_part_obs),2) / Math.pow(mobile.r_part_obs, 2)/mobile.E; 
 			
 		if(mobile.r_part_obs > r_phy) {  // observateur extérieur masse
-		
+			r_precedent=mobile.r_part_obs
+
 			val = rungekutta_externe_massif_obs(mobile.dtau, mobile.r_part_obs, mobile.A_part_obs,mobile.E,mobile.L);
 			mobile.r_part_obs = val[0];
 			mobile.A_part_obs = val[1];
@@ -1171,17 +1188,18 @@ function animate(compteur,mobile,mobilefactor) {
 		}else {  // observateur intérieur masse
 		
 	
-		
-		
-
-
-
+	
+			r_precedent=mobile.r_part_obs
 			val = rungekutta_interne_massif_obs(mobile.dtau, mobile.r_part_obs, mobile.A_part_obs,mobile.E,mobile.L);
 			mobile.r_part_obs = val[0];
 			mobile.A_part_obs = val[1];
+
 																										  							   
 			varphi_obs = c * mobile.L * mobile.dtau*Math.pow(beta(mobile.r_part_obs),2) / Math.pow(mobile.r_part_obs, 2)/mobile.E; 
+			mobile.phi_obs= mobile.phi_obs+varphi_obs;
+
 			//SINGERIE
+			
 			if(mobile.r_part_obs <= r_phy*5e-3 && varphi_obs <= 1e-3) { 
 
 				if(mobile.posintero > 0) { 
@@ -1195,9 +1213,10 @@ function animate(compteur,mobile,mobilefactor) {
 					}
 
 
-			}else{
-				mobile.phi_obs= mobile.phi_obs+varphi_obs;
 			}
+			
+			
+			
 			//SINGERIE
 			resultat=calculs.MSC_In_vitess(mobile.E,mobile.L,mobile.r_part_obs,rs,r_phy,false); //voir fonctions.js
 			//vtotal=resultat[0];
@@ -1207,11 +1226,26 @@ function animate(compteur,mobile,mobilefactor) {
 			vtotal=Math.sqrt(vr_1_obs*vr_1_obs + vp_1_obs*vp_1_obs) ;
 			mobile.distance_parcourue_totale+=vtotal*(mobile.dtau*Math.pow(beta(mobile.r_part_obs),2)/mobile.E) //ManonCorrection
 
-			
-		/*	for(i=0;i<nbr;i++){
-				mobile=bouttons.vitesse(mobile,true)
-			}*/
+		
 		}
+		
+
+		r_precedent=Math.max(r_precedent, mobile.r_part_obs);
+
+		if((mobile.r_part_obs <= r_phy*5e-3 && varphi_obs >= 5e-2 )|| r_precedent>mobile.r_part_obs*4  ) 
+			{ 
+				Timer.instances[compteur].stop();//puis on stope la simulation 
+
+			}
+
+			/*si tout les Timers relié aux mobiles sont supprimés on sait que ya plus de calculs en cours alors on met qu'on a fini la simulation*/
+			if (Object.keys(Timer.instances).length === 0) 
+				{
+					document.getElementById("indic_calculs").innerHTML=texte.pages_trajectoire.calcul_termine; //on met que le calculé est fini (voir le Json)
+					document.getElementById("pause/resume").style.display='none';  //on enleve les 2 buttons pause
+					document.getElementById('bouton_pause').style.display='none'; 
+					alert(texte.pages_trajectoire.alerte_singularite_non_baryonique);
+				}
 
 		
 	}
@@ -1229,9 +1263,6 @@ function animate(compteur,mobile,mobilefactor) {
 		mobile.positionspatio.posY1 = mobilefactor[compteur] * mobile.r_part * (Math.sin(mobile.phi) / rmax) + (canvas.height / 2.);
 		mobile.position.posX2 = mobilefactor[compteur] * mobile.r_part_obs * (Math.cos(mobile.phi_obs) / rmax) + (canvas.width / 2.);
 		mobile.position.posY2 = mobilefactor[compteur] * mobile.r_part_obs * (Math.sin(mobile.phi_obs) / rmax) + (canvas.height / 2.);	
-		
-		console.log("1354  mobilefactor[compteur] mobile.phi_obs mobile.r_part_obs mobile.position.posX2",mobilefactor[compteur],mobile.phi_obs,mobile.r_part_obs,mobile.position.posX2);
-			
 		
 	
 		if (element2.value != "mobile"){
@@ -1354,8 +1385,8 @@ function animate(compteur,mobile,mobilefactor) {
 		}		//  spationaute
 		else{
 			if (mobile.r_part>= r_phy){
-				mobile.temps_observateur_distant+=mobile.dtau;
-				mobile.temps_particule+=mobile.dtau*(1-rs/mobile.r_part)/mobile.E;
+				mobile.temps_particule+=mobile.dtau;
+				mobile.temps_observateur_distant+=mobile.dtau*mobile.E/(1-rs/mobile.r_part);
 				document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3); 
 				document.getElementById("ga"+compteur.toString()).innerHTML = fm.toExponential(3);
 				document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part.toExponential(3);
@@ -1378,14 +1409,14 @@ function animate(compteur,mobile,mobilefactor) {
 
 			}
 			else{
-				temps_observateur_distant+=mobile.dtau;
-				mobile.temps_particule+=mobile.dtau*Math.pow(beta(mobile.r_part),2)/mobile.E;
+				mobile.temps_observateur_distant+=mobile.dtau*mobile.E/Math.pow(beta(mobile.r_part),2);
+				mobile.temps_particule+=mobile.dtau;
 				document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3); 
 				document.getElementById("ga"+compteur.toString()).innerHTML = fm.toExponential(3);
 				document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part.toExponential(3);
 				document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_1.toExponential(3);
 				document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_1.toExponential(3);
-				document.getElementById("to"+compteur.toString()).innerHTML = temps_observateur_distant.toExponential(3);
+				document.getElementById("to"+compteur.toString()).innerHTML = mobile.temps_observateur_distant.toExponential(3);
 				document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(3);
 				document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation
 	
@@ -1721,17 +1752,14 @@ function majFondFixe(){
 
 function majFondFixe44(mobile){
 	mobile["context22"].clearRect(0, 0, canvas.width, canvas.height);
-	//console.log(canvas.width, canvas.height);
 }
 
 function majFondFixe22(){
 	context22.clearRect(0, 0, canvas.width, canvas.height);
-	//console.log(canvas.width, canvas.height);
 }
 
 function majFondFixe3(){
 	context3.clearRect(0, 0, canvas.width, canvas.height);
-	//console.log(canvas.width, canvas.height);
 }
 
 // Fonction de verification par rapport à R_phy r0 et rs avant lancement 
@@ -1782,9 +1810,9 @@ function creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur){
 	context.lineWidth = "1";
 	context.fillStyle = COULEUR_NOIR;
 
-/*	if ((mobilefactor[cle] * m / rmaxjson[cle]) < 3) {
+    if ((mobilefactor[cle] * m / rmaxjson[cle]) < 3) {
 		context.beginPath();
-		context.strokeStyle = COULEUR_GRIS;
+		context.strokeStyle = COULEUR_BLEU;
 		context.moveTo(posX3 - 10, posY3);
 		context.lineTo(posX3 - 3, posY3);
 		context.stroke();
@@ -1807,7 +1835,7 @@ function creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur){
 		context.setLineDash([5, 5]);
 		context.arc(posX3, posY3, ((mobilefactor[cle] * 2 * m / rmaxjson[cle])), 0, Math.PI * 2);
 		context.stroke();
-	}*/
+	}
 //	if (rs < r_phy) {
 		context.beginPath();
 		context.fillStyle = COULEUR_RPHY;
