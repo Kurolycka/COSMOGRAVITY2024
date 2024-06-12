@@ -287,9 +287,6 @@ function notationvitesseree2kerr(){
   	document.getElementById("vitesseuphi").title = htmlDecode(texte.pages_trajectoire.vitesseuphi);
     document.getElementById("philabel").title = htmlDecode(texte.pages_trajectoire.philabel);
     document.getElementById("theta_label").title = htmlDecode(texte.pages_trajectoire.theta_label);
-    document.getElementById("nb_g").title= htmlDecode(texte.pages_trajectoire.nombre_g_infobulle); //Manon
-    document.getElementById("dernier_g").title= htmlDecode(texte.pages_trajectoire.dernier_g_infobulle); //ManonV2
-    document.getElementById("distance_metrique").title = texte.pages_trajectoire.distance_metrique_parcourue_infobulle;
   }
 
 
@@ -300,7 +297,6 @@ function notationvitesseree1kerr(){
   document.getElementById("vitesseuphi").title = htmlDecode(texte.pages_trajectoire.vitesseuphi);
   document.getElementById("philabel").title = htmlDecode(texte.pages_trajectoire.philabel);
   document.getElementById("theta_label").title = htmlDecode(texte.pages_trajectoire.theta_label);
-  document.getElementById("distance_metrique").title = texte.pages_trajectoire.distance_metrique_parcourue_infobulle; //Manon
 }
 
 function notationvitesseree1(){

@@ -321,7 +321,7 @@ function trajectoire() {
 				dtau += dtau;
 				clicks += 1 ;
 			}
-		  document.getElementById('nsimtxt').innerHTML= "frame="+ clicks.toString(); //J'affiche le ns correspondant sur le site.
+		  document.getElementById('nsimtxt').innerHTML= "simu="+ clicks.toString(); //J'affiche le ns correspondant sur le site.
 		}, false);
 
 
@@ -332,7 +332,7 @@ function trajectoire() {
           		dtau /= 2;
 	        	clicks -= 1 ;  
 			}
-			document.getElementById('nsimtxt').innerHTML= "frame="+ clicks.toString(); //J'affiche le ns correspondant sur le site.
+			document.getElementById('nsimtxt').innerHTML= "simu="+ clicks.toString(); //J'affiche le ns correspondant sur le site.
 		}, false);
 
 
@@ -1239,13 +1239,13 @@ function boutonAvantLancement(){
 function foncPourVitMoinsAvantLancement(){
 	compteurVitesseAvantLancement -= 1
 	compteurVitesse-=1;
-	document.getElementById('nsimtxt').innerHTML= "frame="+ Math.round(compteurVitesse).toString();
+	document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesse).toString();
 }
 
 function foncPourVitPlusAvantLancement(){
 	compteurVitesseAvantLancement += 1
 	compteurVitesse+=1;
-	document.getElementById('nsimtxt').innerHTML= "frame="+ Math.round(compteurVitesse).toString();
+	document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesse).toString();
 }
 	
 /**

@@ -829,14 +829,14 @@ function trajectoire(compteur,mobile) {
     	document.getElementById('plusvite').addEventListener('click', function() { //J'associe le bouton accélérer à la fonction suivante une fois la simulation lancée. 
 			mobile=bouttons.vitesse(mobile,true); //J'accélère grâce à la fonction vitesse du fichier bouttons. 
 			compteurVitesse+=1/nbredefusees;
-			document.getElementById('nsimtxt').innerHTML= "frame="+ Math.round(compteurVitesse).toString(); //J'affiche le ns correspondant sur le site.
+			document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesse).toString(); //J'affiche le ns correspondant sur le site.
     	}, false);
 
 
 		document.getElementById('moinsvite').addEventListener('click', function() { //J'associe le bouton décélérer à la fonction suivante une fois la simulation lancée. 
       		mobile=bouttons.vitesse(mobile,false); //Je décélère grâce à la fonction vitesse du fichier bouttons. 
 			compteurVitesse-=1/nbredefusees;
-			document.getElementById('nsimtxt').innerHTML= "frame="+ Math.round(compteurVitesse).toString(); //J'affiche le ns correspondant sur le site.
+			document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesse).toString(); //J'affiche le ns correspondant sur le site.
 	 	}, false);
 
 

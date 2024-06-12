@@ -495,7 +495,7 @@ function trajectoire() {
 				dtau += dtau;
 				clicks += 1 ;
 			}
-			document.getElementById('nsimtxt').innerHTML= "frame="+ clicks.toString(); //J'affiche le ns correspondant sur le site.
+			document.getElementById('nsimtxt').innerHTML= "simu="+ clicks.toString(); //J'affiche le ns correspondant sur le site.
 		}, false);
 
 
@@ -506,7 +506,7 @@ function trajectoire() {
 				dtau /= 2;
 				clicks -= 1 ;
 			}
-			document.getElementById('nsimtxt').innerHTML= "frame="+ clicks.toString(); //J'affiche le ns correspondant sur le site.
+			document.getElementById('nsimtxt').innerHTML= "simu="+ clicks.toString(); //J'affiche le ns correspondant sur le site.
 		}, false);
 
 	
@@ -800,8 +800,6 @@ function animate() {
 		if(r_part<=rhm && ! document.getElementById("depasser").checked){ //l'utilisateur veut arrêter la trajectoire à Rh-
 			r_part=rhm ; 
 			document.getElementById("r_par").innerHTML = r_part.toExponential(3);
-			//textesfinarret_kerr();
-			//onestarrete=1;
 			alert(texte.page_trajectoire_massive.particule_atteint_rh); 
 			arretkerr();
 			peuxonrelancer=false;
@@ -1483,13 +1481,13 @@ function boutonAvantLancement(){
 function foncPourVitMoinsAvantLancement(){
 	compteurVitesseAvantLancement -= 1
 	compteurVitesse-=1;
-	document.getElementById('nsimtxt').innerHTML= "frame="+ Math.round(compteurVitesse).toString();
+	document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesse).toString();
 }
 
 function foncPourVitPlusAvantLancement(){
 	compteurVitesseAvantLancement += 1
 	compteurVitesse+=1;
-	document.getElementById('nsimtxt').innerHTML= "frame="+ Math.round(compteurVitesse).toString();
+	document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesse).toString();
 }
 
 /**

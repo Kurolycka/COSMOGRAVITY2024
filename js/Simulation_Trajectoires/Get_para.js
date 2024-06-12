@@ -450,6 +450,14 @@ function save_kerr_massif() {
 	puissance_reacteur = document.getElementById("puissance_reacteur").value; //ManonV3
 
 	var graph_check = true;
+	var rh_moins_check = true;
+
+	if (document.getElementById("traject_type2").value == "mobile") {
+		if (document.getElementById("depasser").checked == false){
+			rh_moins_check = false; 
+		}
+	}
+
 	if (document.getElementById("toggle").checked == false) {
 		graph_check = false;
 	}
@@ -466,6 +474,7 @@ function save_kerr_massif() {
 	sessionStorage.setItem("graph_check", graph_check);
 	sessionStorage.setItem("temps_allumage", temps_allumage); //ManonV3
 	sessionStorage.setItem("puissance_reacteur", puissance_reacteur); //ManonV3
+	sessionStorage.setItem("rh_moins_check", rh_moins_check);
 
 }
 
@@ -483,6 +492,8 @@ function load_kerr_massif() {
 		document.getElementById("puissance_reacteur").value = sessionStorage.getItem("puissance_reacteur"); //ManonV3
 
 		var graph_check = sessionStorage.getItem("graph_check");
+		var rh_moins_check = sessionStorage.getItem("rh_moins_check");
+
 		if (graph_check == "false") {
 			document.getElementById("toggle").checked = false;
 		}
@@ -499,18 +510,21 @@ function load_kerr_massif() {
 		var inputPuissanceReacteur = document.getElementById("puissance_reacteur"); //ManonV3
 
 		if (document.getElementById("traject_type2").value == "observateur") {
-			pressionBouttonObservateur();
+			pressionBouttonObservateur2();
 			labelTempsAllumage.style.display ="none"; //ManonV3
 			inputTempsAllumage.style.display = "none"; //ManonV3
 			labelPuissanceReacteur.style.display = "none"; //ManonV3
 			inputPuissanceReacteur.style.display = "none"; //ManonV3
 		} 
 		else if (document.getElementById("traject_type2").value == "mobile") {
-			pressionBouttonMobile();
+			pressionBouttonMobile2();
 			labelTempsAllumage.style.display = "inline"; //ManonV3
 			inputTempsAllumage.style.display = "inline"; //ManonV3
 			labelPuissanceReacteur.style.display = "inline"; //ManonV3
 			inputPuissanceReacteur.style.display = "inline"; //ManonV3
+			if (rh_moins_check=="true"){
+				document.getElementById("depasser").checked = true;
+			}
 
 		}
 
@@ -526,7 +540,16 @@ function save_kerr_photon() {
 	phi0 = document.getElementById("phi0").value;
     traject_type = document.getElementById("traject_type").value;
     traject_type2 = document.getElementById("traject_type2").value;
+
     var graph_check = true;
+	var rh_moins_check = true;
+
+	if (document.getElementById("traject_type2").value == "mobile") {
+		if (document.getElementById("depasser").checked == false){
+			rh_moins_check = false; 
+		}
+	}
+
     if (document.getElementById("toggle").checked == false) {
 		graph_check = false;
     }
@@ -540,6 +563,7 @@ function save_kerr_photon() {
     sessionStorage.setItem("traject_type", traject_type);
     sessionStorage.setItem("traject_type2", traject_type2)
     sessionStorage.setItem("graph_check", graph_check);
+	sessionStorage.setItem("rh_moins_check", rh_moins_check);
 }
 
 function load_kerr_photon() {
@@ -551,7 +575,11 @@ function load_kerr_photon() {
 		document.getElementById("phi0").value = sessionStorage.getItem("phi0");
 		document.getElementById("traject_type").value = sessionStorage.getItem("traject_type");
 		document.getElementById("traject_type2").value = sessionStorage.getItem("traject_type2");
+
+
 		var graph_check = sessionStorage.getItem("graph_check");
+		var rh_moins_check = sessionStorage.getItem("rh_moins_check");
+
 		if (graph_check == "false") {
 			document.getElementById("toggle").checked = false;
 		}
@@ -561,18 +589,13 @@ function load_kerr_photon() {
 			pressionBouttonTrajectoireComplete();
 		}
 
-		var inputNbfusees = document.getElementById("nombredefusees"); //manon
-		var labelNbfusees = document.getElementById("labelnumberfusees"); //manon
-
 		if (document.getElementById("traject_type2").value == "observateur") {
 			pressionBouttonObservateur2();
-			inputNbfusees.style.display = "inline"; //manon
-			labelNbfusees.style.display = "inline"; //manon
 		} else if (document.getElementById("traject_type2").value == "mobile") {
 			pressionBouttonMobile2();
-			inputNbfusees.style.display = "none"; //manon
-			labelNbfusees.style.display = "none"; //manon
-
+			if (rh_moins_check=="true"){
+				document.getElementById("depasser").checked = true;
+			}
 		}
 	}
 }
