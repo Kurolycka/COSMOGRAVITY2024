@@ -478,14 +478,7 @@ function calcul_horizons_annexe(){
 };
 //---------------------------------------
 
-dm_inverse();
-
-function dm_inverse(){
-    //Si il n'y a pas de big bang impossible a calculer
-    // let T0 = Number(document.getElementById("T0").value);
-    // if (isNaN(debut_fin_univers(equa_diff_2_LCDM, T0)[2])){
-    //     return;
-    // };
+function calcul_dm_inverse(){
     z_negatif=false;
     dmmax= calcul_horizon_particule(fonction_E);
     dm = document.getElementById("dm_racine_dm").value;
@@ -515,41 +508,31 @@ function dm_inverse(){
             let a=Dichotomie_Remy(fonction_dm_dichotomie,dm,0,1,1e-15);
             z=(1-a)/a;
         };
-    }else if (interieur_integ_distance(1e-15)>Math.PI/2){// si courbure negatif il peut y avoir plusieurs solution au dessus de pi/2, par soucis de compréhension on ne garde que le cas où il y a maximum 2 solution 
-
-        // console.log(interieur_integ_distance(.5));
-        // console.log("sin "+Math.sin(interieur_integ_distance(.5)))
-        // console.log(interieur_integ_distance(.14366));
-        // console.log("sin "+Math.sin(interieur_integ_distance(.14366)))
-        // console.log(interieur_integ_distance(.0000001));
-        // console.log("sin "+Math.sin(interieur_integ_distance(.0000001)))
-
-
-        if (z_negatif){
-            function fonction_dm_dichotomie(x){
-                return DistanceMetrique(fonction_E,x,0,true);
-            };
-            z_pi_sur_2=Dichotomie_Remy(interieur_integ_distance,Math.PI/2,0,2*Math.PI);
-        }else{
-            function fonction_dm_dichotomie(x){
-                return DistanceMetrique(fonction_E,x,1)
-            };
-            let a=Dichotomie_Remy(fonction_dm_dichotomie,dm,0,1,1e-15);
-            z=(1-a)/a;
-            zpisur2=Dichotomie_Remy(interieur_integ_distance,Math.PI/2,1e-15,1,1e-15);
-            console.log(zpisur2)
-            dmpisur2=DistanceMetrique(fonction_E,zpisur2,1);
-            console.log(dmmax);
-            console.log(dmpisur2);
-            console.log(c/(H0_parSecondes(H0)*Math.pow(Math.abs(Omega_k(0)),0.5)));
-            a1=Dichotomie_Remy(fonction_dm_dichotomie,dm,1/(1+zpisur2),1,1e-15);
-            if (dm>c/(H0_parSecondes(H0)*Math.pow(Math.abs(Omega_k(0)),0.5))){//valeur maximal si sin=1 (maximal de la distance)
-
-            }
-        };
-    }
+    }else if (interieur_integ_distance(1e-15)>Math.PI/2){ 
+        return;
+    }else {
+        return;
+    };
 };
 
-function t_inverse(){
+/**
+ * Inverse du calcul de l'age en fonction d'un z grâce a la fonction dichotomie (marche seulement pour des fonction absolument croissante)
+ * @param {*} temps valeur t
+ * @param {*} fonction fonction a rechercher
+ * @returns valeur de z
+ */
+function calcul_t_inverse(temps,fonction){
+	//Remy test
+	function a_dichotomer(x){
+		return calcul_ages(fonction,H0enannee,1e-15,x);
+	}
+	age_univers=a_dichotomer(1);
+	
+	if (age_univers>=temps){
+		a_t=Dichotomie_Remy(a_dichotomer,temps,1e-15,1,temps*1e-12);
+	}else{
+		a_t=Dichotomie_Remy(a_dichotomer,temps,1,1e7,1e-12);
+	};
 
-};
+	return (1-a_t)/a_t;
+}

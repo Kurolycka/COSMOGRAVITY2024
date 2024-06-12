@@ -768,7 +768,6 @@ function calcul_t_inverse(temps,fonction){
 		a_t=Dichotomie_Remy(a_dichotomer,temps,1e-15,1,temps*1e-12);
 	}else{
 		a_t=Dichotomie_Remy(a_dichotomer,temps,1,1e7,1e-12);
-
 	};
 
 	return (1-a_t)/a_t;
