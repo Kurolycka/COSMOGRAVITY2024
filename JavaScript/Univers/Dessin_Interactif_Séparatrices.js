@@ -1,7 +1,28 @@
-const omegaM0Max = 3;
 const omegaM0Min = 0;
-const omegaL0Max = 3;
+const omegaM0Max = 3;
+
 const omegaL0Min = -1.5;
+const omegaL0Max = 3;
+
+window.onload = function() {
+    resizeCanvas();
+    update_graphe_interactif();
+    update_point()
+};
+
+window.onresize = function() {
+    resizeCanvas();
+    update_graphe_interactif();
+    update_point()
+};
+
+function resizeCanvas() {
+    let canvas = document.getElementById("canvas");
+    let container = document.getElementById("conteneurCanvas");
+
+    canvas.width = container.clientWidth;
+    canvas.height = container.clientHeight;
+}
 
 // Ol est dans le sens des x
 /**
@@ -10,6 +31,7 @@ const omegaL0Min = -1.5;
  * @return {number} Valeur de oméga convertis en pixel sur le canvas
  */
 function omegal0_to_px(value) {
+    let canvas = document.getElementById("canvas");
     let echelle = (canvas.width - 30) / Math.abs(omegaL0Max - omegaL0Min);
     return echelle * (value - omegaL0Min) + 15;
 }
@@ -21,6 +43,7 @@ function omegal0_to_px(value) {
  * @return {number} Valeur de oméga convertis en pixel sur le canvas
  */
 function omegam0_to_px(value) {
+    let canvas = document.getElementById("canvas");
     let echelle = (canvas.height - 30) / Math.abs(omegaM0Max - omegaM0Min);
     return (canvas.height - 15) - (echelle * (value - omegaM0Min));
 }
@@ -113,12 +136,12 @@ function update_graphe_interactif() {
     context.stroke(); // Tracer la séparatrice
 
     context.save();
-    context.translate(omegal0_to_px(omegaL0Min) + 65, omegam0_to_px(1.5) + 15);
-    context.rotate(Math.PI / 5.25);
+    context.translate(omegal0_to_px(-0.75), omegam0_to_px(1.75));
+    context.rotate(Math.PI / 4.25);
     context.fillStyle = "#fa2076"
-    context.fillText(texte.grapheSéparatrices.plat, 5, -10);
-    context.fillText(texte.grapheSéparatrices.ouvert, -50, 0);
-    context.fillText(texte.grapheSéparatrices.ferme, +80, -20);
+    context.fillText(texte.grapheSéparatrices.plat, 0, 0);
+    context.fillText(texte.grapheSéparatrices.ouvert, -50, 10);
+    context.fillText(texte.grapheSéparatrices.ferme, 50, -10);
     context.restore();
 
     // Tracé de la séparatrice univers avec / sans bigCrunch et affichage des textes
@@ -144,10 +167,10 @@ function update_graphe_interactif() {
     context.stroke(); // Tracer la séparatrice
 
     context.save();
-    context.translate(omegal0_to_px(0), omegam0_to_px(3));
+    context.translate(omegal0_to_px(0.16), omegam0_to_px(3));
     context.fillStyle = "#06a106"
-    context.fillText(texte.grapheSéparatrices.BC, -30, 15);
-    context.fillText(texte.grapheSéparatrices.pBC, 60, 15);
+    context.fillText(texte.grapheSéparatrices.BC,-40 ,10 );
+    context.fillText(texte.grapheSéparatrices.pBC, +60, 10);
     context.restore();
 
     // Tracé de la séparatrice univers avec / sans Big Bang et affichage des textes
@@ -198,12 +221,12 @@ function update_graphe_interactif() {
     context.stroke(); // Tracer la séparatrice
 
     context.save();
-    context.translate(omegal0_to_px(omegaL0Min) + 230, omegam0_to_px(1.5) + 25);
+    context.translate(omegal0_to_px(2.2), omegam0_to_px(0.6));
     context.fillStyle = "#34b8b2"
     context.rotate(-Math.PI / 4.9);
-    context.fillText(texte.grapheSéparatrices.BB, 0, -10);
-    context.fillText(texte.grapheSéparatrices.BB, 0, 22);
-    context.fillText(texte.grapheSéparatrices.pBB, 0, 12);
+    context.fillText(texte.grapheSéparatrices.BB, 0, -15);
+    context.fillText(texte.grapheSéparatrices.BB, 0, 15);
+    context.fillText(texte.grapheSéparatrices.pBB, 0, 5);
     context.restore();
 }
 
@@ -229,21 +252,14 @@ function update_point() {
     let context = canvas.getContext("2d");
 
     const omegam0 = parseFloat(document.getElementById("Omégam0").value);
-    let omegalDE0
-    if (document.getElementById("Omégal0")) {
-        omegalDE0 = parseFloat(document.getElementById("Omégal0").value);
-    } else {
-        omegalDE0 = parseFloat(document.getElementById("OmégaDE0").value);
-    }
+    let omegalDE0 = parseFloat(document.getElementById("Omégal0").value);
 
     const x = omegal0_to_px(omegalDE0);
     const y = omegam0_to_px(omegam0);
 
-    //context.clearRect(0, 0, canvas.width, canvas.height);
-
     context.beginPath();
-    context.arc(x, y, 2, 0, 2 * Math.PI);
-    context.fillStyle = "red";
+    context.arc(x, y, 4, 0, 2 * Math.PI);
+    context.fillStyle = "#df1b1b";
     context.fill();
 }
 

@@ -447,10 +447,8 @@ function debut_fin_univers(equa_diff) {
 
     // Si le dernier set de solution contient des valeurs non définies on utilise celui du pas précédent
     if ( (isNaN(set_solution[1]) && isNaN(set_solution[2])) ) {
-        console.log("Le set de solution saved a été utilisé (sens neg)", set_solution, save_set_solution)
         set_solution = save_set_solution
     }
-    console.log(set_solution)
 
     // On récupère le maximum entre la valeur du facteur d'échelle et la dérivée du facteur d'échelle
     let max = Math.max(Math.abs(set_solution[1]), Math.abs(set_solution[2]))
@@ -462,11 +460,11 @@ function debut_fin_univers(equa_diff) {
         age_debut = set_solution[0] / H0_parGAnnees(H0)
 
         if (set_solution[1] <= 1) {
-            naissance_univers = texte.univers.Debut + Math.abs(age_debut).toExponential(4) + texte.univers.Gannee + " (BigBang)"
+            naissance_univers = texte.univers.Debut + "BigBang " + Math.abs(age_debut).toExponential(4) + " Ga"
         }
 
         if ( max >= limite ) {
-            naissance_univers = texte.univers.Debut + Math.abs(age_debut).toExponential(4) + texte.univers.Gannee + " (BigFall)"
+            naissance_univers = texte.univers.Debut + "BigFall " + Math.abs(age_debut).toExponential(4) + " Ga"
         }
     }
 
@@ -487,11 +485,9 @@ function debut_fin_univers(equa_diff) {
     }
 
     if ( isNaN(set_solution[1]) || isNaN(set_solution[2]) ) {
-        console.log("Le set de solution saved a été utilisé (sens pos)", set_solution, save_set_solution)
         set_solution = save_set_solution
         set_solution = save_set_solution
     }
-    console.log(set_solution)
 
     // On récupère le maximum entre la valeur du facteur d'échelle et la dérivée du facteur d'échelle
     max = Math.max(Math.abs(set_solution[1]), Math.abs(set_solution[2]))
@@ -503,11 +499,11 @@ function debut_fin_univers(equa_diff) {
         age_fin = set_solution[0] / H0_parGAnnees(H0)
 
         if (set_solution[1] <= 1) {
-            mort_univers = texte.univers.Mort + Math.abs(age_fin).toExponential(4) + texte.univers.Gannee + " (BigCrunch)"
+            mort_univers = texte.univers.Mort + "BigCrunch " + Math.abs(age_fin).toExponential(4) + " Ga"
         }
 
         if ( max >= limite ) {
-            mort_univers = texte.univers.Mort + Math.abs(age_fin).toExponential(4) + texte.univers.Gannee + " (BigRip)"
+            mort_univers = texte.univers.Mort + "BigRip " + Math.abs(age_fin).toExponential(4) + " Ga"
         }
     }
 
@@ -528,7 +524,7 @@ function tauEnTemps(listeTaus, t_debut) {
         listeTaus[index] = listeTaus[index] / H0parGAnnee
 
         if (t_debut) {
-            listeTaus[index] = listeTaus[index] + Math.abs(t_debut)
+            listeTaus[index] = listeTaus[index] - t_debut
         }
     }
 
@@ -616,7 +612,6 @@ function calcul_horizon_particule(fonction,z_emission=0){
  */
 function calcul_horizon_evenements(fonction,z_reception=0){
     //formule 23 dans la théorie du 20/05/2024
-    console.log(DistanceMetrique(fonction,-.5,.3,true));
     return DistanceMetrique(fonction,-.99999999,z_reception,true);
 }
 
@@ -657,44 +652,33 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
     let H0 = Number(document.getElementById("H0").value);
     let abscisse = solution[0];
     let ordonnee = solution[1];
-
-    let facteur_debut;
-    let facteur_fin;
-    if (H0 > 0) {
-        facteur_debut = ordonnee[0]
-        facteur_fin = ordonnee[ordonnee.length - 1]
-    } else {
-        facteur_debut = ordonnee[ordonnee.length - 1]
-        facteur_fin = ordonnee[0]
+    if (H0 < 0) {
+        abscisse.reverse()
+        ordonnee.reverse()
     }
 
+    let facteur_debut = ordonnee[0]
+    let facteur_fin = ordonnee[ordonnee.length - 1]
+
+
     // Pour corriger l'erreur numérique
+    console.log("avant", abscisse)
     if (t_debut) {
         let offset = abscisse[0];
         for (let index = 0; index < abscisse.length; index++) {
             abscisse[index] = abscisse[index] - offset;
         }
     }
+    console.log("après", abscisse)
 
 
-    if ( a_min === 0 && t_debut && facteur_debut < Math.abs(a_max - a_min) * 1e-1 ) {
-        console.log("correction ordonnée gauche")
-        if (H0 > 0) {
-            abscisse[0] = 0
-            ordonnee[0] = 0
-        } else {
-            abscisse[ordonnee.length - 1] = 0
-            ordonnee[ordonnee.length - 1] = 0
-        }
+    if ( t_debut && facteur_debut < Math.abs(a_max - a_min) * 1e-1 ) {
+        abscisse[0] = 0
+        ordonnee[0] = 0
     }
 
     if (a_min === 0 && t_fin && facteur_fin < Math.abs(a_max - a_min) * 1e-1 ) {
-        console.log("correction ordonné droite")
-        if (H0 > 0) {
-            ordonnee[ordonnee.length - 1] = 0
-        } else {
-            ordonnee[0] = 0
-        }
+        ordonnee[ordonnee.length - 1] = 0
     }
 
     let max = ordonnee.reduce((a, b) => Math.max(a, b), -Infinity);
@@ -712,7 +696,6 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
     }];
 
     if (t_debut && facteur_debut > Math.abs(a_max - a_min) * 1e-1 ) {
-        console.log("test assymptote 1", t_debut, facteur_debut)
         donnee.push({
             type: 'line',
             x:[0, 0],
@@ -727,7 +710,6 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
     }
 
     if (t_fin && facteur_fin > Math.abs(a_max - a_min) * 1e-1 ) {
-        console.log("test assymptote 2", t_debut, Math.abs(ordonnee[ordonnee.length - 1]))
         let x_assymptote;
         if (t_fin && t_debut) {
             x_assymptote = Math.abs(Math.abs(t_fin) + Math.abs(t_debut))

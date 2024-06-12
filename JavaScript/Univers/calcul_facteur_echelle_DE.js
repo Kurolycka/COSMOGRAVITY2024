@@ -54,26 +54,21 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
 
         // On calcule le pas qui sera utilisé
         if ( (isNaN(tau_min) || isNaN(tau_max)) && !isNaN(t_0) ) {
-            console.log("Pas calculé avec t_0")
             pas = t_0 * 1e-5
         } else {
-            console.log("Pas calculé grossèrement")
             pas = 1e-4
         }
 
         let option = document.getElementById("optionsMonofluide").value
         if (!isNaN(tau_min) && !isNaN(tau_max) && option !== "optionLDE") {
-            console.log("Pas calculé avec tau_min - tau_max")
             pas = Math.abs(tau_max - tau_min) * 1e-5
         }
 
-        console.log("les taus :", t_min, t_0, t_max)
 
         return [tau_init, a_init, ap_init, pas]
     }
 
     let params = bornes_temps_CI();
-    console.log("Paramètres sortant de borne et CI", params)
 
     let set_solution = [params[0], params[1], params[2]];
     let pas = params[3];
@@ -112,20 +107,14 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
     let t_0 = calcul_ages(fonction_simplifiant_1, H0parGAnnee, 1e-10, 1);
 
     if (isNaN(t_0) || Math.abs(t_0) === Infinity) {
-        console.log("t0 théorique est NaN")
         t_0 = 0
     } else {
-        console.log("t0 n'est pas NaN")
         t_0 = t_0 / (nbrJours() * 24 * 3600 * 1e9)
     }
 
     let debutEtFin = debut_fin_univers(equa_diff_2)
 
     taus = tauEnTemps(taus, debutEtFin[2])
-
-
-    console.log("Liste temps :", taus)
-    console.log("Liste facteur :", facteur_echelle)
 
     return [[taus, facteur_echelle], t_0, debutEtFin]
 }
@@ -134,18 +123,14 @@ function affichage_site_DE() {
     let equa_diff_1 = equa_diff_1_DE
     let equa_diff_2 = equa_diff_2_DE
     let fonction_1 = fonction_F
-    let fonction_2 = fonction_Y
 
-    let sorties = calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_1, fonction_2)
+    let sorties = calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_1)
     let donnee = sorties[0]
 
-    let age_univers = sorties[1]
     let debutEtFin = sorties[2]
 
     document.getElementById("début").innerHTML = debutEtFin[0]
     document.getElementById("fin").innerHTML = debutEtFin[1]
-    console.log("Timeline :", debutEtFin, age_univers)
-    console.log("Omega DE/k/m/r :", Omega_DE(0), Omega_k(0), Omega_m(0), Omega_r(0))
 
     graphique_facteur_echelle(donnee, debutEtFin[2], debutEtFin[3])
 }

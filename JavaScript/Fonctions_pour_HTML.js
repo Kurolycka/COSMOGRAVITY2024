@@ -32,6 +32,13 @@ function toggleEntreeSortie (IDpanel) {
             '"Entree Graphe Sortie"';
     }
 
+    if (IDpanel === "panneauEntree") {
+        console.log("oui")
+        document.getElementById("flecheGauche").classList.toggle("tournee");
+    } else {
+        document.getElementById("flecheDroite").classList.toggle("tournee");
+    }
+
     ajustementGraphique()
 }
 

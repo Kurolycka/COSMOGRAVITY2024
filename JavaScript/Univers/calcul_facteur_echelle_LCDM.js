@@ -147,4 +147,5 @@ function affichage_site_LCDM() {
 
 
     graphique_facteur_echelle(donnee, debutEtFin[2], debutEtFin[3])
+    update_point()
 }
