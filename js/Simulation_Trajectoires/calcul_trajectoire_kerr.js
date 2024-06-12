@@ -640,6 +640,7 @@ function animate() {
 	onestarrete=0; // condition pour arreter le mobile
 	element = document.getElementById('traject_type'); // on recupere le boutton de type de trajectoire
 	element2=document.getElementById('traject_type2');//on recupere le boutton de observateur ou mobile
+
 	SurTelephone();//on verifie si on est sur telephone ou ordinateur
 	choixTrajectoire(context);// on vérifie le type de trajectoire sélectionné
 
@@ -670,14 +671,16 @@ function animate() {
 				/*Calcul des vitesses dans metrique de Kerr qui retourne une liste de [v_tot,v_r,v_phi]  (Regarder le fichier 
 				Fonctions_utilitaires_trajectoire):*/
 				resulta=calculs.MK_vitess(E,L,a,r_part_obs,rs,false); 
-				vtot=resulta[0];
-				vr_3_obs=resulta[1]*Math.sign(A_part_obs);
-				vp_3_obs= resulta[2]; 
-				z_obs=(1+pvr/c)/((1-(vtot/c)**2)**(1/2))*(1-rs/r_part_obs)**(-1/2)-1;
+				vtot=resulta[0]; //	vitesse total ( module )
+				//calcul de la vitesse radiale en tenant compte du signe de la derivée calculée avec RK
+				vr_3_obs=resulta[1]*Math.sign(A_part_obs); 
+				vp_3_obs= resulta[2]; //calcul de la vitesse angulaire
+
+				z_obs=(1+pvr/c)/((1-(vtot/c)**2)**(1/2))*(1-rs/r_part_obs)**(-1/2)-1;//calcul du decalage spectrale
 
 				//-----------------------------------------------------PARTIE AFFICHAGE-------------------------------------------------
 
-				//----------------------------------------------------- AVANT RS -------------------------------------------------
+				//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> AVANT RS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 			
 				document.getElementById("vrk").innerHTML = vr_3_obs.toExponential(3);
 				document.getElementById("vpk").innerHTML = vp_3_obs.toExponential(3);
@@ -686,11 +689,11 @@ function animate() {
 				document.getElementById("decal").innerHTML=z_obs.toExponential(3)
 			}
 
-			//----------------------------------------------------- APRES RS -------------------------------------------------
-			else //on affiche que les vitesses et distance parcourue ne sont plus definies
+			//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> APRES RS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+			else
 			{ 
-				var textou = o_recupereJson();
-									 
+				var textou = o_recupereJson(); //on recupere le texte du json
+				 //on affiche que les vitesses et distance parcourue ne sont plus definies	
 				document.getElementById("v_tot").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie;
 				document.getElementById("vrk").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie;
 				document.getElementById("vpk").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie;
@@ -712,7 +715,8 @@ function animate() {
 		}
 
 		/*En dehors des conditions car se fait toujours : */
-		varphi_obs = c *dtau* ( rs*a*E/r_part_obs + (1-rs/r_part_obs)*L )/( (Math.pow(r_part_obs,2)+Math.pow(a,2)+rs*Math.pow(a,2)/r_part_obs)*E - rs*a*L/r_part_obs ); //calcul de la vriation de l'angle phi
+		//calcul de la vriation de l'angle phi
+		varphi_obs = c *dtau* ( rs*a*E/r_part_obs + (1-rs/r_part_obs)*L )/( (Math.pow(r_part_obs,2)+Math.pow(a,2)+rs*Math.pow(a,2)/r_part_obs)*E - rs*a*L/r_part_obs ); 
 		phi_obs=phi_obs+varphi_obs; // on l'ajoute à la valeur precedente
 
 		//Calcul des positions X, Y pour le tracé
@@ -753,7 +757,7 @@ function animate() {
 	else
 	//Tout ce qui est dans cette condition concerne le cas du referentiel du spationaute
 	{
-		/* Une condition pour ne pas calculer audela de RH+ */
+		/* Une condition pour ne pas calculer audela attiendre zero */
 		if(r_part>0)
 		{
 			var temps_allumage_reacteur = Number(document.getElementById("temps_allumage").value); //recuperation de la valeur de l'input de temps d'allumage
@@ -771,15 +775,13 @@ function animate() {
 
 			r_part = val[0]; //on recupere le resultat de RK pour le rayon
 			A_part = val[1]; //on recupere le resultat de RK pour le dr/dtau
-
-			varphi = c *dtau* ( rs*a*E/r_part + (1-rs/r_part)*L )/delta(r_part);//calcul de la variation de l'angle phi
-			phi = phi + varphi; //on l'ajoute à la valeur precedente 
 			
 			/*Calcul des vitesses dans metrique de KERR qui retourne une liste de [v_tot,v_r,v_phi]  (Regarder le fichier 
 			Fonctions_utilitaires_trajectoire):*/
 			resulta=calculs.MK_vitess(E,L,a,r_part,rs,false); 
 			vtot=resulta[0]; //calcul de la vitesse total
-			vr_3=resulta[1]*Math.sign(A_part); //calcul de la vitesse radiale
+			 //calcul de la vitesse radiale en tenant compte du signe de la derivée calculée avec RK
+			vr_3=resulta[1]*Math.sign(A_part);
 			vp_3=resulta[2]; //calcul de la vitesse angulaire
 
 			if(J==0) {vp_3= c*L/r_part;} //pour calculer la vitesse angulaire si J=0 
@@ -805,6 +807,9 @@ function animate() {
 			gmp = derivee_seconde_Kerr_massif(r_part + 1);
 			fm = Math.abs(gm - gmp);
 
+			varphi = c *dtau* ( rs*a*E/r_part + (1-rs/r_part)*L )/delta(r_part);//calcul de la variation de l'angle phi
+			phi = phi + varphi; //on l'ajoute à la valeur precedente 
+
 			//Calcul des positions X, Y pour le tracé
 			posX1 = scale_factor * r_part * (Math.cos(phi) / rmax) + (canvas.width / 2.);
 			posY1 = scale_factor * r_part * (Math.sin(phi) / rmax) + (canvas.height / 2.);
@@ -828,9 +833,9 @@ function animate() {
 			//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> APRES RS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 			else
 			{
-				var textou = o_recupereJson();
+				var textou = o_recupereJson(); //on recupere le texte du json
 				document.getElementById("ga").innerHTML = fm.toExponential(3);// gradient d'acceleration
-				/*On met que c'est pas defini au dela de Rs */
+				//on affiche que les vitesses et distance parcourue ne sont plus definies	
 				document.getElementById("v_tot").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie; //vitesse total (module)
 				document.getElementById("vrk").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie; // vitesse radiale
 				document.getElementById("vpk").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie;//vitesse angulaire
@@ -844,7 +849,7 @@ function animate() {
 					document.getElementById("ga").innerHTML = 1/0;
 				}
 			 }
-			 /*Ces variables sont affichées independament de si on est à Rs ou RH+ */
+			 /*Ces variables sont affichées independament de si on a depassé Rs ou RH+ */
 			 document.getElementById("r_par").innerHTML = r_part.toExponential(3); //rayon
 			 document.getElementById("g_ressenti").innerHTML = nombre_de_g_calcul_memo.toExponential(3); //nombre de g ressenti
 			 document.getElementById("dernier_g_res").innerHTML = nombre_de_g_calcul.toExponential(3); //dernier g 
@@ -874,6 +879,7 @@ function animate() {
 		//Dessin du de la boule avec les memes etapes
 		context22.beginPath();
 		context22.fillStyle = COULEUR_BLEU;
+		/*On dessine la particule en evitant les problemes de r non defini :*/
 		if (r_part==0){context22.arc((canvas.width / 2.), (canvas.height / 2.) , 5, 0, Math.PI * 2); }
 		else{ context22.arc(posX1, posY1 , 5, 0, Math.PI * 2);}
 		context22.lineWidth = "1";

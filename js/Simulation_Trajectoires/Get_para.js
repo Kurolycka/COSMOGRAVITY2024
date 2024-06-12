@@ -563,24 +563,14 @@ function load_kerr_photon() {
 		if (graph_check == "false") {
 			document.getElementById("toggle").checked = false;
 		}
-		if (document.getElementById("traject_type").value == "simple") {
+		if (document.getElementById("traject_type").value == "simple") 
+		{
 			pressionBouttonTrajectoireSimple();
-		} else if (document.getElementById("traject_type").value == "complete") {
-			pressionBouttonTrajectoireComplete();
 		}
 
-		var inputNbfusees = document.getElementById("nombredefusees"); //manon
-		var labelNbfusees = document.getElementById("labelnumberfusees"); //manon
-
-		if (document.getElementById("traject_type2").value == "observateur") {
-			pressionBouttonObservateur2();
-			inputNbfusees.style.display = "inline"; //manon
-			labelNbfusees.style.display = "inline"; //manon
-		} else if (document.getElementById("traject_type2").value == "mobile") {
-			pressionBouttonMobile2();
-			inputNbfusees.style.display = "none"; //manon
-			labelNbfusees.style.display = "none"; //manon
-
+		if (document.getElementById("traject_type2").value == "mobile") 
+		{
+			document.getElementById("r4").click(); //on clique sur le button du "mobile"(photon)
 		}
 	}
 }
