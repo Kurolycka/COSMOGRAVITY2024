@@ -23,6 +23,9 @@ var input=0;//si on entre rien dans l'entrée nzoom
 var compteurVitesseAvantLancement = 0;
 var ns_avant_lancement=0;
 
+var point; //pour le graphe du potentiel
+
+
 //puisqu'il faux initaliser data1 et data2 avant l'appel dans graphique_creation_pot
 //var data1 = [];
 //var data2 = [];
@@ -442,8 +445,8 @@ function trajectoire() {
 				data2.push({date: r_part,close: V}); 
 			} 
 
- 			graphique_creation_pot(0,data1,data2,null,null); //Trace le graphe du potentiel.
-		
+ 			point=graphique_creation_pot(0,data1,data2,null,null); //Trace le graphe du potentiel.
+			
 		},300);	 
 	
 	} else { //Dans le cas où ce n'est pas le début de la simulation et où je ne suis pas en pause.												 
@@ -547,7 +550,7 @@ function animate() {
 		data2 = []; //on vide la liste dans la quelle on met nos données
 		V = Vr_obs(r_part_obs); // on recupere la valeur du poteniel au rayon actuel
 		data2.push({date: r_part_obs, close: V });//on met les valeur dans la liste
-		update_graphique_2(null,data2,null); // on appelle la fonction qui dessine le potentiel (Fonctions_utilitaires)
+		if(point !== undefined){update_graphique_2(point,data2,null);} // on appelle la fonction qui dessine le potentiel (Fonctions_utilitaires)
 
 		/*Calcul et affichage du temps_obsevateur (qui s'affiche meme apres RH+:*/
 		temps_observateur += dtau;
@@ -645,7 +648,7 @@ function animate() {
 		data2 = []; //on vide la liste dans la quelle on met nos données
 		V = Vr_mob(r_part);// on recupere la valeur du poteniel au rayon actuel
 		data2.push({date: r_part, close: V });	//on met les valeur dans la liste						
-		update_graphique_2(null,data2,null); // on appelle la fonction qui dessine le potentiel (Fonctions_utilitaires)
+		update_graphique_2(point,data2,null); // on appelle la fonction qui dessine le potentiel (Fonctions_utilitaires)
 
 		//-----------------------------------------------------NE PAS DEPASSER RH_ -------------------------------------------------
 
@@ -907,10 +910,6 @@ function majFondFixe22(){
 function majFondFixe3(){
 	context3.clearRect(0, 0, canvas.width, canvas.height);
 }
-
-							 
-		
- 
 
 
 function test_Jmax() { //teste si la valeur de J est supérieure à sa valeur maximale

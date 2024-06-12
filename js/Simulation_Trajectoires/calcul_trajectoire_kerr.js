@@ -24,6 +24,7 @@ var ns_avant_lancement=0;
 var c = 299792458;
 var G = 6.67385 * Math.pow(10, -11);
 
+var point; //pour le graphe du potentiel
 
 
 //puisqu'il faux initaliser data1 et data2 avant l'appel dans graphique_creation_pot
@@ -615,7 +616,7 @@ function trajectoire() {
   
 	 		}
 
-			graphique_creation_pot(0,data1,data2,null,null); //Trace le graphe du potentiel.
+			point=graphique_creation_pot(0,data1,data2,null,null); //Trace le graphe du potentiel.
 	
 		},300);	
 	
@@ -727,7 +728,7 @@ function animate() {
 		data2 = []; //on vide la liste dans la quelle on met nos données
 		V = Vr_obs(r_part_obs); // on recupere la valeur du poteniel au rayon actuel
 		data2.push({date: r_part_obs, close: V }); //on met les valeur dans la liste
-		update_graphique_2(null,data2,null) ; // on appelle la fonction qui dessine le potentiel (Fonctions_utilitaires)
+		if(point !== undefined){update_graphique_2(point,data2,null);} // on appelle la fonction qui dessine le potentiel (Fonctions_utilitaires)
 
 		//-----------------------------------------------------PARTIE TRACÉ -------------------------------------------------
 		//on dessine le trait derriere le mobile
@@ -890,7 +891,7 @@ function animate() {
 		data2 = []; //on vide la liste dans la quelle on met nos données
 		V = Vr_mob(r_part);// on recupere la valeur du poteniel au rayon actuel
 		data2.push({date: r_part, close: V });	//on met les valeur dans la liste
-		update_graphique_2(null,data2,null) ; // on appelle la fonction qui dessine le potentiel (Fonctions_utilitaires)
+		update_graphique_2(point,data2,null) ; // on appelle la fonction qui dessine le potentiel (Fonctions_utilitaires)
 
 		//-----------------------------------------------------NE PAS DEPASSER RH_ -------------------------------------------------
 		//l'utilisateur veut arrêter la trajectoire à Rh- et ne pas le depasser
@@ -1191,12 +1192,10 @@ function majFondFixe(){ phi_degres=phi0*180/Math.PI;
 
 function majFondFixe22(){
 	context22.clearRect(0, 0, canvas.width, canvas.height);
-	//console.log(canvas.width, canvas.height);
 }
 
 function majFondFixe3(){
 	context3.clearRect(0, 0, canvas.width, canvas.height);
-	//console.log(canvas.width, canvas.height);
 }
 
 
