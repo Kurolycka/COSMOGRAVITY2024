@@ -1167,7 +1167,10 @@ function animate(compteur,mobile,mobilefactor) {
 			//Dessin du tracé derriere la particule
 			context.beginPath();//on ouvre le context
 			context.fillStyle = mobile.couleur;//on choisit la couleur pour remplir parce que c'est fill
-			context.rect(mobile.positionspatio.posX1, mobile.positionspatio.posY1, 1, 1);//on dessine le tracé
+			/*On dessine avec ce qu'on a calculé que si r n'est pas negatif (audela de rs ça donne n'importe quoi) */
+			if(mobile.r_part>1){context.rect(mobile.positionspatio.posX1, mobile.positionspatio.posY1, 1, 1);}
+			else{context.rect((canvas.width / 2.0), (canvas.height / 2.0), 1, 1);}
+
 			context.lineWidth = "1";//en choisissant la bonne largeur des traits
 			context.fill();//on le met sur le canva
 			
@@ -1176,7 +1179,10 @@ function animate(compteur,mobile,mobilefactor) {
 			//On dessine la boule bleue avec les meme etapes
 			mobile["context22"].beginPath();
 			mobile["context22"].fillStyle = COULEUR_BLEU;
-			mobile["context22"].arc(mobile.positionspatio.posX1, mobile.positionspatio.posY1 , 5, 0, Math.PI * 2);
+			/*On dessine avec ce qu'on a calculé que si r n'est pas negatif (audela de rs ça donne n'importe quoi) */
+			if(mobile.r_part>1){mobile["context22"].arc(mobile.positionspatio.posX1, mobile.positionspatio.posY1 , 5, 0, Math.PI * 2);}
+			else{mobile["context22"].arc((canvas.width / 2.0), (canvas.height / 2.0) , 5, 0, Math.PI * 2);}
+			
 			mobile["context22"].lineWidth = "1";
 			mobile["context22"].fill();
 

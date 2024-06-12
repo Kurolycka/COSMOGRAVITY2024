@@ -1324,15 +1324,16 @@ function animate(compteur,mobile,mobilefactor)
 			/*Calcul de la postion [X,Y] (noramilisées) pour dessiner dans le canva (tracé) */
 			mobile.positionspatio.posX1 = mobilefactor[compteur] * mobile.r_part * (Math.cos(mobile.phi) / rmax) + (canvas.width / 2.);  
 			mobile.positionspatio.posY1 = mobilefactor[compteur] * mobile.r_part * (Math.sin(mobile.phi) / rmax) + (canvas.height / 2.);
-
+			/*Calcul de la distance parcourue*/
 			if (mobile.r_part>r_phy)
 			{ 
-				mobile.distance_parcourue_totale+=vtotal*(mobile.dtau*(1-rs/mobile.r_part)/mobile.E); //ManonCorrection
+				mobile.distance_parcourue_totale+=vtotal*dtau; 
 			}
 
 			if(joy.GetPhi()!=0)
 			{ 
-				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_precedente_nombre_g)/temps_allumage_reacteur)/9.80665 //ManonV3
+				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_precedente_nombre_g)/temps_allumage_reacteur)/9.80665 
+				
 				nombre_de_g_calcul_memo = nombre_de_g_calcul;
 			}
 
@@ -1368,7 +1369,7 @@ function animate(compteur,mobile,mobilefactor)
 				document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = "";
 				document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = "";
 				document.getElementById("g_ressenti"+compteur.toString()).innerHTML = ""; 		 
-				document.getElementById("distance_parcourue"+compteur.toString()).innerHTML="";
+				document.getElementById("distance_parcourue"+compteur.toString()).innerHTML= texte.page_trajectoire_photon_kerr.vitesse_pas_définie;
 				document.getElementById("g_ressenti"+compteur.toString()).innerHTML = nombre_de_g_calcul_memo.toExponential(3); 
 			}
 
@@ -1376,7 +1377,10 @@ function animate(compteur,mobile,mobilefactor)
 			//on dessine le trait derriere le mobile
 			context.beginPath();
 			context.fillStyle = mobile.couleur;
-			context.rect(mobile.positionspatio.posX1, mobile.positionspatio.posY1, 1, 1);
+			/*On dessine avec ce qu'on a calculé que si r n'est pas negatif (audela de rs ça donne n'importe quoi) */
+			if(mobile.r_part>1){context.rect(mobile.positionspatio.posX1, mobile.positionspatio.posY1, 1, 1);}
+			else{context.rect((canvas.width / 2.0), (canvas.height / 2.0), 1, 1);}
+
 			context.lineWidth = "1";
 			context.fill();
 
@@ -1384,7 +1388,10 @@ function animate(compteur,mobile,mobilefactor)
 			//on dessine le mobile au bout du trait
 			mobile["context22"].beginPath();
 			mobile["context22"].fillStyle = COULEUR_BLEU;
-			mobile["context22"].arc(mobile.positionspatio.posX1, mobile.positionspatio.posY1 , 5, 0, Math.PI * 2);
+			/*On dessine avec ce qu'on a calculé que si r n'est pas negatif (audela de rs ça donne n'importe quoi) */
+			if(mobile.r_part>1){mobile["context22"].arc(mobile.positionspatio.posX1, mobile.positionspatio.posY1 , 5, 0, Math.PI * 2);}
+			else{mobile["context22"].arc((canvas.width / 2.0), (canvas.height / 2.0) , 5, 0, Math.PI * 2);}
+
 			mobile["context22"].lineWidth = "1";
 			mobile["context22"].fill();
 
@@ -1399,8 +1406,6 @@ function animate(compteur,mobile,mobilefactor)
 		else
 		{
 			mobile.r_part=0; // on met quand on s'approche du milieu
-			//vu que dans le trou noir les equations font un peu n'importe quoi, du coup on efface la derrniére  position
-			mobile["context22"].clearRect(mobile.positionspatio.posX1, mobile.positionspatio.posY1 , 5, 0, Math.PI * 2);
 			//on affiche les derniéres valeurs avant l'arret de la simulation
 			document.getElementById("r_par"+compteur.toString()).innerHTML =mobile.r_part.toExponential(3); 
 			//on stop la simulation quand on arrive à r=0

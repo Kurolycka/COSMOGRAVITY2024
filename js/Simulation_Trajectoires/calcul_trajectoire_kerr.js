@@ -641,7 +641,6 @@ function animate() {
 	onestarrete=0; // condition pour arreter le mobile
 	element = document.getElementById('traject_type'); // on recupere le boutton de type de trajectoire
 	element2=document.getElementById('traject_type2');//on recupere le boutton de observateur ou mobile
-
 	SurTelephone();//on verifie si on est sur telephone ou ordinateur
 	choixTrajectoire(context);// on vérifie le type de trajectoire sélectionné
 
@@ -679,6 +678,9 @@ function animate() {
 
 				z_obs=(1+pvr/c)/((1-(vtot/c)**2)**(1/2))*(1-rs/r_part_obs)**(-1/2)-1;//calcul du decalage spectrale
 
+				distance_parcourue_totale+=vtot*dtau*delta(r_part_obs)/( (Math.pow(r_part_obs,2)+Math.pow(a,2)+rs*Math.pow(a,2)/r_part_obs)*E - rs*a*L/r_part_obs ); //calcul de la distance parcourue
+
+
 				//-----------------------------------------------------PARTIE AFFICHAGE-------------------------------------------------
 
 				//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> AVANT RS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -693,12 +695,11 @@ function animate() {
 			//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> APRES RS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 			else
 			{ 
-				var textou = o_recupereJson(); //on recupere le texte du json
 				 //on affiche que les vitesses et distance parcourue ne sont plus definies	
-				document.getElementById("v_tot").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie;
-				document.getElementById("vrk").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie;
-				document.getElementById("vpk").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie;
-				document.getElementById("distance_parcourue").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie; 
+				document.getElementById("v_tot").innerHTML = texte.page_trajectoire_massive_kerr.vitesse_pas_définie;
+				document.getElementById("vrk").innerHTML = texte.page_trajectoire_massive_kerr.vitesse_pas_définie;
+				document.getElementById("vpk").innerHTML = texte.page_trajectoire_massive_kerr.vitesse_pas_définie;
+				document.getElementById("distance_parcourue").innerHTML = texte.page_trajectoire_massive_kerr.vitesse_pas_définie; 
 				document.getElementById("decal").innerHTML=1/0;
 
 			}
@@ -834,13 +835,12 @@ function animate() {
 			//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> APRES RS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 			else
 			{
-				var textou = o_recupereJson(); //on recupere le texte du json
 				document.getElementById("ga").innerHTML = fm.toExponential(3);// gradient d'acceleration
 				//on affiche que les vitesses et distance parcourue ne sont plus definies	
-				document.getElementById("v_tot").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie; //vitesse total (module)
-				document.getElementById("vrk").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie; // vitesse radiale
-				document.getElementById("vpk").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie;//vitesse angulaire
-				document.getElementById("distance_parcourue").innerHTML = textou.page_trajectoire_massive_kerr.vitesse_pas_définie; //distance parcourue
+				document.getElementById("v_tot").innerHTML = texte.page_trajectoire_massive_kerr.vitesse_pas_définie; //vitesse total (module)
+				document.getElementById("vrk").innerHTML = texte.page_trajectoire_massive_kerr.vitesse_pas_définie; // vitesse radiale
+				document.getElementById("vpk").innerHTML = texte.page_trajectoire_massive_kerr.vitesse_pas_définie;//vitesse angulaire
+				document.getElementById("distance_parcourue").innerHTML = texte.page_trajectoire_massive_kerr.vitesse_pas_définie; //distance parcourue
 				
 				document.getElementById("joyDiv").style.display = 'none'; //on enleve le pilotage
 				/*Au dela de RH+ le temps observateur et gradient d'acceleration sont infinis */

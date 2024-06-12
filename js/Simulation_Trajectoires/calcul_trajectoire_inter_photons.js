@@ -1588,9 +1588,9 @@ function creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur){
 
 	context.lineWidth = "1";
 	context.fillStyle = COULEUR_NOIR;
-/*	if ((mobilefactor[cle] * m / rmaxjson[cle]) < 3) {
+if ((mobilefactor[cle] * m / rmaxjson[cle]) < 3) {
 		context.beginPath();
-		context.strokeStyle = COULEUR_GRIS;
+		context.strokeStyle = COULEUR_BLEU;
 		context.moveTo(posX3 - 10, posY3);
 		context.lineTo(posX3 - 3, posY3);
 		context.stroke();
@@ -1608,11 +1608,11 @@ function creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur){
 		context.stroke();
 	} else {
 		context.beginPath();
-		context.strokeStyle = COULEUR_GRIS;
+		context.strokeStyle = COULEUR_BLEU;
 		context.setLineDash([5, 5]);
 		context.arc(posX3, posY3, ((mobilefactor[cle] * 2 * m / rmaxjson[cle])), 0, Math.PI * 2);
 		context.stroke();
-	}*/
+	}
 //	if (rs < r_phy) {
 		context.beginPath();
 		context.fillStyle = COULEUR_RPHY;

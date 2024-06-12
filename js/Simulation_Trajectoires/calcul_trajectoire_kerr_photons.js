@@ -503,11 +503,10 @@ function animate() {
 			else
 			{
 				//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> APRES RS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-				var textou = o_recupereJson();//on recupere le texte du json
 				//on affiche que les vitesses et distance parcourue ne sont plus definies	
-				document.getElementById("v_tot").innerHTML = textou.page_trajectoire_photon_kerr.vitesse_pas_définie;
-				document.getElementById("vrkp").innerHTML = textou.page_trajectoire_photon_kerr.vitesse_pas_définie;
-				document.getElementById("vpkp").innerHTML = textou.page_trajectoire_photon_kerr.vitesse_pas_définie;
+				document.getElementById("v_tot").innerHTML = texte.page_trajectoire_photon_kerr.vitesse_pas_définie;
+				document.getElementById("vrkp").innerHTML = texte.page_trajectoire_photon_kerr.vitesse_pas_définie;
+				document.getElementById("vpkp").innerHTML = texte.page_trajectoire_photon_kerr.vitesse_pas_définie;
 			}
 			/*Les variables suivantes s'affiche de la meme manière meme apres Rs:*/
 			document.getElementById("tp").innerHTML = temps_particule.toExponential(3);
@@ -601,11 +600,10 @@ function animate() {
 			//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> APRES RS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 			else
 			{	
-				var textou = o_recupereJson(); //on recupere le texte du json
 				//on affiche que les vitesses et distance parcourue ne sont plus definies	
-				document.getElementById("v_tot").innerHTML = textou.page_trajectoire_photon_kerr.vitesse_pas_définie;//vitesse total (module)
-				document.getElementById("vrkp").innerHTML = textou.page_trajectoire_photon_kerr.vitesse_pas_définie;// vitesse radiale
-				document.getElementById("vpkp").innerHTML = textou.page_trajectoire_photon_kerr.vitesse_pas_définie;//vitesse angulaire
+				document.getElementById("v_tot").innerHTML = texte.page_trajectoire_photon_kerr.vitesse_pas_définie;//vitesse total (module)
+				document.getElementById("vrkp").innerHTML = texte.page_trajectoire_photon_kerr.vitesse_pas_définie;// vitesse radiale
+				document.getElementById("vpkp").innerHTML = texte.page_trajectoire_photon_kerr.vitesse_pas_définie;//vitesse angulaire
 
 				if (r_part<=rhp)
 				{	

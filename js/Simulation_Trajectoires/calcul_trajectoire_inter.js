@@ -1831,7 +1831,7 @@ function creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur){
 	} 
 	else {
 		context.beginPath();
-		context.strokeStyle = COULEUR_GRIS;
+		context.strokeStyle = COULEUR_BLEU;
 		context.setLineDash([5, 5]);
 		context.arc(posX3, posY3, ((mobilefactor[cle] * 2 * m / rmaxjson[cle])), 0, Math.PI * 2);
 		context.stroke();
