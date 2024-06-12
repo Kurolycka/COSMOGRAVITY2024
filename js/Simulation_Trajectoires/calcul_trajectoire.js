@@ -1125,7 +1125,8 @@ function animate(compteur,mobile,mobilefactor)
 				vr_1_obs=mobile.A_part_obs/(1-rs/(mobile.r_part_obs))  // calcul de v_r en utilisant le resultat de l'eqaution differentielle
 				vtotal=Math.sqrt(vr_1_obs*vr_1_obs + vp_1_obs*vp_1_obs) ; //calcul du module de la vitesse 
 
-				varphi_obs = c * mobile.L * mobile.dtau *(1-rs/mobile.r_part_obs) / Math.pow(mobile.r_part_obs, 2)/mobile.E; //Calcul de la variation de l'angle phi pour l'ajouter à la valeur antérieure
+				//Calcul de la variation de l'angle phi pour l'ajouter à la valeur antérieure
+				varphi_obs = c * mobile.L * mobile.dtau *(1-rs/mobile.r_part_obs) / Math.pow(mobile.r_part_obs, 2)/mobile.E; 
 				mobile.phi_obs=mobile.phi_obs+varphi_obs; //on met à jour le l'angle phi apres avoir calculé le var_phi
 
 				mobile.temps_particule += mobile.dtau*(1-rs/mobile.r_part_obs)/(mobile.E); //calcul du temps propre de du mobile
@@ -1133,7 +1134,7 @@ function animate(compteur,mobile,mobilefactor)
 				z_obs= Math.pow(1-((vr_1_obs*vr_1_obs + vp_1_obs*vp_1_obs)/(c*c)),(-1/2))*Math.pow(1-rs/mobile.r_part_obs,-(1/2))-1 ;//calcul du decalage spectrale
 				
 				/*Tres proche de rs les vitesses calculées sont NAN, surtout quand on aceelere, c'est pour cela on fait gaffe de ne pas les prendre*/
-				if (mobile.r_part > r_phy && !isNaN(vtotal))       {mobile.distance_parcourue_totale += vtotal*(mobile.dtau*(1-rs/mobile.r_part_obs)/(mobile.E));} //Calcul de la distance parcourue dans le referentiel du mobile 
+				if (mobile.r_part_obs > r_phy && !isNaN(vtotal))       {mobile.distance_parcourue_totale += vtotal*(mobile.dtau*(1-rs/mobile.r_part_obs)/(mobile.E));} //Calcul de la distance parcourue dans le referentiel du mobile 
 
 				/* Calcul du gradient : */
 				gm = derivee_seconde_Schwarzchild_massif_obs(mobile.E,mobile.L,mobile.r_part_obs);
@@ -1260,13 +1261,7 @@ function animate(compteur,mobile,mobilefactor)
 					}
 				} 
 			}	
-			/*si tout les Timers relié aux mobiles sont supprimés on sait que ya plus de calculs en cours alors on met qu'on a fini la simulation*/
-			if (Object.keys(Timer.instances).length === 0) 
-				{
-					document.getElementById("indic_calculs").innerHTML=texte.pages_trajectoire.calcul_termine; //on met que le calculé est fini (voir le Json)
-					document.getElementById("pause/resume").style.display='none';  //on enleve les 2 buttons pause
-					document.getElementById('bouton_pause').style.display='none'; 
-				}
+			
 		}
 
 		/*Le temps observateur est calculé meme quand on rentre dans le trou noir ( r < rs ) */
@@ -1306,7 +1301,7 @@ function animate(compteur,mobile,mobilefactor)
 			//vr_1=resultat[1]*Math.sign(mobile.A_part);   // <------------JPC  Remarque quand E très proche de 1 calculs.MSC_Ex_vitess donne un résultat[1] faux 
 			
 			vp_1=resultat[2]; //calcul de v_phi avec le fichier de calcul de vitesses
-			vr_1=mobile.A_part/(1-rs/(mobile.r_part))  //calcul de v_r avec le resultat de RK
+			vr_1=mobile.A_part/(1-rs/(mobile.r_part));  //calcul de v_r avec le resultat de RK
 			vtotal=Math.sqrt(vr_1*vr_1 + vp_1*vp_1) ;	//calcul de v_tot (module de la vitesse)
 
 			varphi = c * mobile.L * mobile.dtau / Math.pow(mobile.r_part, 2); //calcul de la variation de l'angle 
@@ -1325,10 +1320,7 @@ function animate(compteur,mobile,mobilefactor)
 			mobile.positionspatio.posX1 = mobilefactor[compteur] * mobile.r_part * (Math.cos(mobile.phi) / rmax) + (canvas.width / 2.);  
 			mobile.positionspatio.posY1 = mobilefactor[compteur] * mobile.r_part * (Math.sin(mobile.phi) / rmax) + (canvas.height / 2.);
 			/*Calcul de la distance parcourue*/
-			if (mobile.r_part>r_phy)
-			{ 
-				mobile.distance_parcourue_totale+=vtotal*dtau; 
-			}
+			mobile.distance_parcourue_totale+=vtotal*dtau; 
 
 			if(joy.GetPhi()!=0)
 			{ 
@@ -1380,7 +1372,6 @@ function animate(compteur,mobile,mobilefactor)
 			/*On dessine avec ce qu'on a calculé que si r n'est pas negatif (audela de rs ça donne n'importe quoi) */
 			if(mobile.r_part>1){context.rect(mobile.positionspatio.posX1, mobile.positionspatio.posY1, 1, 1);}
 			else{context.rect((canvas.width / 2.0), (canvas.height / 2.0), 1, 1);}
-
 			context.lineWidth = "1";
 			context.fill();
 
@@ -1470,14 +1461,7 @@ function animate(compteur,mobile,mobilefactor)
 					Timer.instances[compteur].stop(); //on stope le Timer du mobile concerné 	
 				}
 			}
-
-			/*si tout les Timers relié aux mobiles sont supprimés on sait que ya plus de calculs en cours alors on met qu'on a fini la simulation*/
-			if (Object.keys(Timer.instances).length === 0) 
-			{
-				document.getElementById("indic_calculs").innerHTML=texte.pages_trajectoire.calcul_termine; //on met que le calculé est fini (voir le Json)
-				document.getElementById("pause/resume").style.display='none';  //on enleve les 2 buttons pause
-				document.getElementById('bouton_pause').style.display='none'; 
-			}
+			
 		}
 			
 		//-----------------------------------------------------AFFICHAGE DES DIODES------------------------------------------------
@@ -1545,6 +1529,14 @@ function animate(compteur,mobile,mobilefactor)
 			document.getElementById('DivClignotanteNbG'+compteur.toString()).innerHTML = " <img src='./Images/dioderouge.gif' height='14px' />";
 			document.getElementById('DivClignotanteNbG'+compteur.toString()).style.color = "red";
 		} 
+	}
+
+	/*si tout les Timers relié aux mobiles sont supprimés on sait que ya plus de calculs en cours alors on met qu'on a fini la simulation*/
+	if (Object.keys(Timer.instances).length === 0) 
+	{
+		document.getElementById("indic_calculs").innerHTML=texte.pages_trajectoire.calcul_termine; //on met que le calculé est fini (voir le Json)
+		document.getElementById("pause/resume").style.display='none';  //on enleve les 2 buttons pause
+		document.getElementById('bouton_pause').style.display='none'; 
 	}
 
 }   

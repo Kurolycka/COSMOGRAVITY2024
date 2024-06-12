@@ -340,7 +340,7 @@
 		"puissance_consommee_infobulle":"Puissance totale consommée par les réacteurs en W/kg.",
 		"alerte_v0_superieure_c" : "Attention votre vitesse v0 est supérieure à c.",
 		"alerte_r0_inferieure_rs" : "Attention votre distance initiale au centre de l'astre r0 est plus petite que le rayon de Schwarzschild.",
-		"alerte_singularite_non_baryonique" : "La simulation s'arrete le calcul n'est pas stable, il faut décélérer la prochaine fois."
+		"alerte_singularite_non_baryonique" : "Le mobile s'arrete le calcul n'est pas stable, il faut décélérer la prochaine fois."
 
 	},
 

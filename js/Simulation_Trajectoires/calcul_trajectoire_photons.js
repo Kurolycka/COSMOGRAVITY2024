@@ -1094,14 +1094,7 @@ function animate(compteur,mobile,mobilefactor) {
 				}	
 				
 			}
-			/*si tout les Timers relié aux mobiles sont supprimés on sait que ya plus de calculs en cours alors on met qu'on a fini la simulation*/
-			if (Object.keys(Timer.instances).length === 0) 
-			{
-				document.getElementById("indic_calculs").innerHTML=texte.pages_trajectoire.calcul_termine; //on met que le calculé est fini (voir le Json)
-				document.getElementById("pause/resume").style.display='none';  //on enleve les 2 buttons pause
-				document.getElementById('bouton_pause').style.display='none'; 
-			}
-
+			
 		}
 
 		/*Le temps observateur est calculé meme quand on rentre dans le trou noir ( r < rs ) */
@@ -1219,16 +1212,15 @@ function animate(compteur,mobile,mobilefactor) {
 			}	     
 		}
 
-		/*si tout les Timers relié aux mobiles sont supprimés on sait que ya plus de calculs en cours alors on met qu'on a fini la simulation*/
-		if (Object.keys(Timer.instances).length === 0) 
-			{
-				document.getElementById("indic_calculs").innerHTML=texte.pages_trajectoire.calcul_termine; //on met que le calculé est fini (voir le Json)
-				document.getElementById("pause/resume").style.display='none';  //on enleve le button pause
-				document.getElementById("pause/resume").style.display='none';  //on enleve les 2 buttons pause
-			}
-
 	}
-	
+	/*si tout les Timers relié aux mobiles sont supprimés on sait que ya plus de calculs en cours alors on met qu'on a fini la simulation*/
+	if (Object.keys(Timer.instances).length === 0) 
+	{
+		document.getElementById("indic_calculs").innerHTML=texte.pages_trajectoire.calcul_termine; //on met que le calculé est fini (voir le Json)
+		document.getElementById("pause/resume").style.display='none';  //on enleve les 2 buttons pause
+		document.getElementById('bouton_pause').style.display='none'; 
+	}
+
 }  
 
 // -------------------------------------{fonction Vr_mob}--------------------------------------------
