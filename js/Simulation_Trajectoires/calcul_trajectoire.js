@@ -1085,13 +1085,13 @@ function trajectoire(compteur,mobile) {
 function animate(compteur,mobile,mobilefactor) 
 {
 	element = document.getElementById('traject_type'); // on recupere le boutton de type de trajectoire
-	var isrebond = document.getElementById("boutton_ammorti").value; // on recupere la valeur de la barre rebond	  								   
 	var element2=document.getElementById('traject_type2');   //on recupere le boutton de observateur ou mobile
+	var isrebond = document.getElementById("boutton_ammorti").value; // on recupere la valeur de la barre rebond	  								   
 
 	mobilefactor[compteur] = factGlobalAvecClef //facteur pour l'echelle
 
 	SurTelephone(); //on verifie si on est sur telephone ou ordinateur
-	choixTrajectoire(compteur,context,mobilefactor,rmaxjson,maximum);// on vérifie le type de trajectoire sélectionné
+	choixTrajectoire(compteur,context,mobilefactor,rmaxjson,maximum); // on vérifie le type de trajectoire sélectionné
 	
 	/*----------------------------------------------------------{{{{  CAS_OBSERVATEUR  }}}-----------------------------------------------------------*/
 	if (element2.value != "mobile") 
@@ -1106,8 +1106,8 @@ function animate(compteur,mobile,mobilefactor)
 			if (mobile.r_part_obs >rs*1.000001)//pas exactement rs pour eviter les problemes de calculs 
 			{
 				//-----------------------------------------------------PARTIE CALCULE-------------------------------------------------
-
-				val_obs = rungekutta_obs(mobile.E,mobile.L,mobile.dtau, mobile.r_part_obs, mobile.A_part_obs); //calcul de l'equation differentielle avec RK4 ça donne le r et dr/dt
+				//calcul de l'equation differentielle avec RK4 ça donne le r et dr/dt
+				val_obs = rungekutta_obs(mobile.E,mobile.L,mobile.dtau, mobile.r_part_obs, mobile.A_part_obs);
 				mobile.r_part_obs = val_obs[0]; 		//valeur de r calculée par RK (Runge Kutta)
 				mobile.A_part_obs = val_obs[1]; 		//valeur de dr/dtau calculée par RK
 
