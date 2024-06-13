@@ -191,7 +191,7 @@ function texte_univers_LCDM() {
     document.getElementById("Monofluide_optionLDE").innerHTML = texte.univers.monofluide_LDE
     document.getElementById("Monofluide_optionK").innerHTML = texte.univers.monofluide_K
     document.getElementById("infoOmégam0").title = texte.univers.infoOmégam0
-    document.getElementById("infoOmégaLDE0").title = texte.univers.infoOmégaLDE0
+    document.getElementById("infoOmégaLDE0").title = texte.univers.infoOmégaL0
     document.getElementById("label_optionsOmégar0").insertAdjacentHTML("beforeend", texte.univers.label_Omégar0)
     document.getElementById("infoOmégaR0").title = texte.univers.infoOmégaR0
     document.getElementById("Omégar0_optionRFC_et_Neutrinos").innerHTML = texte.univers.Omégar0_RFC_et_Neutrinos
@@ -241,7 +241,7 @@ function texte_univers_DE() {
     document.getElementById("Monofluide_optionLDE").innerHTML = texte.univers.monofluide_LDE
     document.getElementById("Monofluide_optionK").innerHTML = texte.univers.monofluide_K
     document.getElementById("infoOmégam0").title = texte.univers.infoOmégam0
-    document.getElementById("infoOmégaLDE0").title = texte.univers.infoOmégaLDE0
+    document.getElementById("infoOmégaLDE0").title = texte.univers.infoOmégaDE0
     document.getElementById("label_optionsOmégar0").insertAdjacentHTML("beforeend", texte.univers.label_Omégar0)
     document.getElementById("infoOmégaR0").title = texte.univers.infoOmégaR0
     document.getElementById("Omégar0_optionRFC_et_Neutrinos").innerHTML = texte.univers.Omégar0_RFC_et_Neutrinos
