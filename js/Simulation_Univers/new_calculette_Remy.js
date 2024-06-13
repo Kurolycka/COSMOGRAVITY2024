@@ -501,31 +501,33 @@ function calcul_dm_inverse(){
             function fonction_integ_distance(x){
                 return Math.pow(fonction_E(x,true),-0.5);
             };
-            return Math.pow(Math.abs(Omega_k(0)),0.5)*simpson_composite( fonction_integ_distance, x,1,1e3);
+            return Math.pow(Math.abs(Omega_k(0)),0.5)*simpson_composite( fonction_integ_distance, x,0,1e3);
         };
-        if (Omega_k(0)>=0 || interieur_SK_distance(-1+1e-30)<Math.PI/2){
+        if (Omega_k(0)>=0 || interieur_SK_distance(-1)<Math.PI/2){//cas classique univers plat ou pas trop sphérique
             function fonction_dm_dichotomie(x){
                 return DistanceMetrique(fonction_E,x,0,true);
             };
             z=Dichotomie_Remy(fonction_dm_dichotomie,dm_input,-1,0,1e-30);
-            console.log(z);
         }else{//cas plus particulier ou l'univers est hyperspherique et le paramètre de courbe est assez important pour dépasser le sin(pi/2) dans l'equation de la distance metrique, il y a donc 2 solution maxmimum (pas pour tout les dm si l'interieur du sin est en dessous de pi)
-            generer_graphique_distance();
             dmmax=c/(H0_parSecondes(H0)*Math.pow(Math.abs(Omega_k(0)),0.5));
-            function fonction_dm_dichotomie(x){
-                return DistanceMetrique(fonction_E,-1+1e-30,1,true);
+            console.log(interieur_SK_distance(-1));
+            if (dm_input>dmmax){
+                console.log("valeur dm trop haute (>"+dmmax+")");
+                return;
             };
-            let amax=Dichotomie_Remy(interieur_SK_distance,Math.PI/2,1e-15,1,1e-30);//on calcule le pique de la fonction sinus 
-            let dmlimit=calcul_horizon_particule(fonction_E);//correspond à la valeur vers laquelle tend dans le cas ou pi/2<interieur sk <pi
-            if (interieur_SK_distance(1e-15)>=Math.PI || dm_input>dmlimit){//le premier cas est celui ou l'interieur de sk est superieur a pi donc forcement 2 solution, et le second cas est celui ou il existe une solution en dessous de l'asymptot et 2 au dessus
-                let a1=Dichotomie_Remy(fonction_dm_dichotomie,dm_input,amax,1,1e-30);
-                let a2=Dichotomie_Remy(fonction_dm_dichotomie,dm_input,1e-15,amax,1e-30);
-                z1=(1-a1)/a1;
-                z2=(1-a2)/a2;
+            function fonction_dm_dichotomie(x){
+                return DistanceMetrique(fonction_E,x,0,true);
+            };
+            console.log(m_vers_AL(dm_input)/1e9);
+            let amax=Dichotomie_Remy(interieur_SK_distance,Math.PI/2,-1,0,1e-30);//on calcule le pique de la fonction sinus 
+            let dmlimit=DistanceMetrique(fonction_E,-.999999999999,0,true);//correspond à la valeur vers laquelle tend dans le cas ou pi/2<interieur sk <pi
+            console.log(dmlimit);
+            if (interieur_SK_distance(-1)>=Math.PI || dm_input>dmlimit){//le premier cas est celui ou l'interieur de sk est superieur a pi donc forcement 2 solution, et le second cas est celui ou il existe une solution en dessous de l'asymptot et 2 au dessus
+                let z1=Dichotomie_Remy(fonction_dm_dichotomie,dm_input,amax,0,1e-30);
+                let z2=Dichotomie_Remy(fonction_dm_dichotomie,dm_input,-1,amax,1e-30);
                 document.getElementById("z_racine_dm").value=z1+", "+z2; //résultat z
             }else{
-                let a=Dichotomie_Remy(fonction_dm_dichotomie,dm_input,amax,1,1e-30);
-                z=(1-a)/a;
+                let z=Dichotomie_Remy(fonction_dm_dichotomie,dm_input,amax,1,1e-30);
                 document.getElementById("z_racine_dm").value=z; //résultat z
             };
         };
@@ -538,7 +540,6 @@ function calcul_dm_inverse(){
             };
             return Math.pow(Math.abs(Omega_k(0)),0.5)*simpson_composite( fonction_integ_distance, x,1,1e3);
         };
-
         if (Omega_k(0)>=0 || interieur_SK_distance(1e-15)<Math.PI/2){ //cas classique où l'univers n'est pas une hypersphère ou alors le rayon de courbure de cette sphère est trop petit  -> qu'une seule solution en positif et une négative
             function fonction_dm_dichotomie(x){
                 return DistanceMetrique(fonction_E,x,1,false);
@@ -553,7 +554,6 @@ function calcul_dm_inverse(){
             }
             document.getElementById("z_racine_dm").value=z; //résultat z
         }else{//cas plus particulier ou l'univers est hyperspherique et le paramètre de courbe est assez important pour dépasser le sin(pi/2) dans l'equation de la distance metrique, il y a donc 2 solution maxmimum (pas pour tout les dm si l'interieur du sin est en dessous de pi)
-            dmmax=c/(H0_parSecondes(H0)*Math.pow(Math.abs(Omega_k(0)),0.5));
             function fonction_dm_dichotomie(x){
                 return DistanceMetrique(fonction_E,x,1);
             };
@@ -574,6 +574,10 @@ function calcul_dm_inverse(){
     };
 };
 
+function affichage_t_inverse(){
+    temps_em_input=document.getElementById("t_racine_em").value;
+    temps_rec_input=document.getElementById("t_racine_rec").value;
+}
 
 
 //calcul_t_inverse est deja défini dans fonction_utile

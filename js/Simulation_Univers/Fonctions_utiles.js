@@ -758,7 +758,6 @@ function calcul_horizon_evenements(fonction,z_reception=0){
  * @returns valeur de z
  */
 function calcul_t_inverse(temps,fonction){
-	//Remy test
 	function a_dichotomer(x){
 		return calcul_ages(fonction,H0enannee,1e-15,x);
 	}
@@ -767,7 +766,7 @@ function calcul_t_inverse(temps,fonction){
 	if (age_univers>=temps){
 		a_t=Dichotomie_Remy(a_dichotomer,temps,1e-15,1,temps*1e-12);
 	}else{
-		a_t=Dichotomie_Remy(a_dichotomer,temps,1,1e7,1e-12);
+		a_t=Dichotomie_Remy(a_dichotomer,temps,1,1e10,1e-12);
 	};
 
 	return (1-a_t)/a_t;
