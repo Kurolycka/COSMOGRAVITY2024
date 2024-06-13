@@ -577,8 +577,10 @@ function calcul_dm_inverse(){
 function affichage_t_inverse(){
     temps_em_input=document.getElementById("t_racine_em").value;
     temps_rec_input=document.getElementById("t_racine_rec").value;
-}
+    
+    z_em=calcul_t_inverse(temps_em_input,fonction_E);
+    z_rec=calcul_t_inverse(temprs_rec_input,fonction_E);
 
-
-//calcul_t_inverse est deja défini dans fonction_utile
-
+    document.getElementById('z_racin_t_em').value=z_em;
+    document.getElementById('z_racine_t_rec').value=z_rec;
+};
