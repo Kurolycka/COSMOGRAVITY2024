@@ -1291,7 +1291,7 @@ function calculDeDs(abscissa) {
 
 	abscissa.forEach(i => {   
 		// calcul de la distance mètrique 
-		dm1=DistanceMetrique(fonction_E,0,i,true);		
+		dm1=DistanceMetrique(fonction_E,0,i,true);	
 
 		//  temps en secondes
 		temps = calcul_ages(fonction_E,H0parsec,.0000001,1/(1+i));

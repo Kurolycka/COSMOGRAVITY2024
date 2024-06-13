@@ -738,7 +738,7 @@ function DistanceMetrique(fonction,Zemission,Zreception, z_utilisé=false,precis
 function calcul_horizon_particule(fonction,z_emission=0){
     let a_emission=1/(z_emission+1);
     //formule 21 dans la théorie du 20/05/2024
-    return DistanceMetrique(fonction,1e-15,a_emission);
+    return DistanceMetrique(fonction,1e-30,a_emission,false,1e5);
 };
 
 /**
@@ -748,7 +748,7 @@ function calcul_horizon_particule(fonction,z_emission=0){
  */
 function calcul_horizon_evenements(fonction,z_reception=0){
     //formule 23 dans la théorie du 20/05/2024
-    return DistanceMetrique(fonction,-.99999999,z_reception,true);
+    return DistanceMetrique(fonction,-.99999999,z_reception,true,1e5);
 }
 
 /**

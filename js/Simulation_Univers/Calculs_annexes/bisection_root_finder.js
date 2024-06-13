@@ -326,35 +326,35 @@ function dichotomie(BornInf, BornSup, fonction, cible, ex){
     max_iterations = 500;
     j = 0;
     while (j<500){
-            zc = (z_inf+z_sup)/2.0;
+		zc = (z_inf+z_sup)/2.0;
 
-            dm_zc = fonction(zc, omegam0, omegalambda0, Or, ex);
-            //alert("za : " + za + " dm_za: " + dm_za + " zb: " + zb + " dm_zb: " + dm_zb + " zc: " + zc+ " ex: " + ex);
-            if (((z_sup-z_inf)/2)<ex){
-                if (Math.abs(zc/ex) < 100){
+		dm_zc = fonction(zc, omegam0, omegalambda0, Or, ex);
+		//alert("za : " + za + " dm_za: " + dm_za + " zb: " + zb + " dm_zb: " + dm_zb + " zc: " + zc+ " ex: " + ex);
+		if (((z_sup-z_inf)/2)<ex){
+			if (Math.abs(zc/ex) < 100){
 
-                    ex = ex*1e-5;
-                }
-                else{
-                    zc = zc.toExponential(5);
-                    return zc;
-                }
-            }
-            else if(isNaN(dm_zc)){
-                return NaN;
-            }
+				ex = ex*1e-5;
+			}
+			else{
+				zc = zc.toExponential(5);
+				return zc;
+			}
+		}
+		else if(isNaN(dm_zc)){
+			return NaN;
+		}
 
-            else if ((dm_zc-cible)*(dm_z_sup-cible)< 0){
-                z_inf = zc;
-                dm_z_inf = dm_zc;
-                j+=1;
-            }
-            else{
-                z_sup = zc;
-                dm_z_sup = dm_zc;
-                j+=1;
-            }
-        }
+		else if ((dm_zc-cible)*(dm_z_sup-cible)< 0){
+			z_inf = zc;
+			dm_z_inf = dm_zc;
+			j+=1;
+		}
+		else{
+			z_sup = zc;
+			dm_z_sup = dm_zc;
+			j+=1;
+		}
+	};
 }
 
 //fonction définit du produit de  l'intégral de la fonction "fonction_dm" avec abs(omegak0)^0.5   Ceci sert à  trouver le z correspondant a pi/2 ou pi pour cette fonction

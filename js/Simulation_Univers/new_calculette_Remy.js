@@ -32,14 +32,21 @@ function affichage_des_z(){
 
     //! Partie géometrie ---------------------
     //? Calcul des Distances métriques
-    //distance metrique des deux z ainsi que la distance entre eux
-    let dm1=DistanceMetrique(fonction_E,1/(1+z1),1);
-    let dm2=DistanceMetrique(fonction_E,1/(1+z2),1);
+    if (z1<0){
+        dm1=DistanceMetrique(fonction_E,z1,0,true,);
+    }else{
+        dm1=DistanceMetrique(fonction_E,0,z1,true);
+    };
+    if (z2<0){
+        dm2=DistanceMetrique(fonction_E,z2,0,true,);
+    }else{
+        dm2=DistanceMetrique(fonction_E,0,z2,true);
+    };
     let delta_dm=Math.abs(DistanceMetrique(fonction_E,1/(1+z1),1/(1+z2)));
     
     //? Calcul des temps
-    let t1_sec=calcul_ages(fonction_E,H0_parSecondes(H0),1e-15,1/(1+z1));
-    let t2_sec=calcul_ages(fonction_E,H0_parSecondes(H0),1e-15,1/(1+z2));
+    let t1_sec=calcul_ages(fonction_E,H0_parSecondes(H0),1e-30,1/(1+z1));
+    let t2_sec=calcul_ages(fonction_E,H0_parSecondes(H0),1e-30,1/(1+z2));
     let delta_t=calcul_ages(fonction_E,H0_parSecondes(H0),1/(1+z1),1/(1+z2));
 
 
@@ -93,7 +100,8 @@ function affichage_des_z(){
     //documentgetby compagnie
 
     duree_calcul=Date.now()-start_temps;
-    console.log(dm1);
+    console.log(dm1.toExponential(6));
+    console.log(dm2.toExponential(6));
     //time_affiche.innerHTML = "Le calcul a duré : " + duree_calcul + " millisecondes !";
 };
 
@@ -124,11 +132,15 @@ function generer_graphique_distance(ordonnee_t=false,log=false){
 
     //calculs des longueurs
     abscisse.forEach(i => {
-        let dm=DistanceMetrique(fonction_E,1/(i+1),1,false,1e2);
+        if (i<0){
+            dm=DistanceMetrique(fonction_E,i,0,true,1e2);
+        }else{
+            dm=DistanceMetrique(fonction_E,1/(i+1),1,false,1e2);
+        }
         let da=dm/(1+i);
         let dl=dm*(1+i);
         let temps = calcul_ages(fonction_E,H0_parSecondes(H0),1e-15,1/(1+i));
-        dlt = temps * c;
+        let dlt = temps * c;
         dmArr.push(m_vers_AL(dm));
         daArr.push(m_vers_AL(da));
         dlArr.push(m_vers_AL(dl));
@@ -478,61 +490,91 @@ function calcul_horizons_annexe(){
 };
 //---------------------------------------
 
+//compliquée à lire j'avoue
 function calcul_dm_inverse(){
-    z_negatif=false;
-    dmmax= calcul_horizon_particule(fonction_E);
-    dm = document.getElementById("dm_racine_dm").value;
-    if(dm>=dmmax){
-        document.getElementById("z_racine_dm").innerHTML= NaN;
-        return;
-    };
-    
+    z_negatif=true; //remplacer par le bouton check
+    dm_input = document.getElementById("dm_racine_dm").value;
 
-    //pour le cas particulier ou la courbure est négative il peut y avoir une seule solution seulement si la plus grande valeur dans le sin() de l'equation de la distance metrique est en dessous de pi/2 (strictement croissante)
-    function interieur_integ_distance(x){
-        function fonction_integ_distance(x){
-            return Math.pow(fonction_E(x),-0.5)/Math.pow(x,2);
+
+    if (z_negatif){
+        function interieur_SK_distance(x){
+            function fonction_integ_distance(x){
+                return Math.pow(fonction_E(x,true),-0.5);
+            };
+            return Math.pow(Math.abs(Omega_k(0)),0.5)*simpson_composite( fonction_integ_distance, x,1,1e3);
         };
-        return Math.pow(Math.abs(Omega_k(0)),0.5)*simpson_composite( fonction_integ_distance, x,1,1e3);
-    };
-    if (Omega_k(0)>=0 || interieur_integ_distance(1e-15)<Math.PI/2){
-        if (z_negatif){
+        if (Omega_k(0)>=0 || interieur_SK_distance(-1+1e-30)<Math.PI/2){
             function fonction_dm_dichotomie(x){
                 return DistanceMetrique(fonction_E,x,0,true);
             };
-            z=Dichotomie_Remy(fonction_dm_dichotomie,dm,-1+1e-15,0,1e-15);
-        }else{
+            z=Dichotomie_Remy(fonction_dm_dichotomie,dm_input,-1,0,1e-30);
+            console.log(z);
+        }else{//cas plus particulier ou l'univers est hyperspherique et le paramètre de courbe est assez important pour dépasser le sin(pi/2) dans l'equation de la distance metrique, il y a donc 2 solution maxmimum (pas pour tout les dm si l'interieur du sin est en dessous de pi)
+            generer_graphique_distance();
+            dmmax=c/(H0_parSecondes(H0)*Math.pow(Math.abs(Omega_k(0)),0.5));
             function fonction_dm_dichotomie(x){
-                return DistanceMetrique(fonction_E,x,1)
+                return DistanceMetrique(fonction_E,-1+1e-30,1,true);
             };
-            let a=Dichotomie_Remy(fonction_dm_dichotomie,dm,0,1,1e-15);
-            z=(1-a)/a;
+            let amax=Dichotomie_Remy(interieur_SK_distance,Math.PI/2,1e-15,1,1e-30);//on calcule le pique de la fonction sinus 
+            let dmlimit=calcul_horizon_particule(fonction_E);//correspond à la valeur vers laquelle tend dans le cas ou pi/2<interieur sk <pi
+            if (interieur_SK_distance(1e-15)>=Math.PI || dm_input>dmlimit){//le premier cas est celui ou l'interieur de sk est superieur a pi donc forcement 2 solution, et le second cas est celui ou il existe une solution en dessous de l'asymptot et 2 au dessus
+                let a1=Dichotomie_Remy(fonction_dm_dichotomie,dm_input,amax,1,1e-30);
+                let a2=Dichotomie_Remy(fonction_dm_dichotomie,dm_input,1e-15,amax,1e-30);
+                z1=(1-a1)/a1;
+                z2=(1-a2)/a2;
+                document.getElementById("z_racine_dm").value=z1+", "+z2; //résultat z
+            }else{
+                let a=Dichotomie_Remy(fonction_dm_dichotomie,dm_input,amax,1,1e-30);
+                z=(1-a)/a;
+                document.getElementById("z_racine_dm").value=z; //résultat z
+            };
         };
-    }else if (interieur_integ_distance(1e-15)>Math.PI/2){ 
-        return;
-    }else {
-        return;
+
+
+    }else{//fonction qui renvoie la valeur compris dans la fonction SK du calcul de la distance metrique
+        function interieur_SK_distance(x){
+            function fonction_integ_distance(x){
+                return Math.pow(fonction_E(x),-0.5)/Math.pow(x,2);
+            };
+            return Math.pow(Math.abs(Omega_k(0)),0.5)*simpson_composite( fonction_integ_distance, x,1,1e3);
+        };
+
+        if (Omega_k(0)>=0 || interieur_SK_distance(1e-15)<Math.PI/2){ //cas classique où l'univers n'est pas une hypersphère ou alors le rayon de courbure de cette sphère est trop petit  -> qu'une seule solution en positif et une négative
+            function fonction_dm_dichotomie(x){
+                return DistanceMetrique(fonction_E,x,1,false);
+            };
+            let a=Dichotomie_Remy(fonction_dm_dichotomie,dm_input,0,1,1e-30);
+            z=(1-a)/a;
+            if (z<1e-10){//cas très particulier où le z est tellement petit que le (a) correspondant devient imprécis numériquement à cause du nombre de flottant (0.999999999 est approximer à 1 ce qui fausse le calcul) on utilise donc le calcul avec z car vu que z très petit pas besoin de s'inquiéter que la bonne valeur ne soit pas comprise dans les bornes 
+                function fonction_dm_dichotomie(x){
+                    return DistanceMetrique(fonction_E,0,x,true);
+                };
+                z=Dichotomie_Remy(fonction_dm_dichotomie,dm_input,0,1,1e-30);
+            }
+            document.getElementById("z_racine_dm").value=z; //résultat z
+        }else{//cas plus particulier ou l'univers est hyperspherique et le paramètre de courbe est assez important pour dépasser le sin(pi/2) dans l'equation de la distance metrique, il y a donc 2 solution maxmimum (pas pour tout les dm si l'interieur du sin est en dessous de pi)
+            dmmax=c/(H0_parSecondes(H0)*Math.pow(Math.abs(Omega_k(0)),0.5));
+            function fonction_dm_dichotomie(x){
+                return DistanceMetrique(fonction_E,x,1);
+            };
+            let amax=Dichotomie_Remy(interieur_SK_distance,Math.PI/2,1e-15,1,1e-30);//on calcule le pique de la fonction sinus 
+            let dmlimit=calcul_horizon_particule(fonction_E);//correspond à la valeur vers laquelle tend dans le cas ou pi/2<interieur sk <pi
+            if (interieur_SK_distance(1e-15)>=Math.PI || dm_input>dmlimit){//le premier cas est celui ou l'interieur de sk est superieur a pi donc forcement 2 solution, et le second cas est celui ou il existe une solution en dessous de l'asymptot et 2 au dessus
+                let a1=Dichotomie_Remy(fonction_dm_dichotomie,dm_input,amax,1,1e-30);
+                let a2=Dichotomie_Remy(fonction_dm_dichotomie,dm_input,1e-15,amax,1e-30);
+                z1=(1-a1)/a1;
+                z2=(1-a2)/a2;
+                document.getElementById("z_racine_dm").value=z1+", "+z2; //résultat z
+            }else{
+                let a=Dichotomie_Remy(fonction_dm_dichotomie,dm_input,amax,1,1e-30);
+                z=(1-a)/a;
+                document.getElementById("z_racine_dm").value=z; //résultat z
+            };
+        };
     };
 };
 
-/**
- * Inverse du calcul de l'age en fonction d'un z grâce a la fonction dichotomie (marche seulement pour des fonction absolument croissante)
- * @param {*} temps valeur t
- * @param {*} fonction fonction a rechercher
- * @returns valeur de z
- */
-function calcul_t_inverse(temps,fonction){
-	//Remy test
-	function a_dichotomer(x){
-		return calcul_ages(fonction,H0enannee,1e-15,x);
-	}
-	age_univers=a_dichotomer(1);
-	
-	if (age_univers>=temps){
-		a_t=Dichotomie_Remy(a_dichotomer,temps,1e-15,1,temps*1e-12);
-	}else{
-		a_t=Dichotomie_Remy(a_dichotomer,temps,1,1e7,1e-12);
-	};
 
-	return (1-a_t)/a_t;
-}
+
+//calcul_t_inverse est deja défini dans fonction_utile
+
