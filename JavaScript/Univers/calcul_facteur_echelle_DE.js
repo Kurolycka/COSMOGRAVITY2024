@@ -114,6 +114,7 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
 
     let debutEtFin = debut_fin_univers(equa_diff_2)
 
+    console.log("out debutEtFin", debutEtFin)
     taus = tauEnTemps(taus, debutEtFin[2])
 
     return [[taus, facteur_echelle], t_0, debutEtFin]

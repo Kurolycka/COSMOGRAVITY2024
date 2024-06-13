@@ -112,10 +112,8 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     let t_0 = calcul_ages(fonction_simplifiant, H0parGAnnee, 1e-8, 0.999999999);
 
     if (isNaN(t_0)) {
-        console.log("t0 théorique est NaN")
         t_0 = 0
     } else {
-        console.log("t0 n'est pas NaN")
         t_0 = t_0 / (nbrJours() * 24 * 3600 * 1e9)
     }
 

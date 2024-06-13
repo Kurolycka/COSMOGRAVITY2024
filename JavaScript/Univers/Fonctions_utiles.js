@@ -661,30 +661,17 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
     let facteur_fin = ordonnee[ordonnee.length - 1]
 
 
-    // Pour corriger l'erreur numérique
-    console.log("avant", abscisse)
-    if (t_debut) {
-        let offset = abscisse[0];
-        for (let index = 0; index < abscisse.length; index++) {
-            abscisse[index] = abscisse[index] - offset;
-        }
-    }
-    console.log("après", abscisse)
-
-
     if ( t_debut && facteur_debut < Math.abs(a_max - a_min) * 1e-1 ) {
         abscisse[0] = 0
         ordonnee[0] = 0
     }
 
-    if (a_min === 0 && t_fin && facteur_fin < Math.abs(a_max - a_min) * 1e-1 ) {
+    if ( t_fin && facteur_fin < Math.abs(a_max - a_min) * 1e-1 ) {
         ordonnee[ordonnee.length - 1] = 0
     }
 
     let max = ordonnee.reduce((a, b) => Math.max(a, b), -Infinity);
     let min = ordonnee.reduce((a, b) => Math.min(a, b), +Infinity);
-
-
 
     let donnee = [{
         x: abscisse,

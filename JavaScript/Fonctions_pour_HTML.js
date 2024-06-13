@@ -258,7 +258,9 @@ function updateUnivers() {
     document.getElementById("resultat_DmHorizonParticule").innerHTML = dm_horizon_evenement.toExponential(4);
     document.getElementById("he_enregistrer").innerHTML = "d<sub>e<sub>0</sub></sub> = " + dm_horizon_evenement.toExponential(4) + " GAL"
 
-    update_graphe_interactif()
+    if (document.getElementById("Omégal0")) {
+        update_graphe_interactif()
+    }
 }
 
 
