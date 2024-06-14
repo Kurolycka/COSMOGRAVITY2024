@@ -207,7 +207,7 @@ function genereHtml(){
 		newinput.setAttribute("maxlength","11");
 		newinput.setAttribute("type","text");
 		newinput.setAttribute("size","10");
-		newinput.setAttribute("onChange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
+		newinput.setAttribute("onchange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
 		span.appendChild(newinput);
 	}
 
@@ -230,7 +230,7 @@ function genereHtml(){
 		newinput.setAttribute("maxlength","10");
 		newinput.setAttribute("type","text");
 		newinput.setAttribute("size","10");
-		newinput.setAttribute("onChange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
+		newinput.setAttribute("onchange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
 		span.appendChild(newinput);
 	}	
 
@@ -257,7 +257,7 @@ function genereHtml(){
 		newinput.setAttribute("maxlength","10");
 		newinput.setAttribute("type","text");
 		newinput.setAttribute("size","5");
-		newinput.setAttribute("onChange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
+		newinput.setAttribute("onchange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
 		span.appendChild(newinput);
 	}
 
@@ -321,8 +321,7 @@ function genereHtml(){
 					<th id="vitesseur`+countt.toString()+`" title="" class="tg-aicv"  >V<SUB>r</SUB>(m.s<sup>-1</sup>) </th>
 					<th id="vitesseuphi`+countt.toString()+`" title="" class="tg-aicv"  >V<SUB>&phi;</SUB>(m.s<sup>-1</sup>)</th>
 					<th id="temps_obs`+countt.toString()+`" class="tg-aicv"></th>
-					<th id="v_total`+countt.toString()+`" class="tg-aicv">V<SUB>physique</SUB> (m.s<sup>-1</sup>)</th>
-					<th id="distance_metrique`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>`; //ManonGeneralisation
+					<th id="v_total`+countt.toString()+`" class="tg-aicv">V<SUB>physique</SUB> (m.s<sup>-1</sup>)</th>`; 
 
 		var newRow2=document.getElementById('tableauresultatsimu').insertRow();
 
@@ -333,8 +332,7 @@ function genereHtml(){
 					<td class="tg-3ozo" id="vr_sc_mas`+countt.toString()+`">res</td>
 					<td class="tg-3ozo" id="vp_sc_mas`+countt.toString()+`">res</td>
 					<td class="tg-3ozo" id="to`+countt.toString()+`">res</td>
-					<td class="tg-3ozo" id="v_tot`+countt.toString()+`">res</td>
-					<td class="tg-3ozo" id="distance_parcourue`+countt.toString()+`" style="display: none;">res</td>`; //ManonGeneralisation
+					<td class="tg-3ozo" id="v_tot`+countt.toString()+`">res</td>`; 
 
 	}
 
@@ -659,24 +657,6 @@ function trajectoire(compteur,mobile) {
 
 		element2=document.getElementById('traject_type2'); //Récupère la valeur de si on est en mode observateur ou en mode photon.
 
-		var distance_metrique_cell = document.querySelectorAll('[id^="distance_metrique"]'); //Permet d'identifier toutes les cellules de label de la distance métrique.
-		var distance_metrique_res_cell = document.querySelectorAll('[id^="distance_parcourue"]'); //Permet d'identifier toutes les cellules de la distance métrique.
-
-		if (element2.value == "mobile") { //Si en mode photon, permet de révéler les cases de la distance métrique.
-			distance_metrique_cell.forEach(function(cell) { 
-				cell.style.display = ''; 
-			});
-			distance_metrique_res_cell.forEach(function(cell) {
-				cell.style.display = ''; 
-			});
-		} else {
-			distance_metrique_cell.forEach(function(cell) {
-				cell.style.display = 'none';
-			});
-			distance_metrique_res_cell.forEach(function(cell) {
-				cell.style.display = 'none'; 
-			});
-		}
 
     	document.getElementById('trace_present').value="true"; //Permet de déclarer qu'il y a un tracé. 
 
@@ -731,9 +711,6 @@ function trajectoire(compteur,mobile) {
 		A_init_obs = mobile.vr*(1-rs/mobile.r0)/mobile.E; //Je multiplie par dτ/dt pour passer le dr/dτ en observateur. 
 		A_part_obs=A_init_obs; 
 		mobile["A_part_obs"]=A_part_obs; 
-
-		distance_parcourue_totale=0; //J'initialise la distance parcourue totale par le mobile dans son propre référentiel. 
-		mobile["distance_parcourue_totale"]=distance_parcourue_totale; //La distance totale parcourue devient une valeur spécifique au mobile. 
 	
     	temps_particule = 0; //J'initialise le temps dans le référentiel du mobile. 
     	mobile["temps_particule"]=temps_particule;
@@ -1051,7 +1028,6 @@ function animate(compteur,mobile,mobilefactor) {
 			document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_2_obs.toExponential(3); //vitesse angulaire (v_phi)
 			document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_2_obs.toExponential(3);//vitesse radiale (v_r)
 			document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(8); // vitesse totale (module)
-			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //Distance parcourue
 
 			//-----------------------------------------------------PARTIE TRACÉ-------------------------------------------------
 			//Dessin du tracé derriere la particule
@@ -1139,7 +1115,6 @@ function animate(compteur,mobile,mobilefactor) {
 				document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_2.toExponential(3);//vitesse radiale (v_r)
 				document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_2.toExponential(3);//vitesse angulaire (v_phi)
 				document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(8);// vitesse totale (module)
-				document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3);//distance parcourue
 			}
 			
             //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> APRES RS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -1153,7 +1128,6 @@ function animate(compteur,mobile,mobilefactor) {
 				document.getElementById("v_tot"+compteur.toString()).innerHTML ="";
 				document.getElementById("to"+compteur.toString()).innerHTML = 1/0;
 				document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3);
-				document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation				
 			}
 	
 			//-----------------------------------------------------PARTIE TRACÉ-------------------------------------------------

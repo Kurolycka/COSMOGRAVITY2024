@@ -720,8 +720,6 @@ function texteTrajectoirePhoton(nbrderockets) {
         //document.getElementById("acceleration"+count.toString()+"").innerHTML ="Gradient &nbsp;<span id='DivClignotante"+count.toString()+"'></span>";
 		document.getElementById("temps_obs"+count.toString()+"").innerHTML = texte.pages_trajectoire.temps_obs;
 		document.getElementById("v_tot"+count.toString()+"").innerHTML = texte.pages_trajectoire.vtotal;
-    document.getElementById("distance_metrique"+count.toString()+"").innerHTML = texte.pages_trajectoire.distance_metrique_parcourue;//ManonGeneralisation
-    document.getElementById("distance_metrique"+count.toString()).title = texte.pages_trajectoire.distance_metrique_parcourue_infobulle; //ManonGeneralisation
     document.getElementById("rayon_orb_circ"+count.toString()+"").title = texte.pages_trajectoire.rayon_orbite_circulaire_photon; //ManonCirculaire
     document.getElementById("rayon_orbite_circ_res"+count.toString()+"").title=texte.pages_trajectoire.orbite_circulaire_instable; //ManonCirculaire
 
@@ -803,8 +801,6 @@ function texteTrajectoirePhotonNonBar(nbrderockets) {
 		document.getElementById("temps_ecoule"+count.toString()+"").innerHTML = texte.pages_trajectoire.temps_ecoule;
 		document.getElementById("temps_obs"+count.toString()+"").innerHTML = texte.pages_trajectoire.temps_obs;
 		document.getElementById("v_tot"+count.toString()+"").innerHTML = texte.pages_trajectoire.vtotal;
-    document.getElementById("distance_metrique"+count.toString()+"").innerHTML = texte.pages_trajectoire.distance_metrique_parcourue;//ManonGeneralisation
-    document.getElementById("distance_metrique"+count.toString()).title = texte.pages_trajectoire.distance_metrique_parcourue_infobulle; //ManonGeneralisation
     document.getElementById("rayon_orb_circ_ext_photon_nonBar"+count.toString()+"").title = texte.page_trajectoire_photon_nonBar.orbite_circulaire_exterieure; //ManonCirculaire
     document.getElementById("rayon_orb_circ_int_photon_nonBar"+count.toString()+"").title = texte.page_trajectoire_photon_nonBar.orbite_circulaire_interieure; //ManonCirculaire
 }
@@ -896,7 +892,6 @@ function texteTrajectoirePhotonKerr() {
   document.getElementById("boutton_recup").innerHTML = texte.pages_trajectoire.boutton_recup;
  // document.getElementById("ouvreengrand").innerHTML = texte.pages_trajectoire.ouvreengrand;
   document.getElementById("v_tot").innerHTML = texte.pages_trajectoire.vtotal;
-  document.getElementById("distance_metrique").innerHTML = texte.pages_trajectoire.distance_metrique_parcourue;//Manon
   document.getElementById("circulaire_prograde").title = texte.pages_trajectoire.rayon_orbite_circulaire_photon_kerr_prograde; //ManonCirculaire
   document.getElementById("circulaire_retrograde").title = texte.pages_trajectoire.rayon_orbite_circulaire_photon_kerr_retrograde; //ManonCirculaire
   document.getElementById("circulaire_prograde_res").title = texte.pages_trajectoire.orbite_circulaire_instable; //ManonCirculaire
@@ -924,6 +919,5 @@ function texteTrajectoirePhotonKerrGrand() {
   document.getElementById("temps_ecoule").innerHTML = texte.pages_trajectoire.temps_ecoule;
   document.getElementById("temps_obs").innerHTML = texte.pages_trajectoire.temps_obs;
   document.getElementById("boutton_recup").innerHTML = texte.pages_trajectoire.boutton_recup;
-  document.getElementById("distance_metrique").innerHTML = texte.pages_trajectoire.distance_metrique_parcourue;//Manon
   
 }

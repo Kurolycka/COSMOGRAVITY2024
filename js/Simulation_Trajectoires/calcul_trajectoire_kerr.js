@@ -293,8 +293,6 @@ function trajectoire() {
 			document.getElementById("dernier_g_res").style.visibility='visible'; 
 			document.getElementById("puissance_consommee").style.display='';
 			document.getElementById("puissance_consommee_label").style.display='';
-			document.getElementById("distance_metrique").style.display='';
-			document.getElementById("distance_parcourue").style.display='';
 		}else{ //Dans le cas observateur distant.
 			//Permet de faire disparaître les cases concernant le nombre de g ressenti et la distance parcourue :
 			document.getElementById("g_ressenti").style.display='none'; 
@@ -303,8 +301,6 @@ function trajectoire() {
 			document.getElementById("dernier_g_res").style.display='none'; 
 			document.getElementById("puissance_consommee").style.display='none';
 			document.getElementById("puissance_consommee_label").style.display='none';
-			document.getElementById("distance_metrique").style.display='none';
-			document.getElementById("distance_parcourue").style.display='none';
 		}
 
 		//Interdiction de changer les valeurs des modes observateur et spationaute une fois la simulation lancée : 
@@ -891,7 +887,7 @@ function animate() {
 		data2 = []; //on vide la liste dans la quelle on met nos données
 		V = Vr_mob(r_part);// on recupere la valeur du poteniel au rayon actuel
 		data2.push({date: r_part, close: V });	//on met les valeur dans la liste
-		update_graphique_2(point,data2,null) ; // on appelle la fonction qui dessine le potentiel (Fonctions_utilitaires)
+		if(point !== undefined){update_graphique_2(point,data2,null)} ; // on appelle la fonction qui dessine le potentiel (Fonctions_utilitaires)
 
 		//-----------------------------------------------------NE PAS DEPASSER RH_ -------------------------------------------------
 		//l'utilisateur veut arrêter la trajectoire à Rh- et ne pas le depasser
@@ -1363,7 +1359,7 @@ function creation_blocs(context){
 			if (onEdge_RHM) {
 				infobulle.style.visibility = 'visible';
 				infobulle.style.left = event.clientX + 'px';
-				infobulle.style.top = "700" + 'px';//event.clientY + 'px';
+				infobulle.style.top = "800" + 'px';//event.clientY + 'px';
 				var latex = 'Rh-';
 				infobulle.innerHTML = '\\(' + latex + '\\)';
 				MathJax.typeset();
@@ -1371,7 +1367,7 @@ function creation_blocs(context){
 			else if (onEdge_RHP) {
 				infobulle.style.visibility = 'visible';
 				infobulle.style.left = event.clientX + 'px';
-				infobulle.style.top = "700" + 'px';//event.clientY + 'px';
+				infobulle.style.top = "750" + 'px';//event.clientY + 'px';
 				var latex = 'Rh+';
 				infobulle.innerHTML = '\\(' + latex + '\\)';
 				MathJax.typeset();

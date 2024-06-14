@@ -246,7 +246,7 @@ function genereHtml(){
 		newinput.setAttribute("maxlength","18");
 		newinput.setAttribute("type","text");
 		newinput.setAttribute("size","5");
-		newinput.setAttribute("onChange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
+		newinput.setAttribute("onchange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
 		span.appendChild(newinput);
 	}
 
@@ -269,7 +269,7 @@ function genereHtml(){
 		newinput.setAttribute("maxlength","25");
 		newinput.setAttribute("type","text");
 		newinput.setAttribute("size","5");
-		newinput.setAttribute("onChange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
+		newinput.setAttribute("onchange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
 		span.appendChild(newinput);
 	}
 
@@ -292,7 +292,7 @@ function genereHtml(){
 		newinput.setAttribute("maxlength","10");
 		newinput.setAttribute("type","text");
 		newinput.setAttribute("size","5");
-		newinput.setAttribute("onChange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
+		newinput.setAttribute("onchange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
 		span.appendChild(newinput);
 	}
 	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
@@ -314,7 +314,7 @@ function genereHtml(){
 		newinput.setAttribute("maxlength","10");
 		newinput.setAttribute("type","text");
 		newinput.setAttribute("size","5");
-		newinput.setAttribute("onChange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
+		newinput.setAttribute("onchange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
 		span.appendChild(newinput);
 	}
  
@@ -375,7 +375,7 @@ function genereHtml(){
 		<th id="temps_obs`+countt.toString()+`" class="tg-aicv"></th>
 		<th id="decal_spect`+countt.toString()+`" title="" class="tg-aicv"></th>
 		<th id="v_total`+countt.toString()+`" title="" class="tg-aicv">   V<SUB>physique</SUB> (m.s<sup>-1</sup>) </th>
-		<th id="distance_metrique`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th> 
+		<th id="distance_metrique`+countt.toString()+`" title="" class="tg-aicv"></th> 
 		<th id="nb_g`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>
 		<th id="dernier_g`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>
 		<th id ="puissance_consommee_label`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>`; //ManonV3
@@ -392,7 +392,7 @@ function genereHtml(){
 		<td class="tg-3ozo" id="to`+countt.toString()+`">res</td>
 		<td class="tg-3ozo" id="decal`+countt.toString()+`">res</td>
 		<td class="tg-3ozo" id="v_tot`+countt.toString()+`">res</td>
-		<td class="tg-3ozo" id="distance_parcourue`+countt.toString()+`" style="display: none;">res</td>
+		<td class="tg-3ozo" id="distance_parcourue`+countt.toString()+`">res</td>
 		<td class="tg-3ozo" id="g_ressenti`+countt.toString()+`" style="display: none;">0</td>
 		<td class="tg-3ozo" id="dernier_g_res`+countt.toString()+`" style="display: none;">0</td>
 		<td class="tg-3ozo" id="puissance_consommee`+countt.toString()+`" style="display: none;">0</td>`; //ManonV3
@@ -1132,7 +1132,7 @@ function animate(compteur,mobile,mobilefactor)
 				mobile.temps_particule += mobile.dtau*(1-rs/mobile.r_part_obs)/(mobile.E); //calcul du temps propre de du mobile
 
 				z_obs= Math.pow(1-((vr_1_obs*vr_1_obs + vp_1_obs*vp_1_obs)/(c*c)),(-1/2))*Math.pow(1-rs/mobile.r_part_obs,-(1/2))-1 ;//calcul du decalage spectrale
-				
+				if(isNaN(z_obs)){z_obs=1/0}
 				/*Tres proche de rs les vitesses calculées sont NAN, surtout quand on aceelere, c'est pour cela on fait gaffe de ne pas les prendre*/
 				if (mobile.r_part_obs > r_phy && !isNaN(vtotal))       {mobile.distance_parcourue_totale += vtotal*(mobile.dtau*(1-rs/mobile.r_part_obs)/(mobile.E));} //Calcul de la distance parcourue dans le referentiel du mobile 
 
@@ -1151,13 +1151,11 @@ function animate(compteur,mobile,mobilefactor)
 				/*Cette conditions arrete les calculs et attribue les dernieres valeurs qu'il faut */
 				if(mobile.r_part_obs!=rs) //Comme ça on rentre qu'une seule fois dans cette condition 
 				{
-					console.log(mobile.r_part_obs)
 					mobile.r_part_obs=rs; //condition pour que r soit excatement rs 
 					/*Pour ce qui suit on met ça à la main car on sait que theoriquement ça tend vers ces valeurs */
 					vp_1_obs=0 ;
 					vtotal=vr_1_obs=c; 
 					z_obs=1/0;
-					
 					mobile.condition_trace=false; //on met cette condition à false pour le mobile pour l'arreter le tracé,calculs,et affichage à rs 
 					mobile.distance_parcourue_totale += vtotal*(mobile.dtau*(1-rs/mobile.r_part_obs)/(mobile.E)); //Calcul de la derniere valeur de la distance parcourue 
 				
@@ -1320,7 +1318,7 @@ function animate(compteur,mobile,mobilefactor)
 			mobile.positionspatio.posX1 = mobilefactor[compteur] * mobile.r_part * (Math.cos(mobile.phi) / rmax) + (canvas.width / 2.);  
 			mobile.positionspatio.posY1 = mobilefactor[compteur] * mobile.r_part * (Math.sin(mobile.phi) / rmax) + (canvas.height / 2.);
 			/*Calcul de la distance parcourue*/
-			mobile.distance_parcourue_totale+=vtotal*dtau; 
+			mobile.distance_parcourue_totale+=vtotal*mobile.dtau; 
 
 			if(joy.GetPhi()!=0)
 			{ 
@@ -1340,6 +1338,7 @@ function animate(compteur,mobile,mobilefactor)
 			
 			if(mobile.r_part>rs*1.000001)//pas exactement rs pour eviter les problemes de calculs 
 			{
+				
 				document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3); //temps mobile
 				document.getElementById("to"+compteur.toString()).innerHTML = mobile.temps_observateur_distant.toExponential(3); //temps observateur
 				document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part.toExponential(20);//rayon
@@ -1461,7 +1460,7 @@ function animate(compteur,mobile,mobilefactor)
 					Timer.instances[compteur].stop(); //on stope le Timer du mobile concerné 	
 				}
 			}
-			
+
 		}
 			
 		//-----------------------------------------------------AFFICHAGE DES DIODES------------------------------------------------

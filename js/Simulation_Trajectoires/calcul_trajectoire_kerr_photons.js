@@ -178,16 +178,6 @@ function trajectoire() {
 
 		element2=document.getElementById('traject_type2'); //Récupère la valeur de si on est en mode observateur ou en mode spationaute.
 
-		if(element2.value == "mobile") { //Dans le cas spationaute. 
-			//Permet de faire apparaître la distance parcourue :
-			document.getElementById("distance_metrique").style.display='';
-			document.getElementById("distance_parcourue").style.display='';
-		}else{ //Dans le cas observateur distant.
-			//Permet de faire disparaître les cases concernant la distance parcourue :
-			document.getElementById("distance_metrique").style.display='none';
-			document.getElementById("distance_parcourue").style.display='none';
-		}
-
 		//Interdiction de changer les valeurs des modes observateur et spationaute une fois la simulation lancée : 
 		document.getElementById('r3').disabled = true;
 		document.getElementById('r4').disabled = true;
@@ -1081,7 +1071,7 @@ function creation_blocs(context){
 			if (onEdge_RHM) {
 				infobulle.style.visibility = 'visible';
 				infobulle.style.left = event.clientX + 'px';
-				infobulle.style.top = "700" + 'px';//event.clientY + 'px';
+				infobulle.style.top = "800" + 'px';//event.clientY + 'px';
 				var latex = 'Rh-';
 				infobulle.innerHTML = '\\(' + latex + '\\)';
 				MathJax.typeset();
@@ -1089,7 +1079,7 @@ function creation_blocs(context){
 			else if (onEdge_RHP) {
 				infobulle.style.visibility = 'visible';
 				infobulle.style.left = event.clientX + 'px';
-				infobulle.style.top = "700" + 'px';//event.clientY + 'px';
+				infobulle.style.top = "750" + 'px';//event.clientY + 'px';
 				var latex = 'Rh+';
 				infobulle.innerHTML = '\\(' + latex + '\\)';
 				MathJax.typeset();
