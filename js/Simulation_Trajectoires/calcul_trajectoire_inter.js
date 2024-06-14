@@ -888,37 +888,31 @@ function trajectoire(compteur,mobile) {
 
 		//--------------------------------Gestion du pilotage--------------------------------
 
-		var temps_allumage_reacteur = Number(document.getElementById("temps_allumage").value); //Récupération du temps d'allumage des réacteurs à chaque click. 
-		temps_allumage_reacteur = temps_allumage_reacteur*Math.pow(10,-3); //Conversion des ms du temps d'allumage des réacteurs en s. 
-		var puissance_reacteur = Number(document.getElementById("puissance_reacteur").value); //Récupération de la puissance des réacteurs en W/kg. 
+		var X = Number(document.getElementById("pourcentage_vphi_pilotage").value); //Récupération du pourcentage dont on veut modifier vphi à chaque clic.
 
-		var temps_total_reacteur =0; //Initialisation du temps total d'allumage des réacteurs au cours du pilotage. 
+		if(element2.value == "mobile" ) { //Dans le cas où j'ai un seul mobile et où je suis en mode spationaute. 
+		setInterval(function(){ //Fonction effectuée toutes les 50 ms, qui est le temps de réaction du système fixé. 
+			if(joy.GetPhi()!=0){ 
 
-		if(element2.value == "mobile") {//Dans le cas où j'ai un seul mobile et où je suis en mode spationaute. 
-			setInterval(function(){//Fonction effectuée toutes les 50 ms, qui est le temps de réaction du système fixé. 
-				if(joy.GetPhi()!=0){
+					vitesse_precedente_nombre_g = vtotal //Stockage de la vitesse précédent l'accélération pour le calcul du nombre de g ressenti. 
 
-					vitesse_precedente_nombre_g = vtotal; //Stockage de la vitesse précédent l'accélération pour le calcul du nombre de g ressenti. 
+					//Pourcentage_vphi_pilotage = X = Delta v tangentielle / vtangentielle
 
-					Delta_E_sur_E = joy.GetPhi()*(puissance_reacteur*temps_allumage_reacteur)/Math.pow(c,2);  //Calcul du ΔE/E en fonction de la puissance et du temps d'allumage des réacteurs.
-					Delta_L_sur_L = Delta_E_sur_E; //ΔL/L en fonction de ΔE/E. 
+					//Je calcule les variations de E et L :
+					Delta_E= joy.GetPhi()*X*vp_1*vp_1/(c*c-vtotal*vtotal)*mobile.E;
+                	Delta_L= (X + Delta_E/mobile.E)*mobile.L;
+					puissance_instant=(Delta_E/mobile.E)*c*c/(50e-3);
+					deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/mobile.E); //Calcul de l'énergie ΔE/E consommée au total. 
 
-					mobile.L = mobile.L + mobile.L*Delta_L_sur_L; //Calcul du nouveau L associé à ce mobile.
-					mobile.E = mobile.E + mobile.E*Delta_E_sur_E; //Calcul du nouveau E associé à ce mobile.
-
-					deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E); //Calcul de l'énergie ΔE/E consommée au total.
-					temps_total_reacteur = Math.abs(joy.GetPhi()*temps_allumage_reacteur); //Calcul du temps total durant lequel les réacteurs sont allumés.
-					puissance_consommee_calcul = (deltam_sur_m/temps_total_reacteur)*Math.pow(c,2); //Calcul de la puissance consommée au total en W/kg. 
-
+					mobile.L = mobile.L + Delta_L; //Calcul du nouveau L associé à ce mobile.
+					mobile.E = mobile.E + Delta_E; //Calcul du nouveau E associé à ce mobile. 
+									
 					document.getElementById("E"+compteur.toString()).innerHTML = mobile.E.toExponential(3); //Affichage sur le site du nouveau E. 
 					document.getElementById("L"+compteur.toString()).innerHTML = mobile.L.toExponential(3); //Affichage sur le site du nouveau L. 
 					document.getElementById("decal"+compteur.toString()).innerHTML = deltam_sur_m.toExponential(3); //Affichage sur le site de l'énergie consommée. 
-					document.getElementById("puissance_consommee"+compteur.toString()).innerHTML = puissance_consommee_calcul.toExponential(3);	//Affichage sur le site de la puissance consommée.
-					
-				}
-				
-			}, 50); 									 
-		}
+					document.getElementById("puissance_consommee"+compteur.toString()).innerHTML = puissance_instant.toExponential(3); //Affichage sur le site de la puissance consommée.
+			}
+		}, 50);}
 
 		//--------------------------------Gestion des boutons d'accélération/décélération--------------------------------
 										
@@ -1097,18 +1091,10 @@ function animate(compteur,mobile,mobilefactor) {
 	if (mobile.r0 != 0.0) {
 
 	if(element2.value == "mobile"){ // spationaute
-		
-		var temps_allumage_reacteur = Number(document.getElementById("temps_allumage").value); //ManonV3 
-		
+				
 		if(mobile.r_part >= r_phy) {  // spationaute extérieur masse
 
-	
-
-			if (joy.GetPhi()!=0 && blyo==1){//ManonV3
-				val=rungekutta_externe_massif(temps_allumage_reacteur, mobile.r_part, mobile.A_part, mobile.L);
-			}else{
-				val = rungekutta_externe_massif(mobile.dtau, mobile.r_part, mobile.A_part,mobile.L);
-			}
+			val = rungekutta_externe_massif(mobile.dtau, mobile.r_part, mobile.A_part,mobile.L);
 
 			mobile.r_part = val[0];
 			mobile.A_part = val[1];
@@ -1122,7 +1108,7 @@ function animate(compteur,mobile,mobilefactor) {
 			vtotal=Math.sqrt(vr_1*vr_1 + vp_1*vp_1) ;
 
 			if(joy.GetPhi()!=0 && blyo==1){ //ManonGeneralisation
-				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_precedente_nombre_g)/temps_allumage_reacteur)/9.80665 //Manon
+				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_precedente_nombre_g)/50e-3)/9.80665 //Manon
 				nombre_de_g_calcul_memo = nombre_de_g_calcul; //ManonV3
 			}else{
 				nombre_de_g_calcul_memo = 0; //ManonV3
@@ -1132,11 +1118,9 @@ function animate(compteur,mobile,mobilefactor) {
 		
 		}else {	// spationaute intérieur masse	
 		
-			if (joy.GetPhi()!=0 && blyo==1){//ManonV3
-				val=rungekutta_interne_massif(temps_allumage_reacteur, mobile.r_part, mobile.A_part, mobile.E, mobile.L);
-			}else{
-				val = rungekutta_interne_massif(mobile.dtau, mobile.r_part, mobile.A_part,mobile.E,mobile.L);
-			}
+			
+			val = rungekutta_interne_massif(mobile.dtau, mobile.r_part, mobile.A_part,mobile.E,mobile.L);
+			
 
 			mobile.r_part = val[0];
 			mobile.A_part = val[1];
@@ -1162,7 +1146,7 @@ function animate(compteur,mobile,mobilefactor) {
 			vtotal=Math.sqrt(vr_1*vr_1 + vp_1*vp_1) ;
 
 			if(joy.GetPhi()!=0 && blyo==1){ //Manon
-				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_precedente_nombre_g)/(mobile.dtau*(1-rs/mobile.r_part)/mobile.E))/9.80665 //Manon
+				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_precedente_nombre_g)/(50e-3))/9.80665 //Manon
 				nombre_de_g_calcul_memo = nombre_de_g_calcul; //ManonV3
 			}else{
 				nombre_de_g_calcul_memo = 0; //ManonV3

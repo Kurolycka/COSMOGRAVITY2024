@@ -23,8 +23,7 @@ function save_schwarshild_massif(nbrderockets) {
 	reb = document.getElementById("reb").value;
 	traject_type = document.getElementById("traject_type").value;
 	traject_type2 = document.getElementById("traject_type2").value;
-	temps_allumage = document.getElementById("temps_allumage").value; //ManonV3
-	puissance_reacteur = document.getElementById("puissance_reacteur").value; //ManonV3
+	pourcentage_vphi_pilotage = document.getElementById("pourcentage_vphi_pilotage").value;
 
 	var graph_check = true;
 	if (document.getElementById("toggle").checked == false) {
@@ -51,8 +50,7 @@ function save_schwarshild_massif(nbrderockets) {
 	sessionStorage.setItem("traject_type", traject_type);
 	sessionStorage.setItem("traject_type2", traject_type2);
 	sessionStorage.setItem("graph_check", graph_check);
-	sessionStorage.setItem("temps_allumage", temps_allumage); //ManonV3
-	sessionStorage.setItem("puissance_reacteur", puissance_reacteur); //ManonV3
+	sessionStorage.setItem("pourcentage_vphi_pilotage", pourcentage_vphi_pilotage);
 
 }
 
@@ -83,8 +81,9 @@ function load_schwarshild_massif() {
 		document.getElementById("reb").value = sessionStorage.getItem("reb");
 		document.getElementById("traject_type").value = sessionStorage.getItem("traject_type");
 		document.getElementById("traject_type2").value = sessionStorage.getItem("traject_type2");
-		document.getElementById("temps_allumage").value = sessionStorage.getItem("temps_allumage"); //ManonV3
-		document.getElementById("puissance_reacteur").value = sessionStorage.getItem("puissance_reacteur"); //ManonV3
+		document.getElementById("pourcentage_vphi_pilotage").value = sessionStorage.getItem("pourcentage_vphi_pilotage");
+
+
 		var graph_check = sessionStorage.getItem("graph_check");
 		if (graph_check == "false") {
 			document.getElementById("toggle").checked = false;
@@ -108,28 +107,22 @@ function load_schwarshild_massif() {
 
 		var inputNbfusees = document.getElementById("nombredefusees"); //manon
 		var labelNbfusees = document.getElementById("labelnumberfusees"); //manon
-		var labelTempsAllumage = document.getElementById("label_temps_allumage"); //ManonV3
-		var inputTempsAllumage = document.getElementById("temps_allumage"); //ManonV3
-		var labelPuissanceReacteur = document.getElementById("label_puissance_reacteur"); //ManonV3
-		var inputPuissanceReacteur = document.getElementById("puissance_reacteur"); //ManonV3
+		var labelPourcentageVphiPilotage = document.getElementById("label_pourcentage_vphi_pilotage");
+		var inputPourcentageVphiPilotage = document.getElementById("pourcentage_vphi_pilotage");
 
 		if (document.getElementById("traject_type2").value == "observateur") {
 			pressionBouttonObservateur();
 			inputNbfusees.style.display = "inline"; //manon
 			labelNbfusees.style.display = "inline"; //manon
-			labelTempsAllumage.style.display ="none"; //ManonV3
-			inputTempsAllumage.style.display = "none"; //ManonV3
-			labelPuissanceReacteur.style.display = "none"; //ManonV3
-			inputPuissanceReacteur.style.display = "none"; //ManonV3
+			labelPourcentageVphiPilotage.style.display = "none";
+			inputPourcentageVphiPilotage.style.display = "none";
 		} 
 		else if (document.getElementById("traject_type2").value == "mobile") {
 			pressionBouttonMobile();
 			inputNbfusees.style.display = "none"; //manon
 			labelNbfusees.style.display = "none"; //manon
-			labelTempsAllumage.style.display = "inline"; //ManonV3
-			inputTempsAllumage.style.display = "inline"; //ManonV3
-			labelPuissanceReacteur.style.display = "inline"; //ManonV3
-			inputPuissanceReacteur.style.display = "inline"; //ManonV3
+			labelPourcentageVphiPilotage.style.display = "inline";
+			inputPourcentageVphiPilotage.style.display = "inline";
 
 		}
 
@@ -148,8 +141,7 @@ function save_schwarshild_massif_nonBar(nbrderockets) {
 	M = document.getElementById("M").value;
 	traject_type = document.getElementById("traject_type").value;
 	traject_type2 = document.getElementById("traject_type2").value;
-	temps_allumage = document.getElementById("temps_allumage").value; //ManonV3
-	puissance_reacteur = document.getElementById("puissance_reacteur").value; //ManonV3
+	pourcentage_vphi_pilotage = document.getElementById("pourcentage_vphi_pilotage").value;
 
 	var graph_check = true;
 	if (document.getElementById("toggle").checked == false) {
@@ -173,8 +165,7 @@ function save_schwarshild_massif_nonBar(nbrderockets) {
 	sessionStorage.setItem("traject_type", traject_type);
 	sessionStorage.setItem("traject_type2", traject_type2);
 	sessionStorage.setItem("graph_check", graph_check);
-	sessionStorage.setItem("temps_allumage", temps_allumage); //ManonV3
-	sessionStorage.setItem("puissance_reacteur", puissance_reacteur); //ManonV3
+	sessionStorage.setItem("pourcentage_vphi_pilotage", pourcentage_vphi_pilotage);
 
 }
 
@@ -261,8 +252,7 @@ function load_schwarshild_massif_nonBar() {
 		document.getElementById("M").value = sessionStorage.getItem("M");
 		document.getElementById("traject_type").value = sessionStorage.getItem("traject_type");
 		document.getElementById("traject_type2").value = sessionStorage.getItem("traject_type2");
-		document.getElementById("temps_allumage").value = sessionStorage.getItem("temps_allumage"); //ManonV3
-		document.getElementById("puissance_reacteur").value = sessionStorage.getItem("puissance_reacteur"); //ManonV3
+		document.getElementById("pourcentage_vphi_pilotage").value = sessionStorage.getItem("pourcentage_vphi_pilotage");
 
 		var graph_check = sessionStorage.getItem("graph_check");
 		if (graph_check == "false") {
@@ -276,45 +266,24 @@ function load_schwarshild_massif_nonBar() {
 			pressionBouttonTrajectoireComplete();
 		}
 
-
 		var inputNbfusees = document.getElementById("nombredefusees"); //manon
 		var labelNbfusees = document.getElementById("labelnumberfusees"); //manon
+		var labelPourcentageVphiPilotage = document.getElementById("label_pourcentage_vphi_pilotage");
+		var inputPourcentageVphiPilotage = document.getElementById("pourcentage_vphi_pilotage");
 
 		if (document.getElementById("traject_type2").value == "observateur") {
 			pressionBouttonObservateur();
 			inputNbfusees.style.display = "inline"; //manon
 			labelNbfusees.style.display = "inline"; //manon
+			labelPourcentageVphiPilotage.style.display="none";
+			inputPourcentageVphiPilotage.style.display="none";
 		} 
 		else if (document.getElementById("traject_type2").value == "mobile") {
 			pressionBouttonMobile();
 			inputNbfusees.style.display = "none"; //manon
 			labelNbfusees.style.display = "none"; //manon
-		}
-
-		var inputNbfusees = document.getElementById("nombredefusees"); //manon
-		var labelNbfusees = document.getElementById("labelnumberfusees"); //manon
-		var labelTempsAllumage = document.getElementById("label_temps_allumage"); //ManonV3
-		var inputTempsAllumage = document.getElementById("temps_allumage"); //ManonV3
-		var labelPuissanceReacteur = document.getElementById("label_puissance_reacteur"); //ManonV3
-		var inputPuissanceReacteur = document.getElementById("puissance_reacteur"); //ManonV3
-
-		if (document.getElementById("traject_type2").value == "observateur") {
-			pressionBouttonObservateur();
-			inputNbfusees.style.display = "inline"; //manon
-			labelNbfusees.style.display = "inline"; //manon
-			labelTempsAllumage.style.display ="none"; //ManonV3
-			inputTempsAllumage.style.display = "none"; //ManonV3
-			labelPuissanceReacteur.style.display = "none"; //ManonV3
-			inputPuissanceReacteur.style.display = "none"; //ManonV3
-		} 
-		else if (document.getElementById("traject_type2").value == "mobile") {
-			pressionBouttonMobile();
-			inputNbfusees.style.display = "none"; //manon
-			labelNbfusees.style.display = "none"; //manon
-			labelTempsAllumage.style.display = "inline"; //ManonV3
-			inputTempsAllumage.style.display = "inline"; //ManonV3
-			labelPuissanceReacteur.style.display = "inline"; //ManonV3
-			inputPuissanceReacteur.style.display = "inline"; //ManonV3
+			labelPourcentageVphiPilotage.style.display="inline";
+			inputPourcentageVphiPilotage.style.display="inline";
 
 		}
 
@@ -446,8 +415,7 @@ function save_kerr_massif() {
 	phi0 = document.getElementById("phi0").value;
 	traject_type = document.getElementById("traject_type").value;
 	traject_type2 = document.getElementById("traject_type2").value;
-	temps_allumage = document.getElementById("temps_allumage").value; //ManonV3
-	puissance_reacteur = document.getElementById("puissance_reacteur").value; //ManonV3
+	pourcentage_vphi_pilotage = document.getElementById("pourcentage_vphi_pilotage").value;
 
 	var graph_check = true;
 	var rh_moins_check = true;
@@ -472,9 +440,8 @@ function save_kerr_massif() {
 	sessionStorage.setItem("traject_type", traject_type);
 	sessionStorage.setItem("traject_type2", traject_type2)
 	sessionStorage.setItem("graph_check", graph_check);
-	sessionStorage.setItem("temps_allumage", temps_allumage); //ManonV3
-	sessionStorage.setItem("puissance_reacteur", puissance_reacteur); //ManonV3
 	sessionStorage.setItem("rh_moins_check", rh_moins_check);
+	sessionStorage.setItem("pourcentage_vphi_pilotage", pourcentage_vphi_pilotage);
 
 }
 
@@ -488,8 +455,7 @@ function load_kerr_massif() {
 		document.getElementById("phi0").value = sessionStorage.getItem("phi0");
 		document.getElementById("traject_type").value = sessionStorage.getItem("traject_type");
 		document.getElementById("traject_type2").value = sessionStorage.getItem("traject_type2");
-		document.getElementById("temps_allumage").value = sessionStorage.getItem("temps_allumage"); //ManonV3
-		document.getElementById("puissance_reacteur").value = sessionStorage.getItem("puissance_reacteur"); //ManonV3
+		document.getElementById("pourcentage_vphi_pilotage").value = sessionStorage.getItem("pourcentage_vphi_pilotage");
 
 		var graph_check = sessionStorage.getItem("graph_check");
 		var rh_moins_check = sessionStorage.getItem("rh_moins_check");
@@ -504,24 +470,18 @@ function load_kerr_massif() {
 			pressionBouttonTrajectoireComplete();
 		}
 
-		var labelTempsAllumage = document.getElementById("label_temps_allumage"); //ManonV3
-		var inputTempsAllumage = document.getElementById("temps_allumage"); //ManonV3
-		var labelPuissanceReacteur = document.getElementById("label_puissance_reacteur"); //ManonV3
-		var inputPuissanceReacteur = document.getElementById("puissance_reacteur"); //ManonV3
+		var labelPourcentageVphiPilotage = document.getElementById("label_pourcentage_vphi_pilotage");
+		var inputPourcentageVphiPilotage = document.getElementById("pourcentage_vphi_pilotage");
 
 		if (document.getElementById("traject_type2").value == "observateur") {
 			pressionBouttonObservateur2();
-			labelTempsAllumage.style.display ="none"; //ManonV3
-			inputTempsAllumage.style.display = "none"; //ManonV3
-			labelPuissanceReacteur.style.display = "none"; //ManonV3
-			inputPuissanceReacteur.style.display = "none"; //ManonV3
+			labelPourcentageVphiPilotage.style.display = "none";
+			inputPourcentageVphiPilotage.style.display = "none";
 		} 
 		else if (document.getElementById("traject_type2").value == "mobile") {
 			pressionBouttonMobile2();
-			labelTempsAllumage.style.display = "inline"; //ManonV3
-			inputTempsAllumage.style.display = "inline"; //ManonV3
-			labelPuissanceReacteur.style.display = "inline"; //ManonV3
-			inputPuissanceReacteur.style.display = "inline"; //ManonV3
+			labelPourcentageVphiPilotage.style.display = "inline";
+			inputPourcentageVphiPilotage.style.display = "inline";
 			if (rh_moins_check=="true"){
 				document.getElementById("depasser").checked = true;
 			}

@@ -12,8 +12,6 @@ var facteurDeMalheur=[];
 var cle;
 var fact_defaut;
 var temps_observateur_distant=0
-testouille=true; //ManonV5
-testouilleV2=true; //ManonV5
 var c = 299792458;
 var G = 6.67385 * Math.pow(10, -11);
 var compteurVitesse = 0;
@@ -21,6 +19,7 @@ var compteurVitesseAvantLancement =0;
 
 testouille=true; //ManonV5
 testouilleV2=true; //ManonV5
+testouilleV3=true
 
 // liste de couleurs en hexa
 const COULEUR_ORANGE = '#ffb407';
@@ -905,12 +904,7 @@ function trajectoire(compteur,mobile) {
 
 		//--------------------------------Gestion du pilotage--------------------------------
 
-		var temps_allumage_reacteur = Number(document.getElementById("temps_allumage").value); //Récupération du temps d'allumage des réacteurs à chaque click. 
-		temps_allumage_reacteur = temps_allumage_reacteur*0.001; //Conversion des ms du temps d'allumage des réacteurs en s. 
-		var puissance_reacteur = Number(document.getElementById("puissance_reacteur").value); //Récupération de la puissance des réacteurs en W/kg. 
-
-		var temps_total_reacteur=0; //Initialisation du temps total d'allumage des réacteurs au cours du pilotage. 
-
+		var X = Number(document.getElementById("pourcentage_vphi_pilotage").value); //Récupération du pourcentage dont on veut modifier vphi à chaque clic.
 
 		if(element2.value == "mobile" ) { //Dans le cas où j'ai un seul mobile et où je suis en mode spationaute. 
 		setInterval(function(){ //Fonction effectuée toutes les 50 ms, qui est le temps de réaction du système fixé. 
@@ -918,20 +912,21 @@ function trajectoire(compteur,mobile) {
 
 					vitesse_precedente_nombre_g = vtotal //Stockage de la vitesse précédent l'accélération pour le calcul du nombre de g ressenti. 
 
-					Delta_E_sur_E = joy.GetPhi()*(puissance_reacteur*temps_allumage_reacteur)/Math.pow(c,2); //Calcul du ΔE/E en fonction de la puissance et du temps d'allumage des réacteurs.
-					Delta_L_sur_L = Delta_E_sur_E; //ΔL/L en fonction de ΔE/E. 
+					//Pourcentage_vphi_pilotage = X = Delta v tangentielle / vtangentielle
 
-					mobile.L = mobile.L + mobile.L*Delta_L_sur_L; //Calcul du nouveau L associé à ce mobile.
-					mobile.E = mobile.E + mobile.E*Delta_E_sur_E; //Calcul du nouveau E associé à ce mobile. 
+					//Je calcule les variations de E et L :
+					Delta_E= joy.GetPhi()*X*vp_1*vp_1/(c*c-vtotal*vtotal)*mobile.E;
+                	Delta_L= (X + Delta_E/mobile.E)*mobile.L;
+					puissance_instant=(Delta_E/mobile.E)*c*c/(50e-3);
+					deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/mobile.E); //Calcul de l'énergie ΔE/E consommée au total. 
 
-					deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E); //Calcul de l'énergie ΔE/E consommée au total. 
-					temps_total_reacteur = Math.abs(joy.GetPhi()*temps_allumage_reacteur); //Calcul du temps total durant lequel les réacteurs sont allumés.
-					puissance_consommee_calcul = (deltam_sur_m/temps_total_reacteur)*Math.pow(c,2); //Calcul de la puissance consommée au total en W/kg. 
+					mobile.L = mobile.L + Delta_L; //Calcul du nouveau L associé à ce mobile.
+					mobile.E = mobile.E + Delta_E; //Calcul du nouveau E associé à ce mobile. 
 									
 					document.getElementById("E"+compteur.toString()).innerHTML = mobile.E.toExponential(3); //Affichage sur le site du nouveau E. 
 					document.getElementById("L"+compteur.toString()).innerHTML = mobile.L.toExponential(3); //Affichage sur le site du nouveau L. 
 					document.getElementById("decal"+compteur.toString()).innerHTML = deltam_sur_m.toExponential(3); //Affichage sur le site de l'énergie consommée. 
-					document.getElementById("puissance_consommee"+compteur.toString()).innerHTML = puissance_consommee_calcul.toExponential(3); //Affichage sur le site de la puissance consommée.
+					document.getElementById("puissance_consommee"+compteur.toString()).innerHTML = puissance_instant.toExponential(3); //Affichage sur le site de la puissance consommée.
 			}
 		}, 50);}
 		
@@ -1299,16 +1294,8 @@ function animate(compteur,mobile,mobilefactor)
 			{
 				//-----------------------------------------------------PARTIE CALCULE-------------------------------------------------
 
-				var temps_allumage_reacteur = Number(document.getElementById("temps_allumage").value); //Recuperer la valeur du temps d'allumage du boutton html
-
-				if (joy.GetPhi()!=0)
-				{ 
-					val = rungekutta(mobile.L, temps_allumage_reacteur, mobile.r_part, mobile.A_part); 
-				} //Calcul avec RK4 avec un dtau de temps d'allumages des reacteurs dans le cas d'une acceleration de la part du spationaute
-				else           
-				{ 
-					val = rungekutta(mobile.L,mobile.dtau, mobile.r_part, mobile.A_part); 
-				} //calcul avec RK4 avec le dtau par defaut
+				val = rungekutta(mobile.L,mobile.dtau, mobile.r_part, mobile.A_part); 
+				//calcul avec RK4 avec le dtau par defaut
 
 				mobile.r_part = val[0]; //valeur de r calculée par RK
 				mobile.A_part = val[1]; //valeur de dr/dtau calculée par RK
@@ -1345,13 +1332,28 @@ function animate(compteur,mobile,mobilefactor)
 
 				if(joy.GetPhi()!=0)
 				{ 
-					nombre_de_g_calcul = (Math.abs(vtotal-vitesse_precedente_nombre_g)/temps_allumage_reacteur)/9.80665 //ManonV3
+					nombre_de_g_calcul = (Math.abs(vtotal-vitesse_precedente_nombre_g)/50e-3)/9.80665 //ManonV3
 					nombre_de_g_calcul_memo = nombre_de_g_calcul;
 				}
 
 				else
 				{
 					nombre_de_g_calcul_memo = 0;	
+				}
+
+				if (mobile.phi>=360*Math.PI/180 && testouille==true){
+					pausee();
+					testouille=false;
+				}
+
+				if (mobile.phi>=(360+180)*Math.PI/180 && testouilleV2==true){
+					pausee();
+					testouilleV2=false;
+				}
+
+				if (mobile.phi>=(360*2+180)*Math.PI/180 && testouilleV3==true){
+					pausee();
+					testouilleV3=false;
 				}
 
 				//-----------------------------------------------------PARTIE AFFICHAGE AVANT RS-------------------------------------------------

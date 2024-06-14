@@ -185,11 +185,8 @@
                 <label  id="labelgp" for="teta"></label>
                 <input id="toggle" type="checkbox"  checked>
             </span>
-			<label id="label_temps_allumage" for="temps_allumage" style="display: none;"></label> <!--ManonV3-->
-			<input id="temps_allumage" value="50" type="text" size="5" style="display: none;"> <!--ManonV3-->
-			<label id="label_puissance_reacteur" for="puissance_reacteur" style="display: none;"></label> <!--ManonV3-->
-			<input id="puissance_reacteur" value="100" type="text" size="5" style="display: none;"> <!--ManonV3-->
-
+			<label id="label_pourcentage_vphi_pilotage" for="pourcentage_vphi_pilotage" style="display: none;"></label>
+			<input id="pourcentage_vphi_pilotage" value="0.03" type="text" size="5" style="display: none;">
   		</div>
 
         <div id="radio_button">
@@ -372,24 +369,18 @@
 
 	var btnObervateur = document.getElementById("r3"); //ManonV3
     var btnSpationaute = document.getElementById("r4"); //ManonV3
-	var labelTempsAllumage = document.getElementById("label_temps_allumage"); //ManonV3
-	var inputTempsAllumage = document.getElementById("temps_allumage"); //ManonV3
-	var labelPuissanceReacteur = document.getElementById("label_puissance_reacteur"); //ManonV3
-	var inputPuissanceReacteur = document.getElementById("puissance_reacteur"); //ManonV3
+	var labelPourcentageVphiPilotage = document.getElementById("label_pourcentage_vphi_pilotage");
+	var inputPourcentageVphiPilotage = document.getElementById("pourcentage_vphi_pilotage");
 
 	// Ajouter des écouteurs d'événements pour les boutons
     btnObervateur.addEventListener("click", function() {
-		labelTempsAllumage.style.display = "none"; //ManonV3
-		inputTempsAllumage.style.display = "none"; //ManonV3
-		labelPuissanceReacteur.style.display = "none"; //ManonV3
-		inputPuissanceReacteur.style.display ="none"; //ManonV3
+		labelPourcentageVphiPilotage.style.display="none";
+		inputPourcentageVphiPilotage.style.display="none";
     });
 
     btnSpationaute.addEventListener("click", function() {
-		labelTempsAllumage.style.display = "inline"; //ManonV3
-		inputTempsAllumage.style.display = "inline"; //ManonV3
-		labelPuissanceReacteur.style.display = "inline"; //ManonV3
-		inputPuissanceReacteur.style.display = "inline"; //ManonV3
+		labelPourcentageVphiPilotage.style.display="inline";
+		inputPourcentageVphiPilotage.style.display="inline";
     });
 
 

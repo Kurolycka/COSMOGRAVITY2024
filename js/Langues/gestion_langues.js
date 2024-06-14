@@ -634,13 +634,13 @@ function texteTrajectoireMassive(nbrderockets) {
   document.getElementById("rebondd").innerHTML = texte.page_trajectoire_massive.rebond;
   document.getElementById("r3").innerHTML = texte.pages_trajectoire.observateur;
   document.getElementById("r4").innerHTML = texte.pages_trajectoire.mobile; 
-  document.getElementById("label_temps_allumage").innerHTML = texte.pages_trajectoire.temps_allumage_label; //ManonV3
-  document.getElementById("label_temps_allumage").title= texte.pages_trajectoire.temps_allumage_infobulle; //ManonV3
-  document.getElementById("label_puissance_reacteur").innerHTML = texte.pages_trajectoire.puissance_reacteur_label; //ManonV3
-  document.getElementById("label_puissance_reacteur").title = texte.pages_trajectoire.puissance_reacteur_infobulle; //ManonV3
   //document.getElementById("boutton_prézoom").innerHTML = texte.pages_trajectoire.boutton_prézoom;
   document.getElementById("boutton_recup").innerHTML = texte.pages_trajectoire.boutton_recup;
   document.getElementById("amortissement").innerHTML = texte.page_trajectoire_massive.amortissement;
+  document.getElementById("label_pourcentage_vphi_pilotage").innerHTML = texte.pages_trajectoire.pourcentage_vphi_pilotage_label;
+  document.getElementById("label_pourcentage_vphi_pilotage").title = texte.pages_trajectoire.pourcentage_vphi_infobulle;
+
+
 	for (count = 1; count <= nbrderockets; count += 1) {
 		document.getElementById("temps_ecoule"+count.toString()+"").innerHTML = texte.pages_trajectoire.temps_ecoule;
         document.getElementById("acceleration"+count.toString()+"").innerHTML = "Gradient &nbsp;<span id='DivClignotante"+count.toString()+"'></span>";
@@ -738,10 +738,8 @@ function texteTrajectoireMassiveNonBar(nbrderockets) {
   document.getElementById("r2").innerHTML = texte.pages_trajectoire.trajectoire_simple;
   document.getElementById("r3").innerHTML = texte.pages_trajectoire.observateur;
   document.getElementById("r4").innerHTML = texte.pages_trajectoire.mobile; 
-  document.getElementById("label_temps_allumage").innerHTML = texte.pages_trajectoire.temps_allumage_label; //ManonV3
-  document.getElementById("label_temps_allumage").title= texte.pages_trajectoire.temps_allumage_infobulle; //ManonV3
-  document.getElementById("label_puissance_reacteur").innerHTML = texte.pages_trajectoire.puissance_reacteur_label; //ManonV3
-  document.getElementById("label_puissance_reacteur").title = texte.pages_trajectoire.puissance_reacteur_infobulle; //ManonV3
+  document.getElementById("label_pourcentage_vphi_pilotage").innerHTML = texte.pages_trajectoire.pourcentage_vphi_pilotage_label;
+  document.getElementById("label_pourcentage_vphi_pilotage").title = texte.pages_trajectoire.pourcentage_vphi_infobulle;
   //document.getElementById("boutton_prézoom").innerHTML = texte.pages_trajectoire.boutton_prézoom;
   document.getElementById("boutton_recup").innerHTML = texte.pages_trajectoire.boutton_recup;
   
@@ -816,10 +814,8 @@ function texteTrajectoireMassiveKerr() {
   document.getElementById("r2").innerHTML = texte.pages_trajectoire.trajectoire_simple;
   document.getElementById("r3").innerHTML = texte.pages_trajectoire.observateur;
   document.getElementById("r4").innerHTML = texte.pages_trajectoire.mobile; 
-  document.getElementById("label_temps_allumage").innerHTML = texte.pages_trajectoire.temps_allumage_label; //ManonV3
-  document.getElementById("label_temps_allumage").title= texte.pages_trajectoire.temps_allumage_infobulle; //ManonV3
-  document.getElementById("label_puissance_reacteur").innerHTML = texte.pages_trajectoire.puissance_reacteur_label; //ManonV3
-  document.getElementById("label_puissance_reacteur").title = texte.pages_trajectoire.puissance_reacteur_infobulle; //ManonV3
+  document.getElementById("label_pourcentage_vphi_pilotage").innerHTML = texte.pages_trajectoire.pourcentage_vphi_pilotage_label;
+  document.getElementById("label_pourcentage_vphi_pilotage").title = texte.pages_trajectoire.pourcentage_vphi_infobulle;
   //document.getElementById("boutton_prézoom").innerHTML = texte.pages_trajectoire.boutton_prézoom;
   document.getElementById("temps_ecoule").innerHTML = texte.pages_trajectoire.temps_ecoule;
   document.getElementById("acceleration").innerHTML = texte.pages_trajectoire.acceleration;
