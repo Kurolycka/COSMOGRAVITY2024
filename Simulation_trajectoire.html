@@ -320,8 +320,8 @@ ga('send', 'pageview');
 
 	//AJOUTE PAR KHALED : pour ne pas laisser le choix à un utilisateur le nb de fusees s'il passe en mode spationaute
 	var btnObervateur = document.getElementById("r3");
-  var btnSpationaute = document.getElementById("r4");
-  var inputNbfusees = document.getElementById("nombredefusees");
+  	var btnSpationaute = document.getElementById("r4");
+ 	 var inputNbfusees = document.getElementById("nombredefusees");
 	var labelNbfusees = document.getElementById("labelnumberfusees");
 	var labelTempsAllumage = document.getElementById("label_temps_allumage"); //ManonV3
 	var inputTempsAllumage = document.getElementById("temps_allumage"); //ManonV3
@@ -342,9 +342,21 @@ ga('send', 'pageview');
     });
 
     btnSpationaute.addEventListener("click", function() {
+
+		/*Juste pour avoir les valeurs rentrées avant de cliquer sur spationaute*/
+		const r01 = document.getElementById("r01").value;
+		const v01 = document.getElementById("v01").value;
+		const phi01 = document.getElementById("phi01").value;
+		const teta1 = document.getElementById("teta1").value;
+
 		inputNbfusees.value='1'; // on met un seul mobile
 		const event = new Event('change');//on met à jour tout le changement en appelant la sa fonctionnalité de changement
 		inputNbfusees.dispatchEvent(event);
+		document.getElementById("r01").value=r01;
+		document.getElementById("v01").value=v01;
+		document.getElementById("phi01").value=phi01;
+		document.getElementById("teta1").value=teta1;
+
 		inputNbfusees.style.display="none";
 		labelNbfusees.style.display = "none";
 		labelTempsAllumage.style.display = "inline"; //ManonV3

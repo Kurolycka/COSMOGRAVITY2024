@@ -320,11 +320,20 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
         });
 
         btnSpationaute.addEventListener("click", function() {
-      inputNbfusees.value='1'; // on met un seul mobile
-		  const event = new Event('change');//on met à jour tout le changement en appelant la sa fonctionnalité de changement
-		  inputNbfusees.dispatchEvent(event);
-			inputNbfusees.style.display = "none"; // Masquer le input et le label de nbfusees si button spationaute est cliqué 
-			labelNbfusees.style.display = "none";
+        /*Juste pour avoir les valeurs rentrées avant de cliquer sur spationaute*/
+        const r01 = document.getElementById("r01").value;
+        const phi01 = document.getElementById("phi01").value;
+        const teta1 = document.getElementById("teta1").value;
+
+        inputNbfusees.value='1'; // on met un seul mobile
+        const event = new Event('change');//on met à jour tout le changement en appelant la sa fonctionnalité de changement
+        inputNbfusees.dispatchEvent(event);
+        document.getElementById("r01").value=r01;
+        document.getElementById("phi01").value=phi01;
+        document.getElementById("teta1").value=teta1;
+
+        inputNbfusees.style.display = "none"; // Masquer le input et le label de nbfusees si button spationaute est cliqué 
+		  	labelNbfusees.style.display = "none";
         });
 
     var lenbdefusees;
