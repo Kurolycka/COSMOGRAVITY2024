@@ -91,7 +91,7 @@ function update_omegar0_simu(){
 		sigma = (2*Math.pow(Math.PI, 5)*Math.pow(k, 4))/(15*Math.pow(h, 3)*Math.pow(c, 2));
 		rho_r = (4*sigma*Math.pow(t0, 4))/(Math.pow(c, 3));
 		Or =(8*Math.PI*G*rho_r)/(3*Math.pow(H0parsec, 2));
-		Or=1.68*Or;
+		Or=1.6913*Or;
 		Or = Or.toExponential(4);
 	} else if (document.getElementById("liste").options[1].selected) {
 		sigma = (2*Math.pow(Math.PI, 5)*Math.pow(k, 4))/(15*Math.pow(h, 3)*Math.pow(c, 2));
@@ -188,7 +188,7 @@ function update_omegar0_simu_noir(){
 		sigma = (2*Math.pow(Math.PI, 5)*Math.pow(k, 4))/(15*Math.pow(h, 3)*Math.pow(c, 2));
 		rho_r = (4*sigma*Math.pow(t0, 4))/(Math.pow(c, 3));
 		Or =(8*Math.PI*G*rho_r)/(3*Math.pow(H0parsec, 2));
-		Or=1.68*Or;
+		Or=1.6913*Or;
 		Or = Or.toExponential(4);
 	} else if (document.getElementById("liste").options[1].selected) {
 		sigma = (2*Math.pow(Math.PI, 5)*Math.pow(k, 4))/(15*Math.pow(h, 3)*Math.pow(c, 2));
@@ -198,7 +198,6 @@ function update_omegar0_simu_noir(){
 		} else {
 			Or=Or.toExponential(4);
 	}
-
 	document.getElementById("resultat_omegar0").innerHTML = Or;
 	update_omegak0_simu_noir();
 }
@@ -267,7 +266,7 @@ function update_omegar0_calc(){
 	Or = 0;
 	if (document.getElementById("resultat_omegar0_annexes").value=="Matière, Lambda, RFC et Neutrinos") {
 		Or =(8*Math.PI*G*rho_r)/(3*Math.pow(H0parsec, 2));
-		Or=1.68*Or;
+		Or=1.6913*Or;
 		Or = Or.toExponential(4);
 		} else if (document.getElementById("resultat_omegar0_annexes").value== "Matière, Lambda et RFC") {
 		Or =(8*Math.PI*G*rho_r)/(3*Math.pow(H0parsec, 2));
@@ -384,7 +383,7 @@ function update_omegar0_calc_noir(){
 		sigma = (2*Math.pow(Math.PI, 5)*Math.pow(k, 4))/(15*Math.pow(h, 3)*Math.pow(c, 2));
 		rho_r = (4*sigma*Math.pow(t0, 4))/(Math.pow(c, 3));
 		Or =(8*Math.PI*G*rho_r)/(3*Math.pow(H0parsec, 2));
-		Or=1.68*Or;
+		Or=1.6913*Or;
 		Or = Or.toExponential(4);
 		} else if (document.getElementById("resultat_omegar0_annexes").value=="Matière, Lambda et RFC") {
 		sigma = (2*Math.pow(Math.PI, 5)*Math.pow(k, 4))/(15*Math.pow(h, 3)*Math.pow(c, 2));

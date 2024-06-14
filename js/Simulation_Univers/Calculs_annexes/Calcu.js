@@ -155,7 +155,7 @@ function calcu(path) {
 		sigma = (2 * Math.pow(Math.PI, 5) * Math.pow(k, 4)) / (15 * Math.pow(h, 3) * Math.pow(c, 2));
 		rho_r = (4 * sigma * Math.pow(t0, 4)) / (Math.pow(c, 3));
 		Or = (8 * Math.PI * G * rho_r) / (3 * Math.pow(H0parsec, 2));
-		Or = 1.68 * Or;
+		Or = 1.6913 * Or;
 		Or = Or.toExponential(4);
 	} else if (document.getElementById("resultat_omegar0_annexes").value=="Matière, Lambda et RFC") {
 		sigma = (2 * Math.pow(Math.PI, 5) * Math.pow(k, 4)) / (15 * Math.pow(h, 3) * Math.pow(c, 2));
@@ -171,7 +171,6 @@ function calcu(path) {
 	modele=0;
 	age_ans= simpson_simple_degre2(fonction_integrale, Number(0), Number(omegam0), Number(omegalambda0), Number(Or));  // age en annees ou bien NaN
 	if(isNaN(age_ans)) {modele=1;}
-
 	if (path == 0) {
 
 	//on recupere les valeurs de z1 et z2
@@ -254,8 +253,6 @@ function calcu(path) {
 		}
 
 	}
-	console.log(calcul_ages(fonction_E,H0enannee,1e-15,1/(1+z2)));
-	console.log(tempsReception);
 	if (isNaN(tempsReception)) {
 		tempsReception = NaN;
 	}
@@ -264,7 +261,6 @@ function calcu(path) {
 	// Calcul du temps d'émission
 	if (Number(z1) <= 1e12) {
 		tempsEmission = simpson_simple_degre2(fonction_integrale, Number(z1), omegam0, Number(omegalambda0), Number(Or));
-		
 	}
 
 	else {
@@ -528,7 +524,7 @@ function calcu(path) {
 		if (zmax<=-1 ){
 			return messagebox(texte.page_univers_calculs.message_zmax_incorrect,"zmax >-1");}
 		
-	    if (path == 1 && modele==0) {
+		if (path == 1 && modele==0) {
 		if (sessionStorage.getItem("LANGUE") == "fr") {frtitle="al";
 		}else{frtitle="ly";} 
 	
@@ -656,7 +652,6 @@ function calcu(path) {
 		}
 		
 	} else if (path == 2 && modele==0) {
-
 		titreAbscicce = "z"
 		// Omega's charts in function of z
 		omega_checkbox = document.getElementById("omega_checkbox");
@@ -1231,12 +1226,10 @@ function calcultheta() {
 	var z1 = document.getElementById("z1_checkbox").checked;
 	var z2 = document.getElementById("z2_checkbox").checked;
 	if (z1 && dda !=0){
-		window.document.getElementById("theta").value = (206265 * window.document.getElementById("diametre").value /
-			Number(dda)).toExponential(2);
+		window.document.getElementById("theta").value = (206265 * window.document.getElementById("diametre").value /Number(dda)).toExponential(2);
 	}
 	else if(z2 && dda_2 !=0){
-		window.document.getElementById("theta").value = (206265 * window.document.getElementById("diametre").value /
-			Number(dda_2)).toExponential(2);
+		window.document.getElementById("theta").value = (206265 * window.document.getElementById("diametre").value /Number(dda_2)).toExponential(2);
 	}
 }
 
@@ -1269,7 +1262,7 @@ function linear_scale(zmin, zmax, nb_pts) {
  * @param {*} nb_pts 
  * @returns points for the x-axis
  */
- function log_scale(zmin, zmax, nb_pts) {
+function log_scale(zmin, zmax, nb_pts) {
 	let zmin_10 = Math.log10(zmin + 1);
 	let zmax_10 = Math.log10(zmax + 1);
 	let abscissa = linear_scale(zmin_10, zmax_10, nb_pts);
@@ -1286,9 +1279,7 @@ function linear_scale(zmin, zmax, nb_pts) {
 //!partie tracer graphique
 function calculDeDs(abscissa) {
 	Eps = Number(0.001);  //0.00001
-//	var pas = (zmax - zmin)/dt;	
 	var zArr = [];
-//	var i = zmin;
 	var daArr = [];
 	var da;
 	var dlArr = [];
@@ -1300,7 +1291,7 @@ function calculDeDs(abscissa) {
 
 	abscissa.forEach(i => {   
 		// calcul de la distance mètrique 
-		dm1=DistanceMetrique(fonction_E,0,i,true);		
+		dm1=DistanceMetrique(fonction_E,0,i,true);	
 
 		//  temps en secondes
 		temps = calcul_ages(fonction_E,H0parsec,.0000001,1/(1+i));

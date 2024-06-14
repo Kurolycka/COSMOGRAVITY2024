@@ -102,6 +102,11 @@
 	},
 
 	"page_univers_calculs":{
+		"yaxis_distance": "Distance (Année lumière)",
+		"yaxis_omega": "Paramètre de densité",
+		"yaxis_temps":"temps (année)",
+		"yaxis_decalage":"decalage vers le rouge z",
+		"xaxis_temps":"temps (année)",
 		"titre": "Calculette Cosmologique",
 		"t_trop_grand":"Durée supérieure à la valeur maximale \r pour cet espace-temps",
 		"t_negatif":" doit être un nombre positif(> 0).",

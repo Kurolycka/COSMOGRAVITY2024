@@ -22,9 +22,7 @@ function fonction_integrale(x, omegam0, omegalambda0, Or) {
 
 //formule utilisée pour le calcul de distance metrique
 function fonction_dm(x, omegam0, omegalambda0, Or) {
-	return 1. / Math.pow((Or * Math.pow((1. + x), 4) +
-		omegam0 * Math.pow((1 + x), 3) + (1 - Or - omegam0 - omegalambda0) *
-		Math.pow((1 + x), 2) + omegalambda0), (1. / 2.));
+	return 1. / Math.pow((Or * Math.pow((1. + x), 4) + omegam0 * Math.pow((1 + x), 3) + (1 - Or - omegam0 - omegalambda0) *Math.pow((1 + x), 2) + omegalambda0), (1. / 2.));
 }
 
 function cv_fonction_integrale(l, omegam0, omegalambda0, Or) {
