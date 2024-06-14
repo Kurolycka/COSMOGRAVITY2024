@@ -198,6 +198,8 @@ function arretkerr() {
 	pause = true;
     clearInterval(myInterval);
 	document.getElementById("indic_calculs").innerHTML=texte.pages_trajectoire.calcul_termine;
+    document.getElementById("pause/resume").style.display='none';  //on enleve les 2 buttons pause
+	document.getElementById('bouton_pause').style.display='none'; 
 }
 
 //----------------------------------------------------{htmlDecode}----------------------------------------------------
@@ -237,9 +239,9 @@ function rendreVisibleNbG() {
 
 	var puissance_consommee_Cells = document.querySelectorAll('[id^="puissance_consommee"]'); 
 
-  var distance_metrique_cell = document.querySelectorAll('[id^="distance_metrique"]'); 
+    var distance_metrique_cell = document.querySelectorAll('[id^="distance_metrique"]'); 
 
-  var distance_metrique_res_cell = document.querySelectorAll('[id^="distance_parcourue"]'); 
+    var distance_metrique_res_cell = document.querySelectorAll('[id^="distance_parcourue"]'); 
     
     // Si element2.value est "mobile" et que y a que 1 mobile, rend les cellules visibles, sinon les cache
     if (element2.value == "mobile" && blyo==1) {
@@ -261,12 +263,6 @@ function rendreVisibleNbG() {
 		puissance_consommee_Cells.forEach(function(cell) {
             cell.style.display = ''; 
         });
-        distance_metrique_cell.forEach(function(cell) {
-            cell.style.display = ''; 
-        });
-        distance_metrique_res_cell.forEach(function(cell) {
-            cell.style.display = ''; 
-        });
     } else {
         nbGCells.forEach(function(cell) {
             cell.style.display = 'none';
@@ -284,12 +280,6 @@ function rendreVisibleNbG() {
             cell.style.display = 'none';
         });
 		puissance_consommee_label_Cells.forEach(function(cell) {
-            cell.style.display = 'none'; 
-        });
-        distance_metrique_cell.forEach(function(cell) {
-            cell.style.display = 'none'; 
-        });
-        distance_metrique_res_cell.forEach(function(cell) {
             cell.style.display = 'none'; 
         });
     }

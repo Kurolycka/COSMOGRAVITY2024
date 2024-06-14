@@ -1,4 +1,5 @@
 
+
 // const AU = 149597870000; // unite astronomique
 
 function lance_calc_LCDM() {

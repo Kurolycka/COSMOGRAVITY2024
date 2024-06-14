@@ -198,14 +198,15 @@ function graphique_creation_pot(Onresize=0,data1,data2,compteur,mobile) {
     {
      mobile.point = [point,x,y];
      mobile.blups=1;
-     return [point,x,y];
     }
+    return [point,x,y];
 
 }
 
 
 function update_graphique_2(pointxy,data2,mobile) 
 {
+
   if(mobile!=null)//SCH
   {
   if(pointxy[1](data2[0].date)>=0 && !isNaN(pointxy[1](data2[0].date)) && !isNaN(pointxy[2](data2[0].close))){
@@ -221,17 +222,15 @@ function update_graphique_2(pointxy,data2,mobile)
     .attr('stroke', 'red');
   }
 }
-
 else //KERR
 {
-  if(x(data2[0].date)>=0 && !isNaN(x(data2[0].date)) && !isNaN(y(data2[0].close))){
-    $('.line-point').empty();
-    
-    point.selectAll('circle')
+  if(pointxy[1](data2[0].date)>=0 && !isNaN(pointxy[1](data2[0].date)) && !isNaN(pointxy[2](data2[0].close))){
+    $('.line-point').empty();    
+    pointxy[0].selectAll('circle')
       .data(data2)
       .enter().append('circle')
-      .attr("cx", x(data2[0].date))
-      .attr("cy", y(data2[0].close))
+      .attr("cx", pointxy[1](data2[0].date))
+      .attr("cy", pointxy[2](data2[0].close))
       .attr("r", 4)
       .style("fill", "red")
       .attr('stroke', 'red');

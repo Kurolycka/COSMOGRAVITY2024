@@ -201,7 +201,7 @@ ga('send', 'pageview');
 
 		<div id="boutons_actions">
 		<span id="buts">
-		<button type="button" class="myButton" id="start" onclick="test_inte();save_nbfusees_recupvaleurs();save_schwarshild_massif(lenbdefusees);lancerDeFusees(lenbdefusees);"></button>
+		<button type="button" class="myButton" id="start" onclick="lancement()"></button>
 		<button type="button" class="myButton3" id="pause/resume" style="display: none;" >Pause</button>
 		</span>
 
@@ -293,7 +293,23 @@ ga('send', 'pageview');
 	init_rebond();
 	genereHtml();
 	initialisationGenerale(1);
+	//Fonction qui lance la simulation avec le button start si tout est bien validé 
+	function lancement(){
 		
+		//on lance si ya true en return
+		if(typeof test_inte() === 'boolean')
+		{
+			save_nbfusees_recupvaleurs();
+			save_schwarshild_massif(lenbdefusees);
+			lancerDeFusees(lenbdefusees);
+		}
+		//sinon on affiche le message d'erreur
+		else
+		{
+			alert(test_inte());
+		}
+	}
+
 	function updatenbredefusees(){
 		var nbredefuseesupdatenbr = Number(document.getElementById("nombredefusees").value);	
 		lenbdefusees = nbredefuseesupdatenbr;
@@ -303,7 +319,7 @@ ga('send', 'pageview');
 	//AJOUTE PAR KHALED : pour ne pas laisser le choix à un utilisateur le nb de fusees s'il passe en mode spationaute
 	var btnObervateur = document.getElementById("r3");
   	var btnSpationaute = document.getElementById("r4");
-  	var inputNbfusees = document.getElementById("nombredefusees");
+ 	 var inputNbfusees = document.getElementById("nombredefusees");
 	var labelNbfusees = document.getElementById("labelnumberfusees");
 	var btnrebond = document.getElementById("rebondd");
 	var inputRphysique = document.getElementById("r_phy");
@@ -320,9 +336,21 @@ ga('send', 'pageview');
     });
 
     btnSpationaute.addEventListener("click", function() {
+
+		/*Juste pour avoir les valeurs rentrées avant de cliquer sur spationaute*/
+		const r01 = document.getElementById("r01").value;
+		const v01 = document.getElementById("v01").value;
+		const phi01 = document.getElementById("phi01").value;
+		const teta1 = document.getElementById("teta1").value;
+
 		inputNbfusees.value='1'; // on met un seul mobile
 		const event = new Event('change');//on met à jour tout le changement en appelant la sa fonctionnalité de changement
 		inputNbfusees.dispatchEvent(event);
+		document.getElementById("r01").value=r01;
+		document.getElementById("v01").value=v01;
+		document.getElementById("phi01").value=phi01;
+		document.getElementById("teta1").value=teta1;
+
 		inputNbfusees.style.display="none";
 		labelNbfusees.style.display = "none";
 		labelPourcentageVphiPilotage.style.display = "inline";

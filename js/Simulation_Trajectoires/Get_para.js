@@ -105,6 +105,11 @@ function load_schwarshild_massif() {
 			document.getElementById('ammorti').innerHTML = document.getElementById("reb").value / 100;
 		}
 
+
+		/*Pour savoir si on affiche ou pas le bouton de rebond dans le cas d'un trou noir */
+		if (document.getElementById("r_phy").value == "0" || document.getElementById("r_phy").value == "" ) {document.getElementById("rebondd").style.display="none";} 
+		else{document.getElementById("rebondd").style.display="inline";}
+
 		var inputNbfusees = document.getElementById("nombredefusees"); //manon
 		var labelNbfusees = document.getElementById("labelnumberfusees"); //manon
 		var labelPourcentageVphiPilotage = document.getElementById("label_pourcentage_vphi_pilotage");
@@ -348,6 +353,9 @@ function load_schwarshild_photon() {
 			document.getElementById("rebondd").className = "myButton2";
 		}
 
+		/*Pour savoir si on affiche ou pas le bouton de rebond dans le cas d'un trou noir */
+		if (document.getElementById("r_phy").value == "0" || document.getElementById("r_phy").value == "" ) {document.getElementById("rebondd").style.display="none";} 
+		else{document.getElementById("rebondd").style.display="inline";}
 	}
 }
 
@@ -543,10 +551,9 @@ function load_kerr_photon() {
 		if (graph_check == "false") {
 			document.getElementById("toggle").checked = false;
 		}
-		if (document.getElementById("traject_type").value == "simple") {
+		if (document.getElementById("traject_type").value == "simple") 
+		{
 			pressionBouttonTrajectoireSimple();
-		} else if (document.getElementById("traject_type").value == "complete") {
-			pressionBouttonTrajectoireComplete();
 		}
 
 		if (document.getElementById("traject_type2").value == "observateur") {

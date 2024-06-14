@@ -149,7 +149,7 @@
 
         <div>
             <label for="z1">z<sub>1</sub></label>
-            <input type="checkbox" name="z" id="z1_checkbox" onChange="onlyOne(this)">
+            <input type="checkbox" name="z" id="z1_checkbox" onchange="onlyOne(this)">
             <label for="z2">z<sub>2</sub></label>
             <input type="checkbox" name="z" id="z2_checkbox" onchange="onlyOne(this)">
         </div>
@@ -355,22 +355,22 @@
 
         <div>
           <label for="T0">T<sub>0</sub> =</label>
-          <output id="T0" style="color:blue" onChange="update_omegar0_calc_noir();" type="text"></output> K
+          <output id="T0" style="color:blue" onchange="update_omegar0_calc_noir();" type="text"></output> K
         </div>
   
         <div>
           <label for="H0">H<sub>0</sub> =</label>
-          <output id="H0" style="color:blue" onChange="update_omegar0_calc_noir();" type="text"></output> km.s<sup>-1</sup>.Mpc<sup>-1</sup>
+          <output id="H0" style="color:blue" onchange="update_omegar0_calc_noir();" type="text"></output> km.s<sup>-1</sup>.Mpc<sup>-1</sup>
         </div>
   
         <div>
           <label for="omegam0">&Omega;<sub>m0</sub> =</label>
-          <output id="omegam0" style="color:blue" onChange="update_omegar0_calc_noir();" type="text"></output>
+          <output id="omegam0" style="color:blue" onchange="update_omegar0_calc_noir();" type="text"></output>
         </div>
   
         <div>
           <label for="omegaDE0">&Omega;<sub>DE0</sub> =</label>
-          <output id="omegaDE0" style="color:blue" value="0.6911" onChange="update_omegar0_calc_noir();" type="text"></output>
+          <output id="omegaDE0" style="color:blue" value="0.6911" onchange="update_omegar0_calc_noir();" type="text"></output>
         </div>
   
         <div>
@@ -391,7 +391,7 @@
       <div>
         <br>
 
-        <output id="resultat_omegar0_annexes" style="color:blue" onChange="update_omegar0_calc_noir();">
+        <output id="resultat_omegar0_annexes" style="color:blue" onchange="update_omegar0_calc_noir();">
                 <option id="txt_MLRFCN" value="Matière, Lambda, RFC et Neutrinos"></option>
                 <option id="txt_MLRFC" value="Matière, Lambda et RFC"></option>
                 <option id="txt_ML" value="Matière et Lambda"></option>
@@ -399,7 +399,7 @@
         <div>
         <br/>
           <span id="txt_univplat"></span>
-          <input id="univ_plat" type="checkbox" name="univ_plat" onChange="Omegak0_plat_calc_noir();" disabled></input>
+          <input id="univ_plat" type="checkbox" name="univ_plat" onchange="Omegak0_plat_calc_noir();" disabled></input>
           <div/>
   <br/>
             <div>
