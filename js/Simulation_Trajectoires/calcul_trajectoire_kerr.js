@@ -18,11 +18,12 @@ var scale_factor=280;
 var z=0;
 var z_obs=0;
 var input=0;
-var compteurVitesseAvantLancement = 0;
 var distance_parcourue_totale=0; //Manon
-var ns_avant_lancement=0;
+var nz_avant_lancement=0;
 var c = 299792458;
 var G = 6.67385 * Math.pow(10, -11);
+var compteurVitesse = 0;
+var compteurVitesseAvantLancement =0; 
 
 var point; //pour le graphe du potentiel
 
@@ -115,12 +116,12 @@ function initialisation(){
 	vitesse_precedente_nombre_g = 0; //Pareil pour la vitesse précédent le pilotage. 
 
 	//Je calcule Rh+ (rhp), Rh- (rhm) et rh (qui sert au calcul de rmax) :
-	rh = G * M / Math.pow(c, 2) * (1 + Math.sqrt(1 - Math.pow(J * c / (G * M * M), 2))); //Rayon de Kerr.
+	rh = m * (1 + Math.sqrt(1 - Math.pow(J * c / (G * M * M), 2))); //Rayon de Kerr.
 	rhp = 0.5*(rs+Math.sqrt((rs**2)-4*(a**2)));
     rhm = 0.5*(rs-Math.sqrt((rs**2)-4*(a**2)));
 	
 	//Je calcule la gravité de surface théorique pour R=Rh+.
-	gravSurface = 0.5 * Math.pow(c, 2) * (Math.pow(rhp, 2) - Math.pow(a, 2)) / (Math.pow(rhp, 2) + Math.pow(a, 2))/rhp;
+	gravSurface = 0.5 * Math.pow(c, 2) * (Math.pow(rhp, 2) - Math.pow(a, 2)) / ((Math.pow(rhp, 2) + Math.pow(a, 2))*rhp);
 
 	//Je calcule la distance radiale maximale que je pourrais atteindre : 
 	if( (E>0.99999 && E<1.00001) && (Math.pow(L,4)- Math.pow(2*rs*(L-a),2)) > 0 ){ 
@@ -216,7 +217,7 @@ function initialisation(){
 
 	//--------------------------------Affichage--------------------------------
 	
-	//J'affiche sur la page le paramètre de spin, le rayon de SCH, les constantes E et L et gravité de surface. 
+	//J'affiche sur la page le paramètre de spin, le rayon de SCH, les constantes E et L et gravité de surface :
 	document.getElementById("a").innerHTML = a.toExponential(3);
 	document.getElementById("m").innerHTML = rs.toExponential(3);
 	document.getElementById("L").innerHTML = L.toExponential(3);
@@ -237,24 +238,49 @@ function initialisation(){
 
 	textegravetetc_Kerr(); //Pour afficher les infobulles des tableaux etc.
 	boutonAvantLancement(); //J'associe aux différents boutons les fonctions associées d'avant le lancement. 
-} 
+}
 
 //----------------------------------------------------{verifnbr}----------------------------------------------------
 
+/**
+ * Fonction qui affiche un message d'erreur si une saisie n'est pas un nombre dans un des champs. 
+ */
 function verifnbr() {
 
-	r0 = document.getElementById("r0").value;
-	M = document.getElementById("M").value;
-	J = document.getElementById("J").value;
+	var texte = o_recupereJson(); //Pour les messages d'alerte.
 
-	if (isNaN(r0)){
-		alert ("Veuillez vérifier vos saisie en r0");}
+	//Je récupère les données remplies par l'utilisateur : 
+	M = document.getElementById("M").value; //La masse de l'astre. 
+	r0 = document.getElementById("r0").value; //La distance initiale au centre.
+	J = document.getElementById("J").value; //Le moment angulaire.
+	v0 = document.getElementById("v0").value; //La vitesse initiale.
+	phi0 = document.getElementById("phi0").value; //L'angle de la position initiale.
+	teta = document.getElementById("teta").value; //L'angle de la vitesse initiale. 
 
+	//Si un des champs a pour saisie autre chose que un nombre j'affiche un message d'alerte :
 	if (isNaN(M)){
-		alert ("Veuillez vérifier vos saisie en M");
+		alert (texte.pages_trajectoire.alerte_verifier_M);
+		document.getElementById("M").value=2e39.toExponential(0);
+	}
+	if (isNaN(r0)){
+		alert (texte.pages_trajectoire.alerte_verifier_r0);
+		document.getElementById("r0").value=5e12.toExponential(0);
 	}
 	if (isNaN(J)){
-		alert ("Veuillez vérifier vos saisie en J");
+		alert (texte.pages_trajectoire.alerte_verifier_J);
+		document.getElementById("J").value=8e59.toExponential(0);
+	}
+	if (isNaN(v0)){
+		alert (texte.pages_trajectoire.alerte_verifier_v0);
+		document.getElementById("v0").value=5e7.toExponential(0);
+	}
+	if (isNaN(phi0)){
+		alert (texte.pages_trajectoire.alerte_verifier_phi0);
+		document.getElementById("phi0").value=0;
+	}
+	if (isNaN(teta)){
+		alert (texte.pages_trajectoire.alerte_verifier_teta);
+		document.getElementById("teta").value=90;
 	}
 }
 
@@ -401,11 +427,8 @@ function trajectoire() {
 		}, false);
 
 		//--------------------------------Gestion du pilotage--------------------------------
-
-		var temps_allumage_reacteur = Number(document.getElementById("temps_allumage").value); //Récupération du temps d'allumage des réacteurs à chaque click. 
-		temps_allumage_reacteur = temps_allumage_reacteur*Math.pow(10,-3); //Conversion des ms du temps d'allumage des réacteurs en s.
-		var puissance_reacteur = Number(document.getElementById("puissance_reacteur").value); //Récupération de la puissance des réacteurs en W/kg.
-		var temps_total_reacteur=0; //Initialisation du temps total d'allumage des réacteurs au cours du pilotage. 
+		
+		var X = Number(document.getElementById("pourcentage_vphi_pilotage").value); //Récupération du pourcentage dont on veut modifier vphi à chaque clic.
 
 
 		if (element2.value=="mobile"){//Dans le cas spationaute
@@ -429,21 +452,23 @@ function trajectoire() {
 						joy.GetPhi()=0; 
 					}else{ //Autrement il est possible de piloter.
 
-						vitesse_precedente_nombre_g = vtot; //Stockage de la vitesse précédent l'accélération pour le calcul du nombre de g ressenti. 
+						vitesse_precedente_nombre_g = vtot //Stockage de la vitesse précédent l'accélération pour le calcul du nombre de g ressenti. 
 
-						Delta_E_sur_E = joy.GetPhi()*(puissance_reacteur*temps_allumage_reacteur)/Math.pow(c,2); //Calcul du ΔE/E en fonction de la puissance et du temps d'allumage des réacteurs.
-						Delta_L_sur_L = Delta_E_sur_E; 
+						//Pourcentage_vphi_pilotage = X = Delta v tangentielle / vtangentielle
 
-						L = L + L*Delta_L_sur_L; //Calcul du nouveau L associé à ce mobile.
-						E = E + E*Delta_E_sur_E //Calcul du nouveau E associé à ce mobile. 
-						deltam_sur_m = deltam_sur_m + Math.abs(Delta_E_sur_E); //Calcul de l'énergie ΔE/E consommée au total.
-						temps_total_reacteur = Math.abs(joy.GetPhi()*temps_allumage_reacteur); //Calcul du temps total durant lequel les réacteurs sont allumés.
-						puissance_consommee_calcul = (deltam_sur_m/temps_total_reacteur)*Math.pow(c,2); //Calcul de la puissance consommée au total en W/kg. 
+						//Je calcule les variations de E et L :
+						Delta_E= joy.GetPhi()*X*vp_3*vp_3/(c*c-vtot*vtot)*E;
+                		Delta_L= (X + Delta_E/E)*L;
+						puissance_instant=(Delta_E/E)*c*c/(50e-3);
+						deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/E); //Calcul de l'énergie ΔE/E consommée au total. 
 
+						L = L + Delta_L; //Calcul du nouveau L associé à ce mobile.
+						E = E + Delta_E; //Calcul du nouveau E associé à ce mobile. 
+									
 						document.getElementById("E").innerHTML = E.toExponential(3); //Affichage sur le site du nouveau E. 
 						document.getElementById("L").innerHTML = L.toExponential(3); //Affichage sur le site du nouveau L. 
-						document.getElementById("decal").innerHTML = deltam_sur_m.toExponential(3); //Affichage sur le site de l'énergie consommée.
-						document.getElementById("puissance_consommee").innerHTML = puissance_consommee_calcul.toExponential(3); //Affichage sur le site de la puissance consommée. 
+						document.getElementById("decal").innerHTML = deltam_sur_m.toExponential(3); //Affichage sur le site de l'énergie consommée. 
+						document.getElementById("puissance_consommee").innerHTML = puissance_instant.toExponential(3); //Affichage sur le site de la puissance consommée.
 					}
 
 				}
@@ -453,8 +478,8 @@ function trajectoire() {
 		
 		//--------------------------------Gestion des boutons d'accélération/décélération--------------------------------
 
-		document.getElementById('plusvite').removeEventListener('click',foncPourVitAvantLancement,false); //Je désassocie la fonction foncPourVitAvantLancement du bouton pour accélérer une fois la simulation commencée.
-		document.getElementById('moinsvite').removeEventListener('click',foncPourVitAvantLancement,false); //Je désassocie la fonction foncPourVitAvantLancement du bouton pour décélérer une fois la simulation commencée.
+		document.getElementById('plusvite').removeEventListener('click',foncPourVitPlusAvantLancement,false); //Je désassocie la fonction foncPourVitAvantLancement du bouton pour accélérer une fois la simulation commencée.
+		document.getElementById('moinsvite').removeEventListener('click',foncPourVitMoinsAvantLancement,false); //Je désassocie la fonction foncPourVitAvantLancement du bouton pour décélérer une fois la simulation commencée.
 
 		Dtau1 = 1e8*temps_chute_libre ; //Pour permettre une accélération.
 		Dtau2 = temps_chute_libre / 1e8; //Pour permettre une décélération.
@@ -466,7 +491,7 @@ function trajectoire() {
 				dtau += dtau;
 				clicks += 1 ;
 			}
-			document.getElementById('nsimtxt').innerHTML= "ns="+ clicks.toString(); //J'affiche le ns correspondant sur le site.
+			document.getElementById('nsimtxt').innerHTML= "simu="+ clicks.toString(); //J'affiche le ns correspondant sur le site.
 		}, false);
 
 
@@ -477,7 +502,7 @@ function trajectoire() {
 				dtau /= 2;
 				clicks -= 1 ;
 			}
-			document.getElementById('nsimtxt').innerHTML= "ns="+ clicks.toString(); //J'affiche le ns correspondant sur le site.
+			document.getElementById('nsimtxt').innerHTML= "simu="+ clicks.toString(); //J'affiche le ns correspondant sur le site.
 		}, false);
 
 	
@@ -516,7 +541,7 @@ function trajectoire() {
 			majFondFixe22(); //Je mets à jour tout ce qui est relié au dessin du mobile.																		   
 			rafraichir2(context); //Redessine les rayons Rh+, Rh- et rs un fond blanc avec les entrées à gauche. 
 			input-=1;
-			document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString(); //Mets à jour l'affichage du zoom sur le site. 
+			document.getElementById('nzoomtxt').innerHTML= "zoom="+ input.toString(); //Mets à jour l'affichage du zoom sur le site. 
 		}, false);
 
 
@@ -530,7 +555,7 @@ function trajectoire() {
 			majFondFixe22(); //Je mets à jour tout ce qui est relié au dessin du mobile.																						  
 			rafraichir2(context); //Redessine les rayons Rh+, Rh- et rs un fond blanc avec les entrées à gauche. 
 			input+=1;
-			document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString(); //Mets à jour l'affichage du zoom sur le site.
+			document.getElementById('nzoomtxt').innerHTML= "zoom="+ input.toString(); //Mets à jour l'affichage du zoom sur le site.
 		}, false);
 
 
@@ -544,16 +569,16 @@ function trajectoire() {
 			majFondFixe22(); //Je mets à jour tout ce qui est relié au dessin du mobile.																		   
 			rafraichir2(context); //Redessine les rayons Rh+, Rh- et rs un fond blanc avec les entrées à gauche. 
 			input=0;
-			document.getElementById('nzoomtxt').innerHTML= "nz="+ input.toString(); //Mets à jour l'affichage du zoom sur le site.
+			document.getElementById('nzoomtxt').innerHTML= "zoom="+ input.toString(); //Mets à jour l'affichage du zoom sur le site.
 		}, false);
 
 		//Partie qui permet de mettre à l'échelle le dessin de l'astre et du rayon de SCH vis à vis des zooms avant le lancement de la simulation : 
-		if (ns_avant_lancement < 0) {
-			for (incr = 0; incr > ns_avant_lancement; incr -= 1) {
+		if (nz_avant_lancement < 0) {
+			for (incr = 0; incr > nz_avant_lancement; incr -= 1) {
 				scale_factor = scale_factor / 1.2;
 			}
-		} else if (ns_avant_lancement > 0) {
-			for (incr = 0; incr < ns_avant_lancement; incr += 1) {
+		} else if (nz_avant_lancement > 0) {
+			for (incr = 0; incr < nz_avant_lancement; incr += 1) {
 				scale_factor = scale_factor * 1.2;
 			}
 		}
@@ -758,18 +783,9 @@ function animate() {
 		/* Une condition pour ne pas calculer audela attiendre zero */
 		if(r_part>0)
 		{
-			var temps_allumage_reacteur = Number(document.getElementById("temps_allumage").value); //recuperation de la valeur de l'input de temps d'allumage
-			/*Ce qui suit verifie si on a appuyé pour accelerer et adapte le pas de calcul pour RK:*/
-			if (joy.GetPhi()!=0)
-			{
-				/*Calcul avec RK4 avec un dtau de temps d'allumages des reacteurs dans le cas d'une acceleration de la part du spationaute */
-				val = rungekutta(temps_allumage_reacteur, r_part, A_part); 
-			}
-			else
-			{
-				//calcul avec RK4 avec le dtau par defaut
-				val = rungekutta(dtau, r_part, A_part); 
-			}
+			//calcul avec RK4 avec le dtau par defaut
+			val = rungekutta(dtau, r_part, A_part); 
+			
 
 			r_part = val[0]; //on recupere le resultat de RK pour le rayon
 			A_part = val[1]; //on recupere le resultat de RK pour le dr/dtau
@@ -787,7 +803,7 @@ function animate() {
 			/*Ce qui suit verifie si on a appuyé pour accelerer et calcul le nombre de g :*/
 			if(joy.GetPhi()!=0)
 			{ 
-				nombre_de_g_calcul = (Math.abs(vtot-vitesse_precedente_nombre_g)/(temps_allumage_reacteur))/9.80665 //calcul du nombre de g ressenti
+				nombre_de_g_calcul = (Math.abs(vtot-vitesse_precedente_nombre_g)/(50e-3))/9.80665 //calcul du nombre de g ressenti
 				nombre_de_g_calcul_memo = nombre_de_g_calcul; // on stocke sa valeur pour afficher la derniere valeur calculée
 			}
 			else //apres chaque acceleration il devient nul
@@ -1430,14 +1446,14 @@ function MAJGraphePotentiel(){
 
 
 function foncPourZoomPlusAvantLancement(){
-		ns_avant_lancement+=1;
-		document.getElementById('nzoomtxt').innerHTML= "nz="+ ns_avant_lancement.toString();
+		nz_avant_lancement+=1;
+		document.getElementById('nzoomtxt').innerHTML= "zoom="+ nz_avant_lancement.toString();
 		
 }
 
 function foncPourZoomMoinsAvantLancement(){
-		ns_avant_lancement-=1;
-		document.getElementById('nzoomtxt').innerHTML= "nz="+ ns_avant_lancement.toString();
+		nz_avant_lancement-=1;
+		document.getElementById('nzoomtxt').innerHTML= "zoom="+ nz_avant_lancement.toString();
 }
 
 function boutonAvantLancement(){
@@ -1449,20 +1465,20 @@ function boutonAvantLancement(){
     
     document.getElementById('moinszoom').addEventListener('click',foncPourZoomMoinsAvantLancement, false);
     document.getElementById('pluszoom').addEventListener('click',foncPourZoomPlusAvantLancement, false);
-    document.getElementById('plusvite').addEventListener('click',foncPourVitAvantLancement,false);
-    document.getElementById('plusvite').myParam = true
-    document.getElementById('moinsvite').addEventListener('click',foncPourVitAvantLancement,false);
-    document.getElementById('moinsvite').myParam = false
+    document.getElementById('plusvite').addEventListener('click',foncPourVitPlusAvantLancement,false);
+    document.getElementById('moinsvite').addEventListener('click',foncPourVitMoinsAvantLancement,false);
 }
 
-function foncPourVitAvantLancement(){
-	if(accelerer.currentTarget.myParam){
-		compteurVitesseAvantLancement += 1
-	}
-	else{
-		compteurVitesseAvantLancement -= 1
-	}
-	document.getElementById('nsimtxt').innerHTML= "ns="+ compteurVitesseAvantLancement.toString();
+function foncPourVitMoinsAvantLancement(){
+	compteurVitesseAvantLancement -= 1
+	compteurVitesse-=1;
+	document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesse).toString();
+}
+
+function foncPourVitPlusAvantLancement(){
+	compteurVitesseAvantLancement += 1
+	compteurVitesse+=1;
+	document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesse).toString();
 }
 
 /**

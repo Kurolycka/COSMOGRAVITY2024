@@ -162,10 +162,8 @@
 				<label  id="labelgp" for="vr"></label>
 				<input id="toggle" type="checkbox"  checked>
 			</span>
-			<label id="label_temps_allumage" for="temps_allumage" style="display: none;"></label> <!--ManonV3-->
-			<input id="temps_allumage" value="50" type="text" size="5" style="display: none;"> <!--ManonV3-->
-			<label id="label_puissance_reacteur" for="puissance_reacteur" style="display: none;"></label> <!--ManonV3-->
-			<input id="puissance_reacteur" value="100" type="text" size="5" style="display: none;"> <!--ManonV3-->
+			<label id="label_pourcentage_vphi_pilotage" for="pourcentage_vphi_pilotage" style="display: none;"></label>
+			<input id="pourcentage_vphi_pilotage" value="0.03" type="text" size="5" style="display: none;">
 		</div>
 
 		<div id="radio_button">
@@ -227,7 +225,7 @@
 
 		<!-- Panneau mobile zoom -->
 		<div id="panneau_mobile2" >			
-			<label id="nzoomtxt" for="nzoom" style="border: 1px solid rgb(175, 175, 175); padding: 5px; border-radius: 25% ; ">nz=0</label>
+			<label id="nzoomtxt" for="nzoom" style="border: 1px solid rgb(175, 175, 175); padding: 5px; border-radius: 25% ; ">zoom=0</label>
 			<span id="moinszoom">
 				<img id="moinsvi1" src="Images/moins.png" class="bouton_mobile" title="Zoom (-)">
 			</span>
@@ -251,7 +249,7 @@
 			<span id="plusvite">
 				<img id="plusvi" src="Images/rapide.png" class="bouton_mobile" title="Accélérer (attention, réduit la précision)">
 			</span>
-			<label id="nsimtxt" for="nzoom" style="border: 1px solid rgb(175, 175, 175);  padding: 5px; border-radius: 25% ;">ns=0</label>		
+			<label id="nsimtxt" for="nzoom" style="border: 1px solid rgb(175, 175, 175);  padding: 5px; border-radius: 25% ;">simu=0</label>		
 		</div>
 
 		<div id="cccccccc">
@@ -291,19 +289,15 @@
         var btnSpationaute = document.getElementById("r4");
         var inputNbfusees = document.getElementById("nombredefusees");
 		var labelNbfusees = document.getElementById("labelnumberfusees");
-		var labelTempsAllumage = document.getElementById("label_temps_allumage"); //ManonV3
-		var inputTempsAllumage = document.getElementById("temps_allumage"); //ManonV3
-		var labelPuissanceReacteur = document.getElementById("label_puissance_reacteur"); //ManonV3
-		var inputPuissanceReacteur = document.getElementById("puissance_reacteur"); //ManonV3
+		var labelPourcentageVphiPilotage = document.getElementById("label_pourcentage_vphi_pilotage");
+		var inputPourcentageVphiPilotage = document.getElementById("pourcentage_vphi_pilotage");
 
         // Ajouter des écouteurs d'événements pour les boutons
         btnObervateur.addEventListener("click", function() {
 			inputNbfusees.style.display = "inline"; // Afficher le input et le label de nbfusees si button observateur est cliqué 
 			labelNbfusees.style.display = "inline"; 
-			labelTempsAllumage.style.display = "none"; //ManonV3
-			inputTempsAllumage.style.display = "none"; //ManonV3
-			labelPuissanceReacteur.style.display = "none"; //ManonV3
-			inputPuissanceReacteur.style.display ="none"; //ManonV3
+			labelPourcentageVphiPilotage.style.display = "none";
+			inputPourcentageVphiPilotage.style.display = "none";
         });
 
         btnSpationaute.addEventListener("click", function() {
@@ -323,10 +317,8 @@
 
 			inputNbfusees.style.display = "none"; // Masquer le input et le label de nbfusees si button spationaute est cliqué 
 			labelNbfusees.style.display = "none";
-			labelTempsAllumage.style.display = "inline"; //ManonV3
-			inputTempsAllumage.style.display = "inline"; //ManonV3
-			labelPuissanceReacteur.style.display = "inline"; //ManonV3
-			inputPuissanceReacteur.style.display = "inline"; //ManonV3
+			labelPourcentageVphiPilotage.style.display = "inline";
+			inputPourcentageVphiPilotage.style.display = "inline";
         });
 
 

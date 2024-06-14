@@ -328,15 +328,20 @@
 	"dernier_g_infobulle":"Last number of g ≠ 0 felt by the pilot with 1g = 9.81m/s². Valid only for Newtonian mechanics.",
 	"distance_metrique_parcourue":"D(m)",
 	"distance_metrique_parcourue_infobulle":"Metric distance traveled by the mobile since the initial moment.",
-	"temps_allumage_label":"T<sub>ignition</sub> (ms) =",
-	"temps_allumage_infobulle":"Engine ignition time when V\u1D69+ or V\u1D69- is clicked.",
-	"puissance_reacteur_label":"P (W/kg) =",
-	"puissance_reacteur_infobulle":"Reactor power per unit mass.",
+	"pourcentage_vphi_pilotage_label" : "X=",
+	"pourcentage_vphi_infobulle" : "Percentage of the tangential speed used for piloting.",
 	"puissance_consommee_label":"P<sub>consumed</sub> (W/kg)",
-	"puissance_consommee_infobulle":"Total power consumed by reactors in W/kg.",
+	"puissance_consommee_infobulle":"Instantaneous power consumed by reactors in W/kg.",
 	"alerte_v0_superieure_c" : "Be careful, your speed v0 is greater than c.",
 	"alerte_r0_inferieure_rs" : "Be careful, your initial distance from the center of the celestial body r0 is smaller than the Schwarzschild's radius.",
 	"alerte_singularite_non_baryonique" : "Particle stops, calculations are not stable, try to slow down next time."
+	"alerte_verifier_r0" : "Be careful, please check the entry in r₀.",
+	"alerte_verifier_M" : "Be careful, please check the entry in M.",
+	"alerte_verifier_v0" : "Be careful, please check the entry in v₀.",
+	"alerte_verifier_phi0" : "Be careful, please check the entry in the angle of the initial position.",
+	"alerte_verifier_teta" : "Be careful, please check the entry in ɸ₀.",
+	"alerte_verifier_rphy" : "Be careful, please check the entry in the physical radius.",
+	"alerte_verifier_J" : "Be careful, please check the entry in the angular momentum J."
 },
 
 "page_trajectoire_massive":{
