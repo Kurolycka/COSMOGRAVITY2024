@@ -9,12 +9,14 @@ var G = 6.67385 * Math.pow(10, -11);
 var title = "V(r)/c²";		  
 var clicks = 0;
 var nzoom=0;
-var ns_avant_lancement=0;
+var nz_avant_lancement=0;
 var facteurDeMalheur;
 var fact_defaut;
 
 var factGlobalAvecClef ;//pour l'échelle avant lancement
 var compteurVitesseAvantLancement = 0;
+var compteurVitesse = 0;
+var compteurVitesseAvantLancement =0; 
 
 
 // -------------------------------------{Variables globales, key values}--------------------------------------------
@@ -59,7 +61,7 @@ ifUneFois3=true
 //puis j'ai fait de sorte que ça remplace setinterval et ça marche 1000x mieux
 
 class Timer {
-    constructor(funct, delayMs, times) {
+    constructor(funct,compteur,delayMs, times) {
         if (times === undefined) times = -1;
         if (delayMs === undefined) delayMs = 10;
 
@@ -68,7 +70,8 @@ class Timer {
         this.timesCount = 0;
         this.ticks = (delayMs / 10) | 0;
         this.count = 0;
-        Timer.instances.push(this);
+		this.compteur=compteur
+        Timer.instances[this.compteur]=this;
     }
 
     tick() {
@@ -86,18 +89,15 @@ class Timer {
     }
 
     stop() {
-        const index = Timer.instances.indexOf(this);
-        Timer.instances.splice(index, 1);
-    }
-}
+        delete Timer.instances[this.compteur];}}
 
-Timer.instances = [];
+Timer.instances = {};
 Timer.paused = false;
 
 
 Timer.ontick = function () {
     if (!Timer.paused) {
-        for (const instance of Timer.instances) {
+        for (const instance of Object.values(Timer.instances)) {
             instance.tick();
         }
     }
@@ -138,6 +138,11 @@ function lancerDeFusees(fuseecompteur){
 
 	document.getElementById("pause/resume").addEventListener("click", function() {
         pausee()}); //ajouté Là par Khaled car le fonctionnement du button à ete changé
+
+	//Associe au bouton pause la fonction pausee permettant de mettre la simulation en pause : 
+	 document.getElementById('bouton_pause').addEventListener('click', function() {
+		pausee();
+	});
 }
 
 // -------------------------------------{fonction supprHtml}--------------------------------------------
@@ -204,7 +209,7 @@ function genereHtml(){
 		newinput.setAttribute("maxlength","11");
 		newinput.setAttribute("type","text");
 		newinput.setAttribute("size","10");
-		newinput.setAttribute("onChange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
+		newinput.setAttribute("onchange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
 		span.appendChild(newinput);
 	}
 
@@ -227,7 +232,7 @@ function genereHtml(){
 		newinput.setAttribute("maxlength","10");
 		newinput.setAttribute("type","text");
 		newinput.setAttribute("size","10");
-		newinput.setAttribute("onChange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
+		newinput.setAttribute("onchange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
 		span.appendChild(newinput);
 	}	
 
@@ -254,7 +259,7 @@ function genereHtml(){
 		newinput.setAttribute("maxlength","10");
 		newinput.setAttribute("type","text");
 		newinput.setAttribute("size","5");
-		newinput.setAttribute("onChange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
+		newinput.setAttribute("onchange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
 		span.appendChild(newinput);
 	}
 
@@ -318,8 +323,7 @@ function genereHtml(){
 					<th id="vitesseur`+countt.toString()+`" title="" class="tg-aicv"  >V<SUB>r</SUB>(m.s<sup>-1</sup>) </th>
 					<th id="vitesseuphi`+countt.toString()+`" title="" class="tg-aicv"  >V<SUB>&phi;</SUB>(m.s<sup>-1</sup>)</th>
 					<th id="temps_obs`+countt.toString()+`" class="tg-aicv"></th>
-					<th id="v_total`+countt.toString()+`" class="tg-aicv">V<SUB>physique</SUB> (m.s<sup>-1</sup>)</th>
-					<th id="distance_metrique`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>`; //ManonGeneralisation
+					<th id="v_total`+countt.toString()+`" class="tg-aicv">V<SUB>physique</SUB> (m.s<sup>-1</sup>)</th>`; 
 
 		var newRow2=document.getElementById('tableauresultatsimu').insertRow();
 
@@ -330,8 +334,7 @@ function genereHtml(){
 					<td class="tg-3ozo" id="vr_sc_mas`+countt.toString()+`">res</td>
 					<td class="tg-3ozo" id="vp_sc_mas`+countt.toString()+`">res</td>
 					<td class="tg-3ozo" id="to`+countt.toString()+`">res</td>
-					<td class="tg-3ozo" id="v_tot`+countt.toString()+`">res</td>
-					<td class="tg-3ozo" id="distance_parcourue`+countt.toString()+`" style="display: none;">res</td>`; //ManonGeneralisation
+					<td class="tg-3ozo" id="v_tot`+countt.toString()+`">res</td>`; 
 
 	}
 
@@ -444,10 +447,6 @@ function initialisation(compteur){
 	mobile["pointsvg"]="pointg"+compteur.toString();
 	mobile["graphesvg"]="#grsvg_"+compteur.toString();
 
-	//J'associe les variables permettant de déclarer si je suis arrêtée ou pas et si je peux relancer la simulation à mon objet mobile :
-	mobile["onestarrete"]=0;
-	mobile["peuxonrelancer"]=true;
-
 	//J'initialise et j'associe d'autres variables à mon objet mobile : 
 	mobile["rmax"]=rmax; //Ma position radiale maximale atteinte. 
 	mobile["blups"]=0;
@@ -459,6 +458,9 @@ function initialisation(compteur){
 	mobile["red"]=couleurs[0];
 	mobile["green"]=couleurs[1];
 	mobile["blue"]=couleurs[2];
+
+	mobile["condition_trace"]=true //Cette condition c'est pour arreter le tracer et l'affichage quand on en a besoin.
+
 
 	rmaxjson[compteur]=rmax; // Je stocke dans la liste rmaxjson à la clé associée à ce mobile la position radiale maximale atteinte.
 	mobilefactor[compteur]=scale_factor; //Je stocke dans la liste mobilefactor à la clé associée à ce mobile le facteur d'échelle.
@@ -553,46 +555,65 @@ function initialisation(compteur){
 	return mobile; //Je récupère au final de cette fonction l'objet mobile correctement initialisé.
 }  
 
-// -------------------------------------{fonction verifnbr}--------------------------------------------
+//----------------------------------------------------{verifnbr}----------------------------------------------------
 
-function verifnbr() {//fonction qui affiche un message d'erreur si des valeurs ne sont pas donnée dans l'une des cases
+/**
+ * Fonction qui affiche un message d'erreur si une saisie n'est pas un nombre dans un des champs. 
+ */
+function verifnbr() {
+
+	var texte = o_recupereJson(); //Pour les messages d'alerte.
   
-	r_phy = document.getElementById("r_phy").value;
-	M = document.getElementById("M").value;
-	var onebolean=false;
-	var twobolean=false;
-	var threebolean=false;
+	//Je récupère les données remplies par l'utilisateur :
+	r_phy = document.getElementById("r_phy").value; //Le rayon physique.
+	M = document.getElementById("M").value; //La masse de l'astre. 
+	nbredefuseesverifnbr = Number(document.getElementById("nombredefusees").value); //Le nombre de mobiles. 
 
-	var sddsdsddss = Number(document.getElementById("nombredefusees").value);
-	for (countetttt = 1; countetttt <= sddsdsddss; countetttt += 1) {
-			var r0verifnbr = Number(document.getElementById("r0"+countetttt.toString()+"").value); 
-			var vphiverifnbr =  Number(document.getElementById("phi0"+count.toString()+"").value);
-			var vrverifnbr = Number(document.getElementById("teta"+count.toString()+"").value);
-			if(isNaN(r0verifnbr)){
-				onebolean=true;
+	//Pour stocker dans des variables si un des champs n'est pas un nombre pour un mobile :
+	var oneboolean=false;
+	var twoboolean=false;
+	var threeboolean=false;
+	var indice = 0; //Pour récupérer sur quel mobile il y a une erreur de saisie.
+
+	for (count = 1; count <= nbredefuseesverifnbr; count += 1) { //Pour chaque mobile :
+			//Je récupère la distance initiale au centre de l'astre r0, l'angle de la position et l'angle de la vitesse : 
+			var r0verifnbr = Number(document.getElementById("r0"+count.toString()+"").value); 
+			var phi0verifnbr =  Number(document.getElementById("phi0"+count.toString()+"").value);
+			var tetaverifnbr = Number(document.getElementById("teta"+count.toString()+"").value);
+
+			if(isNaN(r0verifnbr)){ //Si un seul des mobiles n'a pas de nombre pour r0 alors oneboolean est true. 
+				oneboolean=true;
+				indice=count;
 			}
-			if(isNaN(vphiverifnbr)){
-				twobolean=true;
+			if(isNaN(phi0verifnbr)){ //Si un seul des mobiles n'a pas de nombre pour l'angle de position initiale alors twoboolean est true.
+				twoboolean=true;
+				indice=count;
 			}
-			if(isNaN(vrverifnbr)){
-				threebolean=true;
+			if(isNaN(tetaverifnbr)){ //Si un seul des mobiles n'a pas de nombre pour l'angle de vitesse initiale alors threeboolean est true.
+				threeboolean=true;
+				indice=count;
 			}
 	}
 
-	if (onebolean){
-		alert ("Veuillez vérifier vos saisie en r0");}
-
-	if (twobolean){
-		alert ("Veuillez vérifier vos saisie en Vphi");
+	if (oneboolean){ //Si un seul des mobiles n'a pas un nombre pour r0.
+		alert(texte.pages_trajectoire.alerte_verifier_r0);
+		document.getElementById("r0"+indice.toString()).value=1.7685e11.toExponential(4);
 	}
-	if (threebolean){
-		alert ("Veuillez vérifier vos saisie en Vr");
+	if (twoboolean){ //Si un seul des mobiles n'a pas un nombre pour phi0.
+		alert(texte.pages_trajectoire.alerte_verifier_phi0);
+		document.getElementById("phi0"+indice.toString()).value=-10;
 	}
-	if (isNaN(r_phy)){
-		alert ("Veuillez vérifier vos saisie en r physique");
+	if (threeboolean){ //Si un seul des mobiles n'a pas un nombre pour teta.
+		alert(texte.pages_trajectoire.alerte_verifier_teta);
+		document.getElementById("teta"+indice.toString()).value=190;
 	}
-	if (isNaN(M)){
-		alert ("Veuillez vérifier vos saisie en M");																
+	if (isNaN(r_phy)){ //Si il n'y a pas un nombre pour le rayon physique de l'astre.
+		alert(texte.pages_trajectoire.alerte_verifier_rphy);
+		document.getElementById("r_phy").value=0;
+	}
+	if (isNaN(M)){ //Si il n'y a pas un nombre pour la masse de l'astre.
+		alert(texte.pages_trajectoire.alerte_verifier_M);		
+		document.getElementById("M").value=8e36.toExponential(0);													
 	}
   
 }
@@ -657,25 +678,6 @@ function trajectoire(compteur,mobile) {
 
 		element2=document.getElementById('traject_type2'); //Récupère la valeur de si on est en mode observateur ou en mode photon.
 
-		var distance_metrique_cell = document.querySelectorAll('[id^="distance_metrique"]'); //Permet d'identifier toutes les cellules de label de la distance métrique.
-		var distance_metrique_res_cell = document.querySelectorAll('[id^="distance_parcourue"]'); //Permet d'identifier toutes les cellules de la distance métrique.
-
-		if (element2.value == "mobile") { //Si en mode photon, permet de révéler les cases de la distance métrique.
-			distance_metrique_cell.forEach(function(cell) { 
-				cell.style.display = ''; 
-			});
-			distance_metrique_res_cell.forEach(function(cell) {
-				cell.style.display = ''; 
-			});
-		} else {
-			distance_metrique_cell.forEach(function(cell) {
-				cell.style.display = 'none';
-			});
-			distance_metrique_res_cell.forEach(function(cell) {
-				cell.style.display = 'none'; 
-			});
-		}
-
     	document.getElementById('trace_present').value="true"; //Permet de déclarer qu'il y a un tracé. 
 
     	mobile.pause = false; //Permet de dire que nous ne sommes pas en pause.
@@ -729,9 +731,6 @@ function trajectoire(compteur,mobile) {
 		A_init_obs = mobile.vr*(1-rs/mobile.r0)/mobile.E; //Je multiplie par dτ/dt pour passer le dr/dτ en observateur. 
 		A_part_obs=A_init_obs; 
 		mobile["A_part_obs"]=A_part_obs; 
-
-		distance_parcourue_totale=0; //J'initialise la distance parcourue totale par le mobile dans son propre référentiel. 
-		mobile["distance_parcourue_totale"]=distance_parcourue_totale; //La distance totale parcourue devient une valeur spécifique au mobile. 
 	
     	temps_particule = 0; //J'initialise le temps dans le référentiel du mobile. 
     	mobile["temps_particule"]=temps_particule;
@@ -792,7 +791,7 @@ function trajectoire(compteur,mobile) {
 		posY2 = posY3 + y1obs;
     	mobile["position"]={posX2:posX2, posY2:posY2} 
 		
-		new Timer(() => animate(compteur,mobile,mobilefactor), 1, -1); //Créé un nouvel objet Timer qui répète la fonction animate toutes les 1s indéfiniment. 
+		new Timer(() => animate(compteur,mobile,mobilefactor),compteur, 1, -1); //Créé un nouvel objet Timer qui répète la fonction animate toutes les 1s indéfiniment. 
 		//animate calcule les coordonnées de la particule à chaque instant.
 
 		document.getElementById('enregistrer2').addEventListener('click', function() { //Lorsque l'on clique sur enregistrer cela permet d'avoir la boule de la particule sur l'enregistrement.
@@ -817,8 +816,8 @@ function trajectoire(compteur,mobile) {
 
 		//--------------------------------Gestion des boutons d'accélération/décélération--------------------------------
 
-		document.getElementById('plusvite').removeEventListener('click',foncPourVitAvantLancement,false); //Je désassocie la fonction foncPourVitAvantLancement du bouton pour accélérer une fois la simulation commencée.
-		document.getElementById('moinsvite').removeEventListener('click',foncPourVitAvantLancement,false) //Je désassocie la fonction foncPourVitAvantLancement du bouton pour décélérer une fois la simulation commencée.
+		document.getElementById('plusvite').removeEventListener('click',foncPourVitPlusAvantLancement,false); //Je désassocie la fonction foncPourVitAvantLancement du bouton pour accélérer une fois la simulation commencée.
+		document.getElementById('moinsvite').removeEventListener('click',foncPourVitMoinsAvantLancement,false) //Je désassocie la fonction foncPourVitAvantLancement du bouton pour décélérer une fois la simulation commencée.
 
 		Dtau1 = 1e8 * dtau ; //Pour permettre une accélération.
 		mobile["Dtau1"]=Dtau1; //Pour associer ce Dtau1 à un mobile spécifique.
@@ -829,14 +828,14 @@ function trajectoire(compteur,mobile) {
 		document.getElementById('plusvite').addEventListener('click', function() { //J'associe le bouton accélérer à la fonction suivante une fois la simulation lancée. 
 			mobile=bouttons.vitesse(mobile,true); //J'accélère grâce à la fonction vitesse du fichier bouttons. 
 			compteurVitesseAvantLancement+=1/nbredefusees;
-			document.getElementById('nsimtxt').innerHTML= "ns="+ Math.round(compteurVitesseAvantLancement).toString(); //J'affiche le ns correspondant sur le site.
+			document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesseAvantLancement).toString(); //J'affiche le ns correspondant sur le site.
 		}, false);
 
 
 		document.getElementById('moinsvite').addEventListener('click', function() { //J'associe le bouton décélérer à la fonction suivante une fois la simulation lancée. 
 			mobile=bouttons.vitesse(mobile,false); //Je décélère grâce à la fonction vitesse du fichier bouttons. 
 			compteurVitesseAvantLancement-=1/nbredefusees;
-			document.getElementById('nsimtxt').innerHTML= "ns="+ Math.round(compteurVitesseAvantLancement).toString(); //J'affiche le ns correspondant sur le site.
+			document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesseAvantLancement).toString(); //J'affiche le ns correspondant sur le site.
 		}, false);
 
 
@@ -864,7 +863,7 @@ function trajectoire(compteur,mobile) {
 			majFondFixe44(mobile); //Je mets à jour tout ce qui est relié au dessin du mobile.
 			rafraichir2(context,mobilefactor,rmaxjson,maximum,compteur); //Redessine le rayon de SCH et si besoin l'astre sur un fond blanc avec les entrées à gauche. 
 			nzoom-=1/nbredefusees;
-			document.getElementById('nzoomtxt').innerHTML= "nz="+ Math.round(nzoom).toString(); //Mets à jour l'affichage du zoom sur le site. 
+			document.getElementById('nzoomtxt').innerHTML= "zoom="+ Math.round(nzoom).toString(); //Mets à jour l'affichage du zoom sur le site. 
 		}, false);
 
 
@@ -876,7 +875,7 @@ function trajectoire(compteur,mobile) {
 			majFondFixe44(mobile); //Je mets à jour tout ce qui est relié au dessin du mobile.
 			rafraichir2(context,mobilefactor,rmaxjson,maximum,compteur); //Redessine le rayon de SCH et si besoin l'astre sur un fond blanc avec les entrées à gauche.
 			nzoom+=1/nbredefusees;
-			document.getElementById('nzoomtxt').innerHTML= "nz="+ Math.round(nzoom).toString(); //Mets à jour l'affichage du zoom sur le site. 
+			document.getElementById('nzoomtxt').innerHTML= "zoom="+ Math.round(nzoom).toString(); //Mets à jour l'affichage du zoom sur le site. 
 		}, false);
 
 
@@ -888,7 +887,7 @@ function trajectoire(compteur,mobile) {
 			majFondFixe44(mobile); //Je mets à jour tout ce qui est relié au dessin du mobile.
 			rafraichir2(context,mobilefactor,rmaxjson,maximum,compteur); //Redessine le rayon de SCH et si besoin l'astre sur un fond blanc avec les entrées à gauche. 
 			nzoom=0;
-			document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString(); //Mets à jour l'affichage du zoom sur le site. 
+			document.getElementById('nzoomtxt').innerHTML= "zoom="+ nzoom.toString(); //Mets à jour l'affichage du zoom sur le site. 
 		}, false);
 
 
@@ -919,12 +918,12 @@ function trajectoire(compteur,mobile) {
     	}, false);
 
 		//Partie qui permet de mettre à l'échelle le dessin de l'astre et du rayon de SCH vis à vis des zooms avant le lancement de la simulation : 
-		if (ns_avant_lancement < 0) {
-			for (incr = 0; incr > ns_avant_lancement; incr -= 1) {
+		if (nz_avant_lancement < 0) {
+			for (incr = 0; incr > nz_avant_lancement; incr -= 1) {
 				mobilefactor[cle] = mobilefactor[cle] / 1.2;
 			}
-		} else if (ns_avant_lancement > 0) {
-			for (incr = 0; incr < ns_avant_lancement; incr += 1) {
+		} else if (nz_avant_lancement > 0) {
+			for (incr = 0; incr < nz_avant_lancement; incr += 1) {
 				mobilefactor[cle] = mobilefactor[cle] * 1.2;
 			}
 		}
@@ -966,7 +965,7 @@ function trajectoire(compteur,mobile) {
 								  
   	}
 	else { //Dans le cas où ce n'est pas le début de la simulation et où je ne suis pas en pause. 
-    	new Timer(() => animate(compteur,mobile,mobilefactor), 1, -1); //Créé un nouvel objet Timer qui répète la fonction animate toutes les 1s indéfiniment. 
+    	new Timer(() => animate(compteur,mobile,mobilefactor),compteur, 1, -1); //Créé un nouvel objet Timer qui répète la fonction animate toutes les 1s indéfiniment. 
 		//animate calcule les coordonnées de la particule à chaque instant. 
 	}
 
@@ -977,210 +976,246 @@ function trajectoire(compteur,mobile) {
 } 
 
 // -------------------------------------{animate}--------------------------------------------
-
+/**
+ * Fonction qui s'occupe de l'animation, tracé et calculs en cours, elle est appelé dans trajectoire() en utilisant un Timer. 
+ * @param {*} compteur : Numero du mobile 
+ * @param {*} mobile   : mobile en cours de calcul
+ * @param {*} mobilefactor : liste des facteurs pour l'echelle
+ */
 function animate(compteur,mobile,mobilefactor) {
-	mobile.onestarrete=0;
-	mobilefactor[compteur] = factGlobalAvecClef
-	SurTelephone();
-	element = document.getElementById('traject_type');
 
-	choixTrajectoire(compteur,context,mobilefactor,rmaxjson,maximum);
+	element = document.getElementById('traject_type'); // on recupere le boutton de type de trajectoire
+	var isrebond = document.getElementById("boutton_ammorti").value; // on recupere la valeur de la barre rebond		
+	element2=document.getElementById('traject_type2');		//on recupere le boutton de observateur ou mobile
 
-	var isrebond = document.getElementById("boutton_ammorti").value;
-	element2=document.getElementById('traject_type2');													 
+	mobilefactor[compteur] = factGlobalAvecClef //facteur pour l'echelle
+	SurTelephone();	//on verifie si on est sur telephone ou ordinateur										 
+	choixTrajectoire(compteur,context,mobilefactor,rmaxjson,maximum); // on vérifie le type de trajectoire sélectionné
 
-	if (mobile.r0 != 0.0) {
-		if (element2.value == "mobile"){ //photon
+	/*----------------------------------------------------------{{{{  CAS_OBSERVATEUR  }}}-----------------------------------------------------------*/
+
+	if (element2.value != "mobile") 
+	//Tout ce qui est dans cette condition concerne le cas du referentiel de l'observateur
+	{
+		/* La condition suivante c'est pour arreter le calcul à rs vu que R_phy > rs toujours : */
+		if (mobile.condition_trace)
+		{	
+			/*Cette condition gere la partie trou noir (R_phy=0), dans le cas d'un observateur lointain, on fait les calculs
+			jusqu'a rs puis au dela on met les valeurs aux quelles tendent les variables quand r tend vers rs. L'affichage et le tracé
+			s'arretent c'est pour ça que ya une variable pour cette condition, ya que temps_observateur qui continue*/
+			if (mobile.r_part_obs >rs*1.000001) //pas exactement rs pour eviter les problemes de calculs 
+			{
+				//-----------------------------------------------------PARTIE CALCULE-------------------------------------------------
+				val_obs = rungekutta_obs(mobile.E,mobile.L,mobile.dtau, mobile.r_part_obs, mobile.A_part_obs); //calcul de l'equation differentielle avec RK4 ça donne le r et dr/dlamda
+				mobile.r_part_obs = val_obs[0];///valeur de r calculée par RK (Runge Kutta)
+				mobile.A_part_obs = val_obs[1];//valeur de dr/dtau calculée par RK
+
+				/*Calcul des vitesses dans metrique externe de SCH qui retourne une liste de [v_tot,v_r,v_phi]  (Regarder le fichier 
+				Fonctions_utilitaires_trajectoire):*/
+				resultat=calculs.MSC_Ex_vitess(mobile.E,mobile.L,mobile.r_part_obs,rs,true);
+				 // calcul de v_tot
+				vtotal=resultat[0];
+				// calcul de v_r en utilisant la fontion de calcul des vitesse en prennant en compte le signe de la derivée donné par l'equation differentielle
+				vr_2_obs=resultat[1]*Math.sign(mobile.A_part_obs);
+				vp_2_obs=resultat[2]; //resulatas de v_phi avec le fichier de calcul de vitesses
+
+				varphi_obs = c * mobile.L * mobile.dtau*(1-rs/mobile.r_part_obs) / Math.pow(mobile.r_part_obs, 2)/mobile.E;//Calcul de la variation de l'angle phi pour l'ajouter à la valeur antérieure
+				mobile.phi_obs=mobile.phi_obs+varphi_obs; //on met à jour le l'angle phi apres avoir calculé le var_phi
+
+				/*Calcul de la postion [X,Y] (noramilisées) pour dessiner dans le canva (tracé) */
+				mobile.position.posX2 = mobilefactor[compteur] * mobile.r_part_obs * (Math.cos(mobile.phi_obs) / rmax) + (canvas.width / 2.);  
+				mobile.position.posY2 = mobilefactor[compteur] * mobile.r_part_obs * (Math.sin(mobile.phi_obs) / rmax) + (canvas.height / 2.);	
+
+			}
+
+			else /* La condition pour s'arreter à rs */
+			{
+				/*Cette conditions arrete les calculs et attribue les dernieres valeurs qu'il faut */
+				if(mobile.r_part_obs!=rs) //Comme ça on rentre qu'une seule fois dans cette condition 
+				{
+					mobile.r_part_obs=rs; //condition pour que r soit excatement rs 
+					/*Pour ce qui suit on met ça à la main car on sait que theoriquement ça tend vers ces valeurs */
+					vp_2_obs=0 ;
+					vtotal=vr_2_obs=c; 
+					mobile.condition_trace=false; //on met cette condition à false pour le mobile pour l'arreter le tracé,calculs,et affichage à rs 
+				}
+			}
+			//-----------------------------------------------------PARTIE AFFICHAGE-------------------------------------------------
 			
-	
+			/*Affichage de toutes les variables dans le tableau */
+			document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part_obs.toExponential(3);//rayon
+			document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3);//temps photon (nul des le debut pas de calcul)
+			document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_2_obs.toExponential(3); //vitesse angulaire (v_phi)
+			document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_2_obs.toExponential(3);//vitesse radiale (v_r)
+			document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(8); // vitesse totale (module)
+
+			//-----------------------------------------------------PARTIE TRACÉ-------------------------------------------------
+			//Dessin du tracé derriere la particule
+			context.beginPath();//on ouvre le context
+			context.fillStyle = mobile.couleur;//on choisit la couleur pour remplir parce que c'est fill
+			context.rect(mobile.position.posX2, mobile.position.posY2, 1, 1); //on dessine le tracé
+			context.lineWidth = "1";//en choisissant la bonne largeur des traits
+			context.fill();//on le met sur le canva
+
+			majFondFixe44(mobile);// on efface l'ancienne position de la boule
 			
-			val = rungekutta(mobile.L,mobile.dtau, mobile.r_part, mobile.A_part);
-			mobile.r_part = val[0];
-			mobile.A_part = val[1];
-			resultat=calculs.MSC_Ex_vitess(mobile.E,mobile.L,mobile.r_part,rs,true); /// voir fichier fonctions.j 
-			vtotal=resultat[0];
-			mobile.phi = mobile.phi + c * mobile.L * mobile.dtau / Math.pow(mobile.r_part, 2);
-			vr_2=resultat[1]*Math.sign(mobile.A_part);  
-			vp_2=resultat[2];
-			
-
-		}
-		else{
-			varphi_obs = c * mobile.L * mobile.dtau*(1-rs/mobile.r_part_obs) / Math.pow(mobile.r_part_obs, 2)/mobile.E; 
-			mobile.phi_obs=mobile.phi_obs+varphi_obs;
-			val_obs = rungekutta_obs(mobile.E,mobile.L,mobile.dtau, mobile.r_part_obs, mobile.A_part_obs);
-			mobile.r_part_obs = val_obs[0];
-			mobile.A_part_obs = val_obs[1];
-			resultat=calculs.MSC_Ex_vitess(mobile.E,mobile.L,mobile.r_part_obs,rs,true); /// voir fichier fonctions.j 
-			vtotal=resultat[0];
-			if(mobile.r_part_obs<rs*1.0001) { mobile.r_part_obs=rs;}
-			vr_2_obs=resultat[1]*Math.sign(mobile.A_part_obs); 
-			vp_2_obs=resultat[2]; 
-
-			
-		}
-      
-
-    //On ne devrait pas mettre a jour les positions x et y ici? au lieu de plus loin
-    //Tracé de la particule
-
-    if (element2.value != "mobile"){
-		if (mobile.r_part_obs >= rs){
-			context.beginPath();
-			context.fillStyle = mobile.couleur;
-			context.rect(mobile.position.posX2, mobile.position.posY2, 1, 1);
-			context.lineWidth = "1";
-			context.fill();
-			majFondFixe44(mobile);
+		    //On dessine la boule bleue avec les meme etapes
 			mobile["context22"].beginPath();
 			mobile["context22"].fillStyle = COULEUR_BLEU;
 			mobile["context22"].arc(mobile.position.posX2, mobile.position.posY2 , 5, 0, Math.PI * 2);
 			mobile["context22"].lineWidth = "1";
 			mobile["context22"].fill();
-    	}
-    }
-	else{
-		context.beginPath();
-		context.fillStyle = mobile.couleur;
-		context.rect(mobile.positionspatio.posX1, mobile.positionspatio.posY1, 1, 1);
-		context.lineWidth = "1";
-		context.fill();
-		majFondFixe44(mobile);
-		mobile["context22"].beginPath();
-		mobile["context22"].fillStyle = COULEUR_BLEU;
-		mobile["context22"].arc(mobile.positionspatio.posX1, mobile.positionspatio.posY1 , 5, 0, Math.PI * 2);
-		mobile["context22"].lineWidth = "1";
-		mobile["context22"].fill();
-    }
-
-
-// conditions pour le rebond
-
-	if(element2.value != "mobile"){
-		if (mobile.r_part_obs <= r_phy ) {
-			if (isrebond == 1 && r_phy > 0) {
 		
-				mobile.A_part_obs = -mobile.A_part_obs ;
-			} 
-			if(isrebond == 0 && r_phy!=0 && mobile.r_part_obs <= r_phy){
-				//alert(texte.pages_trajectoire.particule_ecrasee);
-				mobile.onestarrete=1;
-				arret(mobile);
-				mobile.peuxonrelancer=false;
-			}	
-		}
-		
-	}else{	
-		if (mobile.r_part <= r_phy || mobile.r_part==0) {
-			if (isrebond == 1 && r_phy > 0) {
-				mobile.A_part = -mobile.A_part ;
-			}	
-			if(isrebond == 0 && r_phy!=0 && mobile.r_part <= r_phy){
-				//alert(texte.pages_trajectoire.particule_ecrasee);
-				mobile.onestarrete=1;
-				arret(mobile);
-				mobile.peuxonrelancer=false;
-			}	     
-		}
-	}	
-	mobile.positionspatio.posX1 = mobilefactor[compteur] * mobile.r_part * (Math.cos(mobile.phi) / rmax) + (canvas.width / 2.);  // rmax pas mobile.rmax <-----  JPC
-    mobile.positionspatio.posY1 = mobilefactor[compteur] * mobile.r_part * (Math.sin(mobile.phi) / rmax) + (canvas.height / 2.);  // rmax pas mobile.rmax <-----  JPC
-	mobile.position.posX2 = mobilefactor[compteur] * mobile.r_part_obs * (Math.cos(mobile.phi_obs) / rmax) + (canvas.width / 2.);  // rmax pas mobile.rmax <-----  JPC
-    mobile.position.posY2 = mobilefactor[compteur] * mobile.r_part_obs * (Math.sin(mobile.phi_obs) / rmax) + (canvas.height / 2.);	// rmax pas mobile.rmax <-----  JPC
-	
-	
-	if (element2.value != "mobile"){	
-		V = Vr_obs(mobile.E,mobile.L,mobile.r_part_obs);
-		data2 = [];
-		data2.push({date: mobile.r_part_obs, close: V });
-		if(mobile.point !== undefined){
-			update_graphique_2(mobile.point,data2,mobile);
-		}
+			//-----------------------------------------------------PARTIE TRACÉ POTENTIEL -------------------------------------------------
 
-	}else{
-		V = Vr_mob(mobile.L,mobile.r_part);
-		data2 = [];
-		data2.push({date: mobile.r_part, close: V });
-		if(mobile.point !== undefined){update_graphique_2(mobile.point,data2,mobile);}	
-	}
+			V = Vr_obs(mobile.E,mobile.L,mobile.r_part_obs);//on stocke la valeur du (Poteniel-1) avec les valeurs actuelles
+			data2 = [];//on vide la liste qu'on va à la fonction update_graphique_2()
+			data2.push({date: mobile.r_part_obs, close: V }); //on mets les les valeurs  dans data2 
+			if(mobile.point !== undefined){update_graphique_2(mobile.point,data2,mobile);}//puis on les dessine si le point est defini
 
-
-    // pour éviter d'avoir des surprises sur le dernier calcul avant la fin
-    if(mobile.r_part<0){  
-      mobile.r_part=0;
-    }
-
-
- //  Les différents "temps" et autres valeurs à afficher
-	if (element2.value != "mobile"){  //observateur
-		if(mobile.r_part_obs >= rs*1.000001){
-			mobile.temps_particule =0; 
-			mobile.temps_observateur_distant+= mobile.dtau;
-			document.getElementById("to"+compteur.toString()).innerHTML = mobile.temps_observateur_distant.toExponential(3);
-			document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part_obs.toExponential(3);
-			document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3);
-			document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_2_obs.toExponential(3);
-			document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_2_obs.toExponential(3);
-			document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(8);
-			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation
+			//-----------------------------------------------------GESTION REBOND-------------------------------------------------
 			
-		} else {
-				mobile.temps_observateur_distant += mobile.dtau;
-				mobile.r_part_obs=rs;
-				vr_2_obs=c ; vp_2_obs=0 ; vtotal=c ;
-				document.getElementById("to"+compteur.toString()).innerHTML = mobile.temps_observateur_distant.toExponential(3);
-				document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(8); 
-				document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part_obs.toExponential(3);
-				document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_2_obs.toExponential(3);
-				document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_2_obs.toExponential(3); 
-				document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation
+			if (mobile.r_part_obs <= r_phy ) 
+			{
+				/*Si ya un rebond on change de sens pour la vitesse */
+				if (isrebond == 1 && r_phy > 0)
+				{
+					mobile.A_part_obs = -mobile.A_part_obs ;
+				} 
+				/*Si ya pas de rebond on stope le mobile sur l'astre*/
+				if(isrebond == 0 && r_phy!=0 && mobile.r_part_obs <= r_phy)
+				{
+					Timer.instances[compteur].stop(); //on stope le Timer du mobile concerné 	
 
-		}
-	}
-	else{  //photon
-	
-		if (mobile.r_part>0){
-			mobile.temps_particule+=0;
-			//document.getElementById("ga"+compteur.toString()).innerHTML = '';
-			document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3);
-			document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_2.toExponential(3);
-            document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_2.toExponential(3);
-			document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(8);
-		    document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part.toExponential(3);
-			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation
-			
-			if(mobile.r_part<=rs){
-				document.getElementById("v_tot"+compteur.toString()).innerHTML ="";
-				document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = "";
-				document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = "";
-				document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation
+				}	
+				
 			}
-		} 
-		else {
-			mobile.r_part=0;
-			document.getElementById("ga"+compteur.toString()).innerHTML = '';
-			document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part.toExponential(3);
-			if(mobile.L!=0) { 
+			
+		}
+
+		/*Le temps observateur est calculé meme quand on rentre dans le trou noir ( r < rs ) */
+		mobile.temps_observateur_distant += mobile.dtau //le calcul temps observateur est toujours calculé et affiché sauf si la simulation s'arrete
+		document.getElementById("to"+compteur.toString()).innerHTML = mobile.temps_observateur_distant.toExponential(3); //affichage
+			
+	}
+
+	/*----------------------------------------------------------{{{{  CAS_PHOTON }}}-----------------------------------------------------------*/
+	else
+	//Tout ce qui est dans cette condition concerne le cas du referentiel du photon
+	{
+		if (mobile.r_part > 0) 
+		{
+			//-----------------------------------------------------PARTIE CALCULE-------------------------------------------------
+			//MEMES ETAPES QUE LA PARTIE OBSERVATEUR
+			val = rungekutta(mobile.L,mobile.dtau, mobile.r_part, mobile.A_part);
+			mobile.r_part = val[0]; //calcul de r
+			mobile.A_part = val[1]; //calcul de sa derivée
+			/*Calcul des vitesses avec le fichier fonctions utilitaires*/
+			resultat=calculs.MSC_Ex_vitess(mobile.E,mobile.L,mobile.r_part,rs,true); /// voir fichier fonctions.j 
+			
+			vtotal=resultat[0]; //vitesse totale (module)
+			vr_2=resultat[1]*Math.sign(mobile.A_part); //vitesse radiale  
+			vp_2=resultat[2]; //vitesse angulaire
+
+			mobile.phi = mobile.phi + c * mobile.L * mobile.dtau / Math.pow(mobile.r_part, 2);//calcul de l'angle
+
+			/*Calcul de la postion [X,Y] (noramilisées) pour dessiner dans le canva (tracé) */
+			mobile.positionspatio.posX1 = mobilefactor[compteur] * mobile.r_part * (Math.cos(mobile.phi) / rmax) + (canvas.width / 2.);  // rmax pas mobile.rmax <-----  JPC
+			mobile.positionspatio.posY1 = mobilefactor[compteur] * mobile.r_part * (Math.sin(mobile.phi) / rmax) + (canvas.height / 2.);  // rmax pas mobile.rmax <-----  JPC
+
+			mobile.temps_observateur_distant += mobile.dtau //calcul temps_observateur
+
+			//-----------------------------------------------------PARTIE AFFICHAGE-------------------------------------------------
+		    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> AVANT RS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+			if(mobile.r_part>rs*1.000001) //pas exactement rs pour eviter les problemes de calculs 
+			{
+				document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3);//temps mobile
+				document.getElementById("to"+compteur.toString()).innerHTML = mobile.temps_observateur_distant.toExponential(3);//temps observateur
+				document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part.toExponential(3); //rayon
+				document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_2.toExponential(3);//vitesse radiale (v_r)
+				document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_2.toExponential(3);//vitesse angulaire (v_phi)
+				document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(8);// vitesse totale (module)
+			}
+			
+            //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> APRES RS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+			
+			/*On affiche les valeurs aux quelles tendent les variables theoriquement:*/
+			else
+			{
+				document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part.toExponential(3);
 				document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML="";
 				document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML="";  
+				document.getElementById("v_tot"+compteur.toString()).innerHTML ="";
+				document.getElementById("to"+compteur.toString()).innerHTML = 1/0;
+				document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3);
 			}
-			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //ManonGeneralisation				
-      	}  
+	
+			//-----------------------------------------------------PARTIE TRACÉ-------------------------------------------------
+			//Dessin du tracé derriere la particule
+			context.beginPath();//on ouvre le context
+			context.fillStyle = mobile.couleur;//on choisit la couleur pour remplir parce que c'est fill
+			/*On dessine avec ce qu'on a calculé que si r n'est pas negatif (audela de rs ça donne n'importe quoi) */
+			if(mobile.r_part>1){context.rect(mobile.positionspatio.posX1, mobile.positionspatio.posY1, 1, 1);}
+			else{context.rect((canvas.width / 2.0), (canvas.height / 2.0), 1, 1);}
+
+			context.lineWidth = "1";//en choisissant la bonne largeur des traits
+			context.fill();//on le met sur le canva
+			
+			majFondFixe44(mobile);// on efface l'ancienne position de la boule
+
+			//On dessine la boule bleue avec les meme etapes
+			mobile["context22"].beginPath();
+			mobile["context22"].fillStyle = COULEUR_BLEU;
+			/*On dessine avec ce qu'on a calculé que si r n'est pas negatif (audela de rs ça donne n'importe quoi) */
+			if(mobile.r_part>1){mobile["context22"].arc(mobile.positionspatio.posX1, mobile.positionspatio.posY1 , 5, 0, Math.PI * 2);}
+			else{mobile["context22"].arc((canvas.width / 2.0), (canvas.height / 2.0) , 5, 0, Math.PI * 2);}
+			
+			mobile["context22"].lineWidth = "1";
+			mobile["context22"].fill();
+
+			//-----------------------------------------------------PARTIE TRACÉ POTENTIEL -------------------------------------------------
+			V = Vr_mob(mobile.L,mobile.r_part);//on stocke la valeur du (Poteniel-1) avec les valeurs actuelles
+			data2 = [];//on vide la liste qu'on va à la fonction update_graphique_2()
+			data2.push({date: mobile.r_part, close: V });//on mets les les valeurs  dans data2 
+			if(mobile.point !== undefined){update_graphique_2(mobile.point,data2,mobile);}	//puis on les dessine si le point est defini
+		}
+		else 
+		{
+			//quand on arrive à la singularité on veut que r=0 
+			mobile.r_part=0;
+			document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part.toExponential(3); //et on l'affiche
+			//vu que dans le trou noir les equations font un peu n'importe quoi, du coup on efface la derrniére  position
+			mobile["context22"].clearRect(mobile.positionspatio.posX1, mobile.positionspatio.posY1 , 5, 0, Math.PI * 2);
+			//on stop la simulation quand on arrive à r=0
+			Timer.instances[compteur].stop();
+			
+		}  
+
+		if (mobile.r_part <= r_phy || mobile.r_part==0) 
+		{
+			/*Si ya un rebond on change de sens pour la vitesse */
+			if (isrebond == 1 && r_phy > 0) 
+			{
+				mobile.A_part = -mobile.A_part ;
+			}	
+			/*Si ya pas de rebond on stope le mobile sur l'astre*/
+			if(isrebond == 0 && r_phy!=0 && mobile.r_part <= r_phy)
+			{
+				Timer.instances[compteur].stop(); //on stope le Timer du mobile concerné 	
+
+			}	     
+		}
+
 	}
-	
-	
-	if (element2.value == "mobile"){
-	if(mobile.r_part > rs*1.00001) {
-		mobile.temps_observateur_distant+=mobile.dtau; 
-	}else{
+	/*si tout les Timers relié aux mobiles sont supprimés on sait que ya plus de calculs en cours alors on met qu'on a fini la simulation*/
+	if (Object.keys(Timer.instances).length === 0) 
+	{
+		document.getElementById("indic_calculs").innerHTML=texte.pages_trajectoire.calcul_termine; //on met que le calculé est fini (voir le Json)
+		document.getElementById("pause/resume").style.display='none';  //on enleve les 2 buttons pause
+		document.getElementById('bouton_pause').style.display='none'; 
+	}
 
-		mobile.temps_observateur_distant=1/0;	} 
-		document.getElementById("to"+compteur.toString()).innerHTML = mobile.temps_observateur_distant.toExponential(3);}
-	
-	
-
-  	}  //fin r0!=0
-}  // fin fonction animate
+}  
 
 // -------------------------------------{fonction Vr_mob}--------------------------------------------
 
@@ -1306,9 +1341,8 @@ function pausee() {
 		document.getElementById("pau").title = texte.pages_trajectoire.bouton_lecture;
         document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_enpause;
         document.getElementById("pause/resume").innerHTML =texte.pages_trajectoire.bouton_resume;
-		//clearInterval(mobile.myInterval);
 	} 
-    else if(mobile.peuxonrelancer) {
+    else{
 		    Timer.paused = false;
 			mobile.pause = false;
             document.getElementById("pause/resume").innerHTML = texte.pages_trajectoire.bouton_pause;
@@ -1437,26 +1471,21 @@ function majFondFixe3(){
 
 // -------------------------------------{fonction text_inte}--------------------------------------------
 
-// Empeche le lancer si on part de l'interieur de l'horizon et si le rayon est négatif
+// Fonction de verification par rapport à R_phy r0 et rs avant lancement 
 function test_inte() {
-	var texte = o_recupereJson();
-	
-	c = 299792458;
-	G = 6.6742 * Math.pow(10, -11);
-	M = Number(document.getElementById("M").value);
-	r_phy = Number(document.getElementById("r_phy").value);
-	m = G * M / Math.pow(c, 2); 
-	rs=2*m;
-	
+
+	var texte = o_recupereJson(); //recuperer le texte du json
+
+	/*variables pours verifier 3 conditions differentes:*/
 	var onebol=false;
 	var twobol=false;
 	var threebol=false;
 	var fourbol=false;
 
-
-	var nbrdefuseestestinte = Number(document.getElementById("nombredefusees").value);
-	for (countetttt = 1; countetttt <= nbrdefuseestestinte; countetttt += 1) {
-		var r0testinte = Number(document.getElementById("r0"+countetttt.toString()+"").value); 
+	/*On boucle sur tout les fusees pour voir si tout est bon:*/
+	var nombre_de_fusees = Number(document.getElementById("nombredefusees").value);
+	for (count = 1; count <= nombre_de_fusees; count += 1) {
+		var r0testinte = Number(document.getElementById("r0"+count.toString()+"").value); 
 		if(r0testinte<0){
 			onebol=true;
 		}
@@ -1471,24 +1500,23 @@ function test_inte() {
 		}
   }
 
-	//le arret ici va etre appeler sans l'argument mobile et donc va crasher mais ce n'est pas grave, on ne veux pas lancer la simulation. 
-	var texte = o_recupereJson();
+	/*Si la condition r>r_phy>rs n'est pas verifié on renvoie un message d'erreur adapté à la situation*/
 	if (r_phy < 0 || onebol) {
-		alert(texte.pages_trajectoire.rayon_neg);
-		arret();
+		return texte.pages_trajectoire.rayon_neg;
 	} else if (r_phy <= rs && r_phy!=0)   {
-		alert(texte.pages_trajectoire.rayonPhyInfHorz);
-		arret();
+		return texte.pages_trajectoire.rayonPhyInfHorz;
 	} else if (twobol) {
-		alert(texte.pages_trajectoire.rayonHorzInfRayonSchw);
-		arret();
+		return texte.pages_trajectoire.rayonHorzInfRayonSchw;
 	} else if(threebol){
-		alert(texte.pages_trajectoire.lancerInterdit);
-		arret();
+		return texte.pages_trajectoire.lancerInterdit;
 	}
-	if(fourbol) {
-		alert(texte.pages_trajectoire.vitesses_initiales_nulles);
-		arret();
+	else if(fourbol) {
+		return texte.pages_trajectoire.vitesses_initiales_nulles;
+	}
+	//sinon on revoit un true pour lancer la simulation
+	else
+	{
+		return true;
 	}
   
 }
@@ -1655,8 +1683,8 @@ function foncPourZoomPlusAvantLancement(){
 	
 		factGlobalAvecClef = factGlobalAvecClef*1.2;
 		nzoom+=1;
-		ns_avant_lancement+=1;
-		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
+		nz_avant_lancement+=1;
+		document.getElementById('nzoomtxt').innerHTML= "zoom="+ nzoom.toString();
 		canvasAvantLancement();
 	
 }
@@ -1667,8 +1695,8 @@ function foncPourZoomMoinsAvantLancement(){
 	
 		factGlobalAvecClef = factGlobalAvecClef/1.2;
 		nzoom-=1;
-		ns_avant_lancement-=1;
-		document.getElementById('nzoomtxt').innerHTML= "nz="+ nzoom.toString();
+		nz_avant_lancement-=1;
+		document.getElementById('nzoomtxt').innerHTML= "zoom="+ nzoom.toString();
 		canvasAvantLancement();
 }
 
@@ -1704,20 +1732,20 @@ function boutonAvantLancement(){
     
     document.getElementById('moinszoom').addEventListener('click',foncPourZoomMoinsAvantLancement, false);
     document.getElementById('pluszoom').addEventListener('click',foncPourZoomPlusAvantLancement, false);
-    document.getElementById('plusvite').addEventListener('click',foncPourVitAvantLancement,false);
-    document.getElementById('plusvite').myParam = true
-    document.getElementById('moinsvite').addEventListener('click',foncPourVitAvantLancement,false);
-    document.getElementById('moinsvite').myParam = false
+    document.getElementById('plusvite').addEventListener('click',foncPourVitPlusAvantLancement,false);
+    document.getElementById('moinsvite').addEventListener('click',foncPourVitMoinsAvantLancement,false);
 }
 
-function foncPourVitAvantLancement(){
-	if(accelerer.currentTarget.myParam){
-		compteurVitesseAvantLancement += 1
-	}
-	else{
-		compteurVitesseAvantLancement -= 1
-	}
-	document.getElementById('nsimtxt').innerHTML= "ns="+ compteurVitesseAvantLancement.toString();
+function foncPourVitMoinsAvantLancement(){
+	compteurVitesseAvantLancement -= 1
+	compteurVitesse-=1;
+	document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesse).toString();
+}
+
+function foncPourVitPlusAvantLancement(){
+	compteurVitesseAvantLancement += 1
+	compteurVitesse+=1;
+	document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesse).toString();
 }
 
 /**

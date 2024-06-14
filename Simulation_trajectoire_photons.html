@@ -157,7 +157,7 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
       									<label  title= ""  id="massetxt" for="M">M (kg) =</label>
 		   
 
-      										<input id="M" value="8e36" align="left" maxlength="10" type="text" size="10" onChange="verifnbr();initialisationGenerale(lenbdefusees)">
+      										<input id="M" value="8e36" align="left" maxlength="10" type="text" size="10" onchange="verifnbr();initialisationGenerale(lenbdefusees)">
       						</span>		
 		
 									
@@ -196,7 +196,7 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
 
       <div id="boutons_actions">
         <span id="buts">
-                    <button type="button" class="myButton" id="start" onclick="test_inte();save_nbfusees_recupvaleurs();save_schwarshild_photon(lenbdefusees);lancerDeFusees(lenbdefusees);"></button>
+                    <button type="button" class="myButton" id="start" onclick="lancement()"></button>
                     <button type="button" class="myButton3" id="pause/resume" style="display: none;" >Pause</button>
                   <!-- on a changer le classe parce que on ne peut pas mettre 2 bouton de meme classe en meme place avec display: none/block mais le 2 classe ont le meme style-->
                   </span>
@@ -260,7 +260,7 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
   
   <!-- Panneau mobile zoom -->							  
   <div id="panneau_mobile2">
-    <label id="nzoomtxt" for="nzoom" style="border: 1px solid rgb(175, 175, 175); padding: 5px; border-radius: 25% ; ">nz=0</label>   
+    <label id="nzoomtxt" for="nzoom" style="border: 1px solid rgb(175, 175, 175); padding: 5px; border-radius: 25% ; ">zoom=0</label>   
 	<span id="moinszoom">
 			  <img id="moinsvi1" src="Images/moins.png" class="bouton_mobile" title="Zoom (-)">
 	</span>
@@ -284,7 +284,7 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
     <span id="plusvite">
               <img id="plusvi" src="Images/rapide.png" class="bouton_mobile" title="Accélérer (attention, réduit la précision)">
     </span>
-    <label id="nsimtxt" for="nzoom" style="border: 1px solid rgb(175, 175, 175);  padding: 5px; border-radius: 25% ;">ns=0</label>
+    <label id="nsimtxt" for="nzoom" style="border: 1px solid rgb(175, 175, 175);  padding: 5px; border-radius: 25% ;">simu=0</label>
 
   </div>
 
@@ -298,6 +298,24 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
     init_rebond();
     genereHtml();
     initialisationGenerale(1);
+
+    //Fonction qui lance la simulation avec le button start si tout est bien validé 
+    function lancement(){
+      
+      //on lance si ya true en return
+      if(typeof test_inte() === 'boolean')
+      {
+        save_nbfusees_recupvaleurs();
+        save_schwarshild_photon(lenbdefusees);
+        lancerDeFusees(lenbdefusees);
+      }
+      //sinon on affiche le message d'erreur
+      else
+      {
+        alert(test_inte());
+      }
+    }
+
     function updatenbredefusees(){
         var nbredefuseesupdatenbr = Number(document.getElementById("nombredefusees").value);	
         lenbdefusees = nbredefuseesupdatenbr;
@@ -319,9 +337,19 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
         });
 
         btnSpationaute.addEventListener("click", function() {
+
+       /*Juste pour avoir les valeurs rentrées avant de cliquer sur spationaute*/
+        const r01 = document.getElementById("r01").value;
+        const phi01 = document.getElementById("phi01").value;
+        const teta1 = document.getElementById("teta1").value;
+
         inputNbfusees.value='1'; // on met un seul mobile
         const event = new Event('change');//on met à jour tout le changement en appelant la sa fonctionnalité de changement
         inputNbfusees.dispatchEvent(event);
+        document.getElementById("r01").value=r01;
+        document.getElementById("phi01").value=phi01;
+        document.getElementById("teta1").value=teta1;
+
         inputNbfusees.style.display = "none"; // Masquer le input et le label de nbfusees si button spationaute est cliqué 
         labelNbfusees.style.display = "none";
         });

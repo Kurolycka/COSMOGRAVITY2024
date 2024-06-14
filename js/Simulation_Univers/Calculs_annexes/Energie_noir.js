@@ -1795,4 +1795,5 @@ function calcul_horizons_annexe_noire(){
 		let dm_horizon_evenement_Ga=m_vers_AL(dm_horizon_evenement_m)/1e9;
 		document.getElementById("resultat_dm_particule_t").innerHTML=dm_horizon_particule_Ga.toExponential(4);
 		document.getElementById("resultat_dm_evenement_t").innerHTML=dm_horizon_evenement_Ga.toExponential(4);}
+
 }

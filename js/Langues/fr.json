@@ -337,14 +337,20 @@
 		"dernier_g_infobulle":"Dernier nombre de g ≠ 0 ressenti par le pilote avec 1g = 9.81m/s². Valable seulement pour la mécanique Newtonienne.",
 		"distance_metrique_parcourue":"D(m)",
 		"distance_metrique_parcourue_infobulle":"Distance métrique parcourue par le mobile depuis l'instant initial.",
-		"temps_allumage_label":"T<sub>allumage</sub> (ms) =",
-		"temps_allumage_infobulle":"Temps d'allumage du réacteur lorsqu'on clique sur V\u1D69+ ou V\u1D69- .",
-		"puissance_reacteur_label":"P (W/kg) =",
-		"puissance_reacteur_infobulle":"Puissance du réacteur par unité de masse.",
+		"pourcentage_vphi_pilotage_label" : "X=",
+		"pourcentage_vphi_infobulle" : "Pourcentage de la vitesse tangentielle utilisée pour le pilotage.",
 		"puissance_consommee_label":"P<sub>consommée</sub> (W/kg)",
-		"puissance_consommee_infobulle":"Puissance totale consommée par les réacteurs en W/kg.",
+		"puissance_consommee_infobulle":"Puissance instantannée consommée par les réacteurs en W/kg.",
 		"alerte_v0_superieure_c" : "Attention votre vitesse v0 est supérieure à c.",
-		"alerte_r0_inferieure_rs" : "Attention votre distance initiale au centre de l'astre r0 est plus petite que le rayon de Schwarzschild."
+		"alerte_r0_inferieure_rs" : "Attention votre distance initiale au centre de l'astre r0 est plus petite que le rayon de Schwarzschild.",
+		"alerte_singularite_non_baryonique" : "Le mobile s'arrete le calcul n'est pas stable, il faut décélérer la prochaine fois."
+		"alerte_verifier_r0" : "Attention, veuillez vérifier la saisie en r₀.",
+		"alerte_verifier_M" : "Attention, veuillez vérifier la saisie en M.",
+		"alerte_verifier_v0" : "Attention, veuillez vérifier la saisie en v₀.",
+		"alerte_verifier_phi0" : "Attention, veuillez vérifier la saisie de l'angle de la position initiale.",
+		"alerte_verifier_teta" : "Attention, veuillez vérifier la saisie en ɸ₀.",
+		"alerte_verifier_rphy" : "Attention, veuillez vérifier la saisie du rayon physique.",
+		"alerte_verifier_J" : "Attention, veuillez vérifier la saisie du moment angulaire J."
 	},
 
 	"page_trajectoire_massive":{

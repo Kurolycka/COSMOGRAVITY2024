@@ -153,28 +153,28 @@
         <div id="champs_a_remplir">
           	<span id="masse">
 				<label id= "massetxt" for="M">M (kg) =</label>
-				<input id="M" value="2e39" align="left" maxlength="10" type="text" size="10" onChange="verifnbr();initialisation()">
+				<input id="M" value="2e39" align="left" maxlength="10" type="text" size="10" onchange="verifnbr();initialisation()">
 			</span>
 			<span id="rayon">
 				<label id="ctreastre" title="" for="r0">r<sub>0</sub> (m) =</label>
-				<input id="r0" value="5e12" align="left" maxlength="10" type="text" size="10" onChange="verifnbr();initialisation()" >
+				<input id="r0" value="5e12" align="left" maxlength="10" type="text" size="10" onchange="verifnbr();initialisation()" >
 			</span>
           	<span id="momentcinetique">
 				<label  id="moment"for="J">J (kg.m<sup>2</sup>.s<sup>-1</sup>)=</label>
-				<input id="J" value="8e59" align="left" maxlength="15" type="text" size="15" onChange="verifnbr();initialisation()">
+				<input id="J" value="8e59" align="left" maxlength="15" type="text" size="15" onchange="verifnbr();initialisation()">
           	</span>
 			  
 			<span id="vitesse0">
 				<label id="vitesselabel" title=""  for="V">V (m.s<sup>-1</sup>)=</label>
-				<input id="v0" value="5e7" maxlength="15" type="text" size="15" onChange="verifnbr();initialisation()">
+				<input id="v0" value="5e7" maxlength="15" type="text" size="15" onchange="verifnbr();initialisation()">
 			</span>
 			<span id="vitesse2">
 				<label  id="philabel" title="" for="phi0">&phi;<sub>0</sub>°= </label>
-				<input id="phi0" value="0" maxlength="10" type="text" size="10" onChange="verifnbr();initialisation()">
+				<input id="phi0" value="0" maxlength="10" type="text" size="10" onchange="verifnbr();initialisation()">
 			</span>
          	 <span id="vitesse2">
 				<label  id="theta_label" title="" for="teta"> &#632;<sub>0</sub>° = </label>
-				<input id="teta" value="90" maxlength="10" type="text" size="10" onChange="verifnbr();initialisation()">
+				<input id="teta" value="90" maxlength="10" type="text" size="10" onchange="verifnbr();initialisation()">
 			</span>
 
 	</div>
@@ -185,11 +185,8 @@
                 <label  id="labelgp" for="teta"></label>
                 <input id="toggle" type="checkbox"  checked>
             </span>
-			<label id="label_temps_allumage" for="temps_allumage" style="display: none;"></label> <!--ManonV3-->
-			<input id="temps_allumage" value="50" type="text" size="5" style="display: none;"> <!--ManonV3-->
-			<label id="label_puissance_reacteur" for="puissance_reacteur" style="display: none;"></label> <!--ManonV3-->
-			<input id="puissance_reacteur" value="100" type="text" size="5" style="display: none;"> <!--ManonV3-->
-
+			<label id="label_pourcentage_vphi_pilotage" for="pourcentage_vphi_pilotage" style="display: none;"></label>
+			<input id="pourcentage_vphi_pilotage" value="0.03" type="text" size="5" style="display: none;">
   		</div>
 
         <div id="radio_button">
@@ -204,6 +201,7 @@
 				</span>
 			</div>   
 		</div>
+
 
         <div id="boutons_actions">
 			<span id="buts">
@@ -278,7 +276,7 @@
 					<th id="temps_obs" class="tg-aicv"></th>
 					<th id="decal_spect" title="" class="tg-aicv"></th>
 					<th id="v_total" title="" class="tg-aicv">V<SUB>physique</SUB>(m.s<sup>-1</sup>)</th>
-					<th id="distance_metrique" title="" class="tg-aicv" style="display: none;"></th>
+					<th id="distance_metrique" title="" class="tg-aicv" ></th>
 					<th id="nb_g" title="" class="tg-aicv"></th> <!--Manon-->
 					<th id="dernier_g" title="" class="tg-aicv"></th> <!--ManonV2-->
 					<th id="puissance_consommee_label" title="" class="tg-aicv" style="display: none;"></th> <!--ManonV2-->
@@ -292,7 +290,7 @@
 					<td class="tg-3ozo" id="to">res</td>
 					<td class="tg-3ozo" id="decal">res</td>
 					<td class="tg-3ozo" id="v_tot">res</td>
-					<td class="tg-3ozo" id="distance_parcourue" style="display: none;">0</td>
+					<td class="tg-3ozo" id="distance_parcourue">0</td>
 					<td class="tg-3ozo" id="g_ressenti">0</td> <!--ManonV2-->
 					<td class="tg-3ozo" id="dernier_g_res">0</td> <!--ManonV2-->
 					<td class="tg-3ozo" id="puissance_consommee" style="display: none;">0</td> <!--ManonV2-->
@@ -320,7 +318,7 @@
 
   <!-- Panneau mobile qui apparait lorsque tracé -->
 	<div id="panneau_mobile2">
-		<label id="nzoomtxt" for="nzoom" style="border: 1px solid rgb(175, 175, 175); padding: 5px; border-radius: 25% ; ">nz=0</label>
+		<label id="nzoomtxt" for="nzoom" style="border: 1px solid rgb(175, 175, 175); padding: 5px; border-radius: 25% ; ">zoom=0</label>
 		<span id="moinszoom">
 			<img id="moinsvi1" src="Images/moins.png" class="bouton_mobile" title="Zoom (-)">
 		</span>
@@ -342,7 +340,7 @@
 		<span id="plusvite">
 		<img id="plusvi" src="Images/rapide.png" class="bouton_mobile" title="Accélérer (attention, réduit la précision)">
 		</span>
-		<label id="nsimtxt" for="nzoom" style="border: 1px solid rgb(175, 175, 175);  padding: 5px; border-radius: 25% ;">ns=0</label>
+		<label id="nsimtxt" for="nzoom" style="border: 1px solid rgb(175, 175, 175);  padding: 5px; border-radius: 25% ;">simu=0</label>
 
 	</div>
 
@@ -371,24 +369,18 @@
 
 	var btnObervateur = document.getElementById("r3"); //ManonV3
     var btnSpationaute = document.getElementById("r4"); //ManonV3
-	var labelTempsAllumage = document.getElementById("label_temps_allumage"); //ManonV3
-	var inputTempsAllumage = document.getElementById("temps_allumage"); //ManonV3
-	var labelPuissanceReacteur = document.getElementById("label_puissance_reacteur"); //ManonV3
-	var inputPuissanceReacteur = document.getElementById("puissance_reacteur"); //ManonV3
+	var labelPourcentageVphiPilotage = document.getElementById("label_pourcentage_vphi_pilotage");
+	var inputPourcentageVphiPilotage = document.getElementById("pourcentage_vphi_pilotage");
 
 	// Ajouter des écouteurs d'événements pour les boutons
     btnObervateur.addEventListener("click", function() {
-		labelTempsAllumage.style.display = "none"; //ManonV3
-		inputTempsAllumage.style.display = "none"; //ManonV3
-		labelPuissanceReacteur.style.display = "none"; //ManonV3
-		inputPuissanceReacteur.style.display ="none"; //ManonV3
+		labelPourcentageVphiPilotage.style.display="none";
+		inputPourcentageVphiPilotage.style.display="none";
     });
 
     btnSpationaute.addEventListener("click", function() {
-		labelTempsAllumage.style.display = "inline"; //ManonV3
-		inputTempsAllumage.style.display = "inline"; //ManonV3
-		labelPuissanceReacteur.style.display = "inline"; //ManonV3
-		inputPuissanceReacteur.style.display = "inline"; //ManonV3
+		labelPourcentageVphiPilotage.style.display="inline";
+		inputPourcentageVphiPilotage.style.display="inline";
     });
 
 

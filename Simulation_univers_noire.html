@@ -169,7 +169,7 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
 				        document.getElementById('T0txt').title = texte.page_univers_general.temperature_present;
 				</script>
 				<!-- Onchange pour actuliser les paramètre envoyés par le formulaire a chaque changement -->
-				<input id="T0" type="text" value="2.7255" onChange="update_omegar0_simu_noir();document.getElementById('T0calc').value = this.value;"></input>
+				<input id="T0" type="text" value="2.7255" onchange="update_omegar0_simu_noir();document.getElementById('T0calc').value = this.value;"></input>
 				K
 			</div>
 
@@ -178,7 +178,7 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
 				<script>texte=o_recupereJson()
 					document.getElementById('H_0_txt').title = texte.page_univers_general.H0_infobulle;
 				</script>	
-				<input id="H0" type="text" value="67.74" size="10" onChange="update_omegar0_simu_noir();document.getElementById('H0calc').value = this.value;v"></input>
+				<input id="H0" type="text" value="67.74" size="10" onchange="update_omegar0_simu_noir();document.getElementById('H0calc').value = this.value;v"></input>
 				<label>km.s<sup>-1</sup>.Mpc<sup>-1</sup></label>
 			</div>
 
@@ -187,7 +187,7 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
 				<script>texte=o_recupereJson()
 					document.getElementById('omega_m0_txt').title = texte.page_univers_general.omega_m0_infobulle;
 				</script>	
-				<input id="omegam0" type="text" value="0.3089" onChange="document.getElementById('Omcalc').value = this.value;
+				<input id="omegam0" type="text" value="0.3089" onchange="document.getElementById('Omcalc').value = this.value;
 				update_omegak0_simu_noir();document.getElementById('resultat_omegam0').innerHTML=this.value;"></input>
 			</div>
 
@@ -196,7 +196,7 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
 				<script>texte=o_recupereJson()
 					document.getElementById('omega_DE0_txt').title = texte.page_univers_noire.omega_DE_0_infobulle;
 				</script>	
-				<input id="omegaDE0" type="text" value="0.6911" onChange="document.getElementById('Olcalc').value = this.value;update_omegak0_simu_noir();"></input>
+				<input id="omegaDE0" type="text" value="0.6911" onchange="document.getElementById('Olcalc').value = this.value;update_omegak0_simu_noir();"></input>
 			</div>
 			<div class="inp">
 				<label id="w0_txt" for="omega0"> w<sub>0</sub> =</label>
@@ -216,7 +216,7 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
 
 
 		<div id="coche_sim">
-			<span id="txt_univplat"></span><input id="univ_plat" type="checkbox" name="univ_plat" onChange="updateUnivPlat_noir();"></input>
+			<span id="txt_univplat"></span><input id="univ_plat" type="checkbox" name="univ_plat" onchange="updateUnivPlat_noir();"></input>
 		</div>
 		<div id="type_sim">
 			<select id="liste" onchange="update_omegar0_simu_noir();">
@@ -294,8 +294,8 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
 					<td class="tg-cgnp">&Omega;<sub>k0</sub></td>
 				</tr>
 				<tr>
-					<td class="tg-m3ec" style="border-right: 1px solid black;" id="resultat_omegarlambda0" onChange="document.getElementById('Or_calc').value = this.value">Resultat</td>
-					<td class="tg-rkjz" id="resultat_omegak0" onChange="document.getElementById('Ok_calc').value = this.value">t</td>
+					<td class="tg-m3ec" style="border-right: 1px solid black;" id="resultat_omegarlambda0" onchange="document.getElementById('Or_calc').value = this.value">Resultat</td>
+					<td class="tg-rkjz" id="resultat_omegak0" onchange="document.getElementById('Ok_calc').value = this.value">t</td>
 				</tr>
 				<tr>
 					<td class="tg-cgnp" colspan="2">Temps depuis le Big Bang</td>

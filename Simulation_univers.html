@@ -135,7 +135,7 @@
 				        document.getElementById('T0txt').title = texte.page_univers_general.temperature_present;
 				</script>		   
 				<!-- Onchange pour actuliser les paramètre envoyés par le formulaire a chaque changement -->
-				<input id="T0" type="text" value="2.7255" onChange="document.getElementById('T0calc').value = this.value;update_omegar0_simu();verifnbr()"></input>
+				<input id="T0" type="text" value="2.7255" onchange="document.getElementById('T0calc').value = this.value;update_omegar0_simu();verifnbr()"></input>
 				K
 			</div>
 			<div id="balise_H0" class="inp">
@@ -143,7 +143,7 @@
 				<script>texte=o_recupereJson()
 					document.getElementById('H_0_txt').title = texte.page_univers_general.H0_infobulle;
 				</script>	
-				<input id="H0" type="text" value="67.74" size ="10" onChange="document.getElementById('H0calc').value = this.value;update_omegar0_simu();verifnbr()"></input>
+				<input id="H0" type="text" value="67.74" size ="10" onchange="document.getElementById('H0calc').value = this.value;update_omegar0_simu();verifnbr()"></input>
 				<label> km.s<sup>-1</sup>.Mpc<sup>-1</sup></label>
 			</div>
 			<div class="inp">
@@ -151,18 +151,18 @@
 				<script>texte=o_recupereJson()
 					document.getElementById('omega_m0_txt').title = texte.page_univers_general.omega_m0_infobulle;
 				</script>	
-				<input id="omegam0" type="text" value="0.3089" onChange="document.getElementById('Omcalc').value = this.value;update_omegar0_simu();verifnbr()"></input>
+				<input id="omegam0" type="text" value="0.3089" onchange="document.getElementById('Omcalc').value = this.value;update_omegar0_simu();verifnbr()"></input>
 			</div>
 			<div class="inp">
 				<label id="omega_Λ0_txt" for="omegalambda0"> Ω<sub>Λ0</sub> =</label>
 				<script>texte=o_recupereJson()
 					document.getElementById('omega_Λ0_txt').title = texte.page_univers_general.omega_Λ0_infobulle;
 				</script>	
-				<input id="omegalambda0" type="text" value="0.6911" onChange="document.getElementById('Olcalc').value = this.value;update_omegar0_simu();verifnbr()"></input>
+				<input id="omegalambda0" type="text" value="0.6911" onchange="document.getElementById('Olcalc').value = this.value;update_omegar0_simu();verifnbr()"></input>
 			</div>
 		</div>
 		<div id="coche_sim">
-			<span id="txt_univplat"></span><input id="univ_plat" type="checkbox" name="univ_plat" onChange="updateUnivPlat();"></input>
+			<span id="txt_univplat"></span><input id="univ_plat" type="checkbox" name="univ_plat" onchange="updateUnivPlat();"></input>
 		</div>
 		<div id="type_sim">
 			<select id="liste" onchange="update_omegar0_simu();">
@@ -241,8 +241,8 @@
 				<td class="tg-cgnp">&Omega;<sub>k0</sub></td>
 			</tr>
 			<tr>
-				<td class="tg-m3ec" style="border-right: 1px solid black;" id="resultat_omegarlambda0" onChange="document.getElementById('Orcalc').value = this.value">Resultat</td>
-				<td class="tg-rkjz" id="resultat_omegak0" onChange="document.getElementById('Okcalc').value = this.value">t</td>
+				<td class="tg-m3ec" style="border-right: 1px solid black;" id="resultat_omegarlambda0" onchange="document.getElementById('Orcalc').value = this.value">Resultat</td>
+				<td class="tg-rkjz" id="resultat_omegak0" onchange="document.getElementById('Okcalc').value = this.value">t</td>
 			</tr>
 			<tr>
 				<td class="tg-cgnp" colspan="2">Temps depuis le Big Bang</td>
