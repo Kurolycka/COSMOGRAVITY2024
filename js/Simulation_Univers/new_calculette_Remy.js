@@ -19,7 +19,7 @@ function linear_scale(zmin, zmax, nb_pts) {
 };
 
 
-function affichage_des_z(){
+function affichage_des_z(fonction_EouF){
     start_temps=Date.now();
     let H0 = Number(document.getElementById("H0").value);
     z1 = Number(document.getElementById("z1").value);
@@ -33,22 +33,39 @@ function affichage_des_z(){
     //! Partie géometrie ---------------------
     //? Calcul des Distances métriques
     if (z1<0){
-        dm1=DistanceMetrique(fonction_E,z1,0,true,);
+        dm1=DistanceMetrique(fonction_EouF,z1,0,true,);
     }else{
-        dm1=DistanceMetrique(fonction_E,0,z1,true);
+        dm1=DistanceMetrique(fonction_EouF,0,z1,true);
     };
     if (z2<0){
-        dm2=DistanceMetrique(fonction_E,z2,0,true,);
+        dm2=DistanceMetrique(fonction_EouF,z2,0,true,);
     }else{
-        dm2=DistanceMetrique(fonction_E,0,z2,true);
+        dm2=DistanceMetrique(fonction_EouF,0,z2,true);
     };
-    let delta_dm=Math.abs(DistanceMetrique(fonction_E,1/(1+z1),1/(1+z2)));
+    let delta_dm=Math.abs(DistanceMetrique(fonction_EouF,z1,z2,true));
+
+    document.getElementById('dm1').value=arrondie_affichage(dm1);
+    document.getElementById('dm1_pc').value=arrondie_affichage(m_vers_pc(dm1));
+    document.getElementById('dm1_lum').value=arrondie_affichage(m_vers_AL(dm1));
+    document.getElementById('dm2').value=arrondie_affichage(dm2);
+    document.getElementById('dm2_pc').value=arrondie_affichage(m_vers_pc(dm2));
+    document.getElementById('dm2_lum').value=arrondie_affichage(m_vers_AL(dm2));
+    document.getElementById('dm').value=arrondie_affichage(delta_dm);
+    document.getElementById('dm_pc').value=arrondie_affichage(m_vers_pc(delta_dm));
+    document.getElementById('dm_diff_lum').value=arrondie_affichage(m_vers_AL(delta_dm));
+    
+
     
     //? Calcul des temps
-    let t1_sec=calcul_ages(fonction_E,H0_parSecondes(H0),1e-30,1/(1+z1));
-    let t2_sec=calcul_ages(fonction_E,H0_parSecondes(H0),1e-30,1/(1+z2));
-    let delta_t=calcul_ages(fonction_E,H0_parSecondes(H0),1/(1+z1),1/(1+z2));
-
+    let t1=calcul_ages(fonction_EouF,H0_parSecondes(H0),1e-30,1/(1+z1));
+    let t2=calcul_ages(fonction_EouF,H0_parSecondes(H0),1e-30,1/(1+z2));
+    let delta_t=calcul_ages(fonction_EouF,H0_parSecondes(H0),1/(1+z1),1/(1+z2));
+    document.getElementById('tempsEmission_sec').value=arrondie_affichage(t1);
+    document.getElementById('tempsEmission').value=arrondie_affichage(seconde_vers_annee(t1));
+    document.getElementById('tempsReception_sec').value=arrondie_affichage(t2);
+    document.getElementById('tempsReception').value=arrondie_affichage(seconde_vers_annee(t2));
+    document.getElementById('agebetween').value=arrondie_affichage(delta_t);
+    document.getElementById('agebetween_sec').value=arrondie_affichage(seconde_vers_annee(delta_t));
 
 
     //! Partie paramètre cosmologique ------------------
@@ -56,23 +73,34 @@ function affichage_des_z(){
     let Omega_r0 = Number(document.getElementById("Orr").innerHTML);//changer
     let Omega_m0 = Number(document.getElementById("omegam0").value);
     let Omega_k0 = Number(document.getElementById("resultat_omegak0_annexes").innerHTML);
-    let Omega_l0 = Number(document.getElementById("omegalambda0").value);
+    if (fonction_EouF.name===fonction_E){
+        let Omega_l0 = Number(document.getElementById("omegalambda0").value);
+    }else if (fonction_EouF.name===fonction_F){
+        let Omega_l0 = Number(document.getElementById("omegaDE0").value);
+    };
 
     //temperature
     let Tz1 = T0 * (1 + z1);
     let Tz2 = T0 * (1 + z2);
     //taux d'expansion
-    let Hz1 = H0 * Math.pow(fonction_E(z1,true),0.5);
-    let Hz2 = H0 * Math.pow(fonction_E(z1,true),0.5);
+    let Hz1 = H0 * Math.pow(fonction_EouF(z1,true),0.5);
+    let Hz2 = H0 * Math.pow(fonction_EouF(z1,true),0.5);
     //Omegas 
-    let Omega_rz1 = Omega_r0*Math.pow((1+z1),4)/fonction_E(z1,true);
-    let Omega_rz2 = Omega_r0*Math.pow((1+z2),4)/fonction_E(z2,true);
-    let Omega_mz1 = Omega_m0*Math.pow((1+z1),3)/fonction_E(z1,true);
-    let Omega_mz2 = Omega_m0*Math.pow((1+z2),3)/fonction_E(z2,true);
-    let Omega_kz1 = Omega_k0*Math.pow((1+z1),2)/fonction_E(z1,true);
-    let Omega_kz2 = Omega_k0*Math.pow((1+z2),2)/fonction_E(z2,true);
-    let Omega_lz1 = Omega_l0/fonction_E(z1,true);
-    let Omega_lz2 = Omega_l0/fonction_E(z2,true);
+    let Omega_rz1 = Omega_r0*Math.pow((1+z1),4)/fonction_EouF(z1,true);
+    let Omega_rz2 = Omega_r0*Math.pow((1+z2),4)/fonction_EouF(z2,true);
+    let Omega_mz1 = Omega_m0*Math.pow((1+z1),3)/fonction_EouF(z1,true);
+    let Omega_mz2 = Omega_m0*Math.pow((1+z2),3)/fonction_EouF(z2,true);
+    let Omega_kz1 = Omega_k0*Math.pow((1+z1),2)/fonction_EouF(z1,true);
+    let Omega_kz2 = Omega_k0*Math.pow((1+z2),2)/fonction_EouF(z2,true);
+    if (fonction_EouF.name===fonction_E){
+        let Omega_lz1 = Omega_l0/fonction_E(z1,true);
+        let Omega_lz2 = Omega_l0/fonction_E(z2,true);
+    }else if (fonction_EouF.name===fonction_F){
+        let Omega_DEz1=omegaDE0/fonction_F(z1,true);
+        let Omega_DEz2=omegaDE0/fonction_F(z2,true);
+        let Omega_DENz1=omegaDE0*fonction_Y(z1,true)/fonction_F(z1,true);
+        let Omega_DENz2=omegaDE0*fonction_Y(z1,true)/fonction_F(z2,true);
+    };
     // dz1/t0 et dz2/t0
     let dz1= (1+z1)*H0_parSecondes(H0) - H0_parSecondes(Hz1);
     let dz2= (1+z2)*H0_parSecondes(H0) - H0_parSecondes(Hz2);
@@ -100,12 +128,10 @@ function affichage_des_z(){
     //documentgetby compagnie
 
     duree_calcul=Date.now()-start_temps;
-    console.log(dm1.toExponential(6));
-    console.log(dm2.toExponential(6));
     //time_affiche.innerHTML = "Le calcul a duré : " + duree_calcul + " millisecondes !";
 };
 
-function generer_graphique_distance(ordonnee_t=false,log=false){
+function generer_graphique_distance(fonction_EouF,ordonnee_t=false,log=false){
     //on récupère les variables utiles pour les calcules
     let T0 = Number(document.getElementById("T0").value);
     let H0 = Number(document.getElementById("H0").value);
@@ -133,13 +159,13 @@ function generer_graphique_distance(ordonnee_t=false,log=false){
     //calculs des longueurs
     abscisse.forEach(i => {
         if (i<0){
-            dm=DistanceMetrique(fonction_E,i,0,true,1e2);
+            dm=DistanceMetrique(fonction_EouF,i,0,true,1e2);
         }else{
-            dm=DistanceMetrique(fonction_E,1/(i+1),1,false,1e2);
+            dm=DistanceMetrique(fonction_EouF,1/(i+1),1,false,1e2);
         }
         let da=dm/(1+i);
         let dl=dm*(1+i);
-        let temps = calcul_ages(fonction_E,H0_parSecondes(H0),1e-15,1/(1+i));
+        let temps = calcul_ages(fonction_EouF,H0_parSecondes(H0),1e-15,1/(1+i));
         let dlt = temps * c;
         dmArr.push(m_vers_AL(dm));
         daArr.push(m_vers_AL(da));
@@ -163,7 +189,7 @@ function generer_graphique_distance(ordonnee_t=false,log=false){
         xaxis_title=xaxis_temps;
         document.getElementById("graph_container_d_t").style.display = "contents";// afficher le graph
         graphdivid="graphique_d_t"
-        abscisse=abscisse.map((x) => calcul_ages(fonction_E,H0_parAnnees(H0),1e-15,1/(1+x)));
+        abscisse=abscisse.map((x) => calcul_ages(fonction_EouF,H0_parAnnees(H0),1e-15,1/(1+x)));
     }else{
         plot_title = "d<sub>i</sub>(z)";
         xaxis_title = "z";
@@ -229,7 +255,8 @@ function generer_graphique_distance(ordonnee_t=false,log=false){
     Plotly.newPlot(graphdivid,data,layout,{displaylogo: false});
 };
 
-function generer_graphique_Omega(ordonnee_t=false,log=false){
+function generer_graphique_Omega(fonction_EouF,ordonnee_t=false,log=false){
+    console.log(fonction_EouF.name);
     //Si il n'y a pas de big bang impossible a calculer
     let T0 = Number(document.getElementById("T0").value);
     if (isNaN(debut_fin_univers(equa_diff_2_LCDM, T0)[2])){
@@ -253,7 +280,12 @@ function generer_graphique_Omega(ordonnee_t=false,log=false){
         Or = Omega_r(i);
         Om = Omega_m(i);
         Ok = Omega_k(i);
-        Ol = Omega_l(i);
+        if (fonction_EouF.name===fonction_E){
+            Ol = Omega_l(i);
+        }else if (fonction_EouF.name===fonction_F){
+            Ol = Omega_DE(i); 
+        }
+        
 
         OrArr.push(Or);
         OmArr.push(Om);
@@ -277,7 +309,7 @@ function generer_graphique_Omega(ordonnee_t=false,log=false){
         xaxis_title=xaxis_temps;
         document.getElementById("graph_container_omega_t").style.display = "contents";// afficher le graph
         graphdivid="graphique_omega_t"
-        abscisse=abscisse.map((x) => calcul_ages(fonction_E,H0_parAnnees(H0),1e-15,1/(1+x)));
+        abscisse=abscisse.map((x) => calcul_ages(fonction_EouF,H0_parAnnees(H0),1e-15,1/(1+x)));
     }else{
         plot_title = "&#x3A9;<sub>i</sub>(z)";
         xaxis_title = "z";
@@ -343,7 +375,7 @@ function generer_graphique_Omega(ordonnee_t=false,log=false){
     Plotly.newPlot(graphdivid,data,layout,{displaylogo: false});
 };
 
-function generer_graphique_TempsDecalage(ordonnee_t=false,log=false){
+function generer_graphique_TempsDecalage(fonction_EouF,ordonnee_t=false,log=false){
     //Si il n'y a pas de big bang impossible a calculer
     let T0 = Number(document.getElementById("T0").value);
     if (isNaN(debut_fin_univers(equa_diff_2_LCDM, T0)[2])){
@@ -361,7 +393,7 @@ function generer_graphique_TempsDecalage(ordonnee_t=false,log=false){
 
     //calculs des longueurs
     abscisse.forEach(i => {
-        let zdet = calcul_ages(fonction_E,H0_parAnnees(H0),1e-15,1/(1+i));
+        let zdet = calcul_ages(fonction_EouF,H0_parAnnees(H0),1e-15,1/(1+i));
 
         zArr.push(zdet);
     });
@@ -473,17 +505,17 @@ function calcul_theta_versdiametre(){
     document.getElementById("diametrekpc").value = m_vers_pc(diametre)/1e3;
 };
 
-function calcul_horizons_annexe(){
+function calcul_horizons_annexe(fonction_EouF){
 	let t_pour_horizon= Number(document.getElementById("t_pour_calcul_horizon").value);
 	if (t_pour_horizon<=0){
 		document.getElementById("resultat_dm_particule_t").innerHTML=NaN;
 		document.getElementById("resultat_dm_evenement_t").innerHTML=NaN;
 	}else{
-		z_pour_horizon=calcul_t_inverse(t_pour_horizon,fonction_E);
+		z_pour_horizon=calcul_t_inverse(t_pour_horizon,fonction_EouF);
 		console.log(z_pour_horizon);
-		let dm_horizon_particule_m=calcul_horizon_particule(fonction_E,z_pour_horizon);
+		let dm_horizon_particule_m=calcul_horizon_particule(fonction_EouF,z_pour_horizon);
 		let dm_horizon_particule_Ga=m_vers_AL(dm_horizon_particule_m)/1e9;
-		let dm_horizon_evenement_m=calcul_horizon_evenements(fonction_E,z_pour_horizon);
+		let dm_horizon_evenement_m=calcul_horizon_evenements(fonction_EouF,z_pour_horizon);
 		let dm_horizon_evenement_Ga=m_vers_AL(dm_horizon_evenement_m)/1e9;
 		document.getElementById("resultat_dm_particule_t").innerHTML=dm_horizon_particule_Ga.toExponential(4);
 		document.getElementById("resultat_dm_evenement_t").innerHTML=dm_horizon_evenement_Ga.toExponential(4);}
@@ -491,7 +523,7 @@ function calcul_horizons_annexe(){
 //---------------------------------------
 
 //compliquée à lire j'avoue
-function calcul_dm_inverse(){
+function calcul_dm_inverse(fonction_EouF){
     z_negatif=true; //remplacer par le bouton check
     dm_input = document.getElementById("dm_racine_dm").value;
 
@@ -499,13 +531,13 @@ function calcul_dm_inverse(){
     if (z_negatif){
         function interieur_SK_distance(x){
             function fonction_integ_distance(x){
-                return Math.pow(fonction_E(x,true),-0.5);
+                return Math.pow(fonction_EouF(x,true),-0.5);
             };
             return Math.pow(Math.abs(Omega_k(0)),0.5)*simpson_composite( fonction_integ_distance, x,0,1e3);
         };
         if (Omega_k(0)>=0 || interieur_SK_distance(-1)<Math.PI/2){//cas classique univers plat ou pas trop sphérique
             function fonction_dm_dichotomie(x){
-                return DistanceMetrique(fonction_E,x,0,true);
+                return DistanceMetrique(fonction_EouF,x,0,true);
             };
             z=Dichotomie_Remy(fonction_dm_dichotomie,dm_input,-1,0,1e-30);
         }else{//cas plus particulier ou l'univers est hyperspherique et le paramètre de courbe est assez important pour dépasser le sin(pi/2) dans l'equation de la distance metrique, il y a donc 2 solution maxmimum (pas pour tout les dm si l'interieur du sin est en dessous de pi)
@@ -516,11 +548,11 @@ function calcul_dm_inverse(){
                 return;
             };
             function fonction_dm_dichotomie(x){
-                return DistanceMetrique(fonction_E,x,0,true);
+                return DistanceMetrique(fonction_EouF,x,0,true);
             };
             console.log(m_vers_AL(dm_input)/1e9);
             let amax=Dichotomie_Remy(interieur_SK_distance,Math.PI/2,-1,0,1e-30);//on calcule le pique de la fonction sinus 
-            let dmlimit=DistanceMetrique(fonction_E,-.999999999999,0,true);//correspond à la valeur vers laquelle tend dans le cas ou pi/2<interieur sk <pi
+            let dmlimit=DistanceMetrique(fonction_EouF,-.999999999999,0,true);//correspond à la valeur vers laquelle tend dans le cas ou pi/2<interieur sk <pi
             console.log(dmlimit);
             if (interieur_SK_distance(-1)>=Math.PI || dm_input>dmlimit){//le premier cas est celui ou l'interieur de sk est superieur a pi donc forcement 2 solution, et le second cas est celui ou il existe une solution en dessous de l'asymptot et 2 au dessus
                 let z1=Dichotomie_Remy(fonction_dm_dichotomie,dm_input,amax,0,1e-30);
@@ -536,29 +568,29 @@ function calcul_dm_inverse(){
     }else{//fonction qui renvoie la valeur compris dans la fonction SK du calcul de la distance metrique
         function interieur_SK_distance(x){
             function fonction_integ_distance(x){
-                return Math.pow(fonction_E(x),-0.5)/Math.pow(x,2);
+                return Math.pow(fonction_EouF(x),-0.5)/Math.pow(x,2);
             };
             return Math.pow(Math.abs(Omega_k(0)),0.5)*simpson_composite( fonction_integ_distance, x,1,1e3);
         };
         if (Omega_k(0)>=0 || interieur_SK_distance(1e-15)<Math.PI/2){ //cas classique où l'univers n'est pas une hypersphère ou alors le rayon de courbure de cette sphère est trop petit  -> qu'une seule solution en positif et une négative
             function fonction_dm_dichotomie(x){
-                return DistanceMetrique(fonction_E,x,1,false);
+                return DistanceMetrique(fonction_EouF,x,1,false);
             };
             let a=Dichotomie_Remy(fonction_dm_dichotomie,dm_input,0,1,1e-30);
             z=(1-a)/a;
             if (z<1e-10){//cas très particulier où le z est tellement petit que le (a) correspondant devient imprécis numériquement à cause du nombre de flottant (0.999999999 est approximer à 1 ce qui fausse le calcul) on utilise donc le calcul avec z car vu que z très petit pas besoin de s'inquiéter que la bonne valeur ne soit pas comprise dans les bornes 
                 function fonction_dm_dichotomie(x){
-                    return DistanceMetrique(fonction_E,0,x,true);
+                    return DistanceMetrique(fonction_EouF,0,x,true);
                 };
                 z=Dichotomie_Remy(fonction_dm_dichotomie,dm_input,0,1,1e-30);
             }
             document.getElementById("z_racine_dm").value=z; //résultat z
         }else{//cas plus particulier ou l'univers est hyperspherique et le paramètre de courbe est assez important pour dépasser le sin(pi/2) dans l'equation de la distance metrique, il y a donc 2 solution maxmimum (pas pour tout les dm si l'interieur du sin est en dessous de pi)
             function fonction_dm_dichotomie(x){
-                return DistanceMetrique(fonction_E,x,1);
+                return DistanceMetrique(fonction_EouF,x,1);
             };
             let amax=Dichotomie_Remy(interieur_SK_distance,Math.PI/2,1e-15,1,1e-30);//on calcule le pique de la fonction sinus 
-            let dmlimit=calcul_horizon_particule(fonction_E);//correspond à la valeur vers laquelle tend dans le cas ou pi/2<interieur sk <pi
+            let dmlimit=calcul_horizon_particule(fonction_EouF);//correspond à la valeur vers laquelle tend dans le cas ou pi/2<interieur sk <pi
             if (interieur_SK_distance(1e-15)>=Math.PI || dm_input>dmlimit){//le premier cas est celui ou l'interieur de sk est superieur a pi donc forcement 2 solution, et le second cas est celui ou il existe une solution en dessous de l'asymptot et 2 au dessus
                 let a1=Dichotomie_Remy(fonction_dm_dichotomie,dm_input,amax,1,1e-30);
                 let a2=Dichotomie_Remy(fonction_dm_dichotomie,dm_input,1e-15,amax,1e-30);
@@ -574,12 +606,12 @@ function calcul_dm_inverse(){
     };
 };
 
-function affichage_t_inverse(){
+function affichage_t_inverse(fonction_EouF){
     temps_em_input=document.getElementById("t_racine_em").value;
     temps_rec_input=document.getElementById("t_racine_rec").value;
     
-    z_em=calcul_t_inverse(temps_em_input,fonction_E);
-    z_rec=calcul_t_inverse(temprs_rec_input,fonction_E);
+    z_em=calcul_t_inverse(temps_em_input,fonction_EouF);
+    z_rec=calcul_t_inverse(temprs_rec_input,fonction_EouF);
 
     document.getElementById('z_racin_t_em').value=z_em;
     document.getElementById('z_racine_t_rec').value=z_rec;

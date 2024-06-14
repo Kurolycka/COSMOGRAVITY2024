@@ -58,7 +58,7 @@ function annee_vers_seconde(valeur){
     return valeur*nbJoursParAn()*24*3600;
 };
 function seconde_vers_annee(valeur){
-    return valeur/nbJoursParAn()*24*3600;
+    return valeur/(nbJoursParAn()*24*3600);
 };
 function gigaannee_vers_seconde(valeur){
     return valeur*nbJoursParAn()*24*3600*1e9;
