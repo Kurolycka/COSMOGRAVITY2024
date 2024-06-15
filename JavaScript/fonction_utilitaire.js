@@ -1,4 +1,20 @@
-
+/**
+ * Fonction permettant de récupérer le nombre de jours par ans en fonction du type d'année sélectionné
+ * @return {number} Le nombre de jour par ans
+ */
+function nbrJours() {
+    typeAnnee = document.getElementById("typeAnnee").value
+    switch (typeAnnee) {
+        case 'Sidérale':
+            return 365.256363051;
+        case 'Julienne':
+            return 365.25;
+        case 'Tropique (2000)':
+            return 365.242190517;
+        default:
+            return 365.2425;
+    }
+}
 
 function arrondie_affichage(nombre, chiffre_significatif){
     if (nombre<1e4){

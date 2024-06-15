@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau HTML avec Labels en Lignes</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .table-container {
+            width: 80%;
+            margin-top: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #dddddd;
+            border-right: 1px solid #dddddd;
+        }
+
+        th:last-child, td:last-child {
+            border-right: none;
+        }
+
+        th {
+            background-color: rgba(39, 121, 124, 0.85);
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        thead tr.label-row th {
+            background-color: #007bff;
+            color: #ffffff;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tbody tr:hover {
+            background-color: #e2e6ea;
+        }
+
+        tbody td {
+            font-size: 14px;
+            color: #333333;
+        }
+
+        @media screen and (max-width: 600px) {
+            .table-container {
+                width: 100%;
+                border-radius: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr class="label-row">
+                    <th colspan="4">Informations Générales</th>
+                </tr>
+                <tr>
+                    <th>Nom</th>
+                    <th>Âge</th>
+                    <th>Ville</th>
+                    <th>Profession</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Albert Einstein</td>
+                    <td>76</td>
+                    <td>Berlin</td>
+                    <td>Physicien</td>
+                </tr>
+                <tr>
+                    <td>Marie Curie</td>
+                    <td>66</td>
+                    <td>Paris</td>
+                    <td>Physicienne-Chimiste</td>
+                </tr>
+                <tr>
+                    <td>Stephen Hawking</td>
+                    <td>76</td>
+                    <td>Cambridge</td>
+                    <td>Physicien Théoricien</td>
+                </tr>
+                <tr class="label-row">
+                    <td colspan="4">Informations Supplémentaires</td>
+                </tr>
+                <tr>
+                    <td>Nikola Tesla</td>
+                    <td>86</td>
+                    <td>New York</td>
+                    <td>Ingénieur Électrique</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
