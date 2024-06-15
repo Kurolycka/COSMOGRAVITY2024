@@ -343,7 +343,7 @@
 		"puissance_consommee_infobulle":"Puissance instantannée consommée par les réacteurs en W/kg.",
 		"alerte_v0_superieure_c" : "Attention votre vitesse v0 est supérieure à c.",
 		"alerte_r0_inferieure_rs" : "Attention votre distance initiale au centre de l'astre r0 est plus petite que le rayon de Schwarzschild.",
-		"alerte_singularite_non_baryonique" : "Le mobile s'arrete le calcul n'est pas stable, il faut décélérer la prochaine fois."
+		"alerte_singularite_non_baryonique" : "Le mobile s'arrete le calcul n'est pas stable, il faut décélérer la prochaine fois.",
 		"alerte_verifier_r0" : "Attention, veuillez vérifier la saisie en r₀.",
 		"alerte_verifier_M" : "Attention, veuillez vérifier la saisie en M.",
 		"alerte_verifier_v0" : "Attention, veuillez vérifier la saisie en v₀.",
