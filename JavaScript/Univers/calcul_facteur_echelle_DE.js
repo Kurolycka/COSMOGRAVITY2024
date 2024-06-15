@@ -40,6 +40,8 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
         let t_max = calcul_ages(fonction_simplifiant_1, H0parGAnnee, 1e-10, a_max)
         let tau_max = H0parGAnnee * (t_max - t_0)
 
+        console.log("les taus", tau_min, tau_max)
+
         if (a_min > 1 && !isNaN(tau_min)) {
             tau_init = tau_min
             a_init = a_min
@@ -114,7 +116,6 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
 
     let debutEtFin = debut_fin_univers(equa_diff_2)
 
-    console.log("out debutEtFin", debutEtFin)
     taus = tauEnTemps(taus, debutEtFin[2])
 
     return [[taus, facteur_echelle], t_0, debutEtFin]

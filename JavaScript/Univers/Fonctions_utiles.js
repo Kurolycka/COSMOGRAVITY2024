@@ -657,7 +657,9 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
         ordonnee.reverse()
     }
 
+    let temps_debut = abscisse[0]
     let facteur_debut = ordonnee[0]
+    let temps_fin = abscisse[abscisse.length - 1]
     let facteur_fin = ordonnee[ordonnee.length - 1]
 
 
@@ -682,7 +684,8 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
         line: { color: 'purple' }
     }];
 
-    if (t_debut && facteur_debut > Math.abs(a_max - a_min) * 1e-1 ) {
+    console.log(temps_debut, Math.abs(t_debut) * (1 + 10/100))
+    if (t_debut && facteur_debut > Math.abs(a_max - a_min) * 1e-1 && temps_debut < Math.abs(t_debut) * 1e-1 ) {
         donnee.push({
             type: 'line',
             x:[0, 0],
@@ -696,7 +699,7 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
         });
     }
 
-    if (t_fin && facteur_fin > Math.abs(a_max - a_min) * 1e-1 ) {
+    if (t_fin && facteur_fin > Math.abs(a_max - a_min) * 1e-1 && temps_fin > Math.abs(t_fin) * (1 + 10/100)) {
         let x_assymptote;
         if (t_fin && t_debut) {
             x_assymptote = Math.abs(Math.abs(t_fin) + Math.abs(t_debut))
