@@ -173,15 +173,16 @@
 
                 <div class="desact_retour">
                     <label for="diametre">D =</label>
-                    <input id="diametre" maxlength="17" type="text"><span style="font-size:smaller"> (m)</span>
-                    <input style="margin-left:15px; font-family: sans-serif; font-style: italic; font-weight: lighter;" type="button" value="&rarr; &Phi;" onClick="calcultheta();">
+                    <input id="diametre" maxlength="17" type="text" onchange="afficher_seconde_valeur('diametre')">
+                        <span style="font-size:smaller"> (m)</span>
+                    <input style="margin-left:15px; font-family: sans-serif; font-style: italic; font-weight: lighter;" type="button" value="&rarr; &Phi;" onClick="calcultheta();calcul_diamtre_vers_theta();">
                     </div>
 
                     <br>
 
                 <div class="desact_retour">
                     <label for="diametrekpc">D =</label>
-                    <input id="diametrekpc" maxlength="17" type="text"><span style="font-size:smaller"> (kpc)</span>
+                    <input id="diametrekpc" maxlength="17" type="text" onchange="afficher_seconde_valeur('diametrekpc')"><span style="font-size:smaller"> (kpc)</span>
                     <input style="margin-left:15px; font-family :sans-serif;font-style: italic; font-weight: lighter;" type="button" value="&rarr; &Phi;" onClick="calculthetakpc();">
                 </div>
 
@@ -243,7 +244,7 @@
                     </div>
 
                     <div style="padding:10px" id="plus">
-                        <input id="boutonCalculInverse" type="button" onclick="inverse();ga('send', 'event', 'button', 'click', 'Calcul Annexe Inverse');" value="Calcul">
+                        <input id="boutonCalculInverse" type="button" onclick="calcul_dm_inverse();inverse();ga('send', 'event', 'button', 'click', 'Calcul Annexe Inverse');" value="Calcul">
                     </div>
 
                 </div>
@@ -1010,5 +1011,6 @@
         <script src="js/Simulation_Univers/MéthodesNumériques.js"></script>
         <script src="js/Simulation_Univers/Fonctions_utiles.js"></script>
         <script src="js/Simulation_Univers/calcul_facteur_echelle_LCDM.js"></script>
+        <script src="js/Simulation_Univers/new_calculette_Remy.js"></script>
     </body>
 </html>

@@ -245,7 +245,9 @@ function textegravetetc_Kerr(){
   document.getElementById("horizon1").title = texte.pages_trajectoire.horizon1;
   document.getElementById("horizon2").title = texte.pages_trajectoire.horizon2;
   document.getElementById("gravSurface").title = texte.pages_trajectoire.gravSurface_BulleInfo;
- var canvaswidthheightt = document.getElementById("canvaswidthheight").value;
+  
+ var canvaswidthheightt = '750';
+
   if(canvaswidthheightt=="750"){
   document.getElementById("labelgp").innerHTML = texte.pages_trajectoire.labelgp;
   document.getElementById("label_depasser").innerHTML = texte.pages_trajectoire.label_depasser;																		 
@@ -274,7 +276,7 @@ function textegravetetc(){
   document.getElementById("massetxt").title = texte.pages_trajectoire.massetxt;
   document.getElementById("txt_rphysique").title = texte.pages_trajectoire.txt_rphysique;															   
   document.getElementById("labelnumberfusees").innerHTML = texte.pages_trajectoire.labelnumberfusees;
-  var canvaswidthheightt = document.getElementById("canvaswidthheight").value;
+  var canvaswidthheightt = '750';
   if(canvaswidthheightt=="750"){
     document.getElementById("labelgp").innerHTML = texte.pages_trajectoire.labelgp;
   }
@@ -411,7 +413,6 @@ function texteUnivers() {
   document.getElementById("txt_sorties").innerHTML = texte.page_univers_general.sorties;
   document.getElementById("txt_tempsBB").innerHTML = texte.page_univers_general.tempsBigBang;
   document.getElementById("txt_dureeeUniv").innerHTML = texte.page_univers_general.dureeUnivers;
-  document.getElementById("txt_distance_decalage_HorizonEvenement").innerHTML = texte.page_univers_general.DistanceDecalageHorizon;
   document.getElementById("txt_univplat").innerHTML = texte.page_univers.univers_plat;
   document.getElementById("txt_MLRFCN").innerHTML = texte.page_univers.matierelambdaRFCNeu;
   document.getElementById("txt_MLRFC").innerHTML = texte.page_univers.matierelambdaRFC;
@@ -424,6 +425,11 @@ function texteUnivers() {
 
 function texteUniversCalculs() {//Beaucoup des redondants, il faut gérer tout ça 
   var texte = o_recupereJson();
+  xaxis_temps=texte.page_univers_calculs.xaxis_temps;
+  yaxis_distance=texte.page_univers_calculs.yaxis_distance
+  yaxis_omega=texte.page_univers_calculs.yaxis_omega;
+  yaxis_temps=texte.page_univers_calculs.yaxis_temps;//un peu la meme chose que xaxis mais je laisse dans le doute
+  yaxis_decalage=texte.page_univers_calculs.yaxis_decalage;
   document.getElementById("bouton_retour").value = texte.page_univers_calculs.bouton_retour;
   document.getElementById("txt_titre").innerHTML = texte.page_univers_calculs.titre;
   document.getElementById("txt_valeursZ").innerHTML = texte.page_univers_calculs.valeursZ;
@@ -661,7 +667,7 @@ function texteTrajectoireMassive(nbrderockets) {
 
 		
 	}
-  var canvaswidthheightt = document.getElementById("canvaswidthheight").value;
+  var canvaswidthheightt = '750';
 
 }
   
@@ -720,7 +726,7 @@ function texteTrajectoirePhoton(nbrderockets) {
     document.getElementById("rayon_orbite_circ_res"+count.toString()+"").title=texte.pages_trajectoire.orbite_circulaire_instable; //ManonCirculaire
 
 	}
-  var canvaswidthheightt = document.getElementById("canvaswidthheight").value;
+  var canvaswidthheightt = '750';
 
 }
 function texteTrajectoireMassiveNonBar(nbrderockets) {
@@ -787,7 +793,7 @@ function texteTrajectoirePhotonNonBar(nbrderockets) {
   document.getElementById("massetxt").title = texte.pages_trajectoire.massetxt;
   document.getElementById("txt_rphysique").title = texte.pages_trajectoire.txt_rphysique;
   document.getElementById("labelnumberfusees").innerHTML = texte.pages_trajectoire.labelnumberfusees;
-  var canvaswidthheightt = document.getElementById("canvaswidthheight").value;
+  var canvaswidthheightt = '750';
   if(canvaswidthheightt=="750"){
   document.getElementById("labelgp").innerHTML = texte.pages_trajectoire.labelgp;}
   

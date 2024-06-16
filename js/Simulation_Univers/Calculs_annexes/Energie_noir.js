@@ -127,7 +127,7 @@ function calc_energie_noire() {
     sigma = (2 * Math.pow(Math.PI, 5) * Math.pow(k, 4)) / (15 * Math.pow(h, 3) * Math.pow(c, 2));
     rho_r = (4 * sigma * Math.pow(t0, 4)) / (Math.pow(c, 3));
     Or = (8 * Math.PI * G * rho_r) / (3 * Math.pow(H0parsec, 2));
-    Or = 1.68 * Or;
+    Or = 1.6913 * Or;
     Or = Or.toExponential(3);
   } else if (document.getElementById("resultat_omegar0_annexes").value=="Matière, Lambda et RFC") {
     sigma = (2 * Math.pow(Math.PI, 5) * Math.pow(k, 4)) / (15 * Math.pow(h, 3) * Math.pow(c, 2));
@@ -268,7 +268,7 @@ avertissement();
 	Tz1 = Tz1.toExponential(8);
 	Omz1 = omegam0 * Math.pow(1 + Number(z1), 3) / fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1);
 	Omz1 = Omz1.toExponential(8);
-	Olz1 = omegaDE0 * Ya(Number(z1))*(1/(1+z1))	/ fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1);
+	Olz1 = Number(omegaDE0/fonction_F(1/(1+z1)));
 	Olz1 = Olz1.toExponential(8);
 	Orz1 = Or * Math.pow(1 + Number(z1), 4) / fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1);
 	Orz1 = Orz1.toExponential(8);
@@ -277,12 +277,15 @@ avertissement();
 	Hz1 = h0 * Math.pow(fonction_F(Number(z1), omegam0, Number(omegaDE0), Or,w0,w1),0.5);
 	Hz1 = Hz1.toExponential(8);
 
+	ODEn1= Number(omegaDE0) * fonction_Y(1/(1+z1)) / fonction_F(1/(1+z1));
+	ODEn1=ODEn1.toExponential(8);
+
 //z2
 	Tz2 = t0 * (1 + Number(z2));
 	Tz2 = Tz2.toExponential(8);
 	Omz2 = omegam0 * Math.pow(1 + Number(z2), 3) / fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1);
 	Omz2 = Omz2.toExponential(8);
-	Olz2 = omegaDE0 * Ya(Number(z1))*(1/(1+z2))	/ fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1);
+	Olz2 = Number(omegaDE0/fonction_F(1/(1+z2)));
 	Olz2 = Olz2.toExponential(8);
 	Orz2 = Or * Math.pow(1 + Number(z2), 4) / fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1);
 	Orz2 = Orz2.toExponential(8);
@@ -290,6 +293,9 @@ avertissement();
 	Okz2 = Okz2.toExponential(8);
 	Hz2 = h0 * Math.pow(fonction_F(Number(z2), omegam0, Number(omegaDE0), Or,w0,w1), 0.5);
 	Hz2 = Hz2.toExponential(8);
+
+	ODEn2= Number(omegaDE0) * fonction_Y(1/(1+z2)) / fonction_F(1/(1+z2));
+	ODEn2=ODEn2.toExponential(8);
 
    //calcul de la distance du diametre apparent et distance lumiere(dm et photometrie)
   dda = dm1 / (1 + Number(z1));
@@ -470,6 +476,7 @@ avertissement();
   document.getElementById("Tz1").innerHTML = Tz1;
   document.getElementById("Omz1").innerHTML = Omz1;
   document.getElementById("Olz1").innerHTML = Olz1;
+  document.getElementById("ODEn1").innerHTML = ODEn1;
   document.getElementById("Orz1").innerHTML = Orz1;
   document.getElementById("Okz1").innerHTML = Okz1;
   document.getElementById("Hz1").innerHTML = Hz1;
@@ -477,6 +484,7 @@ avertissement();
   document.getElementById("Tz2").innerHTML = Tz2;
   document.getElementById("Omz2").innerHTML = Omz2;
   document.getElementById("Olz2").innerHTML = Olz2;
+  document.getElementById("ODEn2").innerHTML = ODEn2;
   document.getElementById("Orz2").innerHTML = Orz2;
   document.getElementById("Okz2").innerHTML = Okz2;
   document.getElementById("Hz2").innerHTML = Hz2;
@@ -850,7 +858,7 @@ function Tracer(path) {
 		sigma = (2 * Math.pow(Math.PI, 5) * Math.pow(k, 4)) / (15 * Math.pow(h, 3) * Math.pow(c, 2));
 		rho_r = (4 * sigma * Math.pow(t0, 4)) / (Math.pow(c, 3));
 		Or = (8 * Math.PI * G * rho_r) / (3 * Math.pow(H0parsec, 2));
-		Or = 1.68 * Or;
+		Or = 1.6913 * Or;
 		Or = Or.toExponential(8);
 	} else if (document.getElementById("resultat_omegar0_annexes").value=="Matière, Lambda et RFC") {
 		sigma = (2 * Math.pow(Math.PI, 5) * Math.pow(k, 4)) / (15 * Math.pow(h, 3) * Math.pow(c, 2));

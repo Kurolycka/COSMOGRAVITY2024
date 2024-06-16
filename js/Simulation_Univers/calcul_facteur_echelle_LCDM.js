@@ -86,7 +86,7 @@ function calcul_facteur_echelle_LCDM(a_min,a_max,equa_diff_1, equa_diff_2, fonct
             facteur_echelle.push(set_solution[1])
         }
         nombre_point = nombre_point + 1
-        console.log(set_solution)
+        //console.log(set_solution)
     }
 
     // On inverse pour que les listes commencent avec le tau le plus petit puis on réinitialise les conditions initiales
@@ -103,7 +103,7 @@ function calcul_facteur_echelle_LCDM(a_min,a_max,equa_diff_1, equa_diff_2, fonct
             facteur_echelle.push(set_solution[1])
         }
         nombre_point = nombre_point + 1
-        console.log(set_solution)
+        //console.log(set_solution)
     }
 
     // On calcule le temps associé à l'instant présent et si il n'est pas définis on le met à zéro
@@ -137,7 +137,7 @@ function affichage_site_LCDM() {
     let equa_diff_1 = equa_diff_1_LCDM
     let equa_diff_2 = equa_diff_2_LCDM
     let fonction = fonction_E
-  
+
     let sorties = calcul_facteur_echelle_LCDM(a_min,a_max,equa_diff_1_LCDM, equa_diff_2_LCDM, fonction_E)
     let donnee = sorties[0]
     graphique_facteur_echelle(donnee)

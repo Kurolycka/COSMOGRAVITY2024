@@ -103,9 +103,14 @@
 	},
 
 	"page_univers_calculs":{
-	    "t_trop_grand":"Time greater than the maximum value \r for this space-time",
+		"yaxis_distance": "Distance (Light-year)",
+		"yaxis_omega": "Density parameter",
+		"yaxis_temps":"time (year)",
+		"yaxis_decalage":"redshift z",
+		"xaxis_temps":"time (year)",
+		"t_trop_grand":"Time greater than the maximum value \r for this space-time",
 		"t_negatif":" should be a positif number(>0)",
-	   "dm_trop_grand":"Metric distance greater than the maximum value \r for this space-time",
+		"dm_trop_grand":"Metric distance greater than the maximum value \r for this space-time",
 		"titre": "Cosmological Calculator",
 		"bouton_retour":"Back",
 		"bouton_tracer":"Plot",
@@ -334,7 +339,7 @@
 	"puissance_consommee_infobulle":"Instantaneous power consumed by reactors in W/kg.",
 	"alerte_v0_superieure_c" : "Be careful, your speed v0 is greater than c.",
 	"alerte_r0_inferieure_rs" : "Be careful, your initial distance from the center of the celestial body r0 is smaller than the Schwarzschild's radius.",
-	"alerte_singularite_non_baryonique" : "Particle stops, calculations are not stable, try to slow down next time."
+	"alerte_singularite_non_baryonique" : "Particle stops, calculations are not stable, try to slow down next time.",
 	"alerte_verifier_r0" : "Be careful, please check the entry in r₀.",
 	"alerte_verifier_M" : "Be careful, please check the entry in M.",
 	"alerte_verifier_v0" : "Be careful, please check the entry in v₀.",

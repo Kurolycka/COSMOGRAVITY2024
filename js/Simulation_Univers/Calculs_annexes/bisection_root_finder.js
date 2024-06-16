@@ -38,7 +38,7 @@ function inverse(){
 		sigma = (2*Math.pow(Math.PI, 5)*Math.pow(k, 4))/(15*Math.pow(h, 3)*Math.pow(c, 2));
 		rho_r = (4*sigma*Math.pow(t0, 4))/(Math.pow(c, 3));
 		Or =(8*Math.PI*G*rho_r)/(3*Math.pow(H0parsec, 2));
-		Or=1.68*Or;
+		Or=1.6913*Or;
 		Or = Or.toExponential();
 	} else if (document.getElementById("resultat_omegar0_annexes").value=="Matière, Lambda et RFC") {
 		sigma = (2*Math.pow(Math.PI, 5)*Math.pow(k, 4))/(15*Math.pow(h, 3)*Math.pow(c, 2));
@@ -154,7 +154,6 @@ function bisection_method_dm (dm, omegam0, omegalambda0, Or, eps){
 	//cette variable possède 2 valeurs [nouveau_zb, contrainte] contrainte =0 ou 1. 0 pour absence de contrainte
 
 	contrainte = Number(reconditionneur[1]);
-	console.log(contrainte);
 	dm_za = f_x(za, omegam0, omegalambda0, Or, eps);
 	dm_zb = f_x(zb, omegam0, omegalambda0, Or, eps);
 	if (Number(dm)===0){
@@ -203,7 +202,7 @@ function bisection_method_dm (dm, omegam0, omegalambda0, Or, eps){
 		}else if((integB>Math.PI/2) && (integB<Math.PI)){
 			z_Pi_div_2 = dichotomie(0, zb, Integral_dm, Math.PI/2, ex);
 			z_sol_1 = dichotomie(0, z_Pi_div_2, f_x, dm, ex);
-			if (dm>dm_zb){
+			if (dm>dm_zb){ 
 				z_sol_2 = dichotomie(z_Pi_div_2, zb, f_x, dm, ex);
 				return (z_sol_1+", " + z_sol_2);
 			}
@@ -327,35 +326,35 @@ function dichotomie(BornInf, BornSup, fonction, cible, ex){
     max_iterations = 500;
     j = 0;
     while (j<500){
-            zc = (z_inf+z_sup)/2.0;
+		zc = (z_inf+z_sup)/2.0;
 
-            dm_zc = fonction(zc, omegam0, omegalambda0, Or, ex);
-            //alert("za : " + za + " dm_za: " + dm_za + " zb: " + zb + " dm_zb: " + dm_zb + " zc: " + zc+ " ex: " + ex);
-            if (((z_sup-z_inf)/2)<ex){
-                if (Math.abs(zc/ex) < 100){
+		dm_zc = fonction(zc, omegam0, omegalambda0, Or, ex);
+		//alert("za : " + za + " dm_za: " + dm_za + " zb: " + zb + " dm_zb: " + dm_zb + " zc: " + zc+ " ex: " + ex);
+		if (((z_sup-z_inf)/2)<ex){
+			if (Math.abs(zc/ex) < 100){
 
-                    ex = ex*1e-5;
-                }
-                else{
-                    zc = zc.toExponential(5);
-                    return zc;
-                }
-            }
-            else if(isNaN(dm_zc)){
-                return NaN;
-            }
+				ex = ex*1e-5;
+			}
+			else{
+				zc = zc.toExponential(5);
+				return zc;
+			}
+		}
+		else if(isNaN(dm_zc)){
+			return NaN;
+		}
 
-            else if ((dm_zc-cible)*(dm_z_sup-cible)< 0){
-                z_inf = zc;
-                dm_z_inf = dm_zc;
-                j+=1;
-            }
-            else{
-                z_sup = zc;
-                dm_z_sup = dm_zc;
-                j+=1;
-            }
-        }
+		else if ((dm_zc-cible)*(dm_z_sup-cible)< 0){
+			z_inf = zc;
+			dm_z_inf = dm_zc;
+			j+=1;
+		}
+		else{
+			z_sup = zc;
+			dm_z_sup = dm_zc;
+			j+=1;
+		}
+	};
 }
 
 //fonction définit du produit de  l'intégral de la fonction "fonction_dm" avec abs(omegak0)^0.5   Ceci sert à  trouver le z correspondant a pi/2 ou pi pour cette fonction

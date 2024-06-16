@@ -192,7 +192,8 @@ function supprHtml(){
 
 	var elementcanvasasuppr = document.getElementById("myCanvas");
 	elementcanvasasuppr.parentNode.removeChild(elementcanvasasuppr);
-	var canvaswh = document.getElementById("canvaswidthheight").value;
+
+	var canvaswh = '750';
 
 	for (count = 1; count <= nbrfuseesuppr; count += 1) {
 		var elementrayonasuppr = document.getElementById("rayon"+count.toString()+"");
@@ -204,7 +205,7 @@ function supprHtml(){
 		var elementvrasuppr = document.getElementById("tetaid"+count.toString()+"");
 		elementvrasuppr.parentNode.removeChild(elementvrasuppr);
 
-		var elementcanvasbouleasuppr = document.getElementById("myCanvasBoule"+count.toString()+"");
+		var elementcanvasbouleasuppr = document.getElementById("myCanvasBoule");
 		elementcanvasbouleasuppr.parentNode.removeChild(elementcanvasbouleasuppr);
 
 		if(canvaswh=="750"){
@@ -219,43 +220,76 @@ function supprHtml(){
 }
 
 //----------------------------------------------------{genereHtml}----------------------------------------------------
-
+/**
+ * Cette fonction s'occupe de la creation : 
+  - Des entrées initiales
+  - Les deux tableaux de calculs 
+  - Le tracé de la particule et du potentiel 
+ */
 function genereHtml(){
+
+	//on recupere le nombre de fusées rentré par l'utilisateur
 	var nbredefuseesgenere = Number(document.getElementById("nombredefusees").value);
-	
-	
-	lenbdefusees = nbredefuseesgenere;
-	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
-		var span = document.createElement("span");
-		span.setAttribute("id","rayon"+countt.toString()+"");
-		var divchampsr = document.getElementById('champs_a_remplir');
-		divchampsr.appendChild(span);
-		if(countt==1){
-			var newlabel = document.createElement("Label");
-			//newlabel.setAttribute("title","Distance initiale du projectile au centre de l'astre");
-			newlabel.setAttribute("id","ctreastre");
-			newlabel.setAttribute("title","");
-			newlabel.setAttribute("for","r01");
-			newlabel.innerHTML = " r<sub>0</sub> (m) =";
-			span.appendChild(newlabel);
+
+	lenbdefusees=nbredefuseesgenere;
+
+	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Partie entrées ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+	/*----------------Entrée pour le r_0-------------------- */
+
+	/*On fait une boucle pour le avoir des entrées pour tout les mobile */
+	for (count = 1; count <= nbredefuseesgenere; count += 1) 
+	{
+		/*SPAN*/
+		var span = document.createElement("span"); //on crée un span 
+		span.setAttribute("id","rayon"+count.toString()+""); //on lui met un id
+		var divchampsr = document.getElementById('champs_a_remplir');//on recupere le div defini dans le HTML
+		divchampsr.appendChild(span);//on ajoute le span
+
+		/* LABEL */
+		if(count==1) //on met le label qu'une seule fois
+		{
+			var newlabel = document.createElement("Label"); //on crée le label
+			newlabel.setAttribute("id","ctreastre"); //on lui met un id
+			newlabel.setAttribute("title","");//on lui met un titre
+
+			/*on dit que c'est relié à l'input qu'on definir apres
+			(pour que si on clique sur le label ça focalise sur l'input)*/
+			newlabel.setAttribute("for","r01"); 
+			newlabel.innerHTML = " r<sub>0</sub> (m) ="; //on met le texte du label
+			span.appendChild(newlabel); //on ajoute le label créé au span
 		}
-		var newinput = document.createElement("Input");
-		newinput.setAttribute("id","r0"+countt.toString()+"");
-		newinput.setAttribute("value","2e13");
-		newinput.setAttribute("align","left");
-		newinput.setAttribute("maxlength","18");
-		newinput.setAttribute("type","text");
-		newinput.setAttribute("size","5");
-		newinput.setAttribute("onchange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
-		span.appendChild(newinput);
+		/* INPUT */
+		var newinput = document.createElement("Input"); //on crée le input
+		newinput.setAttribute("id","r0"+count.toString()+"");//on lui met un id
+		newinput.setAttribute("value","2e13"); // on met la valeur par defaut
+		newinput.setAttribute("align","left"); // on met la position du texte dans l'input
+		newinput.setAttribute("maxlength","18");//on peut mettre que 18 caracteres 
+		newinput.setAttribute("type","text"); //on met que c'est du text
+		newinput.setAttribute("size","5");	//on met la taille de la case
+		/*On lui associe la fonction *verifnbr* et *initialisationGenerale*,
+		 si jamais y a un changement on appelle les deux fonctions*/
+		newinput.setAttribute("onchange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")"); 
+		span.appendChild(newinput);//on ajoute l'input créé au span
 	}
 
-	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
+	/*----------------Entrée pour le v_0-------------------- */
+	/*Pour savoir qu'est ce qu'on fait à chaque etape, allez plus haut
+	tout est expliqué pour le r0, c'est exactement les memes etapes
+	avec de differents noms, id et valeurs*/
+
+	/*On fait une boucle pour le avoir des entrées pour tout les mobile */
+	for (count = 1; count <= nbredefuseesgenere; count += 1) 
+	{
+		/* SPAN */
 		var span = document.createElement("span");
-		span.setAttribute("id","vitesseu"+countt.toString()+"");
+		span.setAttribute("id","vitesseu"+count.toString()+"");
 		var divchampsr = document.getElementById('champs_a_remplir');
 		divchampsr.appendChild(span);
-		if(countt==1){
+
+		/* LABEL */
+		if(count==1)
+		{
 			var newlabel = document.createElement("Label");
 			newlabel.setAttribute("id","vitesseurlabel");
 			newlabel.setAttribute("title","");
@@ -263,8 +297,10 @@ function genereHtml(){
 			newlabel.innerHTML = " v<sub>0</sub> (m/s) =";
 			span.appendChild(newlabel);
 		}
+
+		/* INPUT */
 		var newinput = document.createElement("Input");
-		newinput.setAttribute("id","v0"+countt.toString()+"");
+		newinput.setAttribute("id","v0"+count.toString()+"");
 		newinput.setAttribute("value","7.75e7");
 		newinput.setAttribute("maxlength","25");
 		newinput.setAttribute("type","text");
@@ -273,12 +309,25 @@ function genereHtml(){
 		span.appendChild(newinput);
 	}
 
-	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
+	/*----------------Entrée pour le phi_0-------------------- */
+
+	/*Pour savoir qu'est ce qu'on fait à chaque etape, allez plus haut
+	tout est expliqué pour le r0, c'est exactement les memes etapes
+	avec de differents noms, id et valeurs*/
+
+	/*On fait une boucle pour le avoir des entrées pour tout les mobile */
+	for (count = 1; count <= nbredefuseesgenere; count += 1) 
+	{
+		/* SPAN */
 		var span = document.createElement("span");
-		span.setAttribute("id","idphie"+countt.toString()+"");
+		span.setAttribute("id","idphie"+count.toString()+"");
 		var divchampsr = document.getElementById('champs_a_remplir');
 		divchampsr.appendChild(span);
-		if(countt==1){
+
+		/* LABEL */
+		if(count==1)
+		{	
+			
 			var newlabel = document.createElement("Label");
 			newlabel.setAttribute("id","philabel");
 			newlabel.setAttribute("title","");
@@ -286,8 +335,10 @@ function genereHtml(){
 			newlabel.innerHTML =" "+htmlDecode("&phi;")+"<sub>0</sub>° =";
 			span.appendChild(newlabel);
 		}
+
+		/* INPUT */
 		var newinput = document.createElement("Input");
-		newinput.setAttribute("id","phi0"+countt.toString()+"");
+		newinput.setAttribute("id","phi0"+count.toString()+"");
 		newinput.setAttribute("value","0");
 		newinput.setAttribute("maxlength","10");
 		newinput.setAttribute("type","text");
@@ -295,21 +346,36 @@ function genereHtml(){
 		newinput.setAttribute("onchange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
 		span.appendChild(newinput);
 	}
-	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
+
+	/*----------------Entrée pour le teta_0-------------------- */
+	
+	/*Pour savoir qu'est ce qu'on fait à chaque etape, allez plus haut
+	tout est expliqué pour le r0, c'est exactement les memes etapes
+	avec de differents noms, id et valeurs*/
+
+	/*On fait une boucle pour le avoir des entrées pour tout les mobile */
+	for (count = 1; count <= nbredefuseesgenere; count += 1) 
+	{
+		/* SPAN */
 		var span = document.createElement("span");
-		span.setAttribute("id","tetaid"+countt.toString()+"");
+		span.setAttribute("id","tetaid"+count.toString()+"");
 		var divchampsr = document.getElementById('champs_a_remplir');
 		divchampsr.appendChild(span);
-		if(countt==1){
-			var newlabel = document.createElement("Label");
+		if(count==1)
+		{
+
+		/* LABEL */
+		var newlabel = document.createElement("Label");
 			newlabel.setAttribute("id","thetalabel");
 			newlabel.setAttribute("title","");
 			newlabel.setAttribute("for","teta1");
 			newlabel.innerHTML = " "+htmlDecode("&#632;")+"<sub>0</sub>° =";      //  &#632; c'est phi majuscule
 			span.appendChild(newlabel);
 		}
+
+		/* INPUT */
 		var newinput = document.createElement("Input");
-		newinput.setAttribute("id","teta"+countt.toString()+"");
+		newinput.setAttribute("id","teta"+count.toString()+"");
 		newinput.setAttribute("value","90");
 		newinput.setAttribute("maxlength","10");
 		newinput.setAttribute("type","text");
@@ -318,131 +384,226 @@ function genereHtml(){
 		span.appendChild(newinput);
 	}
  
+
+
+	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Partie 1er Tableau ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+	//-----------------------------CASES DU HAUT------------------------------------
+	
+	/*On recupere l'element defini dans le HTML qui est le tableau
+	, puis on insere une nouvelle ligne qu'on appelle newRow*/
 	var newRow=document.getElementById('tableauconstanteslers').insertRow();
-	var jstring = '<tr id="tgggg1" >'
-	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
-		jstring += '<th class="tg-aicv">$L'+countt.toString()+'(m)$</th>';}
-	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
-		jstring += '<th class="tg-aicv">$E'+countt.toString()+'$</th>';}
-	for (countt = 1; countt <= nbredefuseesgenere; countt +=1) {
-		jstring += '<th class="tg-aicv" id="vitesse_orb_circ'+countt.toString()+'" title="">$Vcirc'+countt.toString()+' (m/s)$</th>'; //ManonCirculaire
+
+	/* Dans le jstring on va mettre les cases du haut en bouclant sur les mobiles */
+
+	var jstring = '<tr id="tgggg1" >' //debut ligne
+
+	/* CASE POUR L */
+	for (count = 1; count <= nbredefuseesgenere; count += 1) 
+	{
+		jstring += '<th class="tg-aicv">$L'+count.toString()+'(m)$</th>';
+	} 
+
+	/* CASE POUR E */
+	for (count = 1; count <= nbredefuseesgenere; count += 1) 
+	{ 
+		jstring += '<th class="tg-aicv">$E'+count.toString()+'$</th>';
+	} 
+
+	/* CASE POUR LA VITESSE DES ORBITES CIRCULAIRES*/
+	for (count = 1; count <= nbredefuseesgenere; count +=1) 
+	{
+		jstring += '<th class="tg-aicv" id="vitesse_orb_circ'+count.toString()+'" title="">$Vcirc'+count.toString()+' (m/s)$</th>'; //ManonCirculaire
 	}
 
 	//pour katex il faux mettre un antislash devant le antislash
+	
+	/* CASE POUR RAYON DE SCHWARZSCHILD */
+	jstring +='<th class="tg-6l4m" id="rayonschwars" title="" >$rs=\\frac{2GM}{c^{2}}(m)$</th>';
 
-	jstring +='<th class="tg-6l4m" id="rayonschwars" title="" >$rs=\\frac{2GM}{c^{2}}(m)$</th>';;
+	/* CASE POUR GRAVITE DE SURFACE */
 	jstring +='<th class="tg-6l4m" style="display: none;" id="gravtxt" title="">$grav=\\frac{GM}{R^{2}}\\frac{1}{9.81}(g)$</th>';
+
+	/* CASE POUR VITESSE DE LIBERATION */
 	jstring +='<th class="tg-6l4m" style="display: none;" id="vitesseLibéra" title="">$Vlib=c(\\frac{rs}{R})^{1/2}(m.s^{-1}) $</th>';     //  <---------JPC
+	
+	/* CASE POUR TEMPERATURE TROU NOIR */
 	jstring +='<th class="tg-6l4m" style="display: none;" id="TempTrouNoirtxt" title="">$T=6.15*10^{-8}\\frac{M\\odot}{M}(K)$</th>';
+
+	/* CASE POUR TEMPS D'EVAPORATION TROU NOIR */
 	jstring +='<th class="tg-6l4m" style="display: none;" id="tempsEvaporationTrouNoirtxt" title="">$t=6.6*10^{74}(\\frac{M}{M\\odot})^{3}(s)$</th>';
-	jstring +='</tr>';
+	
+	jstring +='</tr>'; //fin ligne
 
-	newRow.innerHTML = jstring;
+	/*On met le jstring dans le tableau */
+	newRow.innerHTML = jstring; 
 
+
+	//-----------------------------CASES DU BAS------------------------------------
+
+	//C'est cette partie qui concerne les valeurs en chiffres
+
+	/*On recupere l'element defini dans le HTML qui est le tableau
+	, puis on insere une nouvelle ligne qu'on appelle newRow*/
 	var newRow2=document.getElementById('tableauconstanteslers').insertRow();
 
-	var jstring = '<tr id="tgggg2" >'
-	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
-		jstring += '<td class="tg-3ozo" id="L'+countt.toString()+'">0</td>';}
+	/* Dans le jstring on va mettre les cases du bas en bouclant sur les mobiles */
+	
+	var jstring = '<tr id="tgggg2" >'//debut ligne
 
-	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
-		jstring += '<td class="tg-3ozo" id="E'+countt.toString()+'">0</td>';
-	}
-	for (countt =1; countt <= nbredefuseesgenere; countt +=1) {
-		jstring += '<td class="tg-3ozo" id="Vcirc'+countt.toString()+'">0</td>'; //ManonCirculaire
+	/* CASE POUR L */
+	for (count = 1; count <= nbredefuseesgenere; count += 1) {
+		jstring += '<td class="tg-3ozo" id="L'+count.toString()+'">0</td>';}
+	
+	/* CASE POUR E */
+	for (count = 1; count <= nbredefuseesgenere; count += 1) {
+		jstring += '<td class="tg-3ozo" id="E'+count.toString()+'">0</td>';
 	}
 
+	/* CASE POUR LA VITESSE DES ORBITES CIRCULAIRES*/
+	for (count =1; count <= nbredefuseesgenere; count +=1) {
+		jstring += '<td class="tg-3ozo" id="Vcirc'+count.toString()+'">0</td>'; 
+	}
+
+	/* CASE POUR RAYON DE SCHWARZSCHILD */
 	jstring +='<td class="tg-3ozo" id="m">0</td>';
+
+	/* CASE POUR GRAVITE DE SURFACE */
 	jstring +='<td class="tg-3ozo" style="display: none;" id="g">0</td>';
+
+	/* CASE POUR VITESSE DE LIBERATION */
 	jstring +='<td class="tg-3ozo" style="display: none;" id="Vlib">0</td>';
+
+	/* CASE POUR TEMPERATURE TROU NOIR */
 	jstring +='<td class="tg-3ozo" style="display: none;" id="TempTN">0</td>';
+
+	/* CASE POUR TEMPS D'EVAPORATION TROU NOIR */
 	jstring +='<td class="tg-3ozo" style="display: none;" id="tempsEvapTN">0</td>';
-	jstring +='</tr>';
-	newRow2.innerHTML = jstring;
+	jstring +='</tr>';	//fin ligne
 
-	//element2=document.getElementById('traject_type2');  <------------------------------------JPC
+	/*On met le jstring dans le tableau */
+	newRow2.innerHTML = jstring; 
 
-	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
+	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Partie 2eme Tableau ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+	/*On fait une boucle pour avoir un tableau pour chaque mobile*/
+	for (count = 1; count <= nbredefuseesgenere; count += 1) 
+	{
+		//-----------------------------CASES DU HAUT------------------------------------
+
+		/*On recupere l'element defini dans le HTML qui est le tableau
+		, puis on insere une nouvelle ligne qu'on appelle newRow*/
 		var newRow=document.getElementById('tableauresultatsimu').insertRow();
 		// il faudrait songer a la sécurité ici, 'never trust user input', serait il possible pour un utilisateur de prendre le controle avec ses user input?
-
-		newRow.innerHTML = `<tr id="tg2gga`+countt.toString()+`">
-		<th class="tg-aicv">r(m)</th>
-		<th id="temps_ecoule`+countt.toString()+`" class="tg-aicv"></th>
-		<th id="acceleration`+countt.toString()+`" title="" class="tg-aicv"> Gradient (m.s<sup>-2)</sup>)</th>
-		<th id="vitesseur`+countt.toString()+`" title="" class="tg-aicv"  >V<SUB>r</SUB>(m.s<sup>-1</sup>) </th>
-		<th id="vitesseuphi`+countt.toString()+`" title="" class="tg-aicv"  >V<SUB>&phi;</SUB>(m.s<sup>-1</sup>)</th>
-		<th id="temps_obs`+countt.toString()+`" class="tg-aicv"></th>
-		<th id="decal_spect`+countt.toString()+`" title="" class="tg-aicv"></th>
-		<th id="v_total`+countt.toString()+`" title="" class="tg-aicv">   V<SUB>physique</SUB> (m.s<sup>-1</sup>) </th>
-		<th id="distance_metrique`+countt.toString()+`" title="" class="tg-aicv"></th> 
-		<th id="nb_g`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>
-		<th id="dernier_g`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>
-		<th id ="puissance_consommee_label`+countt.toString()+`" title="" class="tg-aicv" style="display: none;"></th>`; //ManonV3
 		
+		newRow.innerHTML  = '<tr id="tg2gga'+count.toString()+'">';//debut ligne
+		/*POUR LE R */
+		newRow.innerHTML += '<th class="tg-aicv">r(m)</th>';
+		/*POUR LE TEMPS PROPRE */
+		newRow.innerHTML += '<th id="temps_ecoule'+count.toString()+'" class="tg-aicv"></th>';
+		/*POUR LE GRADIENT D'ACCELERATION */
+		newRow.innerHTML += '<th id="acceleration'+count.toString()+'" title="" class="tg-aicv"> Gradient (m.s<sup>-2)</sup>)</th>';
+		/*POUR LA VITESSE RADIALE */
+		newRow.innerHTML += '<th id="vitesseur'+count.toString()+'" title="" class="tg-aicv"  >V<SUB>r</SUB>(m.s<sup>-1</sup>) </th>';
+		/*POUR LA VITESSE ANGULAIRE */
+		newRow.innerHTML += '<th id="vitesseuphi'+count.toString()+'" title="" class="tg-aicv"  >V<SUB>&phi;</SUB>(m.s<sup>-1</sup>)</th>';
+		/*POUR LE TEMPS OBSERVATEUR */
+		newRow.innerHTML += '<th id="temps_obs'+count.toString()+'" class="tg-aicv"></th>';
+		/*POUR LE DECALAGE SPECTRALE */
+		newRow.innerHTML += '<th id="decal_spect'+count.toString()+'" title="" class="tg-aicv"></th>';
+		/*POUR LA VITESSE TOTAL */
+		newRow.innerHTML += '<th id="v_total'+count.toString()+'" title="" class="tg-aicv">   V<SUB>physique</SUB> (m.s<sup>-1</sup>) </th>';
+		/*POUR LA DISTANCE PARCOURUE */
+		newRow.innerHTML += '<th id="distance_metrique'+count.toString()+'" title="" class="tg-aicv"></th> ';
+		/*POUR LE NOMBRE DE G RESSENTI*/
+		newRow.innerHTML += '<th id="nb_g'+count.toString()+'" title="" class="tg-aicv" style="display: none;"></th>';
+		/*POUR LE DERNIER G AFFICHÉ */
+		newRow.innerHTML += '<th id="dernier_g'+count.toString()+'" title="" class="tg-aicv" style="display: none;"></th>'
+		/*POUR LA PUISSANCE TOTALE CONSOMÉE*/
+		newRow.innerHTML += '<th id ="puissance_consommee_label'+count.toString()+'" title="" class="tg-aicv" style="display: none;"></th>'; 
+		
+		//-----------------------------CASES DU BAS------------------------------------
 
+		//C'est cette partie qui concerne les valeurs en chiffres
+
+		/*On recupere l'element defini dans le HTML qui est le tableau
+		, puis on insere une nouvelle ligne qu'on appelle newRow*/
 		var newRow2=document.getElementById('tableauresultatsimu').insertRow();
 
-		newRow2.innerHTML = `<tr id="tg2ggb`+countt.toString()+`">
-		<td class="tg-3ozo" id="r_par`+countt.toString()+`">res</td>
-		<td class="tg-3ozo" id="tp`+countt.toString()+`">res</td>
-		<td class="tg-3ozo" id="ga`+countt.toString()+`">res</td>
-		<td class="tg-3ozo" id="vr_sc_mas`+countt.toString()+`">res</td>
-		<td class="tg-3ozo" id="vp_sc_mas`+countt.toString()+`">res</td>
-		<td class="tg-3ozo" id="to`+countt.toString()+`">res</td>
-		<td class="tg-3ozo" id="decal`+countt.toString()+`">res</td>
-		<td class="tg-3ozo" id="v_tot`+countt.toString()+`">res</td>
-		<td class="tg-3ozo" id="distance_parcourue`+countt.toString()+`">res</td>
-		<td class="tg-3ozo" id="g_ressenti`+countt.toString()+`" style="display: none;">0</td>
-		<td class="tg-3ozo" id="dernier_g_res`+countt.toString()+`" style="display: none;">0</td>
-		<td class="tg-3ozo" id="puissance_consommee`+countt.toString()+`" style="display: none;">0</td>`; //ManonV3
+		newRow2.innerHTML = '<tr id="tg2ggb'+count.toString()+'">';//debut ligne
+		/*POUR LE R */
+		newRow2.innerHTML += '<td class="tg-3ozo" id="r_par'+count.toString()+'">res</td>'
+		/*POUR LE TEMPS PROPRE */
+		newRow2.innerHTML += '<td class="tg-3ozo" id="tp'+count.toString()+'">res</td>'
+		/*POUR LE GRADIENT D'ACCELERATION */
+		newRow2.innerHTML += '<td class="tg-3ozo" id="ga'+count.toString()+'">res</td>'
+		/*POUR LA VITESSE RADIALE */
+		newRow2.innerHTML += '<td class="tg-3ozo" id="vr_sc_mas'+count.toString()+'">res</td>'
+		/*POUR LA VITESSE ANGULAIRE */
+		newRow2.innerHTML += '<td class="tg-3ozo" id="vp_sc_mas'+count.toString()+'">res</td>'
+		/*POUR LE TEMPS OBSERVATEUR */
+		newRow2.innerHTML += '<td class="tg-3ozo" id="to'+count.toString()+'">res</td>'
+		/*POUR LE DECALAGE SPECTRALE */
+		newRow2.innerHTML += '<td class="tg-3ozo" id="decal'+count.toString()+'">res</td>'
+		/*POUR LA VITESSE TOTAL */
+		newRow2.innerHTML += '<td class="tg-3ozo" id="v_tot'+count.toString()+'">res</td>'
+		/*POUR LA DISTANCE PARCOURUE */
+		newRow2.innerHTML += '<td class="tg-3ozo" id="distance_parcourue'+count.toString()+'">res</td>'
+		/*POUR LE NOMBRE DE G RESSENTI*/
+		newRow2.innerHTML += '<td class="tg-3ozo" id="g_ressenti'+count.toString()+'" style="display: none;">0</td>'
+		/*POUR LE DERNIER G AFFICHÉ */
+		newRow2.innerHTML += '<td class="tg-3ozo" id="dernier_g_res'+count.toString()+'" style="display: none;">0</td>'
+		/*POUR LA PUISSANCE TOTALE CONSOMÉE*/
+		newRow2.innerHTML += '<td class="tg-3ozo" id="puissance_consommee'+count.toString()+'" style="display: none;">0</td>'; 
+	} 
+
+	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< CANVA POUR LE TRACÉ ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	//on recupere la valeur de la hauteur du canva
+	var canvaswidthheight = '750';
+	/*POUR LE TRACÉ DERRIERE LA BOULE*/
+	var canvasgenere = document.createElement("canvas");//on crée un element HTML Canva
+	canvasgenere.setAttribute("id","myCanvas"); //on lui met un id
+	canvasgenere.setAttribute("width",canvaswidthheight); // on definit sa largeur avec la valeur recupérée
+	canvasgenere.setAttribute("height",canvaswidthheight);// on definit sa hauteur avec la valeur recupérée
+	canvasgenere.setAttribute("class","canvaslaclasse");  // on met un style css
+	wrappergenere = document.getElementById('wrapper'); //on recupere l'element Wrapper	créé dans le HTML 
+	wrappergenere.appendChild(canvasgenere); //on ajoute le canva sur le Wrapper
+
+	/*POUR LE TRACÉ DE LA BOULE*/
+	var canvasboulegenere = document.createElement("canvas");//on crée un element HTML Canva
+	canvasboulegenere.setAttribute("id","myCanvasBoule"); //on lui met un id
+	canvasboulegenere.setAttribute("width",canvaswidthheight); // on definit sa largeur avec la valeur recupérée
+	canvasboulegenere.setAttribute("height",canvaswidthheight); // on definit sa hauteur avec la valeur recupérée
+	canvasboulegenere.setAttribute("class","canvaslaclasse"); // on met un style css
+	wrappergenere = document.getElementById('wrapper'); //on recupere l'element Wrapper	créé dans le HTML 
+	wrappergenere.appendChild(canvasboulegenere); //on ajoute le canva sur le Wrapper
+
+
+	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< CANVA POUR LE POTENTIEL ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	var canvaswidthheight = '900';
+	var canvas3genere = document.createElement("canvas");//on crée un element HTML Canva
+	canvas3genere.setAttribute("id","myCanvas3three"); //on lui met un id
+	canvas3genere.setAttribute("width",canvaswidthheight); // on definit sa largeur avec la valeur recupérée
+	canvas3genere.setAttribute("height",canvaswidthheight); // on definit sa hauteur avec la valeur recupérée
+	canvas3genere.setAttribute("class","canvaslaclasse"); // on met un style css
+	var wrappergenere = document.getElementById('wrapper'); //on recupere l'element Wrapper	créé dans le HTML 
+	wrappergenere.appendChild(canvas3genere); //on ajoute le canva sur le Wrapper
+
+	/*Pour creer des svg dans les quels on dessine le potentiel*/
+	
+	for (count = 1; count <= nbredefuseesgenere; count += 1) 
+	{
+		var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");//on crée un element svg
+		svg.setAttribute("id", "grsvg_"+count.toString()+""); //on lui met un id
+		document.getElementById("wrapper2").appendChild(svg); //on ajoute au Wrapper
 	}
+	
 
+	texteTrajectoireMassive(nbredefuseesgenere); //on met le text adapaté la page HTML
+	notationvitesseree2(); //on met les bonnes notations
+	infobulleobservateurdistant(); //on met les infobulles
+	textegravetetc(); //on met le text adapaté dans les tableaux 
 
-
-		var canvaswidthheight = document.getElementById("canvaswidthheight").value;
-		var canvasgenere = document.createElement("canvas");
-		canvasgenere.setAttribute("id","myCanvas");
-		canvasgenere.setAttribute("width",canvaswidthheight);
-		canvasgenere.setAttribute("height",canvaswidthheight);
-		canvasgenere.setAttribute("class","canvaslaclasse");
-		if(canvaswidthheight=="750"){var wrappergenere = document.getElementById('wrapper');}
-		else{var wrappergenere = document.getElementById('wrapperengrand');}
-		wrappergenere.appendChild(canvasgenere);
-
-	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
-		var canvasboulegenere = document.createElement("canvas");
-		canvasboulegenere.setAttribute("id","myCanvasBoule"+countt.toString()+"");
-		canvasboulegenere.setAttribute("width",canvaswidthheight);
-		canvasboulegenere.setAttribute("height",canvaswidthheight);
-		canvasboulegenere.setAttribute("class","canvaslaclasse");
-		if(canvaswidthheight=="750"){var wrappergenere = document.getElementById('wrapper');}
-		else{var wrappergenere = document.getElementById('wrapperengrand');}
-		wrappergenere.appendChild(canvasboulegenere);
-
-	}
-
-	var canvas3genere = document.createElement("canvas");
-	canvas3genere.setAttribute("id","myCanvas3three");
-	canvas3genere.setAttribute("width",canvaswidthheight);
-	canvas3genere.setAttribute("height",canvaswidthheight);
-	canvas3genere.setAttribute("class","canvaslaclasse");
-	if(canvaswidthheight=="750"){var wrappergenere = document.getElementById('wrapper');}
-	else{var wrappergenere = document.getElementById('wrapperengrand');}
-	wrappergenere.appendChild(canvas3genere);
-
-	if(canvaswidthheight=="750"){
-		for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
-			var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-			svg.setAttribute("id", "grsvg_"+countt.toString()+"");
-			document.getElementById("wrapper2").appendChild(svg);
-		}
-	}	
-
-	texteTrajectoireMassive(nbredefuseesgenere);
-	notationvitesseree2();
-	infobulleobservateurdistant();
-	textegravetetc();
 	//pour le bon affichage du katex
 	renderMathInElement(document.body, {
 		// ...options...
@@ -461,7 +622,6 @@ function genereHtml(){
  * @returns {Object} mobile : objet contenant toutes les informations sur un mobile/fusée/particule... 
  */
 function initialisation(compteur){
-
 	var texte = o_recupereJson(); //Cela me permettra de récupérer le texte pour les infobulles. 
 			
 	//Je récupère les différentes valeurs rentrées par l'utilisateur :
@@ -862,15 +1022,14 @@ function trajectoire(compteur,mobile) {
 			return;
     	} 
 
-		/*Méthode des prédecesseurs : un canvas est créé pour chaque boule bleue dans le html et tous les canvas sont superposés. 
-		C'est une mauvaise manière de faire qui ralentit l'animation mais cela a été fait par faute de temps.
-		Dans l'idéal il faudrait tout dessiner ou tout mettre à jour en même temps sur le même canvas.*/
-
-    	mobile["canvas22"]= document.getElementById("myCanvasBoule"+compteur.toString());
-    	mobile["context22"]=mobile["canvas22"].getContext("2d");
+		
+		//on recupere le canva qu'on a créé et on ouvre un context
+    	canvas22= document.getElementById("myCanvasBoule");
+    	context22= canvas22.getContext("2d");
 
 		majFondFixe(); //J'efface le canvas et je le remplace par un fond blanc avec le texte visible sur la gauche avec les paramètres d'entrée. 
-		majFondFixe44(mobile); //J'efface tout ce qui est lié au context22 du mobile, donc tout ce qui est lié à la trajectoire d'un mobile spécifique. 
+		
+		context22.clearRect(0, 0, canvas.width, canvas.height);//J'efface tout ce qui est lié au context22 du mobile, donc tout ce qui est lié à la trajectoire d'un mobile spécifique. 
 
     	diametre_particule = DIAMETRE_PART; //Je fixe le diamètre de la particule. 
 
@@ -887,6 +1046,9 @@ function trajectoire(compteur,mobile) {
 		posX2 = posX3 + x1obs;
 		posY2 = posY3 + y1obs;
     	mobile["position"]={posX2:posX2, posY2:posY2} 
+
+		//Une variable qui stocke la valeur precedente de la position
+    	mobile["position_precedente"]={X:0, Y:0} 
  
     	new Timer(() => animate(compteur,mobile,mobilefactor),compteur, 1, -1); //Créé un nouvel objet Timer qui répète la fonction animate toutes les 1s indéfiniment. 
 		//animate calcule les coordonnées de la particule à chaque instant. 
@@ -925,7 +1087,7 @@ function trajectoire(compteur,mobile) {
 
 					//Je calcule les variations de E et L :
 					Delta_E= joy.GetPhi()*X*vp_1*vp_1/(c*c-vtotal*vtotal)*mobile.E;
-          Delta_L= (X + Delta_E/mobile.E)*mobile.L;
+         			Delta_L= (X + Delta_E/mobile.E)*mobile.L;
 					puissance_instant=(Delta_E/mobile.E)*c*c/(50e-3);
 					deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/mobile.E); //Calcul de l'énergie ΔE/E consommée au total. 
 
@@ -1082,7 +1244,7 @@ function trajectoire(compteur,mobile) {
 
 			mobile.point = graphique_creation_pot(0,data1,data2,compteur,mobile); //Trace le graphe du potentiel.
 
-		},300);  
+		},120);  
   	} 
 	else { //Dans le cas où ce n'est pas le début de la simulation et où je ne suis pas en pause. 
 		new Timer(() => animate(compteur,mobile,mobilefactor),compteur, 1, -1); //Créé un nouvel objet Timer qui répète la fonction animate toutes les 1s indéfiniment. 
@@ -1163,6 +1325,10 @@ function animate(compteur,mobile,mobilefactor)
 				gmp = derivee_seconde_Schwarzchild_massif_obs(mobile.E,mobile.L,mobile.r_part_obs + 1);
 				fm = Math.abs(gm - gmp); 
 
+				/*on stocke l'ancienne position pour l'efacer avant de dessiner la nouvelle position*/
+				mobile.position_precedente.X=mobile.position.posX2; 
+				mobile.position_precedente.Y=mobile.position.posY2;	
+
 				/*Calcul de la postion [X,Y] (noramilisées) pour dessiner dans le canva (tracé) */
 				mobile.position.posX2 = mobilefactor[compteur] * mobile.r_part_obs * (Math.cos(mobile.phi_obs) / rmax) + (canvas.width / 2.);  
 				mobile.position.posY2 = mobilefactor[compteur] * mobile.r_part_obs * (Math.sin(mobile.phi_obs) / rmax) + (canvas.height / 2.); 
@@ -1205,22 +1371,28 @@ function animate(compteur,mobile,mobilefactor)
 			context.rect(mobile.position.posX2, mobile.position.posY2, 1, 1); //on dessine le tracé
 			context.lineWidth = "1"; //en choisissant la bonne largeur des traits
 			context.fill();		//on le met sur le canva
+
+			/*on efface l'ancienne position de la boule*/
+			radius=5 //rayon de la boule
+			lineWidth=1 //la largeur de la ligne utilisée pour dessiner 
+			//Expression fournie par ChatGPT et adapté à CosmoGravity
+			context22.clearRect(mobile.position_precedente.X- radius - lineWidth, mobile.position_precedente.Y - radius - lineWidth, (radius + lineWidth) * 2, (radius + lineWidth) * 2);
+
 			
-			majFondFixe44(mobile); // on efface l'ancienne position de la boule
 
 			//On dessine la boule bleue avec les meme etapes
-			mobile["context22"].beginPath();
-			mobile["context22"].fillStyle = COULEUR_BLEU;
-			mobile["context22"].arc(mobile.position.posX2, mobile.position.posY2 , 5, 0, Math.PI * 2);
-			mobile["context22"].lineWidth = "1";
-			mobile["context22"].fill();
+			context22.beginPath();
+			context22.fillStyle = COULEUR_BLEU;
+			context22.arc(mobile.position.posX2, mobile.position.posY2 , radius, 0, Math.PI * 2);
+			context22.lineWidth = lineWidth.toString();
+			context22.fill();
 
 			//-----------------------------------------------------PARTIE TRACÉ POTENTIEL-------------------------------------------------
 			
 			V = Vr_obs(mobile.E,mobile.L,mobile.r_part_obs)-1; //on stocke la valeur du (Poteniel-1) avec les valeurs actuelles
 			data2 = []; //on vide la liste qu'on va à la fonction update_graphique_2()
 			data2.push({date: mobile.r_part_obs, close: V }); //on mets les les valeurs  dans data2 
-			if(mobile.point !== undefined){update_graphique_2(mobile.point,data2,mobile);} //puis on les dessine si le point est defini
+			//if(mobile.point !== undefined){update_graphique_2(mobile.point,data2,mobile);} //puis on les dessine si le point est defini
 
 			//-----------------------------------------------------GESTION REBOND-------------------------------------------------
 			if (mobile.r_part_obs <= r_phy ) 
@@ -1242,18 +1414,18 @@ function animate(compteur,mobile,mobilefactor)
 					if (Math.abs(A_part_obs_init)>300) 
 					{
 						//On dessine l'explosion comme un GIF si ya pas d'amortissement 
-						setTimeout(function(){mobile["context22"].drawImage(expl1,mobile.position.posX2-50,mobile.position.posY2-50,100,100);},200);
-						setTimeout(function(){mobile["context22"].clearRect(mobile.position.posX2-50,mobile.position.posY2-50,100,100);},390);
-						setTimeout(function(){mobile["context22"].drawImage(expl2,mobile.position.posX2-50,mobile.position.posY2-50,100,100);},400);
-						setTimeout(function(){mobile["context22"].clearRect(mobile.position.posX2-50,mobile.position.posY2-50,100,100);},590);
-						setTimeout(function(){mobile["context22"].drawImage(expl3,mobile.position.posX2-50,mobile.position.posY2-50,100,100);},600);
-						setTimeout(function(){mobile["context22"].clearRect(mobile.position.posX2-50,mobile.position.posY2-50,100,100);},790);
-						setTimeout(function(){mobile["context22"].drawImage(expl4,mobile.position.posX2-50,mobile.position.posY2-50,100,100);},800);
-						setTimeout(function(){mobile["context22"].clearRect(mobile.position.posX2-50,mobile.position.posY2-50,100,100);},990);
-						setTimeout(function(){mobile["context22"].drawImage(expl5,mobile.position.posX2-50,mobile.position.posY2-50,100,100);},1000);
-						setTimeout(function(){mobile["context22"].clearRect(mobile.position.posX2-50,mobile.position.posY2-50,100,100);},1190);
-						setTimeout(function(){mobile["context22"].drawImage(expl6,mobile.position.posX2-50,mobile.position.posY2-50,100,100);},1200);
-						setTimeout(function(){mobile["context22"].clearRect(mobile.position.posX2-50,mobile.position.posY2-50,100,100);},1390);
+						setTimeout(function(){context22.drawImage(expl1,mobile.position.posX2-50,mobile.position.posY2-50,100,100);},200);
+						setTimeout(function(){context22.clearRect(mobile.position.posX2-50,mobile.position.posY2-50,100,100);},390);
+						setTimeout(function(){context22.drawImage(expl2,mobile.position.posX2-50,mobile.position.posY2-50,100,100);},400);
+						setTimeout(function(){context22.clearRect(mobile.position.posX2-50,mobile.position.posY2-50,100,100);},590);
+						setTimeout(function(){context22.drawImage(expl3,mobile.position.posX2-50,mobile.position.posY2-50,100,100);},600);
+						setTimeout(function(){context22.clearRect(mobile.position.posX2-50,mobile.position.posY2-50,100,100);},790);
+						setTimeout(function(){context22.drawImage(expl4,mobile.position.posX2-50,mobile.position.posY2-50,100,100);},800);
+						setTimeout(function(){context22.clearRect(mobile.position.posX2-50,mobile.position.posY2-50,100,100);},990);
+						setTimeout(function(){context22.drawImage(expl5,mobile.position.posX2-50,mobile.position.posY2-50,100,100);},1000);
+						setTimeout(function(){context22.clearRect(mobile.position.posX2-50,mobile.position.posY2-50,100,100);},1190);
+						setTimeout(function(){context22.drawImage(expl6,mobile.position.posX2-50,mobile.position.posY2-50,100,100);},1200);
+						setTimeout(function(){context22.clearRect(mobile.position.posX2-50,mobile.position.posY2-50,100,100);},1390);
 						Timer.instances[compteur].stop();//puis on stope la simulation 
 						
 						
@@ -1328,6 +1500,10 @@ function animate(compteur,mobile,mobilefactor)
 			gmp = derivee_seconde_Schwarzchild_massif(mobile.L,mobile.r_part + 1);
 			fm = Math.abs(gm - gmp);
 
+			/*on stocke l'ancienne position pour l'efacer avant de dessiner la nouvelle position*/
+			mobile.position_precedente.X=mobile.positionspatio.posX1; 
+			mobile.position_precedente.Y=mobile.positionspatio.posY1;	
+
 			/*Calcul de la postion [X,Y] (noramilisées) pour dessiner dans le canva (tracé) */
 			mobile.positionspatio.posX1 = mobilefactor[compteur] * mobile.r_part * (Math.cos(mobile.phi) / rmax) + (canvas.width / 2.);  
 			mobile.positionspatio.posY1 = mobilefactor[compteur] * mobile.r_part * (Math.sin(mobile.phi) / rmax) + (canvas.height / 2.);
@@ -1383,21 +1559,26 @@ function animate(compteur,mobile,mobilefactor)
 			context.beginPath();
 			context.fillStyle = mobile.couleur;
 			/*On dessine avec ce qu'on a calculé que si r n'est pas negatif (audela de rs ça donne n'importe quoi) */
-			if(mobile.r_part>1){context.rect(mobile.positionspatio.posX1, mobile.positionspatio.posY1, 1, 1);}
+			if(mobile.r_part>0){context.rect(mobile.positionspatio.posX1, mobile.positionspatio.posY1, 1, 1);}
 			else{context.rect((canvas.width / 2.0), (canvas.height / 2.0), 1, 1);}
 			context.lineWidth = "1";
 			context.fill();
 
-			majFondFixe44(mobile); // on efface l'ancienne position de la boule
-			//on dessine le mobile au bout du trait
-			mobile["context22"].beginPath();
-			mobile["context22"].fillStyle = COULEUR_BLEU;
-			/*On dessine avec ce qu'on a calculé que si r n'est pas negatif (audela de rs ça donne n'importe quoi) */
-			if(mobile.r_part>1){mobile["context22"].arc(mobile.positionspatio.posX1, mobile.positionspatio.posY1 , 5, 0, Math.PI * 2);}
-			else{mobile["context22"].arc((canvas.width / 2.0), (canvas.height / 2.0) , 5, 0, Math.PI * 2);}
+			/*on efface l'ancienne position de la boule*/
+			radius=5 //rayon de la boule
+			lineWidth=1 //la largeur de la ligne utilisée pour dessiner 
+			//Expression fournie par ChatGPT et adapté à CosmoGravity
+			context22.clearRect(mobile.position_precedente.X- radius - lineWidth,mobile.position_precedente.Y - radius - lineWidth, (radius + lineWidth) * 2, (radius + lineWidth) * 2);
 
-			mobile["context22"].lineWidth = "1";
-			mobile["context22"].fill();
+			//on dessine le mobile au bout du trait
+			context22.beginPath();
+			context22.fillStyle = COULEUR_BLEU;
+			/*On dessine avec ce qu'on a calculé que si r n'est pas negatif (audela de rs ça donne n'importe quoi) */
+			if(mobile.r_part>0){context22.arc(mobile.positionspatio.posX1, mobile.positionspatio.posY1 , radius, 0, Math.PI * 2);}
+			else{context22.arc((canvas.width / 2.0), (canvas.height / 2.0) , 5, 0, Math.PI * 2);}
+
+			context22.lineWidth = "1";
+			context22.fill();
 
 			//-----------------------------------------------------PARTIE TRACÉ POTENTIEL -------------------------------------------------
 			V = Vr_mob(mobile.L,mobile.r_part)-1;//on stocke la valeur du (Poteniel-1) avec les valeurs actuelles
@@ -1436,18 +1617,18 @@ function animate(compteur,mobile,mobilefactor)
 				if (Math.abs(A_part_init)>300) 
 				{
 					//On dessine l'explosion comme un GIF si ya pas d'amortissement 
-					setTimeout(function(){mobile["context22"].drawImage(expl1,mobile.positionspatio.posX1-50,mobile.positionspatio.posY1-50,100,100);},200);
-					setTimeout(function(){mobile["context22"].clearRect(mobile.positionspatio.posX1-50,mobile.positionspatio.posY1-50,100,100);},390);
-					setTimeout(function(){mobile["context22"].drawImage(expl2,mobile.positionspatio.posX1-50,mobile.positionspatio.posY1-50,100,100);},400);
-					setTimeout(function(){mobile["context22"].clearRect(mobile.positionspatio.posX1-50,mobile.positionspatio.posY1-50,100,100);},590);
-					setTimeout(function(){mobile["context22"].drawImage(expl3,mobile.positionspatio.posX1-50,mobile.positionspatio.posY1-50,100,100);},600);
-					setTimeout(function(){mobile["context22"].clearRect(mobile.positionspatio.posX1-50,mobile.positionspatio.posY1-50,100,100);},790);
-					setTimeout(function(){mobile["context22"].drawImage(expl4,mobile.positionspatio.posX1-50,mobile.positionspatio.posY1-50,100,100);},800);
-					setTimeout(function(){mobile["context22"].clearRect(mobile.positionspatio.posX1-50,mobile.positionspatio.posY1-50,100,100);},990);
-					setTimeout(function(){mobile["context22"].drawImage(expl5,mobile.positionspatio.posX1-50,mobile.positionspatio.posY1-50,100,100);},1000);
-					setTimeout(function(){mobile["context22"].clearRect(mobile.positionspatio.posX1-50,mobile.positionspatio.posY1-50,100,100);},1190);
-					setTimeout(function(){mobile["context22"].drawImage(expl6,mobile.positionspatio.posX1-50,mobile.positionspatio.posY1-50,100,100);},1200);
-					setTimeout(function(){mobile["context22"].clearRect(mobile.positionspatio.posX1-50,mobile.positionspatio.posY1-50,100,100);},1390);          
+					setTimeout(function(){context22.drawImage(expl1,mobile.positionspatio.posX1-50,mobile.positionspatio.posY1-50,100,100);},200);
+					setTimeout(function(){context22.clearRect(mobile.positionspatio.posX1-50,mobile.positionspatio.posY1-50,100,100);},390);
+					setTimeout(function(){context22.drawImage(expl2,mobile.positionspatio.posX1-50,mobile.positionspatio.posY1-50,100,100);},400);
+					setTimeout(function(){context22.clearRect(mobile.positionspatio.posX1-50,mobile.positionspatio.posY1-50,100,100);},590);
+					setTimeout(function(){context22.drawImage(expl3,mobile.positionspatio.posX1-50,mobile.positionspatio.posY1-50,100,100);},600);
+					setTimeout(function(){context22.clearRect(mobile.positionspatio.posX1-50,mobile.positionspatio.posY1-50,100,100);},790);
+					setTimeout(function(){context22.drawImage(expl4,mobile.positionspatio.posX1-50,mobile.positionspatio.posY1-50,100,100);},800);
+					setTimeout(function(){context22.clearRect(mobile.positionspatio.posX1-50,mobile.positionspatio.posY1-50,100,100);},990);
+					setTimeout(function(){context22.drawImage(expl5,mobile.positionspatio.posX1-50,mobile.positionspatio.posY1-50,100,100);},1000);
+					setTimeout(function(){context22.clearRect(mobile.positionspatio.posX1-50,mobile.positionspatio.posY1-50,100,100);},1190);
+					setTimeout(function(){context22.drawImage(expl6,mobile.positionspatio.posX1-50,mobile.positionspatio.posY1-50,100,100);},1200);
+					setTimeout(function(){context22.clearRect(mobile.positionspatio.posX1-50,mobile.positionspatio.posY1-50,100,100);},1390);          
 					Timer.instances[compteur].stop();	//puis on stope la simulation 
 				} 
 
@@ -1780,20 +1961,6 @@ function majFondFixe(){
 		context.fillText("V\u2080 = "+vphi2i.toExponential(3)+" m.s\u207B\u00B9",5,290);
 		context.fillText("\u03C6\u2080= "+vr2i.toExponential(3)+"°",5,310);
 	}
-}
-
-//----------------------------------------------------{majFondFixe44}----------------------------------------------------
-
-function majFondFixe44(mobile){
-	mobile["context22"].clearRect(0, 0, canvas.width, canvas.height);
-	//console.log(canvas.width, canvas.height);
-}
-
-//----------------------------------------------------{majFondFixe22}----------------------------------------------------
-
-function majFondFixe22(){
-	context22.clearRect(0, 0, canvas.width, canvas.height);
-	//console.log(canvas.width, canvas.height);
 }
 
 //----------------------------------------------------{majFondFixe3}----------------------------------------------------
