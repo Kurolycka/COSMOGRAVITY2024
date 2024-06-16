@@ -571,7 +571,7 @@ function initialisation(compteur){
 	gCell = document.getElementById("g");
 	gLabelCell = document.getElementById("gravtxt");
 
-  	g=(G*M)/(Math.pow(r_phy,2)*9.81); //Je la calcule.
+  g=(G*M)/(Math.pow(r_phy,2)*9.81); //Je la calcule.
 
 	if(r_phy==0){ //Dans le cas d'un trou noir je n'affiche pas la case.
 		document.getElementById("g").innerHTML=" ";
