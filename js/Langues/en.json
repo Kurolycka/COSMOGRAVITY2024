@@ -334,7 +334,7 @@
 	"distance_metrique_parcourue":"D(m)",
 	"distance_metrique_parcourue_infobulle":"Metric distance traveled by the mobile since the initial moment.",
 	"pourcentage_vphi_pilotage_label" : "X=",
-	"pourcentage_vphi_infobulle" : "Percentage of the tangential speed used for piloting.",
+	"pourcentage_vphi_infobulle" : "Percentage of the tangential speed used for piloting. The engine acceleration time is 50 ms.",
 	"puissance_consommee_label":"P<sub>consumed</sub> (W/kg)",
 	"puissance_consommee_infobulle":"Instantaneous power consumed by reactors in W/kg.",
 	"alerte_v0_superieure_c" : "Be careful, your speed v0 is greater than c.",

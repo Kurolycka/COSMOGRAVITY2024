@@ -12,6 +12,9 @@ var c = 299792458;
 var G = 6.67385 * Math.pow(10, -11);
 var compteurVitesse = 0;
 var compteurVitesseAvantLancement =0; 
+var pilotage_possible = true; 
+var puissance_instant =0;
+
 
 // liste de couleurs en hexa
 const COULEUR_NOIR = '#2F2D2B';
@@ -888,19 +891,31 @@ function trajectoire(compteur,mobile) {
 		//--------------------------------Gestion du pilotage--------------------------------
 
 		var X = Number(document.getElementById("pourcentage_vphi_pilotage").value); //Récupération du pourcentage dont on veut modifier vphi à chaque clic.
+		var temps_acceleration = 50e-3; //Temps d'accélération pendant le pilotage fixé à 50ms. 
+
 
 		if(element2.value == "mobile" ) { //Dans le cas où j'ai un seul mobile et où je suis en mode spationaute. 
 		setInterval(function(){ //Fonction effectuée toutes les 50 ms, qui est le temps de réaction du système fixé. 
-			if(joy.GetPhi()!=0){ 
+
+			if (isNaN(vtotal) || vtotal >=c){ //Si jamais la vitesse du mobile a déja atteint la vitesse de la lumière ou que la vitesse n'est pas définie, on ne peut pas piloter. 
+				pilotage_possible = false;
+			}else{
+				pilotage_possible = true; 
+			}
+
+			if(joy.GetPhi()!=0 && pilotage_possible==true){ 
+
 
 					vitesse_precedente_nombre_g = vtotal //Stockage de la vitesse précédent l'accélération pour le calcul du nombre de g ressenti. 
 
 					//Pourcentage_vphi_pilotage = X = Delta v tangentielle / vtangentielle
 
+					X_eff = joy.GetPhi()*X;
+
 					//Je calcule les variations de E et L :
-					Delta_E= joy.GetPhi()*X*vp_1*vp_1/(c*c-vtotal*vtotal)*mobile.E;
-                	Delta_L= (X + Delta_E/mobile.E)*mobile.L;
-					puissance_instant=(Delta_E/mobile.E)*c*c/(50e-3);
+					Delta_E= joy.GetPhi()*X_eff*vp_1*vp_1/(c*c-vtotal*vtotal)*mobile.E;
+                	Delta_L= (X_eff + Delta_E/mobile.E)*mobile.L;
+					puissance_instant=(Delta_E/mobile.E)*c*c/(temps_acceleration);
 					deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/mobile.E); //Calcul de l'énergie ΔE/E consommée au total. 
 
 					mobile.L = mobile.L + Delta_L; //Calcul du nouveau L associé à ce mobile.
@@ -1083,6 +1098,8 @@ function animate(compteur,mobile,mobilefactor) {
 	element = document.getElementById('traject_type');// on recupere le boutton de type de trajectoire
 	element2=document.getElementById('traject_type2');//on recupere le boutton de observateur ou mobile
 
+	var temps_acceleration = 50e-3; //Temps d'accélération imposé pour le pilotage. 
+
 	mobilefactor[compteur] = factGlobalAvecClef//facteur pour l'echelle
 	
 	SurTelephone();//on verifie si on est sur telephone ou ordinateur
@@ -1248,9 +1265,14 @@ function animate(compteur,mobile,mobilefactor) {
 		//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< METRIQUE EXTERIEURE ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 		if(mobile.r_part >= r_phy) 
 		{ 	
-				//calcul avec RK4 avec le dtau par defaut
-				val = rungekutta_externe_massif(mobile.dtau, mobile.r_part, mobile.A_part,mobile.L);
-      
+
+			if (joy.GetPhi()!=0 && pilotage_possible==true){
+				val = rungekutta_externe_massif(temps_acceleration, mobile.r_part, mobile.A_part, mobile.L); //Si un pilotage est détecté, calcul avec RK4 avec le temps d'accélération.
+			}else{
+				val = rungekutta_externe_massif(mobile.dtau, mobile.r_part, mobile.A_part,mobile.L); //Autrement, calcul avec RK4 avec le dtau par défaut.
+			}
+
+			
 			//on stocke le rayon avant de calculer avec RK pour savoir si ya un changement brusuqe ou pas
 			r_precedent=mobile.r_part
 
@@ -1263,18 +1285,19 @@ function animate(compteur,mobile,mobilefactor) {
 		
 			//MEME REMARQUE PLUS HAUT
 			//vtotal=resultat[0];
-			//vr_1=resultat[1]*Math.sign(mobile.A_part);   //<------------JPC  Remarque quand E très proche de 1 calculs.MSC_Ex_vitess donne un résultat[1] faux 
-			vr_1=mobile.A_part/E;     //calcul de v_r avec le resultat de RK
+			vr_1=resultat[1]*Math.sign(mobile.A_part);   //<------------JPC  Remarque quand E très proche de 1 calculs.MSC_Ex_vitess donne un résultat[1] faux 
+			//vr_1=mobile.A_part/E;     //calcul de v_r avec le resultat de RK
 			vp_1=resultat[2]; 	//calcul de v_phi avec le fichier de calcul de vitesses
 			vtotal=Math.sqrt(vr_1*vr_1 + vp_1*vp_1) ; //calcul de v_tot (module de la vitesse)
+
 
 			varphi = c * mobile.L * mobile.dtau / Math.pow(mobile.r_part, 2);//calcul de la variation de l'angle 
 			mobile.phi = mobile.phi + varphi;	 //calcul de la nouvelle valeur de l'angle
 
 			/*Calcul de nombre de g ressenti et sa stockage de sa derniere valeur si on accelere : */
-			if(joy.GetPhi()!=0 )
+			if(joy.GetPhi()!=0 && pilotage_possible==true)
 			{ 
-				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_precedente_nombre_g)/50e-3)/9.80665 
+				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_precedente_nombre_g)/temps_acceleration)/9.80665 
 				nombre_de_g_calcul_memo = nombre_de_g_calcul; 
 			}
 			else
@@ -1299,8 +1322,13 @@ function animate(compteur,mobile,mobilefactor) {
 		else 
 		{	
 			/*Ce qui suit verifie si on a appuyé pour accelerer et adapte le pas de calcul pour RK:*/
-				//calcul avec RK4 avec le dtau par defaut
-				val=rungekutta_interne_massif(mobile.dtau, mobile.r_part, mobile.A_part,mobile.E,mobile.L);
+
+			if (joy.GetPhi()!=0 && pilotage_possible==true){
+				val=rungekutta_interne_massif(temps_acceleration, mobile.r_part, mobile.A_part,mobile.E,mobile.L); //Si un pilotage est détecté, calcul avec RK4 avec le temps d'accélération.
+			}else{
+				val=rungekutta_interne_massif(mobile.dtau, mobile.r_part, mobile.A_part,mobile.E,mobile.L); //Autrement, calcul avec RK4 avec le dtau par défaut.
+			}
+
 			//on stocke le rayon avant de calculer avec RK pour savoir si ya un changement brusuqe ou pas
 			r_precedent=mobile.r_part
 
@@ -1313,9 +1341,9 @@ function animate(compteur,mobile,mobilefactor) {
 
 			//MEME REMARQUE PLUS HAUT
 			//vtotal=resultat[0];
-			//vr_1=resultat[1]*Math.sign(mobile.A_part);  //<---------------------   Remarque quand E très proche de 1 calculs.MSC_In_vitess donne un résultat[1] faux 
+			vr_1=resultat[1]*Math.sign(mobile.A_part);  //<---------------------   Remarque quand E très proche de 1 calculs.MSC_In_vitess donne un résultat[1] faux 
 			
-			vr_1=mobile.A_part*beta(mobile.r_part)/Math.sqrt(alpha(mobile.r_part))/mobile.E   ;   //calcul de v_r avec le resultat de RK
+			//vr_1=mobile.A_part*beta(mobile.r_part)/Math.sqrt(alpha(mobile.r_part))/mobile.E   ;   //calcul de v_r avec le resultat de RK
 			vp_1=resultat[2];  //calcul de v_phi avec le fichier de calcul de vitesses
 			vtotal=Math.sqrt(vr_1*vr_1 + vp_1*vp_1) ;//calcul de v_tot (module de la vitesse)
 
@@ -1341,9 +1369,9 @@ function animate(compteur,mobile,mobilefactor) {
 			}
 
 			/*Calcul de nombre de g ressenti et sa stockage de sa derniere valeur si on accelere : */
-			if(joy.GetPhi()!=0)
+			if(joy.GetPhi()!=0 && pilotage_possible==true)
 			{ 
-				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_precedente_nombre_g)/(mobile.dtau*(1-rs/mobile.r_part)/mobile.E))/9.80665 
+				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_precedente_nombre_g)/temps_acceleration)/9.80665 
 				nombre_de_g_calcul_memo = nombre_de_g_calcul; 
 			}
 			else

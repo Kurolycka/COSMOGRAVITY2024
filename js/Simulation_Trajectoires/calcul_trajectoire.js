@@ -17,6 +17,9 @@ var G = 6.67385 * Math.pow(10, -11);
 var compteurVitesse = 0;
 var compteurVitesseAvantLancement =0; 
 
+var pilotage_possible = true; //Pour savoir si on peut piloter ou pas.
+var temps_acceleration; //Pour imposer le temps d'accélération du pilotage.
+
 testouille=true; //ManonV5
 testouilleV2=true; //ManonV5
 testouilleV3=true
@@ -914,19 +917,29 @@ function trajectoire(compteur,mobile) {
 		//--------------------------------Gestion du pilotage--------------------------------
 
 		var X = Number(document.getElementById("pourcentage_vphi_pilotage").value); //Récupération du pourcentage dont on veut modifier vphi à chaque clic.
+		var temps_acceleration = 50e-3; //Je fixe le temps d'accélération à 50ms.
 
 		if(element2.value == "mobile" ) { //Dans le cas où j'ai un seul mobile et où je suis en mode spationaute. 
 		setInterval(function(){ //Fonction effectuée toutes les 50 ms, qui est le temps de réaction du système fixé. 
-			if(joy.GetPhi()!=0){ 
+
+			if (isNaN(vtotal) || vtotal >=c){ //Si jamais la vitesse du mobile a déja atteint la vitesse de la lumière ou que la vitesse n'est pas définie, on ne peut pas piloter. 
+				pilotage_possible = false;
+			}else{
+				pilotage_possible = true; 
+			}
+
+			if(joy.GetPhi()!=0 && pilotage_possible==true){ 
 
 					vitesse_precedente_nombre_g = vtotal //Stockage de la vitesse précédent l'accélération pour le calcul du nombre de g ressenti. 
 
 					//Pourcentage_vphi_pilotage = X = Delta v tangentielle / vtangentielle
 
+					X_eff = joy.GetPhi()*X;
+
 					//Je calcule les variations de E et L :
-					Delta_E= joy.GetPhi()*X*vp_1*vp_1/(c*c-vtotal*vtotal)*mobile.E;
-          Delta_L= (X + Delta_E/mobile.E)*mobile.L;
-					puissance_instant=(Delta_E/mobile.E)*c*c/(50e-3);
+					Delta_E= X_eff*vp_1*vp_1/(c*c-vtotal*vtotal)*mobile.E;
+          			Delta_L= (X_eff + Delta_E/mobile.E)*mobile.L;
+					puissance_instant=Math.abs((Delta_E/mobile.E))*c*c/(temps_acceleration);
 					deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/mobile.E); //Calcul de l'énergie ΔE/E consommée au total. 
 
 					mobile.L = mobile.L + Delta_L; //Calcul du nouveau L associé à ce mobile.
@@ -1107,7 +1120,9 @@ function animate(compteur,mobile,mobilefactor)
 {
 	element = document.getElementById('traject_type'); // on recupere le boutton de type de trajectoire
 	var element2=document.getElementById('traject_type2');   //on recupere le boutton de observateur ou mobile
-	var isrebond = document.getElementById("boutton_ammorti").value; // on recupere la valeur de la barre rebond	  								   
+	var isrebond = document.getElementById("boutton_ammorti").value; // on recupere la valeur de la barre rebond	 
+	
+	var temps_acceleration=50e-3; //J'impose le temps d'accélération.
 
 	mobilefactor[compteur] = factGlobalAvecClef //facteur pour l'echelle
 
@@ -1124,7 +1139,7 @@ function animate(compteur,mobile,mobilefactor)
 			/*Cette condition gere la partie trou noir (R_phy=0), dans le cas d'un observateur lointain, on fait les calculs
 			jusqu'a rs puis au dela on met les valeurs aux quelles tendent les variables quand r tend vers rs. L'affichage et le tracé
 			s'arretent c'est pour ça que ya une variable pour cette condition, ya que temps_observateur qui continue*/
-			if (mobile.r_part_obs >rs*1.000001)//pas exactement rs pour eviter les problemes de calculs 
+			if (mobile.r_part_obs >rs*1.001)//pas exactement rs pour eviter les problemes de calculs 
 			{
 				//-----------------------------------------------------PARTIE CALCULE-------------------------------------------------
 
@@ -1300,8 +1315,12 @@ function animate(compteur,mobile,mobilefactor)
 		{
 			//-----------------------------------------------------PARTIE CALCULE-------------------------------------------------
 		
-				//calcul avec RK4 avec le dtau par defaut
-				val = rungekutta(mobile.L,mobile.dtau, mobile.r_part, mobile.A_part); 
+			if (joy.GetPhi()!=0 && pilotage_possible==true){
+				val = rungekutta(mobile.L,temps_acceleration, mobile.r_part, mobile.A_part); //calcul avec RK4 avec le temps d'accélération lorsque pilotage
+			}else{
+				val = rungekutta(mobile.L,mobile.dtau, mobile.r_part, mobile.A_part); //calcul avec RK4 avec le dtau par defaut lorsque pas de pilotage
+			}
+			
 
 			mobile.r_part = val[0]; //valeur de r calculée par RK
 			mobile.A_part = val[1]; //valeur de dr/dtau calculée par RK
@@ -1310,10 +1329,10 @@ function animate(compteur,mobile,mobilefactor)
 	
 			/*MEME REMARQUE QUE LE CAS DE L'OBSERVATEUR POUR CE QUI SUIT */
 			//vtotal=resultat[0];
-			//vr_1=resultat[1]*Math.sign(mobile.A_part);   // <------------JPC  Remarque quand E très proche de 1 calculs.MSC_Ex_vitess donne un résultat[1] faux 
+			vr_1=resultat[1]*Math.sign(mobile.A_part);   // <------------JPC  Remarque quand E très proche de 1 calculs.MSC_Ex_vitess donne un résultat[1] faux 
 			
 			vp_1=resultat[2]; //calcul de v_phi avec le fichier de calcul de vitesses
-			vr_1=mobile.A_part/(1-rs/(mobile.r_part));  //calcul de v_r avec le resultat de RK
+			//vr_1=mobile.A_part/(1-rs/(mobile.r_part));  //calcul de v_r avec le resultat de RK
 			vtotal=Math.sqrt(vr_1*vr_1 + vp_1*vp_1) ;	//calcul de v_tot (module de la vitesse)
 
 			varphi = c * mobile.L * mobile.dtau / Math.pow(mobile.r_part, 2); //calcul de la variation de l'angle 
@@ -1334,9 +1353,9 @@ function animate(compteur,mobile,mobilefactor)
 			/*Calcul de la distance parcourue*/
 			mobile.distance_parcourue_totale+=vtotal*mobile.dtau; 
 
-			if(joy.GetPhi()!=0)
+			if(joy.GetPhi()!=0 && pilotage_possible==true)
 			{ 
-				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_precedente_nombre_g)/50e-3)/9.80665 
+				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_precedente_nombre_g)/temps_acceleration)/9.80665 
 				
 				nombre_de_g_calcul_memo = nombre_de_g_calcul;
 			}

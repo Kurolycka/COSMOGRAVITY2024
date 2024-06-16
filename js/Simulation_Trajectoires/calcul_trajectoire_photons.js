@@ -1003,7 +1003,7 @@ function animate(compteur,mobile,mobilefactor) {
 			/*Cette condition gere la partie trou noir (R_phy=0), dans le cas d'un observateur lointain, on fait les calculs
 			jusqu'a rs puis au dela on met les valeurs aux quelles tendent les variables quand r tend vers rs. L'affichage et le tracé
 			s'arretent c'est pour ça que ya une variable pour cette condition, ya que temps_observateur qui continue*/
-			if (mobile.r_part_obs >rs*1.000001) //pas exactement rs pour eviter les problemes de calculs 
+			if (mobile.r_part_obs >rs*1.001) //pas exactement rs pour eviter les problemes de calculs 
 			{
 				//-----------------------------------------------------PARTIE CALCULE-------------------------------------------------
 				val_obs = rungekutta_obs(mobile.E,mobile.L,mobile.dtau, mobile.r_part_obs, mobile.A_part_obs); //calcul de l'equation differentielle avec RK4 ça donne le r et dr/dlamda
