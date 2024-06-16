@@ -26,6 +26,7 @@ var compteurVitesse = 0;
 var compteurVitesseAvantLancement =0; 
 
 var point; //pour le graphe du potentiel
+var pilotage_possible = true; //Pour savoir si on peut piloter ou pas.
 
 
 //puisqu'il faux initaliser data1 et data2 avant l'appel dans graphique_creation_pot
@@ -429,6 +430,7 @@ function trajectoire() {
 		//--------------------------------Gestion du pilotage--------------------------------
 		
 		var X = Number(document.getElementById("pourcentage_vphi_pilotage").value); //Récupération du pourcentage dont on veut modifier vphi à chaque clic.
+		var temps_acceleration = 50e-3; //Le temps d'accélération est imposé et fixé à 50ms. 
 
 
 		if (element2.value=="mobile"){//Dans le cas spationaute
@@ -447,29 +449,33 @@ function trajectoire() {
 					document.getElementById('DivClignotantePilot').style.color = "red";
 				}
 
-				if (joy.GetPhi()!=0){ //Contrôle du pilotage
-					if (isNaN(vtot)){ //Dans le cas où je n'ai pas de vitesse une fois rs dépassée je ne dois pas pouvoir piloter.
-						joy.GetPhi()=0; 
-					}else{ //Autrement il est possible de piloter.
+				if (isNaN(vtot) || vtot >=c){ //Si jamais la vitesse du mobile a déja atteint la vitesse de la lumière ou que la vitesse n'est pas définie, on ne peut pas piloter. 
+					pilotage_possible = false;
+				}else{
+					pilotage_possible = true; 
+				}
 
-						vitesse_precedente_nombre_g = vtot //Stockage de la vitesse précédent l'accélération pour le calcul du nombre de g ressenti. 
+				if (joy.GetPhi()!=0 && pilotage_possible ==true){ //Contrôle du pilotage
 
-						//Pourcentage_vphi_pilotage = X = Delta v tangentielle / vtangentielle
+					vitesse_precedente_nombre_g = vtot //Stockage de la vitesse précédent l'accélération pour le calcul du nombre de g ressenti. 
 
-						//Je calcule les variations de E et L :
-						Delta_E= joy.GetPhi()*X*vp_3*vp_3/(c*c-vtot*vtot)*E;
-                		Delta_L= (X + Delta_E/E)*L;
-						puissance_instant=(Delta_E/E)*c*c/(50e-3);
-						deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/E); //Calcul de l'énergie ΔE/E consommée au total. 
+					//Pourcentage_vphi_pilotage = X = Delta v tangentielle / vtangentielle
 
-						L = L + Delta_L; //Calcul du nouveau L associé à ce mobile.
-						E = E + Delta_E; //Calcul du nouveau E associé à ce mobile. 
+					X_eff = joy.GetPhi()*X;
+
+					//Je calcule les variations de E et L :
+					Delta_E= X_eff*vp_3*vp_3/(c*c-vtot*vtot)*E;
+                	Delta_L= (Delta_E/E + ((E*r_part*Math.sqrt(delta(r_part)))/(c*L*(r_part -rs)))*X_eff*vp_3)*L
+					puissance_instant=Math.abs((Delta_E/E))*c*c/(temps_acceleration);
+					deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/E); //Calcul de l'énergie ΔE/E consommée au total. 
+
+					L = L + Delta_L; //Calcul du nouveau L associé à ce mobile.
+					E = E + Delta_E; //Calcul du nouveau E associé à ce mobile. 
 									
-						document.getElementById("E").innerHTML = E.toExponential(3); //Affichage sur le site du nouveau E. 
-						document.getElementById("L").innerHTML = L.toExponential(3); //Affichage sur le site du nouveau L. 
-						document.getElementById("decal").innerHTML = deltam_sur_m.toExponential(3); //Affichage sur le site de l'énergie consommée. 
-						document.getElementById("puissance_consommee").innerHTML = puissance_instant.toExponential(3); //Affichage sur le site de la puissance consommée.
-					}
+					document.getElementById("E").innerHTML = E.toExponential(3); //Affichage sur le site du nouveau E. 
+					document.getElementById("L").innerHTML = L.toExponential(3); //Affichage sur le site du nouveau L. 
+					document.getElementById("decal").innerHTML = deltam_sur_m.toExponential(3); //Affichage sur le site de l'énergie consommée. 
+					document.getElementById("puissance_consommee").innerHTML = puissance_instant.toExponential(3); //Affichage sur le site de la puissance consommée.
 
 				}
 			}, 50);
@@ -665,6 +671,8 @@ function animate() {
 	SurTelephone();//on verifie si on est sur telephone ou ordinateur
 	choixTrajectoire(context);// on vérifie le type de trajectoire sélectionné
 
+	var temps_acceleration = 50e-3; //Temps d'accélération imposé à 50ms.
+
 	/*----------------------------------------------------------{{{{  CAS_OBSERVATEUR  }}}-----------------------------------------------------------*/
 	if (element2.value != "mobile")
 	//Tout ce qui est dans cette condition concerne le cas du referentiel de l'observateur	
@@ -783,8 +791,12 @@ function animate() {
 		/* Une condition pour ne pas calculer audela attiendre zero */
 		if(r_part>0)
 		{
-			//calcul avec RK4 avec le dtau par defaut
-			val = rungekutta(dtau, r_part, A_part); 
+
+			if (joy.GetPhi()!=0 && pilotage_possible==true){
+				val = rungekutta(temps_acceleration, r_part, A_part); //Si un pilotage est détecté, calcul avec RK4 avec le temps d'accélération.
+			}else{
+				val = rungekutta(dtau, r_part, A_part); //Autrement, calcul avec RK4 avec le dtau par défaut.
+			}
 			
 
 			r_part = val[0]; //on recupere le resultat de RK pour le rayon
@@ -801,9 +813,9 @@ function animate() {
 			if(J==0) {vp_3= c*L/r_part;} //pour calculer la vitesse angulaire si J=0 
 
 			/*Ce qui suit verifie si on a appuyé pour accelerer et calcul le nombre de g :*/
-			if(joy.GetPhi()!=0)
+			if(joy.GetPhi()!=0 && pilotage_possible==true)
 			{ 
-				nombre_de_g_calcul = (Math.abs(vtot-vitesse_precedente_nombre_g)/(50e-3))/9.80665 //calcul du nombre de g ressenti
+				nombre_de_g_calcul = (Math.abs(vtot-vitesse_precedente_nombre_g)/(temps_acceleration))/9.80665 //calcul du nombre de g ressenti
 				nombre_de_g_calcul_memo = nombre_de_g_calcul; // on stocke sa valeur pour afficher la derniere valeur calculée
 			}
 			else //apres chaque acceleration il devient nul
