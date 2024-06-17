@@ -272,7 +272,37 @@ function texte_univers_DE() {
     document.getElementById("labelNom_fichier").insertAdjacentHTML("beforeend", texte.univers.labelNom)
     document.getElementById("nom_fichier").value = texte.univers.nomDéfautDE
     document.getElementById("bouttonEnregistrer").innerHTML = texte.univers.bouttonEnregistrer
-}
+};
+
+function texte_univers_calculette() {
+    let texte = o_recupereJson();
+    xaxis_temps=texte.calculette.xaxis_temps;
+    yaxis_distance=texte.calculette.yaxis_distance
+    yaxis_omega=texte.calculette.yaxis_omega;
+    yaxis_temps=texte.calculette.yaxis_temps;//un peu la meme chose que xaxis mais je laisse dans le doute
+    yaxis_decalage=texte.calculette.yaxis_decalage;
+    document.getElementById("Entrées").innerHTML = texte.calculette.Entrées;
+    document.getElementById("constantesUniverselles").innerHTML = texte.calculette.constantes
+    document.getElementById("infoT0").title = texte.calculette.infoT0
+    document.getElementById("infoH0").title = texte.calculette.infoH0
+    document.getElementById("infoTypeUnivers").title = texte.calculette.infoTypecalculette
+    document.getElementById("Monofluide_optionNull").innerHTML = texte.calculette.monofluide_null
+    document.getElementById("Monofluide_optionM").innerHTML = texte.calculette.monofluide_M
+    document.getElementById("Monofluide_optionR").innerHTML = texte.calculette.monofluide_R
+    document.getElementById("Monofluide_optionLDE").innerHTML = texte.calculette.monofluide_LDE
+    document.getElementById("Monofluide_optionK").innerHTML = texte.calculette.monofluide_K
+    document.getElementById("infoOmégam0").title = texte.calculette.infoOmégam0
+    document.getElementById("infoOmégaLDE0").title = texte.calculette.infoOmégaLDE0
+    document.getElementById("label_optionsOmégar0").insertAdjacentHTML("beforeend", texte.calculette.label_Omégar0)
+    document.getElementById("infoOmégaR0").title = texte.calculette.infoOmégaR0
+    document.getElementById("Omégar0_optionRFC_et_Neutrinos").innerHTML = texte.calculette.Omégar0_RFC_et_Neutrinos
+    document.getElementById("Omégar0_optionRFC").innerHTML = texte.calculette.Omégar0_RFC
+    document.getElementById("Omégar0_optionRien").innerHTML = texte.calculette.Omégar0_Rien
+    document.getElementById("infoOmégaK0").title = texte.calculette.infoOmégaK0
+    document.getElementById("label_optionsOmégak0").insertAdjacentHTML("beforeend", texte.calculette.label_Omégak0)
+
+    document.getElementById("generateur_graphique").innerHTML = texte.calculette.generateur_graphique;
+};
 
 function texte_constantes() {
     let texte = o_recupereJson()
@@ -290,4 +320,4 @@ function texte_constantes() {
     document.getElementById("enregistrer").innerHTML = texte.constante.enregistrer
     document.getElementById("réinitialiser").innerHTML = texte.constante.reinitialiser
     document.getElementById("retour").innerHTML = texte.constante.retour
-}
+};

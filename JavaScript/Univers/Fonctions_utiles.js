@@ -53,6 +53,26 @@ function H0_parSecondes(H0) {
  * @param H0 {number} H0 en kilomètre par seconde par Mégaparsec
  * @return {number} H0 en par GigaAnnées
  */
+function H0_parAnnees(H0) {
+    // Conversion des kilomètre en mètre
+    let H0_convertis = H0 * 1000
+
+    // Conversion des Mégaparsec en mètres
+    H0_convertis = H0_convertis / ( (648000 / Math.PI ) * AU * 1000000)
+
+    // Conversion des secondes en Années
+    let nombreDeJours = nbrJours()
+    let secondesParAns = nombreDeJours * 24 * 3600 
+    H0_convertis = H0_convertis * secondesParAns
+
+    return H0_convertis
+}
+
+/**
+ * Fonction permettant de convertir H0 des km / s / Mpc vers les Ga
+ * @param H0 {number} H0 en kilomètre par seconde par Mégaparsec
+ * @return {number} H0 en par GigaAnnées
+ */
 function H0_parGAnnees(H0) {
     // Conversion des kilomètre en mètre
     let H0_convertis = H0 * 1000
@@ -84,7 +104,7 @@ function Omega_r(z) {
         omega_r = ( 8 * Math.PI * G * rho_r) / ( 3 * Math.pow(H0_parSecondes(H0), 2) )
     }
     else {
-        omega_r = ( Omega_r(0) * Math.pow(1 + z, 4) ) / fonction_E(z);
+        omega_r = ( Omega_r(0) * Math.pow(1 + z, 4) ) / fonction_E(z,true);
     }
 
 
@@ -120,7 +140,7 @@ function Omega_m(z) {
         omega_m = Number(document.getElementById("Omégam0").value)
     }
     else {
-        omega_m = Omega_m(0) * Math.pow(1 + z, 3) / fonction_E(z);
+        omega_m = Omega_m(0) * Math.pow(1 + z, 3) / fonction_E(z,true);
     }
 
     let option = document.getElementById("optionsMonofluide").value
@@ -148,7 +168,7 @@ function Omega_l(z) {
         omega_l = Number(document.getElementById("Omégal0").value)
     }
     else {
-        omega_l = Omega_l(0) / fonction_E(z);
+        omega_l = Omega_l(0) / fonction_E(z,true);
     }
 
     if (document.getElementById("OptionsOmégak0").checked) {
@@ -180,7 +200,7 @@ function Omega_DE(z) {
         omega_de = Number(document.getElementById("OmégaDE0").value)
     }
     else {
-        omega_de = Omega_DE(0) *  fonction_Y(z) * (1/(1+z))	/ fonction_F(z);
+        omega_de = Omega_DE(0) *  fonction_Y(z) * (1/(1+z))	/ fonction_F(z,true);
     }
 
     if (document.getElementById("OptionsOmégak0").checked) {
@@ -573,47 +593,47 @@ function Sk(x,OmegaK){
  * pour avoir l'horizon cosmologique des évenement Zemission=-1 (dans le futur) \
  * (Univers,simple) \
  * Si les omega et H0 sont définis dans la page pas besoin de les mettre en paramètre : DistanceMetrique(Zemission,Zreception)
- * @param fonction {function} fonction_E ou fonction_F en fonction de si c'est lcdm ou de
- * @param Zemission {number} décalage spectral au moment ou le photon est émis
- * @param Zreception {number} décalage spectral au moment ou le photon est reçu
- * @param z_utilise {boolean} Pour savoir si le calcul est réalisé avec z ou a
- * @returns
+ * @param {*} fonction fonction_E ou fonction_F en fonction de si c'est lcdm ou de
+ * @param {*} Zemission décalage spectral au moment ou le photon est émis
+ * @param {*} Zreception décalage spectral au moment ou le photon est reçu
+ * @param {*} z_utilisé
+ * @returns 
  */
-function DistanceMetrique(fonction, Zemission, Zreception, z_utilise=false){
-    if (z_utilise){
+function DistanceMetrique(fonction,Zemission,Zreception, z_utilisé=false,precision_nb_pas=1e3){
+    if (z_utilisé){
         function fonction_a_integrer(x){
             return Math.pow(fonction(x,true),-0.5);
-        }
-    } else {
+        };
+    }else{
         function fonction_a_integrer(x){
             return Math.pow(fonction(x),-0.5)/Math.pow(x,2);
-        }
-    }
-    return c/(H0_parSecondes(H0)*Math.pow(Math.abs(Omega_k(0)),0.5))*Sk(Math.pow(Math.abs(Omega_k(0)),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,1e4),Omega_k(0))
-}
+        };
+    };
+    return c/(H0_parSecondes(H0)*Math.pow(Math.abs(Omega_k(0)),0.5))*Sk(Math.pow(Math.abs(Omega_k(0)),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,precision_nb_pas),Omega_k(0))
+};
 
-/**
+//Remy 26/05/24
+/** 
  * Fonction qui renvoie la distance de l'horizon des particules cosmologiques (plus grande distance a laquelle on peut recevoir un signal emis à l'instant t)
- * @param fonction {function} Fonction simplifiant les expressions
  * @param {*} z_emission par defaut = 0 décalage spectral du moment où le signal est émis
- * @returns
+ * @returns 
  */
 function calcul_horizon_particule(fonction,z_emission=0){
     let a_emission=1/(z_emission+1);
     //formule 21 dans la théorie du 20/05/2024
-    return DistanceMetrique(fonction,1e-4,a_emission);
-}
+    return DistanceMetrique(fonction,1e-30,a_emission,false,1e5);
+};
 
 /**
  * Fonction qui renvoie la distance de l'horizon des évenements cosmologiques (plus grande distance a laquelle on peut envoyer un signal emis à l'instant t)
- * @param fonction {function} Fonction qui simplifie les expressions
- * @param z_reception {number} par defaut = 0 décalage spectral du moment où le signal est reçu
- * @returns
+ * @param {*} z_reception par defaut = 0 décalage spectral du moment où le signal est reçu
+ * @returns 
  */
 function calcul_horizon_evenements(fonction,z_reception=0){
     //formule 23 dans la théorie du 20/05/2024
-    return DistanceMetrique(fonction,-.99999999,z_reception,true);
+    return DistanceMetrique(fonction,-.99999999,z_reception,true,1e5);
 }
+
 
 /**
  * Inverse du calcul de l'age en fonction d'un z grâce a la fonction dichotomie (marche seulement pour des fonction absolument croissante)
@@ -621,21 +641,18 @@ function calcul_horizon_evenements(fonction,z_reception=0){
  * @param {*} fonction fonction a rechercher
  * @returns valeur de z
  */
-function calcul_t_inverse(temps,fonction){
-    //Remy test
-    function a_dichotomer(x){
-        return calcul_ages(fonction,H0enannee,1e-15,x);
-    }
-    age_univers=a_dichotomer(1);
-
-    if (age_univers>=temps){
-        a_t=Dichotomie_Remy(a_dichotomer,temps,1e-15,1,temps*1e-12);
-    }else{
-        a_t=Dichotomie_Remy(a_dichotomer,temps,1,1e7,1e-12);
-
-    };
-
-    return (1-a_t)/a_t;
+function calcul_t_inverse(temps,fonction,H0){
+	function a_dichotomer(x){
+		return calcul_ages(fonction,H0,1e-20,x);
+	}
+	age_univers=a_dichotomer(1);
+    
+	if (age_univers>=temps){
+		a_t=Dichotomie(a_dichotomer,temps,1e-15,1,1e-30);
+	}else{
+		a_t=Dichotomie(a_dichotomer,temps,1,1e10,1e-30);
+	};
+	return (1-a_t)/a_t;
 }
 
 /**

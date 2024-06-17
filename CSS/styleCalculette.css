@@ -1,0 +1,51 @@
+.boiteGenerateurGraphique {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgb(231, 209, 231);
+    gap: 10px;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.parametreGraphique{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.CalculAnnexe{
+    border: 2px;
+}
+
+.fenetre_calculette{
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+    padding: 3px;
+    border-radius: 10px;
+    gap: 3px;
+    position: relative;
+}
+
+.boiteSortie output {
+    color: blue;
+}
+
+.boiteCalculAnnexe{
+    display: grid;
+    grid-template-columns:1fr 2fr 1fr;
+    background-color: black;
+    gap: 3px;
+    padding: 3px;
+    border-radius: 10px;
+}
+
+.CalculAnnexe{
+    display: flex;
+    flex-direction: column;
+    background-color: aliceblue;
+    border-radius: 10px;
+    padding: 5px;
+    gap: 3px;
+}

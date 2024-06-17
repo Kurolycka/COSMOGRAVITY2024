@@ -212,7 +212,11 @@ function ajouterEcouteurs() {
     });
 }
 
-window.onload = ajouterEcouteurs;
+if (window.location.pathname==="/Calculette_cosomologique.html"){
+    
+}else{
+    window.onload = ajouterEcouteurs;
+};
 
 /**
  * Fonction qui permet de rafraîchir les éléments importants de la page univers
@@ -262,7 +266,31 @@ function updateUnivers() {
         update_graphe_interactif()
     }
 }
+/**
+ * Fonction qui permet de rafraîchir les éléments importants de la page univers calculette
+ */
+function updateUnivers_calculette() {
+    document.getElementById("Omégak0").value = Omega_k(0).toExponential(4)
 
+    if (document.getElementById("Omégal0")) {
+        document.getElementById("Omégal0").value = Omega_l(0).toExponential(4)
+    }
+
+    if (document.getElementById("OmégaDE0")) {
+        document.getElementById("OmégaDE0").value = Omega_DE(0).toExponential(4)
+    }
+
+    document.getElementById("Omégar0").value = Omega_r(0).toExponential(4)
+
+    document.getElementById("Omégam0").value = Omega_m(0).toExponential(4)
+
+    let fonction_simplifiante;
+    if (document.getElementById("Omégal0")) {
+        fonction_simplifiante = fonction_E
+    } else {
+        fonction_simplifiante = fonction_F
+    }
+}
 
 /**
  * fonction permettant de changer la taille du graphique dynamiquement, elle est utilisé dans un Event listener

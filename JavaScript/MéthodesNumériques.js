@@ -99,4 +99,90 @@ function secante(fonction, x0, x1, precision) {
         iteration = iteration + 1
     }
     return xn2
-}
+};
+
+/**
+ * Permet de trouver l'abscisser correspond a un ordonée d'une fonction monotone
+ * @param {*} fonction fonction utilisée
+ * @param {*} cible abscisse recherché
+ * @param {*} borneDebut borne de départ 
+ * @param {*} borneFin borne de fin
+ * @param {*} precision précision recherchée 
+ * @returns 
+ */
+function Dichotomie(fonction, cible, borneDebut, borneFin, precision){
+    let iterations_max=100;
+    let iterations=0
+
+    start_temps=Date.now();
+    if (fonction(borneDebut)<fonction(borneFin)){
+        while (Math.abs(borneFin - borneDebut) > precision && iterations<iterations_max){
+            iterations = iterations+1;
+            var milieu = (borneDebut+borneFin)/2;
+            let dm_milieu=fonction(milieu);
+
+            if (cible>dm_milieu){
+                borneDebut= milieu;
+            }else if (cible<dm_milieu){
+                borneFin = milieu;
+            }else{
+                return milieu
+            };
+        };
+    }else{//pour le cas où la fonction est décroissante
+        while (Math.abs(borneFin - borneDebut) > precision && iterations<iterations_max){
+            iterations = iterations+1;
+            var milieu = (borneDebut+borneFin)/2;
+            let dm_milieu=fonction(milieu);
+            
+            if (cible<dm_milieu){
+                borneDebut= milieu;
+            }else if (cible>dm_milieu){
+                borneFin = milieu;
+            }else{
+                return milieu
+            };
+        };
+        
+    };
+    console.log(Date.now()-start_temps);
+    return milieu;
+};
+
+function Dichotomie_Remy(fonction, cible, borneDebut, borneFin, precision){
+    let iterations_max=200;
+    let iterations=0
+
+    if (fonction(borneDebut)<fonction(borneFin)){
+        while (Math.abs(borneFin - borneDebut) > precision && iterations<iterations_max){
+            iterations = iterations+1;
+            var milieu = (borneDebut+borneFin)/2;
+            let dm_milieu=fonction(milieu);
+
+            if (cible>dm_milieu){
+                borneDebut= milieu;
+            }else if (cible<dm_milieu){
+                borneFin = milieu;
+            }else{
+                return milieu
+            };
+        };
+    }else{//pour le cas où la fonction est décroissante
+        
+        while (Math.abs(borneFin - borneDebut) > precision && iterations<iterations_max){
+            iterations = iterations+1;
+            var milieu = (borneDebut+borneFin)/2;
+            let dm_milieu=fonction(milieu);
+            
+            if (cible<dm_milieu){
+                borneDebut= milieu;
+            }else if (cible>dm_milieu){
+                borneFin = milieu;
+            }else{
+                return milieu
+            };
+        };
+        
+    };
+    return milieu;
+};
