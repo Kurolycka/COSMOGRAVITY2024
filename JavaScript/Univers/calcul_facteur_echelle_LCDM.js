@@ -53,26 +53,20 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
 
         // On calcule le pas qui sera utilisé
         if ( (isNaN(tau_min) || isNaN(tau_max)) && !isNaN(t_0)) {
-            console.log("Pas calculé avec t_0")
             pas = Math.abs(t_0) * 1e-5
         } else {
-            console.log("Pas calculé grossèrement")
             pas = 1e-4
         }
 
         let option = document.getElementById("optionsMonofluide").value
         if (!isNaN(tau_min) && !isNaN(tau_max) && option !== "optionLDE") {
-            console.log("Pas calculé avec tau_min - tau_max")
             pas = Math.abs(tau_max - tau_min) * 1e-5
         }
-
-        console.log("les temps :", t_min, t_0, t_max)
 
         return [tau_init, a_init, ap_init, pas]
     }
 
     let params = bornes_temps_CI();
-    console.log("Paramètres sortant de borne et CI", params)
 
     let set_solution = [params[0], params[1], params[2]];
     let pas = params[3];
@@ -85,7 +79,6 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 100/Math.abs(pas)) {
         set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
         if (set_solution[1] >= a_min && set_solution[1] <= a_max) {
-            console.log(set_solution)
             taus.push(set_solution[0])
             facteur_echelle.push(set_solution[1])
         }
@@ -122,9 +115,6 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     taus = tauEnTemps(taus, debutEtFin[2])
 
 
-    console.log("Liste temps :", taus)
-    console.log("Liste facteur :", facteur_echelle)
-
     return [[taus, facteur_echelle], t_0, debutEtFin]
 }
 
@@ -141,7 +131,6 @@ function affichage_site_LCDM() {
 
     document.getElementById("début").innerHTML = debutEtFin[0]
     document.getElementById("fin").innerHTML = debutEtFin[1]
-    console.log("Timeline :", debutEtFin, age_univers)
 
 
     graphique_facteur_echelle(donnee, debutEtFin[2], debutEtFin[3])

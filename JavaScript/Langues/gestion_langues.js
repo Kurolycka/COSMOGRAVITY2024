@@ -209,6 +209,8 @@ function texte_univers_LCDM() {
 
     document.getElementById("headGraphiqueLCDM").innerHTML = texte.univers.headGraphiqueLCDM
     document.getElementById("avertissementUnivers").innerHTML = texte.univers.avertissement
+    document.getElementById("entreeEnregistrer").innerHTML = texte.univers.Entrées
+    document.getElementById("sortieEnregistrer").innerHTML = texte.univers.Sorties
 
 
     document.getElementById("Sorties").innerHTML = texte.univers.Sorties
@@ -260,6 +262,8 @@ function texte_univers_DE() {
 
     document.getElementById("headGraphiqueDE").innerHTML = texte.univers.headGraphiqueDE
     document.getElementById("avertissementUnivers").innerHTML = texte.univers.avertissement
+    document.getElementById("entreeEnregistrer").innerHTML = texte.univers.Entrées
+    document.getElementById("sortieEnregistrer").innerHTML = texte.univers.Sorties
 
 
     document.getElementById("Sorties").innerHTML = texte.univers.Sorties

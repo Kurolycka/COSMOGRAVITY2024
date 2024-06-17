@@ -701,7 +701,6 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
         line: { color: 'purple' }
     }];
 
-    console.log(temps_debut, Math.abs(t_debut) * (1 + 10/100))
     if (t_debut && facteur_debut > Math.abs(a_max - a_min) * 1e-1 && temps_debut < Math.abs(t_debut) * 1e-1 ) {
         donnee.push({
             type: 'line',
@@ -737,24 +736,14 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
     }
 
     let apparence = {
-        title: {
-            text: "Tracé du facteur d'échelle",
-            font: {
-                family: 'Arial black, sans-serif',
-                size: 16,
-                color: '#111111'
-            },
-            xref: 'paper',
-            x: 0.55
-        },
         xaxis: {
-            title: "Temps en milliard d'années",
+            title: texte.univers.axeX,
             gridcolor: "#b1b1b1",
             zerolinewidth: 2,
             zeroline: true
         },
         yaxis: {
-            title: "facteur d'échelle réduit",
+            title: texte.univers.axeY,
             gridcolor: "#b1b1b1",
             zerolinewidth: 2,
             zeroline: true

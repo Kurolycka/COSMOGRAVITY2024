@@ -24,7 +24,7 @@
 	"univers": {
 		"constantes": "Constantes universelles",
 		"calculette": "Calculette cosmologique",
-		"Entrées": "<h2>Entrées</h2>",
+		"Entrées": "Entrées",
 			"infoT0": "Température actuelle de l'univers",
 
 			"infoH0": "Taux d'expansion actuel de l'univers (constante de hubble)",
@@ -58,10 +58,12 @@
 
 		"headGraphiqueLCDM": "<h2>Tracé du facteur d'échelle <br /> Constante cosmologique</h2>",
 		"headGraphiqueDE": "<h2>Tracé du facteur d'échelle <br /> Energie sombre</h2>",
-		"avertissement": "Ce site permet de faire des simulations qui prennent en compte 11 paramètres. Il ce peut qu'il y ait des erreur de calculs ou dans le pire des cas un crash de la bage internet. Dans ces cas là n'hésitez pas à recharger la page",
+		"axeX" : "Temps en milliard d'années",
+		"axeY" : "Facteur d'échelle réduit",
+		"avertissement": "La simulation Univers avec ses calculs annexes permet de choisir les valeurs d'une dizaine de paramètres (en comptant celles des constantes fondamentales). Le code actuel n'est évidemment pas robuste sur tout le domaine accessible de cet espace à 10 dimensions. Nous espérons que les résultats sont exacts dans un voisinage 'prudent' du modèle standard, des valeurs usuelles des observables (z, thêta) et des constantes fondamentales. Nous pensons qu'ils le sont encore pour des univers très différents du nôtre mais il est évident que le risque d'échec de la simulation (temps de calcul excessif sur le processeur de l'utilisateur) ou, pire, de résultat inexact augmente lorsque l'on s'aventure très loin du modèle standard. L'option 'mono-fluides', avec son formalisme analytique, permet d'aller plus fiablement explorer les extrêmes. Près des 'séparatrices' entre types d'univers différents (avec ou sans Big Bang, avec ou sans Big Crunch), un avertissement automatique est normalement affiché.",
 
 
-		"Sorties": "<h2>Sorties</h2>",
+		"Sorties": "Sorties",
 			"Omégas": "<h3>Les omégas</h3>",
 				"infoOmégaR0Sortie": "Paramètre de densité de rayonnement calculé.",
 				"infoOmégaK0Sortie": "Paramètre de densité de courbure calculé.",

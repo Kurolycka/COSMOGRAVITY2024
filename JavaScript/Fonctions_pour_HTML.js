@@ -33,7 +33,6 @@ function toggleEntreeSortie (IDpanel) {
     }
 
     if (IDpanel === "panneauEntree") {
-        console.log("oui")
         document.getElementById("flecheGauche").classList.toggle("tournee");
     } else {
         document.getElementById("flecheDroite").classList.toggle("tournee");
@@ -140,7 +139,6 @@ function universMonofluides() {
     }
 
     if (option === "optionNull") {
-        console.log("oui")
         elementOmegaM.disabled = false;
         elementOmegaR.disabled = false;
         elementOmegaK.disabled = false;
@@ -153,7 +151,6 @@ function universMonofluides() {
         }
 
     } else {
-        console.log("non")
         elementOmegaM.disabled = true;
         elementOmegaR.disabled = true;
         elementOmegaK.disabled = true;
@@ -224,7 +221,7 @@ function universMonofluides() {
  */
 function ajouterEcouteurs(fonctionUpdate) {
     const elements = document.querySelectorAll('input, select, list');
-    const UpdateDelais = delaisUpdate(fonctionUpdate, 1000);
+    const UpdateDelais = delaisUpdate(fonctionUpdate, 100);
     elements.forEach(element => {
         element.addEventListener('input', UpdateDelais);
         element.addEventListener('change', UpdateDelais);

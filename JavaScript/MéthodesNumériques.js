@@ -86,10 +86,8 @@ function secante(fonction, x0, x1, precision) {
     let iteration = 0
 
     while (iteration < 20 && Math.abs(fn) > precision) {
-        console.log("les x", xn, xn1)
         fn = fonction(xn)
         fn1 = fonction(xn1)
-        console.log("les f", fn, fn1)
         deltaX = xn1 - xn
         deltaF = fn1 - fn
         xn2 = xn1 - ( (deltaX / deltaF) * fn1 )
@@ -141,13 +139,12 @@ function Dichotomie(fonction, cible, borneDebut, borneFin, precision){
                 borneFin = milieu;
             }else{
                 return milieu
-            };
-        };
+            }
+        }
         
-    };
-    console.log(Date.now()-start_temps);
+    }
     return milieu;
-};
+}
 
 function Dichotomie_Remy(fonction, cible, borneDebut, borneFin, precision){
     let iterations_max=200;

@@ -274,10 +274,6 @@ canvas.addEventListener('click', function(event) {
     const omegam0 = px_to_omegam0(y);
     const omegalDE0 = px_to_omegalambda0(x);
 
-    // Afficher les valeurs récupérées
-    console.log("Omega_m0:", omegam0);
-    console.log("Omega_l0:", omegalDE0);
-
     function update_omegas(omegalDE0, omegam0) {
         document.getElementById("Omégam0").value = omegam0.toExponential(4)
         if (document.getElementById("Omégal0")) {

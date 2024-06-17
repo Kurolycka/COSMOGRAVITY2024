@@ -38,7 +38,7 @@
 
     <div id="panneauEntree" class="Entree">
         <div class="boiteEntree">
-            <div id="Entrées"></div>
+            <div><h2 id="Entrées"></h2></div>
 
             <div class="paramètre" style="grid-template-columns: 1fr 1fr">
                 <button style="height: 110%" id="constantesUniverselles" class="grosBoutton" onclick=fenetreConstantes()></button>
@@ -160,20 +160,20 @@
                     alt="avertissement">
             </button>
 
-            <div class="avertissement" id="avertissementUnivers"></div>
+            <div style="text-align: justify; padding: 15px" class="avertissement" id="avertissementUnivers"></div>
 
             <div id="graphique_LCDM"></div>
 
             <div style="display: flex; gap: 10px">
                 <div style="justify-self: left">
-                    <h3 style="text-align: center">In</h3>
+                    <h3 id="entreeEnregistrer" style="text-align: center"></h3>
                     <div id="Om_enregistrer"></div>
                     <div id="Ol_enregistrer"></div>
                     <div id="Or_enregistrer"></div>
                     <div id="Ok_enregistrer"></div>
                 </div>
                 <div style="justify-self: right">
-                    <h3 style="text-align: center">Out</h3>
+                    <h3 id="sortieEnregistrer" style="text-align: center"></h3>
                     <div id="tdébut_enregistrer"></div>
                     <div id="tfin_enregistrer"></div>
                     <div id="hp_enregistrer"></div>
@@ -193,7 +193,7 @@
     </button>
     <div id="panneauSortie" class="Sortie">
         <div class="boiteSortie">
-            <div id="Sorties"></div>
+            <div><h2 id="Sorties"></h2></div>
 
             <div id="Omégas"></div>
 
