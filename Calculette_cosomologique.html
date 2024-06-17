@@ -34,7 +34,10 @@
         <div class="boiteEntree">
             <div id="Entrées"></div>
 
-            <button id="constantesUniverselles" class="grosBoutton" onclick=fenetreConstantes()></button>
+            <div class="paramètre" style="grid-template-columns: 1fr 1fr">
+                <button style="height: 110%" id="constantesUniverselles" class="grosBoutton" onclick=fenetreConstantes()></button>
+                <button style="height: 110%" id="facteurEchelle" class="grosBoutton" onclick=fenetreFacteur()></button>
+            </div>
 
             <div class="paramètre">
                 <label for="T0">
@@ -264,7 +267,7 @@
                 <button class="petitBoutton" onclick="calcul_horizons_annexe(fonction_E)">Calculer</button>
             </div>
         </div>
-        <div id="panneauGraphe" class="Graphe" style="position: relative;background-color:aliceblue;">
+        <div id="panneauGraphe" class="Graphe" style="position: relative;background-color: rgb(255,238,255);">
             <div id="graphique_d_z"></div>
             <div id="graphique_d_t"></div>
             <div id="graphique_omega_z"></div>
@@ -503,7 +506,7 @@
         $("#positionNav").load("Navigation.html");
     });
 
-    updateUnivers_calculette()
+    updateCalculette()
 </script> 
 </body>
 </html>

@@ -23,6 +23,7 @@
 
 	"univers": {
 		"constantes": "Constantes universelles",
+		"calculette": "Calculette cosmologique",
 		"Entrées": "<h2>Entrées</h2>",
 			"infoT0": "Température actuelle de l'univers",
 
@@ -91,6 +92,7 @@
 		"xaxis_temps":"temps (année)",
 		"constantes": "Constantes universelles",
 		"Entrées": "<h2>Paramètre</h2>",
+			"facteur": "Facteur <br> d'échelle",
 			"infoT0": "Température actuelle de l'univers",
 
 			"infoH0": "Taux d'expansion actuel de l'univers (constante de hubble)",

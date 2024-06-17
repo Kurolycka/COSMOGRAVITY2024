@@ -51,6 +51,25 @@ function fenetreConstantes() {
 }
 
 /**
+ * Fonction permettant d'ouvrir la fenêtre contenant la calculette cosmologique
+ */
+function fenetreCalculette() {
+    window.location.href = "Calculette_cosomologique.html"
+}
+
+/**
+ * Fonction permettant d'ouvrir la fenêtre contenant la calculette cosmologique
+ */
+function fenetreFacteur() {
+    if (document.getElementById("Omégal0")) {
+        window.location.href = "Univers_LCDM.html"
+    } else {
+        window.location.href = "Univers_DE.html"
+    }
+}
+
+
+/**
  * Fonction qui décide de quoi faire des instructions entrée en fonction du boutton utilisé
  * @param nomBoutton {string} Le nom du boutton pressé
  */
@@ -95,7 +114,7 @@ let timeoutId = null;
 /**
  * Fonction pour retarder l'exécution d'une fonction
  */
-function updateUniversDelais(func, delay) {
+function delaisUpdate(func, delay) {
     return function() {
         const context = this;
         const args = arguments;
@@ -203,9 +222,9 @@ function universMonofluides() {
 /**
  * Fonction qui permet de rafraichir les valeurs du site pour chaque changement effectué
  */
-function ajouterEcouteurs() {
+function ajouterEcouteurs(fonctionUpdate) {
     const elements = document.querySelectorAll('input, select, list');
-    const UpdateDelais = updateUniversDelais(updateUnivers, 1000);
+    const UpdateDelais = delaisUpdate(fonctionUpdate, 1000);
     elements.forEach(element => {
         element.addEventListener('input', UpdateDelais);
         element.addEventListener('change', UpdateDelais);
@@ -213,10 +232,10 @@ function ajouterEcouteurs() {
 }
 
 if (window.location.pathname==="/Calculette_cosomologique.html"){
-    
-}else{
-    window.onload = ajouterEcouteurs;
-};
+    window.onload = ajouterEcouteurs(updateCalculette);
+} else {
+    window.onload = ajouterEcouteurs(updateUnivers);
+}
 
 /**
  * Fonction qui permet de rafraîchir les éléments importants de la page univers
@@ -267,9 +286,9 @@ function updateUnivers() {
     }
 }
 /**
- * Fonction qui permet de rafraîchir les éléments importants de la page univers calculette
+ * Fonction qui permet de rafraîchir les éléments importants de la page calculette
  */
-function updateUnivers_calculette() {
+function updateCalculette() {
     document.getElementById("Omégak0").value = Omega_k(0).toExponential(4)
 
     if (document.getElementById("Omégal0")) {

@@ -182,6 +182,7 @@ function texte_univers_LCDM() {
     let texte = o_recupereJson();
     document.getElementById("Entrées").innerHTML = texte.univers.Entrées;
     document.getElementById("constantesUniverselles").innerHTML = texte.univers.constantes
+    document.getElementById("calculetteCosmologique").innerHTML = texte.univers.calculette
     document.getElementById("infoT0").title = texte.univers.infoT0
     document.getElementById("infoH0").title = texte.univers.infoH0
     document.getElementById("infoTypeUnivers").title = texte.univers.infoTypeUnivers
@@ -232,6 +233,7 @@ function texte_univers_DE() {
     let texte = o_recupereJson();
     document.getElementById("Entrées").innerHTML = texte.univers.Entrées;
     document.getElementById("constantesUniverselles").innerHTML = texte.univers.constantes
+    document.getElementById("calculetteCosmologique").innerHTML = texte.univers.calculette
     document.getElementById("infoT0").title = texte.univers.infoT0
     document.getElementById("infoH0").title = texte.univers.infoH0
     document.getElementById("infoTypeUnivers").title = texte.univers.infoTypeUnivers
@@ -283,6 +285,7 @@ function texte_univers_calculette() {
     yaxis_decalage=texte.calculette.yaxis_decalage;
     document.getElementById("Entrées").innerHTML = texte.calculette.Entrées;
     document.getElementById("constantesUniverselles").innerHTML = texte.calculette.constantes
+    document.getElementById("facteurEchelle").innerHTML = texte.calculette.facteur
     document.getElementById("infoT0").title = texte.calculette.infoT0
     document.getElementById("infoH0").title = texte.calculette.infoH0
     document.getElementById("infoTypeUnivers").title = texte.calculette.infoTypecalculette
