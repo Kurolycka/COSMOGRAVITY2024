@@ -53,7 +53,47 @@ function fenetreConstantes() {
  * Fonction permettant d'ouvrir la fenêtre contenant la calculette cosmologique
  */
 function fenetreCalculette() {
-    window.location.href = "Calculette_cosomologique.html"
+    if (document.getElementById("Omégal0")) {
+        savevalues(false)
+        window.location.href = "Calculette_cosomologique.html"
+    } else {
+        savevalues(true);
+        window.location.href = "Calculette_cosomologique_DE.html"
+    }
+}
+
+function savevalues(darkenergy=false){
+    localStorage.setItem('T0',document.getElementById('T0').value);
+    localStorage.setItem('H0',document.getElementById('H0').value);
+    localStorage.setItem('optionsMonofluide',document.getElementById('optionsMonofluide').value);
+    localStorage.setItem('Omégam0',document.getElementById('Omégam0').value);
+    if (darkenergy){
+        localStorage.setItem('OmégaDE0',document.getElementById('OmégaDE0').value);
+        localStorage.setItem('w0',document.getElementById('w0').value);
+        localStorage.setItem('w1',document.getElementById('w1').value);
+    }else{
+        localStorage.setItem('Omégal0',document.getElementById('Omégal0').value);
+    }
+    localStorage.setItem('optionsOmégar0',document.getElementById('optionsOmégar0').value);
+}
+
+function loadvalues(darkenergy=false){
+    if (localStorage.getItem("T0")!==null){
+        document.getElementById('T0').value = localStorage.getItem('T0');
+        document.getElementById('H0').value = localStorage.getItem('H0');
+        document.getElementById('optionsMonofluide').value = localStorage.getItem('optionsMonofluide');
+        document.getElementById('Omégam0').value = localStorage.getItem('Omégam0');
+        if (darkenergy){
+            document.getElementById('OmégaDE0').value = localStorage.getItem('OmégaDE0');
+            document.getElementById('w0').value = localStorage.getItem('w0');
+            document.getElementById('w1').value = localStorage.getItem('w1');
+        }else{
+            document.getElementById('Omégal0').value = localStorage.getItem('Omégal0');
+        }
+        document.getElementById('Omégal0').value = localStorage.getItem('Omégal0');
+        document.getElementById('optionsOmégar0').value = localStorage.getItem('optionsOmégar0');
+        localStorage.clear();
+    }
 }
 
 /**
@@ -61,8 +101,10 @@ function fenetreCalculette() {
  */
 function fenetreFacteur() {
     if (document.getElementById("Omégal0")) {
+        savevalues(false);
         window.location.href = "Univers_LCDM.html"
     } else {
+        savevalues(true);
         window.location.href = "Univers_DE.html"
     }
 }
