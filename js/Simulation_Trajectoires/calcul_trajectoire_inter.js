@@ -571,7 +571,7 @@ function initialisation(compteur){
 	gCell = document.getElementById("g");
 	gLabelCell = document.getElementById("gravtxt");
 
-  g=(G*M)/(Math.pow(r_phy,2)*9.81); //Je la calcule.
+  	g=(G*M)/(Math.pow(r_phy,2)*9.81); //Je la calcule.
 
 	if(r_phy==0){ //Dans le cas d'un trou noir je n'affiche pas la case.
 		document.getElementById("g").innerHTML=" ";
@@ -915,7 +915,7 @@ function trajectoire(compteur,mobile) {
 					//Je calcule les variations de E et L :
 					Delta_E= joy.GetPhi()*X_eff*vp_1*vp_1/(c*c-vtotal*vtotal)*mobile.E;
                 	Delta_L= (X_eff + Delta_E/mobile.E)*mobile.L;
-					puissance_instant=(Delta_E/mobile.E)*c*c/(temps_acceleration);
+					puissance_instant=Math.abs((Delta_E/mobile.E))*c*c/(temps_acceleration);
 					deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/mobile.E); //Calcul de l'énergie ΔE/E consommée au total. 
 
 					mobile.L = mobile.L + Delta_L; //Calcul du nouveau L associé à ce mobile.
