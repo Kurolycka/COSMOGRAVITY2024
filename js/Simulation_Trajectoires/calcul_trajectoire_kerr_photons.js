@@ -976,7 +976,7 @@ function test_r0(){
 function tests_lancement(){
 	var val_test=test_Jmax()&&test_r0();
 	if(val_test==true){
-	save_kerr_photon();
+	save_generalise(false);
 	trajectoire();
 
     //  Le cas où les valeurs de E et L ne sont pas calculables(Test)

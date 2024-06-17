@@ -205,7 +205,7 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
                     </span>
   
         <span id="bouton">
-                    <button type="button" id="clear" class="myButton" onclick="save_nbfusees_recupvaleurs();save_schwarshild_photon(lenbdefusees);rafraichir();"></button>
+                    <button type="button" id="clear" class="myButton" onclick="save_schwarshild_photon(lenbdefusees);rafraichir();"></button>
             </span>
 
         	<span id="enregistrer">
@@ -305,7 +305,6 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
       //on lance si ya true en return
       if(typeof test_inte() === 'boolean')
       {
-        save_nbfusees_recupvaleurs();
         save_schwarshild_photon(lenbdefusees);
         lancerDeFusees(lenbdefusees);
       }

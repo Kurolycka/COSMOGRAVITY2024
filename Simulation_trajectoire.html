@@ -206,7 +206,7 @@ ga('send', 'pageview');
 		</span>
 
 		<span id="bouton">
-		<button type="button" id="clear" class="myButton" onclick="save_nbfusees_recupvaleurs();save_schwarshild_massif(lenbdefusees);rafraichir();"></button>
+		<button type="button" id="clear" class="myButton" onclick="save_schwarshild_massif(lenbdefusees);rafraichir();"></button>
 		</span>
 		<span id="enregistrer">
 		<button id="boutton_enregis" type="button" class="myButton" onclick="enregistrer();"></button>
@@ -299,7 +299,6 @@ ga('send', 'pageview');
 		//on lance si ya true en return
 		if(typeof test_inte() === 'boolean')
 		{
-			save_nbfusees_recupvaleurs();
 			save_schwarshild_massif(lenbdefusees);
 			lancerDeFusees(lenbdefusees);
 		}
