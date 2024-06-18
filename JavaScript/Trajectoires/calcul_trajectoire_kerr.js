@@ -154,13 +154,13 @@ function initialisation(){
 	if (isNaN(E_prograde)){ //ManonCirculaire
 		vitesse_orbite_circulaire_prograde_bar = NaN;
 	}else{
-		vitesse_orbite_circulaire_prograde_bar = c*Math.sqrt(1-(1-(rs/r0))/Math.pow(E_prograde,2))
+		vitesse_orbite_circulaire_prograde_bar = (c*Math.sqrt(2*rs*Math.pow(r0,5)*delta(r0)))/(2*Math.pow(r0,4) - 2*Math.pow(r0,3)*rs + a*Math.sqrt(2*rs*Math.pow(r0,5)));
 	}
 	//Cas de l'orbite rétrograde :
 	if (isNaN(E_retrograde)){ //ManonCirculaire
 		vitesse_orbite_circulaire_retrograde_bar = NaN;
 	}else{
-		vitesse_orbite_circulaire_retrograde_bar = c*Math.sqrt(1-(1-(rs/r0))/Math.pow(E_retrograde,2))
+		vitesse_orbite_circulaire_retrograde_bar = (c*Math.sqrt(2*rs*Math.pow(r0,5)*delta(r0)))/(2*Math.pow(r0,4) - 2*Math.pow(r0,3)*rs - a*Math.sqrt(2*rs*Math.pow(r0,5)));
 	}
 
 	//Je calcule mes limites de stabilités pour les orbites progrades et rétrogrades : 
@@ -437,7 +437,7 @@ function trajectoire() {
 			setInterval(function(){ //J'effectue les actions suivantes toutes les 50 ms. 
 
 				if (Number(deltam_sur_m) <= 0.03) { //Si je consomme moins de ΔE/E=0.03 la led près du décalage spectrale est verte.
-					document.getElementById('DivClignotantePilot').innerHTML = " <img src='../../Images/Anciennes_images//diodever.gif' height='14px' />";
+					document.getElementById('DivClignotantePilot').innerHTML = " <img src='../../Images/Anciennes_images/diodever.gif' height='14px' />";
 					document.getElementById('DivClignotantePilot').style.color = "green";
 				}
 				else if (0.3 < Number(deltam_sur_m) && Number(deltam_sur_m) < 0.05) { //Si je consomme entre ΔE/E=0.03 et ΔE/E=0.05 la led près du décalage spectrale est orange.
@@ -612,6 +612,8 @@ function trajectoire() {
 	
 		creation_blocs(context); //Je trace Rh+, Rh- et rs. 
 	  
+		//-----------------------------------------------------TRACÉ POTENTIEL -------------------------------------------------
+		
 		setInterval(function(){ //Fonction qui permet d'avoir un graphe de potentiel dynamique. Ce graphe est renouvelé toutes les 300ms. 												
 			$('#grsvg_2').empty(); //Je vide le contenue du canvas du potentiel. 
 			data1=[]; 
@@ -645,7 +647,7 @@ function trajectoire() {
 
 			point=graphique_creation_pot(0,data1,data2,null,null); //Trace le graphe du potentiel.
 	
-		},300);	
+		},120);	
 	
 	} else { //Dans le cas où ce n'est pas le début de la simulation et où je ne suis pas en pause.
     	myInterval = setInterval(animate, 10/6); //La fonction animate est exécutée toutes les 10/6 ms pour créer la simulation;
@@ -755,12 +757,6 @@ function animate() {
 		posX2 = scale_factor * r_part_obs * (Math.cos(phi_obs) / rmax) + (canvas.width / 2.);
 		posY2 = scale_factor * r_part_obs * (Math.sin(phi_obs) / rmax) + (canvas.height / 2.);
 
-		//-----------------------------------------------------PARTIE TRACÉ POTENTIEL -------------------------------------------------
-		data2 = []; //on vide la liste dans la quelle on met nos données
-		V = Vr_obs(r_part_obs); // on recupere la valeur du poteniel au rayon actuel
-		data2.push({date: r_part_obs, close: V }); //on met les valeur dans la liste
-		if(point !== undefined){update_graphique_2(point,data2,null);} // on appelle la fonction qui dessine le potentiel (Fonctions_utilitaires)
-
 		//-----------------------------------------------------PARTIE TRACÉ -------------------------------------------------
 		//on dessine le trait derriere le mobile
 		context.beginPath();//on ouvre le context
@@ -860,6 +856,7 @@ function animate() {
 			//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> APRES RS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 			else
 			{
+				document.getElementById("to").innerHTML = temps_observateur.toExponential(3); //temps observateur
 				document.getElementById("ga").innerHTML = fm.toExponential(3);// gradient d'acceleration
 				//on affiche que les vitesses et distance parcourue ne sont plus definies	
 				document.getElementById("v_tot").innerHTML = texte.page_trajectoire_massive_kerr.vitesse_pas_définie; //vitesse total (module)
@@ -911,13 +908,6 @@ function animate() {
 		context22.lineWidth = "1";
 		context22.fill();
 
-		//-----------------------------------------------------PARTIE TRACÉ POTENTIEL -------------------------------------------------
-		
-		data2 = []; //on vide la liste dans la quelle on met nos données
-		V = Vr_mob(r_part);// on recupere la valeur du poteniel au rayon actuel
-		data2.push({date: r_part, close: V });	//on met les valeur dans la liste
-		if(point !== undefined){update_graphique_2(point,data2,null)} ; // on appelle la fonction qui dessine le potentiel (Fonctions_utilitaires)
-
 		//-----------------------------------------------------NE PAS DEPASSER RH_ -------------------------------------------------
 		//l'utilisateur veut arrêter la trajectoire à Rh- et ne pas le depasser
 		if(r_part<=rhm && ! document.getElementById("depasser").checked)
@@ -965,7 +955,7 @@ function animate() {
 
 		if (nombre_de_g_calcul_memo <= 4) 
 		{
-			document.getElementById('DivClignotanteNbG').innerHTML = " <img src='../../Images/Anciennes_images/iodever.gif' height='14px' />";
+			document.getElementById('DivClignotanteNbG').innerHTML = " <img src='../../Images/Anciennes_images/diodever.gif' height='14px' />";
 			document.getElementById('DivClignotanteNbG').style.color = "green";
 		} 
 		else if (4 < nombre_de_g_calcul_memo && nombre_de_g_calcul_memo <= 9) 
@@ -1068,26 +1058,36 @@ function calcul_rmax(){
 	else{rmax=r0;}
 }
 
+/*ATTENTIEN : cette fonction est differente de celle utilisé dans la partie SCH car on a pas besoin de plusieurs
+mobiles, ni de Timers, pusique SetInterval suffit bien, alors on a gardé cette fonction pour Kerr Ainsi */
 
-// Fonction bouton pause
-function pausee() {
-	if (! pause) {
-		//dtau = 0;
-		pause = true;
-		document.getElementById("pau").src = "Anciennes_images/lecture.png";
-		document.getElementById("pau").title = texte.pages_trajectoire.bouton_lecture;
-		document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_enpause;
-		document.getElementById("pause/resume").innerHTML =texte.pages_trajectoire.bouton_resume;
-		clearInterval(myInterval);
+/**
+ * Cette fonction est associé aux bouttons pause, avec les quels on peut pauser et reprendre la simulaiton.
+ */
+function pausee() 
+{
+	//si la simultion est en marche
+	if (! pause) 
+	{
+		pause = true; //on la met en pause
+		document.getElementById("pause/resume").innerHTML =texte.pages_trajectoire.bouton_resume;//on change le texte du boutton pause en haut
+		document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_enpause;//on change le texte qui s'affiche "Calculs en pause"
+		document.getElementById("pau").title = texte.pages_trajectoire.bouton_lecture;//on change l'icone du boutton pause en bas
+		document.getElementById("pau").src = "../../Images/Anciennes_images/lecture.png";//infobulle du boutton pause en bas
+		clearInterval(myInterval); // on arrete l'appel de animte
 	} 
-	else {
-		if(peuxonrelancer) {
-			pause = false;
-			document.getElementById("pause/resume").innerHTML = texte.pages_trajectoire.bouton_pause;
-			document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_encours;
-			document.getElementById("pau").title = texte.pages_trajectoire.bouton_pause;
-			document.getElementById("pau").src = "Anciennes_images/pause.png";
-			myInterval = setInterval(animate, 10 / 6);
+	//si la simultion est en pause
+	else 
+	{
+		//on verifie si on peut relancer
+		if(peuxonrelancer) 
+		{
+			pause = false;//on la met en pause
+			document.getElementById("pause/resume").innerHTML = texte.pages_trajectoire.bouton_pause;//on change le texte du boutton pause en haut
+			document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_encours;//on change le texte qui s'affiche "Calculs en pause"
+			document.getElementById("pau").title = texte.pages_trajectoire.bouton_pause;//infobulle du boutton pause en bas
+			document.getElementById("pau").src = "../../Images/Anciennes_images/pause.png";//on change l'icone du boutton pause en bas
+			myInterval = setInterval(animate, 10 / 6); //on appelle animate à chaque 10/6 ms avec setInterval et on stocke dans myInterval
 		}
 
 	}
@@ -1098,71 +1098,68 @@ function rafraichir() {
 	element2.value="observateur";
 }
 
+// -------------------------------------{enregistrer}--------------------------------------------
 
+/**
+ * Fonction qui sert à enregistrer une image de la simulation. 
+ */
 function enregistrer(){
-	// ces 2 fonctions sont issues des biblios saveSvgAsPng.js et canvas-to-image.js
-	var texte = o_recupereJson();
+	
+	var texte = o_recupereJson(); //Pour avoir accès au contenu des fichiers json.
 
-	if(document.getElementById('trace_present').value=="true") {
-		var nomFichier = prompt(texte.pages_trajectoire.message_nomFichier, "traject_Kerr_B_B");
+	if(document.getElementById('trace_present').value=="true") { //Lorsqu'il y a un tracé de simulation. 
 
+		//On demande à l'utilisateur le nom du fichier, avec "traject_Kerr_B_PM" comme nom du fichier par défaut :
+		var nomFichier = prompt(texte.pages_trajectoire.message_nomFichier, "traject_Kerr_B_PM");
+
+		//Si l'utilisateur a renseigné un nom de fichier non null et qui n'est pas juste des blancs :
 		if (nomFichier !== null && nomFichier.trim() !== '') {
+
+			//Je récupère dans canvas3 l'élément d'ID "myCanvas3three" et dans context3 son context :
 			canvas3 = document.getElementById("myCanvas3");
 			context3 = canvas3.getContext("2d");
+
+			//Je dessine sur context3 ce qu'il y a dans canvas, donc dans context donc le texte, rs et l'astre et le tracé :
 			context3.drawImage(canvas, 0, 0);
-			if (element2.value != "mobile") {
-				context3.beginPath();
-				context3.fillStyle = COULEUR_BLEU;
+
+			//Tracé sur le context3 de la boule du mobile :
+			context3.beginPath();
+			context3.fillStyle = COULEUR_BLEU;
+			if (element2.value != "mobile"){ //Dans le référentiel de l'observateur distant : 
 				context3.arc(posX2, posY2, 5, 0, Math.PI * 2);
-				context3.lineWidth = "1";
-				context3.fill();
-
-				//Dessiner le logo en bas :
-				var logo = new Image() //ManonLogo
-				logo.src='Anciennes_images/CosmoGravity_logo.png'; //ManonLogo
-				logo.onload = function() {
-				var largeurLogo = 100; //ManonLogo
-				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //ManonLogo
-				var x = canvas3.width - largeurLogo; // Position en x pour le coin inférieur droit
-				var y = canvas3.height - hauteurLogo; // Position en y pour le coin inférieur droit
-				context3.drawImage(logo,x,y, largeurLogo, hauteurLogo); //ManonLogo
-
-				canvasToImage(canvas3, {
-					name: nomFichier.trim(),
-					type: 'png'
-				});
-				majFondFixe3();};
-			} else {
-				context3.beginPath();
-				context3.fillStyle = COULEUR_BLEU;
+			}else{ //Dans le référentiel du mobile :
 				context3.arc(posX1, posY1, 5, 0, Math.PI * 2);
-				context3.lineWidth = "1";
-				context3.fill();
-
-				//Dessiner le logo en bas :
-				var logo = new Image() //ManonLogo
-				logo.src='Anciennes_images/CosmoGravity_logo.png'; //ManonLogo
-				logo.onload = function() {
-				var largeurLogo = 100; //ManonLogo
-				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //ManonLogo
-				var x = canvas3.width - largeurLogo; // Position en x pour le coin inférieur droit
-				var y = canvas3.height - hauteurLogo; // Position en y pour le coin inférieur droit
-				context3.drawImage(logo,x,y, largeurLogo, hauteurLogo); //ManonLogo
-
-				canvasToImage(canvas3, {
-					name: nomFichier.trim(),
-					type: 'png'
-				});
-				majFondFixe3();};
 			}
+			context3.lineWidth = "1";
+			context3.fill();
 
-		} else {
+			//Dessin du logo :
+			var logo = new Image()
+			logo.src='Images/CosmoGravity_logo.png'; //Je récupère le chemin de l'image du logo.
+			logo.onload = function() {
+				var largeurLogo = 100; //largeur de l'image du logo
+				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //hauteur de l'image du logo
+				var x = canvas3.width - largeurLogo; // Position en x pour le coin inférieur droit du logo.
+				var y = canvas3.height - hauteurLogo; // Position en y pour le coin inférieur droit du logo.
+				context3.drawImage(logo,x,y, largeurLogo, hauteurLogo); //Je dessine le logo sur context3. 
+
+			canvasToImage(canvas3, { //Je transforme le canvas en image :
+				name: nomFichier.trim(),
+				type: 'png'
+			});
+
+			//J'efface tout le contenu du context3 une fois le canvas enregistrer en tant qu'image :
+			majFondFixe3();};
+
+		} else { //Si il n'y a pas de nom de renseigné alors j'ai un message d'alerte. 
 			alert(texte.pages_trajectoire.alerte_nomFichier);
 		} 
-	} else {
+	} else { //Si il n'y a pas de tracé de simulation alors message d'alerte.
 		alert(texte.pages_trajectoire.message_enregistrer);
 	}
 }
+
+// -------------------------------------{majFondFixe}--------------------------------------------
 
 // utile pour l'exportation d'images
 function majFondFixe(){ phi_degres=phi0*180/Math.PI;

@@ -34,7 +34,7 @@
     </button>
     <div id="panneauEntree" class="Entree">
         <div class="boiteEntree">
-            <div id="Entrées"></div>
+            <div><h2 id="Entrées"></h2></div>
 
             <div class="paramètre" style="grid-template-columns: 1fr 1fr">
                 <button style="height: 110%" id="constantesUniverselles" class="grosBoutton" onclick=fenetreConstantes()></button>
@@ -175,20 +175,19 @@
 
             <div style="display: flex; gap: 10px">
                 <div style="justify-self: left">
-                    <h3 style="text-align: center">In</h3>
+                    <h3 id="entreeEnregistrer" style="text-align: center"></h3>
                     <div id="Om_enregistrer"></div>
-                    <div id="ODE_enregistrer">&Omega;<sub>&Lambda;<sub>0</sub></sub> = </div>
-                    <div id="Or_enregistrer">&Omega;<sub>R<sub>0</sub></sub> = </div>
-                    <div id="Ok_enregistrer">&Omega;<sub>k<sub>0</sub></sub> = </div>
+                    <div id="ODE_enregistrer"></div>
+                    <div id="Or_enregistrer"></div>
+                    <div id="Ok_enregistrer"></div>
                 </div>
                 <div style="justify-self: right">
-                    <h3 style="text-align: center">Out</h3>
+                    <h3 id="sortieEnregistrer" style="text-align: center"></h3>
                     <div id="tdébut_enregistrer"></div>
-                    <div id="tfin_enregistrer">t<sub>f</sub> = </div>
-                    <div id="hp_enregistrer">d<sub>p<sub>0</sub></sub> = </div>
-                    <div id="he_enregistrer">d<sub>e<sub>0</sub></sub> = </div>
+                    <div id="tfin_enregistrer"></div>
+                    <div id="hp_enregistrer"></div>
+                    <div id="he_enregistrer"></div>
                 </div>
-
             </div>
 
         </div>
@@ -203,7 +202,7 @@
     </button>
     <div id="panneauSortie" class="Sortie">
         <div class="boiteSortie">
-            <div id="Sorties"></div>
+            <div><h2 id="Sorties"></h2></div>
 
             <div id="Omégas"></div>
 
@@ -290,7 +289,6 @@
     <script src="./JavaScript/Univers/Fonctions_utiles.js"></script>
     <script src="./JavaScript/Univers/calcul_facteur_echelle_DE.js"></script>
     <script src="./JavaScript/MéthodesNumériques.js"></script>
-    <script src="./JavaScript/Univers/Dessin_Interactif_Séparatrices.js"></script>
 
 <script>
     texte_univers_DE();

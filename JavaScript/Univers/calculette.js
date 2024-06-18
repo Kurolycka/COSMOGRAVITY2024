@@ -82,7 +82,7 @@ function affichage_des_z(fonction_EouF){
     if (fonction_EouF.name==="fonction_E"){//si univers LCDM alors omegaL0 reste tel quel
         Omega_l0 = Number(document.getElementById("Omégal0").value);
     }else if (fonction_EouF.name==="fonction_F"){//si univers DE alors omegaL0 devien omegaDE
-        Omega_l0 = Number(document.getElementById("omegaDE0").value);
+        omegaDE0 = Number(document.getElementById("OmégaDE0").value);
     };
 
     //temperature
@@ -111,8 +111,8 @@ function affichage_des_z(fonction_EouF){
     }else if (fonction_EouF.name==="fonction_F"){
         Omega_DEz1=omegaDE0/fonction_F(z1,true);
         Omega_DEz2=omegaDE0/fonction_F(z2,true);
-        Omega_DENz1=omegaDE0*fonction_Y(z1,true)/fonction_F(z1,true);
-        Omega_DENz2=omegaDE0*fonction_Y(z1,true)/fonction_F(z2,true);
+        Omega_DENz1=omegaDE0*fonction_Y(1/(1+z1))/fonction_F(z1,true);
+        Omega_DENz2=omegaDE0*fonction_Y(1/(1+z2))/fonction_F(z2,true);
     };
     // dz1/t0 et dz2/t0
     let dz1= (1+z1)*H0_parSecondes(H0) - H0_parSecondes(Hz1);
@@ -127,7 +127,8 @@ function affichage_des_z(fonction_EouF){
     if (fonction_EouF.name==="fonction_E"){
         document.getElementById("omegaL_z1").value = arrondie_affichage(Omega_lz1);
     }else if (fonction_EouF.name==="fonction_F"){
-        console.log("rajoute les omegade (2)")
+        document.getElementById("omegaDE_z1").value = arrondie_affichage(Omega_DEz1);
+        document.getElementById("omegaDEN_z1").value = arrondie_affichage(Omega_DENz1);
     };
     document.getElementById("output_dz1dt").value = arrondie_affichage(dz1);
 
@@ -139,7 +140,8 @@ function affichage_des_z(fonction_EouF){
     if (fonction_EouF.name==="fonction_E"){
         document.getElementById("omegaL_z2").value = arrondie_affichage(Omega_lz2);
     }else if (fonction_EouF.name==="fonction_F"){
-        console.log("rajoute les omegade (2)")
+        document.getElementById("omegaDE_z2").value = arrondie_affichage(Omega_DEz2);
+        document.getElementById("omegaDEN_z2").value = arrondie_affichage(Omega_DENz2);
     };
     document.getElementById("output_dz2dt").value = arrondie_affichage(dz2);
 
@@ -197,9 +199,19 @@ function generer_graphique_distance(fonction_EouF){
     let Omega_r0 = Number(document.getElementById("Omégar0").value);//changer
     let Omega_m0 = Number(document.getElementById("Omégam0").value);
     let Omega_k0 = Number(document.getElementById("Omégak0").value);
-    let Omega_l0 = Number(document.getElementById("Omégal0").value);
+
+    if (fonction_EouF.name==="fonction_E"){
+        let Omega_l0 = Number(document.getElementById("Omégal0").value);
+        text_omegal0_graph ='   \Ω<sub>Λ0</sub>:  '+Omega_l0;
+        equa_diff_2=equa_diff_2_LCDM;
+    }else if (fonction_EouF.name==="fonction_F"){
+        let Omega_DE0 = Number(document.getElementById('OmégaDE0').value);
+        text_omegal0_graph ='   \Ω<sub>DE0</sub>:  '+Omega_DE0;
+        equa_diff_2=equa_diff_2_DE;
+    };
+
     //Si il n'y a pas de big bang impossible a calculer
-    if (isNaN(debut_fin_univers(equa_diff_2_LCDM, T0)[2])){
+    if (isNaN(debut_fin_univers(equa_diff_2, T0)[2])){
         return;
     };
     //paramètre pour le tracer
@@ -239,7 +251,7 @@ function generer_graphique_distance(fonction_EouF){
 		xanchor: 'right',
 		y: 1,
 		yanchor: 'bottom',
-		text:'T<sub>0</sub>: '+T0.toExponential(3)+'   H<sub>0</sub>:'+H0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+Omega_m0.toExponential(3)+'   \Ω<sub>Λ0</sub>:  '+Omega_l0+'   \Ω<sub>r0</sub>: ' +Omega_r0+'  \Ω<sub>k0</sub>:   '+Omega_k0.toExponential(3),
+		text:'T<sub>0</sub>: '+T0.toExponential(3)+'   H<sub>0</sub>:'+H0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+Omega_m0.toExponential(3)+text_omegal0_graph+'   \Ω<sub>r0</sub>: ' +Omega_r0+'  \Ω<sub>k0</sub>:   '+Omega_k0.toExponential(3),
 		showarrow: false}];
 
     
@@ -324,11 +336,7 @@ function generer_graphique_Omega(fonction_EouF){
     ordonnee_t=document.getElementById('radio_fonction_t').checked;
     log_abs=document.getElementById('check_log_abs').checked;
     log_ord=document.getElementById('check_log_ord').checked;
-    //Si il n'y a pas de big bang impossible a calculer
-    let T0 = Number(document.getElementById("T0").value);
-    if (isNaN(debut_fin_univers(equa_diff_2_LCDM, T0)[2])){
-        return;
-    };
+
     //paramètre pour le tracer
     let zmin = Number(document.getElementById("graphique_z_min").value);
 	let zmax = Number(document.getElementById("graphique_z_max").value);
@@ -336,29 +344,67 @@ function generer_graphique_Omega(fonction_EouF){
     
     // valeur des abscisses
     let abscisse = linear_scale(zmin,zmax,pas)
-    // valeurs des ordonnées
-    let OrArr = [];    //Paramètre de densité de rayonement
-    let OmArr = [];   //Paramètre de densite de matière
-    let OkArr = [];    //Paramètre de densite de courbure
-    let OlArr = [];   //Paramètre de densite lambda
 
-    //calculs des omegas
-    abscisse.forEach(i => {
-        Or = Omega_r(i);
-        Om = Omega_m(i);
-        Ok = Omega_k(i);
-        if (fonction_EouF.name==="fonction_E"){
-            Ol = Omega_l(i);
-        }else if (fonction_EouF.name==="fonction_F"){
-            Ol = Omega_DE(i); 
-        }
-        
 
-        OrArr.push(Or);
-        OmArr.push(Om);
-        OkArr.push(Ok);
-        OlArr.push(Ol);
-    });
+
+    if (fonction_EouF.name==="fonction_E"){
+        //Si il n'y a pas de big bang impossible a calculer
+        let T0 = Number(document.getElementById("T0").value);
+        if (isNaN(debut_fin_univers(equa_diff_2_LCDM, T0)[2])){
+            return;
+        };
+        text_omegal0_graph ='   \Ω<sub>Λ0</sub>:  '+Omega_l(0); //texte et titre dans lequel omegalambda ou omegaDE apparait
+        titre_omegal='<b>&#x3A9;<sub>&#x39B;</sub><b>'
+        // valeurs des ordonnées
+        OrArr = [];    //Paramètre de densité de rayonement
+        OmArr = [];    //Paramètre de densite de matière
+        OkArr = [];    //Paramètre de densite de courbure
+        OlArr = [];    //Paramètre de densite lambda ou DE
+
+        //calculs des omegas
+        abscisse.forEach(i => {
+            Or = Omega_r(i);
+            Om = Omega_m(i);
+            Ok = Omega_k(i);
+            Ol = Omega_l(i);        
+
+            OrArr.push(Or);
+            OmArr.push(Om);
+            OkArr.push(Ok);
+            OlArr.push(Ol);
+        });
+    }else if (fonction_EouF.name==="fonction_F"){
+        //Si il n'y a pas de big bang impossible a calculer
+        let T0 = Number(document.getElementById("T0").value);
+        if (isNaN(debut_fin_univers(equa_diff_2_DE, T0)[2])){
+            return;
+        };
+        text_omegal0_graph ='   \Ω<sub>DE0</sub>:  '+Omega_DE(0); //texte et titre dans lequel omegalambda ou omegaDE apparait
+        titre_omegal='<b>&#x3A9;<sub>DE</sub><b>'
+    
+        // valeurs des ordonnées
+        OrArr = [];    //Paramètre de densité de rayonement
+        OmArr = [];    //Paramètre de densite de matière
+        OkArr = [];    //Paramètre de densite de courbure
+        OlArr = [];    //Paramètre de densite lambda ou DE
+
+        //calculs des omegas
+        abscisse.forEach(i => {
+            Or = Omega_r(i);
+            Om = Omega_m(i);
+            Ok = Omega_k(i);
+            if (document.getElementById('omegaDE_normalise').checked){
+                Ol=Omega_DE(i)
+            }else{
+                Ol= Omega_DE(0) / fonction_F(i,true);
+            };  
+
+            OrArr.push(Or);
+            OmArr.push(Om);
+            OkArr.push(Ok);
+            OlArr.push(Ol);
+        });
+    };
 
     //affichage des omega0 sous le titre
     let annots = [{xref: 'paper',
@@ -367,7 +413,7 @@ function generer_graphique_Omega(fonction_EouF){
 		xanchor: 'right',
 		y: 1,
 		yanchor: 'bottom',
-		text:'T<sub>0</sub>: '+T0.toExponential(3)+'   H<sub>0</sub>:'+H0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+Omega_m(0).toExponential(3)+'   \Ω<sub>Λ0</sub>:  '+Omega_l(0)+'   \Ω<sub>r0</sub>: ' +Omega_r(0)+'  \Ω<sub>k0</sub>:   '+Omega_k(0).toExponential(3),
+		text:'T<sub>0</sub>: '+T0.toExponential(3)+'   H<sub>0</sub>:'+H0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+Omega_m(0).toExponential(3)+text_omegal0_graph+'   \Ω<sub>r0</sub>: ' +Omega_r(0).toExponential(3)+'  \Ω<sub>k0</sub>:   '+Omega_k(0).toExponential(3),
 		showarrow: false}];
 
     
@@ -413,7 +459,7 @@ function generer_graphique_Omega(fonction_EouF){
         {
             x : abscisse,
             y : OlArr,
-            name :'<b>&#x3A9;<sub>&#x39B;</sub><b>',type:'scatter'
+            name :titre_omegal,type:'scatter'
         }
     ];
     //configuration de la fenetre plotly
@@ -444,7 +490,7 @@ function generer_graphique_Omega(fonction_EouF){
     graph.empty();
     Plotly.newPlot(graphdivid,data,layout,{displaylogo: false});
 
-    document.getElementById("temps_calcul_graph").value = "Le calcul a duré : " + (Date.now()-start_temps) + " millisecondes !";
+    document.getElementById("temps_calcul_graph").innerHTML = "Le calcul a duré : " + (Date.now()-start_temps) + " millisecondes !";
 };
 
 function generer_graphique_TempsDecalage(fonction_EouF){
@@ -452,9 +498,19 @@ function generer_graphique_TempsDecalage(fonction_EouF){
     ordonnee_t=document.getElementById('radio_fonction_t').checked;
     log_abs=document.getElementById('check_log_abs').checked;
     log_ord=document.getElementById('check_log_ord').checked;
+
+    if (fonction_EouF.name==="fonction_E"){
+        text_omegal0_graph ='   \Ω<sub>Λ0</sub>:  '+Omega_l(0);
+        equa_diff_2=equa_diff_2_LCDM;
+    }else if (fonction_EouF.name==="fonction_F"){
+        text_omegal0_graph ='   \Ω<sub>DE0</sub>:  '+Omega_DE(0);
+        equa_diff_2=equa_diff_2_DE;
+    };
+
+
     //Si il n'y a pas de big bang impossible a calculer
     let T0 = Number(document.getElementById("T0").value);
-    if (isNaN(debut_fin_univers(equa_diff_2_LCDM, T0)[2])){
+    if (isNaN(debut_fin_univers(equa_diff_2, T0)[2])){
         return;
     };
     //paramètre pour le tracer
@@ -481,7 +537,7 @@ function generer_graphique_TempsDecalage(fonction_EouF){
 		xanchor: 'right',
 		y: 1,
 		yanchor: 'bottom',
-		text:'T<sub>0</sub>: '+T0.toExponential(3)+'   H<sub>0</sub>:'+H0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+Omega_m(0).toExponential(3)+'   \Ω<sub>Λ0</sub>:  '+Omega_l(0)+'   \Ω<sub>r0</sub>: ' +Omega_r(0)+'  \Ω<sub>k0</sub>:   '+Omega_k(0).toExponential(3),
+		text:'T<sub>0</sub>: '+T0.toExponential(3)+'   H<sub>0</sub>:'+H0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+Omega_m(0).toExponential(3)+text_omegal0_graph+'   \Ω<sub>r0</sub>: ' +Omega_r(0)+'  \Ω<sub>k0</sub>:   '+Omega_k(0).toExponential(3),
 		showarrow: false}];
 
     
@@ -547,7 +603,7 @@ function generer_graphique_TempsDecalage(fonction_EouF){
     graph.empty();
     Plotly.newPlot(graphdivid,data,layout,{displaylogo: false});
 
-    document.getElementById("temps_calcul_graph").value = "Le calcul a duré : " + (Date.now()-start_temps) + " millisecondes !";
+    document.getElementById("temps_calcul_graph").innerHTML = "Le calcul a duré : " + (Date.now()-start_temps) + " millisecondes !";
 };
 
 //-----------------Calcul diamètre---------

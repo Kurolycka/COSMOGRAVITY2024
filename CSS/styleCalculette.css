@@ -34,7 +34,7 @@
 
 .boiteCalculAnnexe{
     display: grid;
-    grid-template-columns:1fr 2fr 1fr;
+    grid-template-columns:2fr 3fr 2fr;
     background-color: black;
     gap: 3px;
     padding: 3px;
@@ -48,4 +48,8 @@
     border-radius: 10px;
     padding: 5px;
     gap: 3px;
+}
+
+.infobullable{
+    cursor: help;
 }

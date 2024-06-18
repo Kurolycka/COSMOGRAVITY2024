@@ -55,7 +55,7 @@ function fenetreConstantes() {
 function fenetreCalculette() {
     if (document.getElementById("Omégal0")) {
         savevalues(false)
-        window.location.href = "Calculette_cosomologique.html"
+        window.location.href = "Calculette_cosomologique_LCDM.html"
     } else {
         savevalues(true);
         window.location.href = "Calculette_cosomologique_DE.html"
@@ -90,7 +90,6 @@ function loadvalues(darkenergy=false){
         }else{
             document.getElementById('Omégal0').value = localStorage.getItem('Omégal0');
         }
-        document.getElementById('Omégal0').value = localStorage.getItem('Omégal0');
         document.getElementById('optionsOmégar0').value = localStorage.getItem('optionsOmégar0');
         localStorage.clear();
     }
@@ -270,7 +269,7 @@ function ajouterEcouteurs(fonctionUpdate) {
     });
 }
 
-if (window.location.pathname==="/Calculette_cosomologique.html"){
+if (window.location.pathname==="/Calculette_cosomologique_LCDM.html"){
     window.onload = ajouterEcouteurs(updateCalculette);
 } else {
     window.onload = ajouterEcouteurs(updateUnivers);
@@ -341,13 +340,6 @@ function updateCalculette() {
     document.getElementById("Omégar0").value = Omega_r(0).toExponential(4)
 
     document.getElementById("Omégam0").value = Omega_m(0).toExponential(4)
-
-    let fonction_simplifiante;
-    if (document.getElementById("Omégal0")) {
-        fonction_simplifiante = fonction_E
-    } else {
-        fonction_simplifiante = fonction_F
-    }
 }
 
 /**

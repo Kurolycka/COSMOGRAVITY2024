@@ -104,7 +104,11 @@ function Omega_r(z) {
         omega_r = ( 8 * Math.PI * G * rho_r) / ( 3 * Math.pow(H0_parSecondes(H0), 2) )
     }
     else {
-        omega_r = ( Omega_r(0) * Math.pow(1 + z, 4) ) / fonction_E(z,true);
+        if (document.getElementById("Omégal0")){
+            omega_r = ( Omega_r(0) * Math.pow(1 + z, 4) ) / fonction_E(z,true);
+        }else{
+            omega_r = ( Omega_r(0) * Math.pow(1 + z, 4) ) / fonction_F(z,true);
+        }  
     }
 
 
@@ -140,7 +144,11 @@ function Omega_m(z) {
         omega_m = Number(document.getElementById("Omégam0").value)
     }
     else {
-        omega_m = Omega_m(0) * Math.pow(1 + z, 3) / fonction_E(z,true);
+        if (document.getElementById("Omégal0")){
+            omega_m = Omega_m(0) * Math.pow(1 + z, 3) / fonction_E(z,true);
+        }else{
+            omega_m = Omega_m(0) * Math.pow(1 + z, 3) / fonction_F(z,true);
+        };
     }
 
     let option = document.getElementById("optionsMonofluide").value
@@ -200,7 +208,7 @@ function Omega_DE(z) {
         omega_de = Number(document.getElementById("OmégaDE0").value)
     }
     else {
-        omega_de = Omega_DE(0) *  fonction_Y(z) * (1/(1+z))	/ fonction_F(z,true);
+        omega_de = Omega_DE(0) *  fonction_Y(1/(1+z)) / fonction_F(z,true);
     }
 
     if (document.getElementById("OptionsOmégak0").checked) {

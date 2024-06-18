@@ -104,6 +104,7 @@ var calculs = calculs || (function() {
             dt=E/(1-(rs/r)); //dt/dtau ou dt/dlambda pour photon
             dphi=c*L/(r**2);// dphi/dtau ou dphi/dlambda pour photon
             vphi=  r*dphi/dt*Math.sqrt(1/(1-rs/r));
+            
             if(photon){ // calcule photon
                 dr=E**2-(1-rs/r)*((L/r)**2);   //dr=(c/E)**2*(1-rs/r)**2*(E**2-(1-rs/r)*((L/r)**2));
                 vr=c/E*Math.sqrt(Math.abs(dr));    //vr=Math.sqrt(dr/((1-rs/r)**2));
@@ -437,6 +438,16 @@ function foncPourVitPlusAvantLancement(){
 
 //----------------------------------------------------{rungekutta}----------------------------------------------------
 
+/**
+ * Fonction de runge-kutta d'ordre 4 générale pour ne pas avoir 16 rungekutta différents comme avant. 
+ * @param {Number} h : pas temporel. 
+ * @param {Number} A : correspond à dr/dt ou dr/dτ en fonction du référentiel.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @param {Number} E : constante d'intégration, sans dimension. 
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur
+ * @param {Function} deriveeSeconde : fonction de la dérivée seconde utilisée dans la méthode de runge-kutta.
+ * @returns {Array} [r,A]
+ */
 function rungekutta_general(h,A,r,E,L,deriveeSeconde) {
     let k=[0,0,0,0];
 
