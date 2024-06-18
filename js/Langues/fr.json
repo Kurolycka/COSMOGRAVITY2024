@@ -306,8 +306,8 @@
 		"rayon_neg":"Distance négative impossible !",
 		"rayonPhyInfHorz":"Rayon physique inférieur à celui de l'horizon !",
 		"EouLisNaN":"E(ou L) est non calculable",
-		"rayonHorzInfRayonSchw":"Veuillez saisir une valeur de r0 stictement supérieure au rayon de Schwarschild.",
-		"rphysetrs":"Rayon physique trop proche du rayon de Schwarschild",
+		"rayonHorzInfRayonSchw":"Veuillez saisir une valeur de r0 stictement supérieure au rayon de Schwarzschild.",
+		"rphysetrs":"Rayon physique trop proche du rayon de Schwarzschild",
 		"rayonHorzInfRayon":"Veuillez saisir une valeur de r0 strictement supérieure à l'horizon extérieur Rh+ !",
 		"lancerInterdit":"Lancer depuis l'intérieur du rayon physique interdit !",
 		"simuavertissement":"Avertissement",
@@ -329,8 +329,8 @@
 		"Vlibtitle":"Vitesse de libération à la surface de l'astre",
 		"infinity":"Infini",
 		"gravSurface_BulleInfo":"Gravité de surface théorique pour R=Rh+",
-		"message_nomFichier": "Veuillez saisir le nom de fichier désiré",
-		"alerte_nomFichier": "Le nom de fichier n'est pas valide",
+		"message_nomFichier": "Veuillez saisir le nom de fichier désiré.",
+		"alerte_nomFichier": "Le nom de fichier n'est pas valide.",
 		"nombre_de_g": "g ressenti",
 		"nombre_g_infobulle": "Nombre de g ressenti par le pilote avec 1g = 9.81m/s². Valable seulement pour la mécanique Newtonienne.",
 		"dernier_g": "Dernier g",
@@ -355,7 +355,7 @@
 	},
 
 	"page_trajectoire_massive":{
-		"titre":"Trajectoire d'un projectile en métrique de Schwarzchild",
+		"titre":"Trajectoire d'un projectile en métrique de Schwarzschild",
 		"rayon_physique":"r<sub>physique</sub> (m) =",
 		"particule_arretee":"Le projectile s'est posé sur la surface du corps céleste.",
 		"particule_ecrasee":"Le projectile s'est écrasé sur la surface du corps céleste.",
@@ -368,7 +368,7 @@
 	},
 
 	"page_trajectoire_photon":{
-		"titre":"Trajectoire d'un photon en métrique de Schwarzchild",
+		"titre":"Trajectoire d'un photon en métrique de Schwarzschild",
 		"titre3":"Masse baryonique et photon",
 		"rayon_physique":"r<sub>physique</sub> (m) =",
 		"non_baryonique_photon":"Masse non baryonique et photon",
@@ -377,11 +377,11 @@
 	},
 
 	"page_trajectoire_massive_nonBar":{
-		"titre":"Trajectoire d'un projectile en métrique de Schwarzchild <br/> (cas non baryonique)"
+		"titre":"Trajectoire d'un projectile en métrique de Schwarzschild <br/> (cas non baryonique)"
 	},
 
 	"page_trajectoire_photon_nonBar":{
-		"titre":"Trajectoire d'un photon en métrique de Schwarzchild <br/> (cas non baryonique)",
+		"titre":"Trajectoire d'un photon en métrique de Schwarzschild <br/> (cas non baryonique)",
 		"orbite_circulaire_exterieure":"Distance nécessaire du photon au centre de l'astre pour obtenir une orbite circulaire à l'extérieur de l'astre (ɸ₀ = 90°).",
 		"orbite_circulaire_interieure":"Distance nécessaire du photon au centre de l'astre pour obtenir une orbite circulaire à l'intérieur de l'astre (ɸ₀ = 90°)."
 	},

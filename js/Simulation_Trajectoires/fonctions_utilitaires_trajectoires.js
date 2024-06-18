@@ -437,6 +437,16 @@ function foncPourVitPlusAvantLancement(){
 
 //----------------------------------------------------{rungekutta}----------------------------------------------------
 
+/**
+ * Fonction de runge-kutta d'ordre 4 générale pour ne pas avoir 16 rungekutta différents comme avant. 
+ * @param {Number} h : pas temporel. 
+ * @param {Number} A : correspond à dr/dt ou dr/dτ en fonction du référentiel.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @param {Number} E : constante d'intégration, sans dimension. 
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur
+ * @param {Function} deriveeSeconde : fonction de la dérivée seconde utilisée dans la méthode de runge-kutta.
+ * @returns {Array} [r,A]
+ */
 function rungekutta_general(h,A,r,E,L,deriveeSeconde) {
     let k=[0,0,0,0];
 

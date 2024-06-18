@@ -903,6 +903,8 @@ function trajectoire(compteur,mobile) {
     	new Timer(() => animate(compteur,mobile,mobilefactor),compteur, 1, -1); //Créé un nouvel objet Timer qui répète la fonction animate toutes les 1s indéfiniment. 
 		//animate calcule les coordonnées de la particule à chaque instant. 
 
+		//--------------------------------Dessin de la boule sur l'enregistrement--------------------------------
+
 		document.getElementById('enregistrer2').addEventListener('click', function() { //Lorsque l'on clique sur enregistrer cela permet d'avoir la boule de la particule sur l'enregistrement.
         	element2z=document.getElementById('traject_type2');
 			if (element2z.value != "mobile"){ //Dans le cas de l'observateur distant. 
@@ -1153,7 +1155,7 @@ function animate(compteur,mobile,mobilefactor)
 				//-----------------------------------------------------PARTIE CALCULE-------------------------------------------------
 
 				//calcul de l'equation differentielle avec RK4 ça donne le r et dr/dt
-				val_obs = rungekutta_general(mobile.dtau, mobile.A_part_obs, mobile.r_part_obs, mobile.E, mobile.L, derivee_seconde_Schwarzchild_massif_obs); 
+				val_obs = rungekutta_general(mobile.dtau, mobile.A_part_obs, mobile.r_part_obs, mobile.E, mobile.L, derivee_seconde_Schwarzschild_massif_obs); 
 				
 				mobile.r_part_obs = val_obs[0]; 		//valeur de r calculée par RK (Runge Kutta)
 				mobile.A_part_obs = val_obs[1]; 		//valeur de dr/dtau calculée par RK
@@ -1184,8 +1186,8 @@ function animate(compteur,mobile,mobilefactor)
 				if (mobile.r_part_obs > r_phy && !isNaN(vtotal))       {mobile.distance_parcourue_totale += vtotal*(mobile.dtau*(1-rs/mobile.r_part_obs)/(mobile.E));} //Calcul de la distance parcourue dans le referentiel du mobile 
 
 				/* Calcul du gradient : */
-				gm = derivee_seconde_Schwarzchild_massif_obs(mobile.E,mobile.L,mobile.r_part_obs);
-				gmp = derivee_seconde_Schwarzchild_massif_obs(mobile.E,mobile.L,mobile.r_part_obs + 1);
+				gm = derivee_seconde_Schwarzschild_massif_obs(mobile.E,mobile.L,mobile.r_part_obs);
+				gmp = derivee_seconde_Schwarzschild_massif_obs(mobile.E,mobile.L,mobile.r_part_obs + 1);
 				fm = Math.abs(gm - gmp); 
 
 				/*Calcul de la postion [X,Y] (noramilisées) pour dessiner dans le canva (tracé) */
@@ -1224,6 +1226,9 @@ function animate(compteur,mobile,mobilefactor)
 			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //Distance parcourue
 
 			//-----------------------------------------------------PARTIE TRACÉ PARTICULE-------------------------------------------------
+
+			//--------------------------------Tracé pour l'enregistrement--------------------------------
+
 			//Dessin du tracé derriere la particule
 			context.beginPath(); //on ouvre le context
 			context.fillStyle = mobile.couleur; //on choisit la couleur pour remplir parce que c'est fill
@@ -1326,9 +1331,9 @@ function animate(compteur,mobile,mobilefactor)
 			//-----------------------------------------------------PARTIE CALCULE-------------------------------------------------
 
 			if (joy.GetPhi()!=0 && pilotage_possible==true){
-				val = rungekutta_general(temps_acceleration, mobile.A_part, mobile.r_part, null, mobile.L, derivee_seconde_Schwarzchild_massif);
+				val = rungekutta_general(temps_acceleration, mobile.A_part, mobile.r_part, null, mobile.L, derivee_seconde_Schwarzschild_massif);
 			}else{
-				val = rungekutta_general(mobile.dtau, mobile.A_part, mobile.r_part, null, mobile.L, derivee_seconde_Schwarzchild_massif); //calcul avec RK4 avec le dtau par defaut lorsque pas de pilotage
+				val = rungekutta_general(mobile.dtau, mobile.A_part, mobile.r_part, null, mobile.L, derivee_seconde_Schwarzschild_massif); //calcul avec RK4 avec le dtau par defaut lorsque pas de pilotage
 			}
 			
 
@@ -1353,8 +1358,8 @@ function animate(compteur,mobile,mobilefactor)
 			mobile.temps_observateur_distant += mobile.dtau*mobile.E/(1-rs/mobile.r_part);//calcul du temps observateur
 
 			/*Calcul du gradient*/
-			gm = derivee_seconde_Schwarzchild_massif(mobile.L,mobile.r_part);
-			gmp = derivee_seconde_Schwarzchild_massif(mobile.L,mobile.r_part + 1);
+			gm = derivee_seconde_Schwarzschild_massif(mobile.L,mobile.r_part);
+			gmp = derivee_seconde_Schwarzschild_massif(mobile.L,mobile.r_part + 1);
 			fm = Math.abs(gm - gmp);
 
 			/*Calcul de la postion [X,Y] (noramilisées) pour dessiner dans le canva (tracé) */
@@ -1408,6 +1413,8 @@ function animate(compteur,mobile,mobilefactor)
 			}
 
 			//-----------------------------------------------------PARTIE TRACÉ-------------------------------------------------
+
+			//--------------------------------Tracé pour l'enregistrement--------------------------------
 			//on dessine le trait derriere le mobile
 			context.beginPath();
 			context.fillStyle = mobile.couleur;
@@ -1585,34 +1592,51 @@ function animate(compteur,mobile,mobilefactor)
 
 //----------------------------------------------------{Vr_mob}----------------------------------------------------
 
-// Expression du potentiel divisé par c^2
-function Vr_mob(L,r) {
-	return potentiel_Schwarzchild_massif(L,r);
+/**
+ * Expression du potentiel divisé par c² dans la métrique de Schwarzschild extérieure pour une particule massive, dans le référentiel du mobile.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat du potentiel divisé par c². 
+ */
+function Vr_mob(L,r){
+	return (1-rs/r) * (1+ Math.pow(L/r,2));
 }
 
 //----------------------------------------------------{Vr_obs}----------------------------------------------------
 
-function Vr_obs(E,L,r) {
-	return Math.pow(E,2)-( 1-potentiel_Schwarzchild_massif(L, r)/Math.pow(E,2) )*Math.pow(1-rs/r,2)  ;
-}
-
-//----------------------------------------------------{potentiel_Schwarzschild_massif}----------------------------------------------------
-
-function potentiel_Schwarzchild_massif(L, r) {
-	return (1 - rs / r) * (1 + Math.pow(L / r, 2));
+/**
+ * Expression du potentiel divisé par c² dans la métrique de Schwarzschild extérieure pour une particule massive, dans le référentiel de l'observateur distant. 
+ * @param {Number} E : constante d'intégration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat du potentiel divisé par c². 
+ */
+function Vr_obs(E,L,r){
+	return Math.pow(E,2) - (1/Math.pow(E,2)) * Math.pow(1-rs/r,2) * (Math.pow(E,2) - (1-rs/r)*(1+Math.pow(L/r,2)));
 }
 
 //----------------------------------------------------{derivee_seconde_Schwarzschild_massif}----------------------------------------------------
 
-function derivee_seconde_Schwarzchild_massif(L, r) {
-		return Math.pow(c, 2)/(2*Math.pow(r, 4)) *  (-rs*Math.pow(r,2) + Math.pow(L, 2)*(2*r-3*rs));
+/**
+ * Expression de la dérivée seconde de r par rapport à τ pour une particule massive dans la métrique de Schwarzschild extérieure. 
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat de la dérivée seconde. 
+ */
+function derivee_seconde_Schwarzschild_massif(L,r){
+	return Math.pow(c,2)/(2*Math.pow(r,4)) *  (-rs*Math.pow(r,2) + Math.pow(L, 2)*(2*r-3*rs));
 }
-
 //----------------------------------------------------{derivee_seconde_Schwarzschild_massif_obs}----------------------------------------------------
 
-function derivee_seconde_Schwarzchild_massif_obs(E,L,r) {
-	return c*c*(r-rs)*(2*E*E*r*r*r*rs + 2*L*L*r*r - 7*L*L*r*rs 
-	+ 5*L*L*rs*rs - 3*r*r*r*rs + 3*r*r*rs*rs)/(2*Math.pow(r,6)*E*E);
+/**
+ * Expression de la dérivée seconde de r par rapport à t pour une particule massive dans la métrique de Schwarzschild extérieure. 
+ * @param {Number} E : constante d'intégration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat de la dérivée seconde. 
+ */
+function derivee_seconde_Schwarzschild_massif_obs(E,L,r) {
+	return -(1/2)*(Math.pow(c,2)/Math.pow(E,2))*(-2*(rs/Math.pow(r,2))*(1-rs/r)*(Math.pow(E,2)-(1-rs/r)*(1+Math.pow(L/r,2))) - Math.pow(1-rs/r,2)*(-(rs/Math.pow(r,2))*(1+Math.pow(L/r,2)) - (1-rs/r)*(-2*(Math.pow(L,2)/Math.pow(r,3)))));
 }
 
 //----------------------------------------------------{calcul_rmax}----------------------------------------------------
@@ -1706,53 +1730,59 @@ function rafraichir() {
 // -------------------------------------{enregistrer}--------------------------------------------
 
 /**
- * 
+ * Fonction qui sert à enregistrer une image de la simulation. 
  */
 function enregistrer() {
 
 	var texte = o_recupereJson(); //Pour avoir accès au contenu des fichiers json.
-	
+
 	if (document.getElementById('trace_present').value === "true") {//Lorsqu'il y a un tracé de simulation. 
 
+		//On demande à l'utilisateur le nom du fichier, avec "traject_Schaw_B_PM" comme nom du fichier par défaut : 
+		var nomFichier = prompt(texte.pages_trajectoire.message_nomFichier, "traject_Schaw_B_PM");
 
-		// Demander à l'utilisateur le nom du fichier
-		var nomFichier = prompt(texte.pages_trajectoire.message_nomFichier, "traject_Schaw_B_B");
+		//Si l'utilisateur a renseigné un nom de fichier non null et qui n'est pas juste des blancs : 
+		if (nomFichier !== null && nomFichier.trim() !== '') { 
 
-		if (nomFichier !== null && nomFichier.trim() !== '') {
+			//Je récupère dans canvas3 l'élément d'ID "myCanvas3three" et dans context3 son context :
 			canvas3 = document.getElementById("myCanvas3three");
 			context3 = canvas3.getContext("2d");
 
-			//Contenu déjà existant :
+			//Je dessine sur context3 ce qu'il y a dans canvas, donc dans context donc le texte, rs et l'astre et le tracé :
 			context3.drawImage(canvas, 0, 0);
 
-			//Dessiner le logo en bas :
-			var logo = new Image() //ManonLogo
-			logo.src='Images/CosmoGravity_logo.png'; //ManonLogo
+			//Dessin du logo :
+			var logo = new Image() 
+			logo.src='Images/CosmoGravity_logo.png'; //Je récupère le chemin de l'image du logo. 
 			logo.onload = function() {
-				var largeurLogo = 100; //ManonLogo
-				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //ManonLogo
-				var x = canvas3.width - largeurLogo; // Position en x pour le coin inférieur droit
-				var y = canvas3.height - hauteurLogo; // Position en y pour le coin inférieur droit
-				context3.drawImage(logo,x,y, largeurLogo, hauteurLogo); //ManonLogo
+				var largeurLogo = 100; //largeur de l'image du logo
+				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //hauteur de l'image du logo
+				var x = canvas3.width - largeurLogo; // Position en x pour le coin inférieur droit du logo.
+				var y = canvas3.height - hauteurLogo; // Position en y pour le coin inférieur droit du logo. 
+				context3.drawImage(logo,x,y, largeurLogo, hauteurLogo); //Je dessine le logo sur context3.
 
-			//Enregistrer le canvas avec le contenu et le logo
-			document.getElementById("enregistrer2").click();
-			canvasToImage(canvas3, {
+
+			document.getElementById("enregistrer2").click(); //Je dessine la boule sur context3. 
+			canvasToImage(canvas3, { //Je transforme le canvas en image :
 				name: nomFichier.trim(),
 				type: 'png'
 			});
+
+			//J'efface tout le contenu du context3 une fois le canvas enregistrer en tant qu'image : 
 			majFondFixe3();
 		};
-		} else {
+		} else { //Si il n'y a pas de nom de renseigné alors j'ai un message d'alerte. 
 			alert(texte.pages_trajectoire.alerte_nomFichier);
 		}
-	} else {
+	} else { //Si il n'y a pas de tracé de simulation alors message d'alerte. 
 		alert(texte.pages_trajectoire.message_enregistrer);
 	}
 }
 
 
 //----------------------------------------------------{majFondFixe}----------------------------------------------------
+
+//--------------------------------Texte pour l'enregistrement--------------------------------
 
 function majFondFixe(){
 	context.clearRect(0, 0, canvas.width, canvas.height);
@@ -1803,7 +1833,6 @@ function majFondFixe22(){
 
 function majFondFixe3(){
 	context3.clearRect(0, 0, canvas.width, canvas.height);
-	//console.log(canvas.width, canvas.height);
 }
 
 //----------------------------------------------------{test_inte}----------------------------------------------------
@@ -1854,6 +1883,8 @@ function test_inte() {
 }
 
 //----------------------------------------------------{creation_blocs}----------------------------------------------------
+
+//--------------------------------Dessin des rs et astre pour l'enregistrement--------------------------------
 
 // crée les différentes couches visuelles
 function creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur){
@@ -2018,6 +2049,8 @@ function canvasAvantLancement(){
 
 
 }
+
+//----------------------------------------------------{choixTrajectoire}----------------------------------------------------
 
 /**
  * Fonction qui permet de préparer le canvas de la simulation en fonction de si on choisit une trajectoire complète ou simple. 

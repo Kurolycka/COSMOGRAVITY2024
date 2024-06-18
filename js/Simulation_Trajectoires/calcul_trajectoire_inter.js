@@ -1527,54 +1527,150 @@ function animate(compteur,mobile,mobilefactor) {
 
 }  //fin fonction animate
 
-// Expression du potentiel divisée par c^2
+// -------------------------------------{potentiel_interne_massif}--------------------------------------------
 
-function Vr_mob(r,E,L) {
-	if(r > r_phy) { return potentiel_externe_massif(r,L);}
-	else{ return potentiel_interne_massif(r,E,L);}
-}
-
-function Vr_obs(r,E,L) {
-	if(r > r_phy) { return Math.pow(E,2)-( 1-potentiel_externe_massif(r,L)/Math.pow(E,2) )*Math.pow(1-rs/r,2);}
-	else{ return Math.pow(E,2)- Math.pow(beta(r),4)*( 1-potentiel_interne_massif(r,E,L)/Math.pow(E,2) );} 
-}										   
-
-function potentiel_interne_massif(r,E,L) {
+/**
+ * Expression du potentiel divisé par c² dans la métrique de Schwarzschild intérieure pour une particule massive, dans le référentiel du mobile.
+ * Permet de simplifier les expressions pour le cas de l'observateur distant. 
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @param {Number} E : constante d'integration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur. 
+ * @returns le résultat du potentiel divisé par c². 
+ */
+function potentiel_interne_massif(r,E,L){
 	return Math.pow(E,2) - alpha(r)* (Math.pow(E/beta(r),2)- Math.pow(L / r, 2)-1);
 }
 
-function potentiel_externe_massif(r,L) {
-	return (1 - rs / r) * (1 + Math.pow(L / r, 2));
+// -------------------------------------{potentiel_externe_massif}--------------------------------------------
+
+/**
+ * Expression du potentiel divisé par c² dans la métrique de Schwarzschild extérieure pour une particule massive, dans le référentiel du mobile.
+ * Permet de simplifier les expressions pour le cas de l'observateur distant. 
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat du potentiel divisé par c². 
+ */
+function potentiel_externe_massif(r,L){
+	return (1-rs/r) * (1+ Math.pow(L/r,2));
 }
 
+// -------------------------------------{Vr_mob}--------------------------------------------
+
+/**
+ * Fonction qui renvoie le potentiel divisé par c² en fonction de si on est dans la métrique intérieure ou extérieure, dans le référentiel du mobile. 
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @param {Number} E : constante d'integration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur. 
+ * @returns le résultat du potentiel divisé par c². 
+ */
+function Vr_mob(r,E,L) {
+	if(r > r_phy) { //Métrique extérieure :
+		return potentiel_externe_massif(r,L);
+	}else{ //Métrique intérieure :
+		return potentiel_interne_massif(r,E,L);
+	}
+}
+
+// -------------------------------------{Vr_obs}--------------------------------------------
+
+/**
+ * Fonction qui renvoie le potentiel divisé par c² en fonction de si on est dans la métrique intérieure ou extérieure, dans le référentiel de l'observateur distant. 
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @param {Number} E : constante d'integration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur. 
+ * @returns le résultat du potentiel divisé par c². 
+ */
+function Vr_obs(r,E,L) {
+	if(r > r_phy) { //Métrique extérieure :
+		return Math.pow(E,2) - (1 - potentiel_externe_massif(r,L)/Math.pow(E,2))*Math.pow(1-rs/r,2);
+	}else{ //Métrique intérieure : 
+		return Math.pow(E,2) - Math.pow(beta(r),4)*(1 - potentiel_interne_massif(r,E,L)/Math.pow(E,2));
+	} 
+}										   
+
+// -------------------------------------{alpha}--------------------------------------------
+
+/**
+ * Fonction pour faciliter les calculs dans la métrique de SCH intérieure.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns {Number} : le résultat de alpha(r). 
+ */
 function alpha(r){
 	return 1-(Math.pow(r, 2)*rs) / Math.pow(r_phy, 3);
 }
 
+// -------------------------------------{beta}--------------------------------------------
+
+/**
+ * Fonction pour faciliter les calculs dans la métrique de SCH intérieure.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns {Number} : le résultat de beta(r). 
+ */
 function beta(r){
 	return 1.5 * Math.sqrt(1-(rs/r_phy)) - 0.5 *Math.sqrt(1-(Math.pow(r, 2)*rs)/Math.pow(r_phy, 3));
 }
 
-// fonctions utilisées pour Runge Kutta
+//----------------------------------------------------{derivee_seconde_externe_massif}----------------------------------------------------
 
-function derivee_seconde_interne_massif(E,L,r) {  AA=Math.pow(c, 2)*r*rs/Math.pow(r_phy, 3);
-	return    AA - AA*Math.pow(E,2) * 1.5 *Math.sqrt(1-rs/r_phy)/Math.pow(beta(r), 3) + Math.pow(c*L, 2)/Math.pow(r, 3) ;	
+/**
+ * Expression de la dérivée seconde de r par rapport à τ pour une particule massive dans la métrique de Schwarzschild extérieure. 
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat de la dérivée seconde. 
+ */
+function derivee_seconde_externe_massif(L,r){
+	return Math.pow(c,2)/(2*Math.pow(r,4)) *  (-rs*Math.pow(r,2) + Math.pow(L, 2)*(2*r-3*rs));
 }
 
-function derivee_seconde_externe_massif(L,r) {
-	return Math.pow(c, 2)/(2*Math.pow(r, 4)) *  (-rs*Math.pow(r,2)+Math.pow(L, 2)*(2*r-3*rs));
-}
+//----------------------------------------------------{derivee_seconde_externe_massif_obs}----------------------------------------------------
 
-function derivee_seconde_interne_massif_obs(E,L,r) {
-	return -Math.pow(c, 2)*r*rs/Math.pow(E,2)/ Math.pow(r_phy, 3) * (Math.pow(E*beta(r),2)- Math.pow(L/r, 2)*Math.pow(beta(r),4) - Math.pow(beta(r),4))
-   +  0.5*Math.pow(c, 2)* alpha(r)/Math.pow(E,2) * ( 2* Math.pow(L, 2)*Math.pow(beta(r),4)/Math.pow(r, 3)- Math.pow(E,2)*r*rs*beta(r)/(Math.sqrt(alpha(r))*Math.pow(r_phy, 3)))
-	+Math.pow(c, 2)*Math.sqrt(alpha(r))/Math.pow(E,2)/ Math.pow(r_phy, 3)*(Math.pow(E,2)*beta(r)- Math.pow(L/r, 2)*Math.pow(beta(r),3) - Math.pow(beta(r),3))*r*rs;
-}
- 
+/**
+ * Expression de la dérivée seconde de r par rapport à t pour une particule massive dans la métrique de Schwarzschild extérieure. 
+ * @param {Number} E : constante d'intégration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat de la dérivée seconde. 
+ */
 function derivee_seconde_externe_massif_obs(E, L,r) {
-	return   c*c*(r-rs)*(2*E*E*r*r*r*rs + 2*L*L*r*r - 7*L*L*r*rs 
-   + 5*L*L*rs*rs - 3*r*r*r*rs + 3*r*r*rs*rs)/(2*Math.pow(r,6)*E*E);
+	return -(1/2)*(Math.pow(c,2)/Math.pow(E,2))*(-2*(rs/Math.pow(r,2))*(1-rs/r)*(Math.pow(E,2)-(1-rs/r)*(1+Math.pow(L/r,2))) - 
+	Math.pow(1-rs/r,2)*(-(rs/Math.pow(r,2))*(1+Math.pow(L/r,2)) - (1-rs/r)*(-2*(Math.pow(L,2)/Math.pow(r,3)))));
 }
+
+//----------------------------------------------------{derivee_seconde_interne_massif}----------------------------------------------------
+
+/**
+ * Expression de la dérivée seconde de r par rapport à τ pour une particule massive dans la métrique de Schwarzschild intérieure. 
+ * @param {Number} E : constante d'intégration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat de la dérivée seconde. 
+ */
+function derivee_seconde_interne_massif(E,L,r) {  
+	return -((Math.pow(c,2)*r*rs)/(Math.pow(r_phy,3)))*(Math.pow(E/beta(r),2) - Math.pow(L/r,2) - 1) 
+	+ ((Math.pow(c,2)*alpha(r))/(2))*((-Math.pow(E,2)*r*rs)/(Math.pow(beta(r),3)*Math.sqrt(alpha(r))*Math.pow(r_phy,3)) + 2*(Math.pow(L,2)/Math.pow(r,3)));
+}
+
+//----------------------------------------------------{derivee_seconde_interne_massif}----------------------------------------------------
+
+/**
+ * Expression de la dérivée seconde de r par rapport à t pour une particule massive dans la métrique de Schwarzschild intérieure. 
+ * @param {Number} E : constante d'intégration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat de la dérivée seconde. 
+ */
+function derivee_seconde_interne_massif_obs(E,L,r) {
+
+	terme_1 = Math.pow(E/beta(r),2) - Math.pow(L/r,2) -1;
+	derivee_alpha = (-2*r*rs)/Math.pow(r_phy,3);
+	derivee_beta = ((r*rs)/(2*Math.pow(r_phy,3)))*(1/Math.sqrt(alpha(r)));
+
+	return -(Math.pow(c/E,2))*(1/2)*(-derivee_alpha*Math.pow(beta(r),4)*terme_1 - alpha(r)*4*derivee_beta*Math.pow(beta(r),3)*terme_1 -
+	alpha(r)*Math.pow(beta(r),4)*((-2*Math.pow(E,2)*derivee_beta)/(Math.pow(beta(r),3)) + 2*(Math.pow(L,2)/Math.pow(r,3))));
+}
+
+
+//----------------------------------------------------{calcul_rmax}----------------------------------------------------
 
 function calcul_rmax(L,E,vr,r0,rmax1ou2){
 	r1 = (L * (L - Math.sqrt(Math.pow(L, 2) - 12 * Math.pow(m, 2))) / (2 * m));
@@ -1655,49 +1751,59 @@ function rafraichir() {
 }
 
 
-// -------------------------------------{fonction enregistrer}--------------------------------------------
+// -------------------------------------{enregistrer}--------------------------------------------
 
+/**
+ * Fonction qui sert à enregistrer une image de la simulation. 
+ */
 function enregistrer() {
-	var texte = o_recupereJson();
 
-	if (document.getElementById('trace_present').value === "true") {
-		// Demander à l'utilisateur le nom du fichier
-		if (document.getElementById('trace_present').value === "true") {
-			// Demander à l'utilisateur le nom du fichier
-		var nomFichier = prompt(texte.pages_trajectoire.message_nomFichier, "traject_Schaw_DM_B");
+	var texte = o_recupereJson(); //Pour avoir accès au contenu des fichiers json.
 
+	if (document.getElementById('trace_present').value === "true") {//Lorsqu'il y a un tracé de simulation. 
+
+		//On demande à l'utilisateur le nom du fichier, avec "traject_Schaw_NB_PM" comme nom du fichier par défaut : 
+		var nomFichier = prompt(texte.pages_trajectoire.message_nomFichier, "traject_Schaw_NB_PM");
+
+		//Si l'utilisateur a renseigné un nom de fichier non null et qui n'est pas juste des blancs :
 		if (nomFichier !== null && nomFichier.trim() !== '') {
+
+			//Je récupère dans canvas3 l'élément d'ID "myCanvas3three" et dans context3 son context :
 			canvas3 = document.getElementById("myCanvas3three");
 			context3 = canvas3.getContext("2d");
 
-			//Contenu déjà existant :
+			//Je dessine sur context3 ce qu'il y a dans canvas, donc dans context donc le texte, rs et l'astre et le tracé :
 			context3.drawImage(canvas, 0, 0);
 
-			//Dessiner le logo en bas :
-			var logo = new Image() //ManonLogo
-			logo.src='Images/CosmoGravity_logo.png'; //ManonLogo
+			//Dessin du logo :
+			var logo = new Image() 
+			logo.src='Images/CosmoGravity_logo.png'; //Je récupère le chemin de l'image du logo. 
 			logo.onload = function() {
-				var largeurLogo = 100; //ManonLogo
-				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //ManonLogo
-				var x = canvas3.width - largeurLogo; // Position en x pour le coin inférieur droit
-				var y = canvas3.height - hauteurLogo; // Position en y pour le coin inférieur droit
-				context3.drawImage(logo,x,y, largeurLogo, hauteurLogo); //ManonLogo
+				var largeurLogo = 100; //largeur de l'image du logo
+				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //hauteur de l'image du logo
+				var x = canvas3.width - largeurLogo; // Position en x pour le coin inférieur droit du logo.
+				var y = canvas3.height - hauteurLogo; // Position en y pour le coin inférieur droit du logo.
+				context3.drawImage(logo,x,y, largeurLogo, hauteurLogo); //Je dessine le logo sur context3.
 
-			//Enregistrer le canvas avec le contenu et le logo
-			document.getElementById("enregistrer2").click();
-			canvasToImage(canvas3, {
+			document.getElementById("enregistrer2").click(); //Je dessine la boule sur context3. 
+			canvasToImage(canvas3, { //Je transforme le canvas en image :
 				name: nomFichier.trim(),
 				type: 'png'
 			});
+
+			//J'efface tout le contenu du context3 une fois le canvas enregistrer en tant qu'image : 
 			majFondFixe3();
 		};
-		} else {
+		} else { //Si il n'y a pas de nom de renseigné alors j'ai un message d'alerte. 
 			alert(texte.pages_trajectoire.alerte_nomFichier);
 		}
-	} else {
+	} else { //Si il n'y a pas de tracé de simulation alors message d'alerte. 
 		alert(texte.pages_trajectoire.message_enregistrer);
 	}
-}}
+}
+
+// -------------------------------------{majFondFixe}--------------------------------------------
+
 
 function majFondFixe(){
 	context.clearRect(0, 0, canvas.width, canvas.height);

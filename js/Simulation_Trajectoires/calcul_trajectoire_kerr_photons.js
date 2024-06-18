@@ -811,72 +811,68 @@ function rafraichir() {
 }
 
 
+// -------------------------------------{enregistrer}--------------------------------------------
 
+/**
+ * Fonction qui sert à enregistrer une image de la simulation. 
+ */
 function enregistrer(){
-	// ces 2 fonctions sont issues des biblios saveSvgAsPng.js et canvas-to-image.js
-	var texte = o_recupereJson();
+	
+	var texte = o_recupereJson(); //Pour avoir accès au contenu des fichiers json.
 
-	if(document.getElementById('trace_present').value=="true") {
+	if(document.getElementById('trace_present').value=="true") { //Lorsqu'il y a un tracé de simulation. 
+
+		//On demande à l'utilisateur le nom du fichier, avec "traject_Kerr_B_P" comme nom du fichier par défaut :
 		var nomFichier = prompt(texte.pages_trajectoire.message_nomFichier, "traject_Kerr_B_P");
 
+		//Si l'utilisateur a renseigné un nom de fichier non null et qui n'est pas juste des blancs :
 		if (nomFichier !== null && nomFichier.trim() !== '') {
+			
+			//Je récupère dans canvas3 l'élément d'ID "myCanvas3three" et dans context3 son context :
 			canvas3 = document.getElementById("myCanvas3");
 			context3 = canvas3.getContext("2d");
+
+			//Je dessine sur context3 ce qu'il y a dans canvas, donc dans context donc le texte, rs et l'astre et le tracé :
 			context3.drawImage(canvas, 0, 0);
-			if (element2.value != "mobile") {
-				context3.beginPath();
-				context3.fillStyle = COULEUR_BLEU;
+
+			//Tracé sur le context3 de la boule du mobile :
+			context3.beginPath();
+			context3.fillStyle = COULEUR_BLEU;
+			if (element2.value != "mobile"){ //Dans le référentiel de l'observateur distant : 
 				context3.arc(posX2, posY2, 5, 0, Math.PI * 2);
-				context3.lineWidth = "1";
-				context3.fill();
-
-				//Dessiner le logo en bas :
-				var logo = new Image() //ManonLogo
-				logo.src='Images/CosmoGravity_logo.png'; //ManonLogo
-				logo.onload = function() {
-				var largeurLogo = 100; //ManonLogo
-				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //ManonLogo
-				var x = canvas3.width - largeurLogo; // Position en x pour le coin inférieur droit
-				var y = canvas3.height - hauteurLogo; // Position en y pour le coin inférieur droit
-				context3.drawImage(logo,x,y, largeurLogo, hauteurLogo); //ManonLogo
-
-				canvasToImage(canvas3, {
-					name: nomFichier.trim(),
-					type: 'png'
-				});
-				majFondFixe3();};
-			} else {
-				context3.beginPath();
-				context3.fillStyle = COULEUR_BLEU;
+			}else{ //Dans le référentiel du mobile :
 				context3.arc(posX1, posY1, 5, 0, Math.PI * 2);
-				context3.lineWidth = "1";
-				context3.fill();
-
-				//Dessiner le logo en bas :
-				var logo = new Image() //ManonLogo
-				logo.src='Images/CosmoGravity_logo.png'; //ManonLogo
-				logo.onload = function() {
-				var largeurLogo = 100; //ManonLogo
-				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //ManonLogo
-				var x = canvas3.width - largeurLogo; // Position en x pour le coin inférieur droit
-				var y = canvas3.height - hauteurLogo; // Position en y pour le coin inférieur droit
-				context3.drawImage(logo,x,y, largeurLogo, hauteurLogo); //ManonLogo
-
-				canvasToImage(canvas3, {
-					name: nomFichier.trim(),
-					type: 'png'
-				});
-				majFondFixe3();};
 			}
+			context3.lineWidth = "1";
+			context3.fill();
 
-		} else {
+			//Dessin du logo :
+			var logo = new Image()
+			logo.src='Images/CosmoGravity_logo.png'; //Je récupère le chemin de l'image du logo.
+			logo.onload = function() {
+				var largeurLogo = 100; //largeur de l'image du logo
+				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //hauteur de l'image du logo
+				var x = canvas3.width - largeurLogo; // Position en x pour le coin inférieur droit du logo.
+				var y = canvas3.height - hauteurLogo; // Position en y pour le coin inférieur droit du logo.
+				context3.drawImage(logo,x,y, largeurLogo, hauteurLogo); //Je dessine le logo sur context3. 
+
+			canvasToImage(canvas3, { //Je transforme le canvas en image :
+				name: nomFichier.trim(),
+				type: 'png'
+			});
+
+			//J'efface tout le contenu du context3 une fois le canvas enregistrer en tant qu'image :
+			majFondFixe3();};
+
+		} else { //Si il n'y a pas de nom de renseigné alors j'ai un message d'alerte.
 			alert(texte.pages_trajectoire.alerte_nomFichier);
 		}
-	} else {
+	} else { //Si il n'y a pas de tracé de simulation alors message d'alerte.
 		alert(texte.pages_trajectoire.message_enregistrer);
 	}
 }
 
+// -------------------------------------{majFondFixe}--------------------------------------------
 
 function majFondFixe(){phi_degres=phi0*180/Math.PI;
 	context.clearRect(0, 0, canvas.width, canvas.height);
