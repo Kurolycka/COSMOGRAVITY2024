@@ -136,28 +136,40 @@ function initialisationGenerale(fuseecompteur){
 }
 
 //----------------------------------------------------{lancerDeFusees}----------------------------------------------------
-
+/**
+ * Fonction qui permet de lancer la simulation pour tout les mobiles.
+ * @param {*} fuseecompteur : nombre de fusées générées.
+ */
 function lancerDeFusees(fuseecompteur){
-	c = 299792458;
-	G = 6.67385 * Math.pow(10, -11);
-	M = Number(document.getElementById("M").value);
-	r_phy = Number(document.getElementById("r_phy").value);
+	
+	M = Number(document.getElementById("M").value);//on recupere la masse
+	r_phy = Number(document.getElementById("r_phy").value);//on recupere le rayon physique
+    //on calcul le rayon de Schwarzschild 
 	m = G * M / Math.pow(c, 2); 
 	rs=2*m;
 
-	for (compteur = 1; compteur <= fuseecompteur; compteur += 1) {		
-		trajectoire(compteur,listejsonfusees[compteur]);
+	//on fait une boucle sur tout les mobiles
+	for (compteur = 1; compteur <= fuseecompteur; compteur += 1) 
+	{		
+		trajectoire(compteur,listejsonfusees[compteur]);//on appelle trajectoire avec le mobile comme argument
 	}
 	
-	document.getElementById("pause/resume").addEventListener("click", function() {
-        pausee()}); //ajouté Là par Khaled car le fonctionnement du button à ete changé
+	/*C'est mieux de les mettre là que dans trejectoire ou autre car on veut que 
+	ça soit global et pas relié à un mobile comme ça on pause quand on veut et pareil pour les touches du clavier */
+	
+	//si le boutton pause est cliqué on appelle la fonction pause
+	document.getElementById("pause/resume").addEventListener("click", function() 
+	{
+        pausee()
+	}); 
 
-	//Associe au bouton pause la fonction pausee permettant de mettre la simulation en pause : 
+	//si le boutton pause en bas est cliqué en appelle la fonction pause 
 	document.getElementById('bouton_pause').addEventListener('click', function() {
 		pausee();
 	});
 	
-	clavierEvenement(true);  //Permet une fois démarrée de gérer la simulation avec les touches du clavier.
+	//Permet une fois démarrée de gérer la simulation avec les touches du clavier.
+	clavierEvenement(true);  
 
 }
 
