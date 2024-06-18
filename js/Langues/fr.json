@@ -306,13 +306,13 @@
 		"rayon_neg":"Distance négative impossible !",
 		"rayonPhyInfHorz":"Rayon physique inférieur à celui de l'horizon !",
 		"EouLisNaN":"E(ou L) est non calculable",
-		"rayonHorzInfRayonSchw":"Veuillez saisir une valeur de r0 stictement supérieure au rayon de Schwarschild.",
-		"rphysetrs":"Rayon physique trop proche du rayon de Schwarschild",
+		"rayonHorzInfRayonSchw":"Veuillez saisir une valeur de r0 stictement supérieure au rayon de Schwarzschild.",
+		"rphysetrs":"Rayon physique trop proche du rayon de Schwarzschild",
 		"rayonHorzInfRayon":"Veuillez saisir une valeur de r0 strictement supérieure à l'horizon extérieur Rh+ !",
 		"lancerInterdit":"Lancer depuis l'intérieur du rayon physique interdit !",
 		"simuavertissement":"Avertissement",
 		"avertissement":"Les simulations trajectoires respectent la cinématique. Pour certaines  conditions initiales le pas de calcul devient trop grand  près des périastres et cela entraine des erreurs sur la suite de la trajectoire. Pour la matière non baryonique, les trajectoires calculées numériquement au voisinage de r=0 sont parfois imprévisibles (les équations des géodésiques ont « r » en dénominateur). <br> Le bouton « Décélérer » permet, en diminuant interactivement le pas de calcul, de palier (la plupart du temps) à ces  difficultés numériques.<br><br> Pour le calcul des vitesses on suppose qu'un observateur fixe (suivant une géodésique) mesure la vitesse du mobile quand celui-ci passe à sa position. Dans le cas de la métrique de Kerr lorsque r est inférieur à rs il ne peut y avoir de géodésique ayant la propriété précédente donc aucun observateur de ne peut demeurer fixe. Ainsi une fois rs dépassé le calcul des vitesses n'est pas possible d'où le 'pas définie'. <br><br> Le changement brusque de rotation de la trajectoire du mobile/photon à Rh+/Rh- est prédit dans la théorie.",
-		"message_enregistrer":"Tracez avant d'enregistrer !",
+		"message_enregistrer":"Il faut tracer avant d'enregistrer.",
 		"entrees":"Entrées :",
 		"horiz_ext_atteint":"Horizon extérieur atteint !",
 		"vitesses_initiales_nulles":"photon au repos !!!!",
@@ -329,8 +329,8 @@
 		"Vlibtitle":"Vitesse de libération à la surface de l'astre",
 		"infinity":"Infini",
 		"gravSurface_BulleInfo":"Gravité de surface théorique pour R=Rh+",
-		"message_nomFichier": "Veuillez saisir le nom de fichier désiré",
-		"alerte_nomFichier": "Le nom de fichier n'est pas valide",
+		"message_nomFichier": "Veuillez saisir le nom de fichier désiré.",
+		"alerte_nomFichier": "Le nom de fichier n'est pas valide.",
 		"nombre_de_g": "g ressenti",
 		"nombre_g_infobulle": "Nombre de g ressenti par le pilote avec 1g = 9.81m/s². Valable seulement pour la mécanique Newtonienne.",
 		"dernier_g": "Dernier g",
@@ -338,23 +338,24 @@
 		"distance_metrique_parcourue":"D(m)",
 		"distance_metrique_parcourue_infobulle":"Distance métrique parcourue par le mobile depuis l'instant initial.",
 		"pourcentage_vphi_pilotage_label" : "X=",
-		"pourcentage_vphi_infobulle" : "Pourcentage de la vitesse tangentielle utilisée pour le pilotage.",
+		"pourcentage_vphi_infobulle" : "Pourcentage de la vitesse tangentielle utilisée pour le pilotage. Le temps d'accélération des réacteurs est de 50 ms.",
 		"puissance_consommee_label":"P<sub>consommée</sub> (W/kg)",
 		"puissance_consommee_infobulle":"Puissance instantannée consommée par les réacteurs en W/kg.",
 		"alerte_v0_superieure_c" : "Attention votre vitesse v0 est supérieure à c.",
 		"alerte_r0_inferieure_rs" : "Attention votre distance initiale au centre de l'astre r0 est plus petite que le rayon de Schwarzschild.",
 		"alerte_singularite_non_baryonique" : "Le mobile s'arrete le calcul n'est pas stable, il faut décélérer la prochaine fois.",
-		"alerte_verifier_r0" : "Attention, veuillez vérifier la saisie en r₀.",
-		"alerte_verifier_M" : "Attention, veuillez vérifier la saisie en M.",
-		"alerte_verifier_v0" : "Attention, veuillez vérifier la saisie en v₀.",
-		"alerte_verifier_phi0" : "Attention, veuillez vérifier la saisie de l'angle de la position initiale.",
-		"alerte_verifier_teta" : "Attention, veuillez vérifier la saisie en ɸ₀.",
-		"alerte_verifier_rphy" : "Attention, veuillez vérifier la saisie du rayon physique.",
-		"alerte_verifier_J" : "Attention, veuillez vérifier la saisie du moment angulaire J."
+		"alerte_verifier_r0" : "Attention, veuillez bien saisir la valeur de r₀.",
+		"alerte_verifier_M" : "Attention, veuillez bien saisir la valeur de M.",
+		"alerte_verifier_v0" : "Attention, veuillez bien saisir la valeur de v₀.",
+		"alerte_verifier_phi0" : "Attention, veuillez bien saisir la valeur de l'angle de la position initiale.",
+		"alerte_verifier_teta" : "Attention, veuillez bien saisir la valeur de ɸ₀.",
+		"alerte_verifier_rphy" : "Attention, veuillez bien saisir la valeur du rayon physique.",
+		"alerte_verifier_J" : "Attention, veuillez bien saisir la valeur du moment angulaire J.",
+		"alerte_verifier_nbrefusees" : "Attention, veuillez bien saisir la valeur du nombre de fusées."
 	},
 
 	"page_trajectoire_massive":{
-		"titre":"Trajectoire d'un projectile en métrique de Schwarzchild",
+		"titre":"Trajectoire d'un projectile en métrique de Schwarzschild",
 		"rayon_physique":"r<sub>physique</sub> (m) =",
 		"particule_arretee":"Le projectile s'est posé sur la surface du corps céleste.",
 		"particule_ecrasee":"Le projectile s'est écrasé sur la surface du corps céleste.",
@@ -367,7 +368,7 @@
 	},
 
 	"page_trajectoire_photon":{
-		"titre":"Trajectoire d'un photon en métrique de Schwarzchild",
+		"titre":"Trajectoire d'un photon en métrique de Schwarzschild",
 		"titre3":"Masse baryonique et photon",
 		"rayon_physique":"r<sub>physique</sub> (m) =",
 		"non_baryonique_photon":"Masse non baryonique et photon",
@@ -376,11 +377,11 @@
 	},
 
 	"page_trajectoire_massive_nonBar":{
-		"titre":"Trajectoire d'un projectile en métrique de Schwarzchild <br/> (cas non baryonique)"
+		"titre":"Trajectoire d'un projectile en métrique de Schwarzschild <br/> (cas non baryonique)"
 	},
 
 	"page_trajectoire_photon_nonBar":{
-		"titre":"Trajectoire d'un photon en métrique de Schwarzchild <br/> (cas non baryonique)",
+		"titre":"Trajectoire d'un photon en métrique de Schwarzschild <br/> (cas non baryonique)",
 		"orbite_circulaire_exterieure":"Distance nécessaire du photon au centre de l'astre pour obtenir une orbite circulaire à l'extérieur de l'astre (ɸ₀ = 90°).",
 		"orbite_circulaire_interieure":"Distance nécessaire du photon au centre de l'astre pour obtenir une orbite circulaire à l'intérieur de l'astre (ɸ₀ = 90°)."
 	},

@@ -12,6 +12,9 @@ var c = 299792458;
 var G = 6.67385 * Math.pow(10, -11);
 var compteurVitesse = 0;
 var compteurVitesseAvantLancement =0; 
+var pilotage_possible = true; 
+var puissance_instant =0;
+
 
 // liste de couleurs en hexa
 const COULEUR_NOIR = '#2F2D2B';
@@ -95,19 +98,19 @@ window.setInterval(Timer.ontick, 1);
 
 //-----------------------------------------------------------KHALED--------------------------------------------------
 
-function initialisationGenerale(fuseecompteur){
-	c = 299792458;
-	G = 6.67385 * Math.pow(10, -11);
-	M = Number(document.getElementById("M").value);
-	r_phy = Number(document.getElementById("r_phy").value);
-	m = G * M / Math.pow(c, 2); 
-	rs=2*m;
+//----------------------------------------------------{initialisationGenerale}----------------------------------------------------
 
+/**
+ * Fonction qui permet l'initialisation de toutes les fusées. 
+ * @param {Number} fuseecompteur : nombre de fusées générées.
+ */
+function initialisationGenerale(fuseecompteur){
 	for (compteur = 1; compteur <= fuseecompteur; compteur += 1) {
 	    listejsonfusees[compteur]=initialisation(compteur);  
 	}
-
 }
+
+//----------------------------------------------------{lancerDeFusees}----------------------------------------------------
 
 function lancerDeFusees(fuseecompteur){
 	c = 299792458;
@@ -189,8 +192,20 @@ function supprHtml(){
  */
 function genereHtml()
 {
-	//on recupere le nombre de fusées rentré par l'utilisateur
-	var nbredefuseesgenere = Number(document.getElementById("nombredefusees").value);
+  
+  texte=o_recupereJson();
+
+	var nbrefusees_NaN = document.getElementById("nombredefusees").value; 
+
+  //on recupere le nombre de fusées rentré par l'utilisateur si ce n'est pas un NaN :
+	if(isNaN(nbrefusees_NaN)){
+		alert(texte.pages_trajectoire.alerte_verifier_nbrefusees);
+		document.getElementById("nombredefusees").value=1
+		var nbredefuseesgenere = Number(document.getElementById("nombredefusees").value);
+	
+	}else{
+		var nbredefuseesgenere = Number(document.getElementById("nombredefusees").value);
+	}	
 
 	lenbdefusees=nbredefuseesgenere;
 
@@ -739,7 +754,7 @@ function initialisation(compteur){
 		vr2i = phi0*180/Math.PI; //Je récupère l'angle de la position initiale en degrés. 
 	}
 
-	boutonAvantLancement(); //J'associe aux différents boutons les fonctions associées d'avant le lancement. 
+	boutonAvantLancement(true); //J'associe aux différents boutons les fonctions associées d'avant le lancement. 
 	canvasAvantLancement(); //J'affiche l'échelle du canvas avant le début de la simulation. 
 
 	return mobile; //Je récupère au final de cette fonction l'objet mobile correctement initialisé.
@@ -1012,19 +1027,31 @@ function trajectoire(compteur,mobile) {
 		//--------------------------------Gestion du pilotage--------------------------------
 
 		var X = Number(document.getElementById("pourcentage_vphi_pilotage").value); //Récupération du pourcentage dont on veut modifier vphi à chaque clic.
+		var temps_acceleration = 50e-3; //Temps d'accélération pendant le pilotage fixé à 50ms. 
+
 
 		if(element2.value == "mobile" ) { //Dans le cas où j'ai un seul mobile et où je suis en mode spationaute. 
 		setInterval(function(){ //Fonction effectuée toutes les 50 ms, qui est le temps de réaction du système fixé. 
-			if(joy.GetPhi()!=0){ 
+
+			if (isNaN(vtotal) || vtotal >=c){ //Si jamais la vitesse du mobile a déja atteint la vitesse de la lumière ou que la vitesse n'est pas définie, on ne peut pas piloter. 
+				pilotage_possible = false;
+			}else{
+				pilotage_possible = true; 
+			}
+
+			if(joy.GetPhi()!=0 && pilotage_possible==true){ 
+
 
 					vitesse_precedente_nombre_g = vtotal //Stockage de la vitesse précédent l'accélération pour le calcul du nombre de g ressenti. 
 
 					//Pourcentage_vphi_pilotage = X = Delta v tangentielle / vtangentielle
 
+					X_eff = joy.GetPhi()*X;
+
 					//Je calcule les variations de E et L :
-					Delta_E= joy.GetPhi()*X*vp_1*vp_1/(c*c-vtotal*vtotal)*mobile.E;
-                	Delta_L= (X + Delta_E/mobile.E)*mobile.L;
-					puissance_instant=(Delta_E/mobile.E)*c*c/(50e-3);
+					Delta_E= joy.GetPhi()*X_eff*vp_1*vp_1/(c*c-vtotal*vtotal)*mobile.E;
+                	Delta_L= (X_eff + Delta_E/mobile.E)*mobile.L;
+					puissance_instant=Math.abs((Delta_E/mobile.E))*c*c/(temps_acceleration);
 					deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/mobile.E); //Calcul de l'énergie ΔE/E consommée au total. 
 
 					mobile.L = mobile.L + Delta_L; //Calcul du nouveau L associé à ce mobile.
@@ -1209,6 +1236,8 @@ function animate(compteur,mobile,mobilefactor) {
 	element = document.getElementById('traject_type');// on recupere le boutton de type de trajectoire
 	element2=document.getElementById('traject_type2');//on recupere le boutton de observateur ou mobile
 
+	var temps_acceleration = 50e-3; //Temps d'accélération imposé pour le pilotage. 
+
 	mobilefactor[compteur] = factGlobalAvecClef//facteur pour l'echelle
 	
 	SurTelephone();//on verifie si on est sur telephone ou ordinateur
@@ -1226,7 +1255,8 @@ function animate(compteur,mobile,mobilefactor) {
 			//on stocke le rayon avant de calculer avec RK pour savoir si ya un changement brusuqe ou pas
 			r_precedent=mobile.r_part_obs 
 			//calcul de l'equation differentielle avec RK4 ça donne le r et dr/dt
-			val = rungekutta_externe_massif_obs(mobile.dtau, mobile.r_part_obs, mobile.A_part_obs,mobile.E,mobile.L);
+			val = rungekutta_general(mobile.dtau, mobile.A_part_obs, mobile.r_part_obs,mobile.E, mobile.L, derivee_seconde_externe_massif_obs);
+	
 			mobile.r_part_obs = val[0]; //valeur de r calculée par RK (Runge Kutta)
 			mobile.A_part_obs = val[1]; //valeur de dr/dtau calculée par RK
 			/*Calcul des vitesses dans metrique externe de SCH qui retourne une liste de [v_tot,v_r,v_phi]  (Regarder le fichier 
@@ -1262,10 +1292,11 @@ function animate(compteur,mobile,mobilefactor) {
 		//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< METRIQUE INTERIEURE ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 		else 
 		{  	
+
 			//on stocke le rayon avant de calculer avec RK pour savoir si ya un changement brusuqe ou pas
 			r_precedent=mobile.r_part_obs
 			//calcul de l'equation differentielle avec RK4 ça donne le r et dr/dt
-			val = rungekutta_interne_massif_obs(mobile.dtau, mobile.r_part_obs, mobile.A_part_obs,mobile.E,mobile.L);
+			val = rungekutta_general(mobile.dtau, mobile.A_part_obs, mobile.r_part_obs, mobile.E, mobile.L, derivee_seconde_interne_massif_obs);
 			mobile.r_part_obs = val[0];//valeur de r calculée par RK (Runge Kutta)
 			mobile.A_part_obs = val[1];//valeur de dr/dtau calculée par RK
 
@@ -1366,9 +1397,14 @@ function animate(compteur,mobile,mobilefactor) {
 		//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< METRIQUE EXTERIEURE ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 		if(mobile.r_part >= r_phy) 
 		{ 	
-				//calcul avec RK4 avec le dtau par defaut
-				val = rungekutta_externe_massif(mobile.dtau, mobile.r_part, mobile.A_part,mobile.L);
-      
+
+			if (joy.GetPhi()!=0 && pilotage_possible==true){
+				val = rungekutta_general(temps_acceleration, mobile.A_part, mobile.r_part, null, mobile.L, derivee_seconde_externe_massif);//Si un pilotage est détecté, calcul avec RK4 avec le temps d'accélération.
+			}else{
+				val = rungekutta_general(mobile.dtau, mobile.A_part, mobile.r_part, null, mobile.L, derivee_seconde_externe_massif); //Autrement, calcul avec RK4 avec le dtau par défaut.
+			}
+
+			
 			//on stocke le rayon avant de calculer avec RK pour savoir si ya un changement brusuqe ou pas
 			r_precedent=mobile.r_part
 
@@ -1381,18 +1417,19 @@ function animate(compteur,mobile,mobilefactor) {
 		
 			//MEME REMARQUE PLUS HAUT
 			//vtotal=resultat[0];
-			//vr_1=resultat[1]*Math.sign(mobile.A_part);   //<------------JPC  Remarque quand E très proche de 1 calculs.MSC_Ex_vitess donne un résultat[1] faux 
-			vr_1=mobile.A_part/E;     //calcul de v_r avec le resultat de RK
+			vr_1=resultat[1]*Math.sign(mobile.A_part);   //<------------JPC  Remarque quand E très proche de 1 calculs.MSC_Ex_vitess donne un résultat[1] faux 
+			//vr_1=mobile.A_part/E;     //calcul de v_r avec le resultat de RK
 			vp_1=resultat[2]; 	//calcul de v_phi avec le fichier de calcul de vitesses
 			vtotal=Math.sqrt(vr_1*vr_1 + vp_1*vp_1) ; //calcul de v_tot (module de la vitesse)
+
 
 			varphi = c * mobile.L * mobile.dtau / Math.pow(mobile.r_part, 2);//calcul de la variation de l'angle 
 			mobile.phi = mobile.phi + varphi;	 //calcul de la nouvelle valeur de l'angle
 
 			/*Calcul de nombre de g ressenti et sa stockage de sa derniere valeur si on accelere : */
-			if(joy.GetPhi()!=0 )
+			if(joy.GetPhi()!=0 && pilotage_possible==true)
 			{ 
-				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_precedente_nombre_g)/50e-3)/9.80665 
+				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_precedente_nombre_g)/temps_acceleration)/9.80665 
 				nombre_de_g_calcul_memo = nombre_de_g_calcul; 
 			}
 			else
@@ -1417,8 +1454,13 @@ function animate(compteur,mobile,mobilefactor) {
 		else 
 		{	
 			/*Ce qui suit verifie si on a appuyé pour accelerer et adapte le pas de calcul pour RK:*/
-				//calcul avec RK4 avec le dtau par defaut
-				val=rungekutta_interne_massif(mobile.dtau, mobile.r_part, mobile.A_part,mobile.E,mobile.L);
+
+			if (joy.GetPhi()!=0 && pilotage_possible==true){
+				val=rungekutta_general(temps_acceleration, mobile.A_part, mobile.r_part, mobile.E, mobile.L, derivee_seconde_interne_massif); //Si un pilotage est détecté, calcul avec RK4 avec le temps d'accélération.
+			}else{
+				val=rungekutta_general(mobile.dtau, mobile.A_part, mobile.r_part, mobile.E, mobile.L, derivee_seconde_interne_massif); //Autrement, calcul avec RK4 avec le dtau par défaut.
+			}
+
 			//on stocke le rayon avant de calculer avec RK pour savoir si ya un changement brusuqe ou pas
 			r_precedent=mobile.r_part
 
@@ -1431,9 +1473,9 @@ function animate(compteur,mobile,mobilefactor) {
 
 			//MEME REMARQUE PLUS HAUT
 			//vtotal=resultat[0];
-			//vr_1=resultat[1]*Math.sign(mobile.A_part);  //<---------------------   Remarque quand E très proche de 1 calculs.MSC_In_vitess donne un résultat[1] faux 
+			vr_1=resultat[1]*Math.sign(mobile.A_part);  //<---------------------   Remarque quand E très proche de 1 calculs.MSC_In_vitess donne un résultat[1] faux 
 			
-			vr_1=mobile.A_part*beta(mobile.r_part)/Math.sqrt(alpha(mobile.r_part))/mobile.E   ;   //calcul de v_r avec le resultat de RK
+			//vr_1=mobile.A_part*beta(mobile.r_part)/Math.sqrt(alpha(mobile.r_part))/mobile.E   ;   //calcul de v_r avec le resultat de RK
 			vp_1=resultat[2];  //calcul de v_phi avec le fichier de calcul de vitesses
 			vtotal=Math.sqrt(vr_1*vr_1 + vp_1*vp_1) ;//calcul de v_tot (module de la vitesse)
 
@@ -1459,9 +1501,9 @@ function animate(compteur,mobile,mobilefactor) {
 			}
 
 			/*Calcul de nombre de g ressenti et sa stockage de sa derniere valeur si on accelere : */
-			if(joy.GetPhi()!=0)
+			if(joy.GetPhi()!=0 && pilotage_possible==true)
 			{ 
-				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_precedente_nombre_g)/(mobile.dtau*(1-rs/mobile.r_part)/mobile.E))/9.80665 
+				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_precedente_nombre_g)/temps_acceleration)/9.80665 
 				nombre_de_g_calcul_memo = nombre_de_g_calcul; 
 			}
 			else
@@ -1596,99 +1638,150 @@ function animate(compteur,mobile,mobilefactor) {
 
 }  //fin fonction animate
 
-// Expression du potentiel divisée par c^2
+// -------------------------------------{potentiel_interne_massif}--------------------------------------------
 
-function Vr_mob(r,E,L) {
-	if(r > r_phy) { return potentiel_externe_massif(r,L);}
-	else{ return potentiel_interne_massif(r,E,L);}
-}
-
-function Vr_obs(r,E,L) {
-	if(r > r_phy) { return Math.pow(E,2)-( 1-potentiel_externe_massif(r,L)/Math.pow(E,2) )*Math.pow(1-rs/r,2);}
-	else{ return Math.pow(E,2)- Math.pow(beta(r),4)*( 1-potentiel_interne_massif(r,E,L)/Math.pow(E,2) );} 
-}										   
-
-function potentiel_interne_massif(r,E,L) {
+/**
+ * Expression du potentiel divisé par c² dans la métrique de Schwarzschild intérieure pour une particule massive, dans le référentiel du mobile.
+ * Permet de simplifier les expressions pour le cas de l'observateur distant. 
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @param {Number} E : constante d'integration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur. 
+ * @returns le résultat du potentiel divisé par c². 
+ */
+function potentiel_interne_massif(r,E,L){
 	return Math.pow(E,2) - alpha(r)* (Math.pow(E/beta(r),2)- Math.pow(L / r, 2)-1);
 }
 
-function potentiel_externe_massif(r,L) {
-	return (1 - rs / r) * (1 + Math.pow(L / r, 2));
+// -------------------------------------{potentiel_externe_massif}--------------------------------------------
+
+/**
+ * Expression du potentiel divisé par c² dans la métrique de Schwarzschild extérieure pour une particule massive, dans le référentiel du mobile.
+ * Permet de simplifier les expressions pour le cas de l'observateur distant. 
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat du potentiel divisé par c². 
+ */
+function potentiel_externe_massif(r,L){
+	return (1-rs/r) * (1+ Math.pow(L/r,2));
 }
 
-function rungekutta_externe_massif(h, r, A, L) {
-	k = [0, 0, 0, 0];
-	k[0] = derivee_seconde_externe_massif(r,L);
-	k[1] = derivee_seconde_externe_massif(r + 0.5 * h * A,L);
-	k[2] = derivee_seconde_externe_massif(r + 0.5 * h * A + 0.25 * h * h * k[0],L);
-	k[3] = derivee_seconde_externe_massif(r + h * A + 0.5 * h * h * k[1],L);
-	r = r + h * A + (1 / 6) * h * h * (k[0] + k[1] + k[2]);
-	A = A + (h / 6) * (k[0] + 2 * (k[1] + k[2]) + k[3]);
-	return [r, A];
+// -------------------------------------{Vr_mob}--------------------------------------------
+
+/**
+ * Fonction qui renvoie le potentiel divisé par c² en fonction de si on est dans la métrique intérieure ou extérieure, dans le référentiel du mobile. 
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @param {Number} E : constante d'integration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur. 
+ * @returns le résultat du potentiel divisé par c². 
+ */
+function Vr_mob(r,E,L) {
+	if(r > r_phy) { //Métrique extérieure :
+		return potentiel_externe_massif(r,L);
+	}else{ //Métrique intérieure :
+		return potentiel_interne_massif(r,E,L);
+	}
 }
 
+// -------------------------------------{Vr_obs}--------------------------------------------
 
-function rungekutta_interne_massif(h, r, A ,E,L) {
-	k = [0, 0, 0, 0];
-	k[0] = derivee_seconde_interne_massif(r,E,L);
-	k[1] = derivee_seconde_interne_massif(r + 0.5 * h * A,E,L);
-	k[2] = derivee_seconde_interne_massif(r + 0.5 * h * A + 0.25 * h * h * k[0],E,L);
-	k[3] = derivee_seconde_interne_massif(r + h * A + 0.5 * h * h * k[1],E,L);
-	r = r + h * A + (1 / 6) * h * h * (k[0] + k[1] + k[2]);
-	A = A + (h / 6) * (k[0] + 2 * (k[1] + k[2]) + k[3]);
-	return [r, A];
-}
+/**
+ * Fonction qui renvoie le potentiel divisé par c² en fonction de si on est dans la métrique intérieure ou extérieure, dans le référentiel de l'observateur distant. 
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @param {Number} E : constante d'integration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur. 
+ * @returns le résultat du potentiel divisé par c². 
+ */
+function Vr_obs(r,E,L) {
+	if(r > r_phy) { //Métrique extérieure :
+		return Math.pow(E,2) - (1 - potentiel_externe_massif(r,L)/Math.pow(E,2))*Math.pow(1-rs/r,2);
+	}else{ //Métrique intérieure : 
+		return Math.pow(E,2) - Math.pow(beta(r),4)*(1 - potentiel_interne_massif(r,E,L)/Math.pow(E,2));
+	} 
+}										   
 
-function rungekutta_externe_massif_obs(h, r, A ,E,L) {
-	k = [0, 0, 0, 0];
-	k[0] = derivee_seconde_externe_massif_obs(r,E,L);
-	k[1] = derivee_seconde_externe_massif_obs(r + 0.5 * h * A,E,L);
-	k[2] = derivee_seconde_externe_massif_obs(r + 0.5 * h * A + 0.25 * h * h * k[0],E,L);
-	k[3] = derivee_seconde_externe_massif_obs(r + h * A + 0.5 * h * h * k[1],E,L);
-	r = r + h * A + (1 / 6) * h * h * (k[0] + k[1] + k[2]);
-	A = A + (h / 6) * (k[0] + 2 * (k[1] + k[2]) + k[3]);
-	return [r, A];
-}
+// -------------------------------------{alpha}--------------------------------------------
 
-function rungekutta_interne_massif_obs(h, r, A,E,L) {
-	k = [0, 0, 0, 0];
-	k[0] = derivee_seconde_interne_massif_obs(r,E,L);
-	k[1] = derivee_seconde_interne_massif_obs(r + 0.5 * h * A,E,L);
-	k[2] = derivee_seconde_interne_massif_obs(r + 0.5 * h * A + 0.25 * h * h * k[0],E,L);
-	k[3] = derivee_seconde_interne_massif_obs(r + h * A + 0.5 * h * h * k[1],E,L);
-	r = r + h * A + (1 / 6) * h * h * (k[0] + k[1] + k[2]);
-	A = A + (h / 6) * (k[0] + 2 * (k[1] + k[2]) + k[3]);
-	return [r, A];
-}
-
+/**
+ * Fonction pour faciliter les calculs dans la métrique de SCH intérieure.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns {Number} : le résultat de alpha(r). 
+ */
 function alpha(r){
 	return 1-(Math.pow(r, 2)*rs) / Math.pow(r_phy, 3);
 }
 
+// -------------------------------------{beta}--------------------------------------------
+
+/**
+ * Fonction pour faciliter les calculs dans la métrique de SCH intérieure.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns {Number} : le résultat de beta(r). 
+ */
 function beta(r){
 	return 1.5 * Math.sqrt(1-(rs/r_phy)) - 0.5 *Math.sqrt(1-(Math.pow(r, 2)*rs)/Math.pow(r_phy, 3));
 }
 
-// fonctions utilisées pour Runge Kutta
+//----------------------------------------------------{derivee_seconde_externe_massif}----------------------------------------------------
 
-function derivee_seconde_interne_massif(r,E,L) {  AA=Math.pow(c, 2)*r*rs/Math.pow(r_phy, 3);
-	return    AA - AA*Math.pow(E,2) * 1.5 *Math.sqrt(1-rs/r_phy)/Math.pow(beta(r), 3) + Math.pow(c*L, 2)/Math.pow(r, 3) ;	
+/**
+ * Expression de la dérivée seconde de r par rapport à τ pour une particule massive dans la métrique de Schwarzschild extérieure. 
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat de la dérivée seconde. 
+ */
+function derivee_seconde_externe_massif(L,r){
+	return Math.pow(c,2)/(2*Math.pow(r,4)) *  (-rs*Math.pow(r,2) + Math.pow(L, 2)*(2*r-3*rs));
 }
 
-function derivee_seconde_externe_massif(r,L) {
-	return Math.pow(c, 2)/(2*Math.pow(r, 4)) *  (-rs*Math.pow(r,2)+Math.pow(L, 2)*(2*r-3*rs));
+//----------------------------------------------------{derivee_seconde_externe_massif_obs}----------------------------------------------------
+
+/**
+ * Expression de la dérivée seconde de r par rapport à t pour une particule massive dans la métrique de Schwarzschild extérieure. 
+ * @param {Number} E : constante d'intégration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat de la dérivée seconde. 
+ */
+function derivee_seconde_externe_massif_obs(E, L,r) {
+	return -(1/2)*(Math.pow(c,2)/Math.pow(E,2))*(-2*(rs/Math.pow(r,2))*(1-rs/r)*(Math.pow(E,2)-(1-rs/r)*(1+Math.pow(L/r,2))) - 
+	Math.pow(1-rs/r,2)*(-(rs/Math.pow(r,2))*(1+Math.pow(L/r,2)) - (1-rs/r)*(-2*(Math.pow(L,2)/Math.pow(r,3)))));
 }
 
-function derivee_seconde_interne_massif_obs(r,E,L) {
-	return -Math.pow(c, 2)*r*rs/Math.pow(E,2)/ Math.pow(r_phy, 3) * (Math.pow(E*beta(r),2)- Math.pow(L/r, 2)*Math.pow(beta(r),4) - Math.pow(beta(r),4))
-   +  0.5*Math.pow(c, 2)* alpha(r)/Math.pow(E,2) * ( 2* Math.pow(L, 2)*Math.pow(beta(r),4)/Math.pow(r, 3)- Math.pow(E,2)*r*rs*beta(r)/(Math.sqrt(alpha(r))*Math.pow(r_phy, 3)))
-	+Math.pow(c, 2)*Math.sqrt(alpha(r))/Math.pow(E,2)/ Math.pow(r_phy, 3)*(Math.pow(E,2)*beta(r)- Math.pow(L/r, 2)*Math.pow(beta(r),3) - Math.pow(beta(r),3))*r*rs;
+//----------------------------------------------------{derivee_seconde_interne_massif}----------------------------------------------------
+
+/**
+ * Expression de la dérivée seconde de r par rapport à τ pour une particule massive dans la métrique de Schwarzschild intérieure. 
+ * @param {Number} E : constante d'intégration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat de la dérivée seconde. 
+ */
+function derivee_seconde_interne_massif(E,L,r) {  
+	return -((Math.pow(c,2)*r*rs)/(Math.pow(r_phy,3)))*(Math.pow(E/beta(r),2) - Math.pow(L/r,2) - 1) 
+	+ ((Math.pow(c,2)*alpha(r))/(2))*((-Math.pow(E,2)*r*rs)/(Math.pow(beta(r),3)*Math.sqrt(alpha(r))*Math.pow(r_phy,3)) + 2*(Math.pow(L,2)/Math.pow(r,3)));
 }
- 
-function derivee_seconde_externe_massif_obs(r,E,L) {
-	return   c*c*(r-rs)*(2*E*E*r*r*r*rs + 2*L*L*r*r - 7*L*L*r*rs 
-   + 5*L*L*rs*rs - 3*r*r*r*rs + 3*r*r*rs*rs)/(2*Math.pow(r,6)*E*E);
+
+//----------------------------------------------------{derivee_seconde_interne_massif}----------------------------------------------------
+
+/**
+ * Expression de la dérivée seconde de r par rapport à t pour une particule massive dans la métrique de Schwarzschild intérieure. 
+ * @param {Number} E : constante d'intégration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat de la dérivée seconde. 
+ */
+function derivee_seconde_interne_massif_obs(E,L,r) {
+
+	terme_1 = Math.pow(E/beta(r),2) - Math.pow(L/r,2) -1;
+	derivee_alpha = (-2*r*rs)/Math.pow(r_phy,3);
+	derivee_beta = ((r*rs)/(2*Math.pow(r_phy,3)))*(1/Math.sqrt(alpha(r)));
+
+	return -(Math.pow(c/E,2))*(1/2)*(-derivee_alpha*Math.pow(beta(r),4)*terme_1 - alpha(r)*4*derivee_beta*Math.pow(beta(r),3)*terme_1 -
+	alpha(r)*Math.pow(beta(r),4)*((-2*Math.pow(E,2)*derivee_beta)/(Math.pow(beta(r),3)) + 2*(Math.pow(L,2)/Math.pow(r,3))));
 }
+
+
+//----------------------------------------------------{calcul_rmax}----------------------------------------------------
 
 function calcul_rmax(L,E,vr,r0,rmax1ou2){
 	r1 = (L * (L - Math.sqrt(Math.pow(L, 2) - 12 * Math.pow(m, 2))) / (2 * m));
@@ -1776,60 +1869,63 @@ function rafraichir() {
 }
 
 
-// -------------------------------------{fonction enregistrer}--------------------------------------------
+// -------------------------------------{enregistrer}--------------------------------------------
 
+/**
+ * Fonction qui sert à enregistrer une image de la simulation. 
+ */
 function enregistrer() {
-	var texte = o_recupereJson();
 
-	if (document.getElementById('trace_present').value === "true") {
-		// Demander à l'utilisateur le nom du fichier
-		if (document.getElementById('trace_present').value === "true") {
-			// Demander à l'utilisateur le nom du fichier
-		var nomFichier = prompt(texte.pages_trajectoire.message_nomFichier, "traject_Schaw_DM_B");
+	var texte = o_recupereJson(); //Pour avoir accès au contenu des fichiers json.
 
+	if (document.getElementById('trace_present').value === "true") {//Lorsqu'il y a un tracé de simulation. 
+
+		//On demande à l'utilisateur le nom du fichier, avec "traject_Schaw_NB_PM" comme nom du fichier par défaut : 
+		var nomFichier = prompt(texte.pages_trajectoire.message_nomFichier, "traject_Schaw_NB_PM");
+
+		//Si l'utilisateur a renseigné un nom de fichier non null et qui n'est pas juste des blancs :
 		if (nomFichier !== null && nomFichier.trim() !== '') {
+
+			//Je récupère dans canvas3 l'élément d'ID "myCanvas3three" et dans context3 son context :
 			canvas3 = document.getElementById("myCanvas3three");
 			context3 = canvas3.getContext("2d");
 
-			//Contenu déjà existant :
+			//Je dessine sur context3 ce qu'il y a dans canvas, donc dans context donc le texte, rs et l'astre et le tracé :
 			context3.drawImage(canvas, 0, 0);
 
-			//Dessiner le logo en bas :
-			var logo = new Image() //ManonLogo
-			logo.src='Images/CosmoGravity_logo.png'; //ManonLogo
+			//Dessin du logo :
+			var logo = new Image() 
+			logo.src='Images/CosmoGravity_logo.png'; //Je récupère le chemin de l'image du logo. 
 			logo.onload = function() {
-				var largeurLogo = 100; //ManonLogo
-				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //ManonLogo
-				var x = canvas3.width - largeurLogo; // Position en x pour le coin inférieur droit
-				var y = canvas3.height - hauteurLogo; // Position en y pour le coin inférieur droit
-				context3.drawImage(logo,x,y, largeurLogo, hauteurLogo); //ManonLogo
+				var largeurLogo = 100; //largeur de l'image du logo
+				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //hauteur de l'image du logo
+				var x = canvas3.width - largeurLogo; // Position en x pour le coin inférieur droit du logo.
+				var y = canvas3.height - hauteurLogo; // Position en y pour le coin inférieur droit du logo.
+				context3.drawImage(logo,x,y, largeurLogo, hauteurLogo); //Je dessine le logo sur context3.
 
-			//Enregistrer le canvas avec le contenu et le logo
-			document.getElementById("enregistrer2").click();
-			canvasToImage(canvas3, {
+			document.getElementById("enregistrer2").click(); //Je dessine la boule sur context3. 
+			canvasToImage(canvas3, { //Je transforme le canvas en image :
 				name: nomFichier.trim(),
 				type: 'png'
 			});
+
+			//J'efface tout le contenu du context3 une fois le canvas enregistrer en tant qu'image : 
 			majFondFixe3();
 		};
-		} else {
+		} else { //Si il n'y a pas de nom de renseigné alors j'ai un message d'alerte. 
 			alert(texte.pages_trajectoire.alerte_nomFichier);
 		}
-	} else {
+	} else { //Si il n'y a pas de tracé de simulation alors message d'alerte. 
 		alert(texte.pages_trajectoire.message_enregistrer);
 	}
-}}
-
-function commandes(){
-	var texte = o_recupereJson();
-	alert(texte.page_trajectoire_massive.commandes);
 }
-// -------------------------------------{fonction majFondFixe}--------------------------------------------
+
+// -------------------------------------{majFondFixe}--------------------------------------------
+
 /**
  * Fonction qui efface le text qu'on met sur le canva
  */
-function majFondFixe()
-{
+function majFondFixe(){
 	context.clearRect(0, 0, canvas.width, canvas.height);
 	// Ajout d'un fond blanc pour l'exportation
 	context.fillStyle = 'white';
@@ -2082,25 +2178,6 @@ function canvasAvantLancement(){
 
 }
 
-function foncPourZoomPlusAvantLancement(){
-	
-		factGlobalAvecClef = factGlobalAvecClef*1.2;
-		nzoom+=1;
-		nz_avant_lancement+=1;
-		document.getElementById('nzoomtxt').innerHTML= "zoom="+ nzoom.toString();
-		canvasAvantLancement();
-	
-}
-
-function foncPourZoomMoinsAvantLancement(){
-	
-		factGlobalAvecClef = factGlobalAvecClef/1.2;
-		nzoom-=1;
-		nz_avant_lancement-=1;
-		document.getElementById('nzoomtxt').innerHTML= "zoom="+ nzoom.toString();
-		canvasAvantLancement();
-}
-
 function MAJGraphePotentiel(data1,data2,compteur,mobile){
 	data1 = []
 	for (r = 0.7*mobile.r_part; r < 1.3*mobile.r_part; r += mobile.dr) {
@@ -2110,41 +2187,6 @@ function MAJGraphePotentiel(data1,data2,compteur,mobile){
 	
 	graphique_creation_pot(0,data1,data2,compteur,mobile);
 
-}
-
-//----------------------------------------------------{Recuperation}----------------------------------------------------
-
-function recuperation(){
-	if(document.getElementById('trace_present').value!="true"){
-		load_schwarshild_massif_nonBar();
-		var lenbdefusees = Number(document.getElementById("nombredefusees").value);
-		initialisationGenerale(lenbdefusees);
-	}
-}
-
-function boutonAvantLancement(){
-    //Gestion de l'accélération/décélération de la simu
-    document.getElementById("panneau_mobile").style.visibility='visible';
-    
-    // Gestion des bouttons Zoom moins
-    document.getElementById("panneau_mobile2").style.visibility='visible';
-    
-    document.getElementById('moinszoom').addEventListener('click',foncPourZoomMoinsAvantLancement, false);
-    document.getElementById('pluszoom').addEventListener('click',foncPourZoomPlusAvantLancement, false);
-    document.getElementById('plusvite').addEventListener('click',foncPourVitPlusAvantLancement,false);
-    document.getElementById('moinsvite').addEventListener('click',foncPourVitMoinsAvantLancement,false);
-}
-
-function foncPourVitMoinsAvantLancement(){
-	compteurVitesseAvantLancement -= 1
-	compteurVitesse-=1;
-	document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesse).toString();
-}
-
-function foncPourVitPlusAvantLancement(){
-	compteurVitesseAvantLancement += 1
-	compteurVitesse+=1;
-	document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesse).toString();
 }
 
 /**
@@ -2163,4 +2205,19 @@ function choixTrajectoire(compteur,context,mobilefactor,rmaxjson,r0ou2) {
 	}else if (element.value=='complete'){
         diametre_particule = DIAMETRE_PART;
     }
+}
+
+//----------------------------------------------------{recuperation}----------------------------------------------------
+
+/**
+ * Fonction qui sert à faire fonctionner le bouton valeurs précédentes lorsque aucune simulation n'a été démarrée. 
+ */
+function recuperation(){
+
+	if(document.getElementById('trace_present').value!="true"){ //Dans le cas où aucune simulation n'a demarée.
+		load_schwarshild_massif_nonBar(); //Récupère les valeurs de la dernière simulation.
+		var lenbdefusees = Number(document.getElementById("nombredefusees").value); //Récupère le nombre de mobiles.
+		initialisationGenerale(lenbdefusees); //Permet le calcul et l'affichage du tableau fixe de constantes avant le début de la simulation. 
+	}
+
 }

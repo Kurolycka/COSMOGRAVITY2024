@@ -17,6 +17,9 @@ var G = 6.67385 * Math.pow(10, -11);
 var compteurVitesse = 0;
 var compteurVitesseAvantLancement =0; 
 
+var pilotage_possible = true; //Pour savoir si on peut piloter ou pas.
+var temps_acceleration; //Pour imposer le temps d'accélération du pilotage.
+
 testouille=true; //ManonV5
 testouilleV2=true; //ManonV5
 testouilleV3=true
@@ -140,18 +143,14 @@ window.setInterval(Timer.ontick, 1);
 
 //----------------------------------------------------{initialisationGenerale}----------------------------------------------------
 
+/**
+ * Fonction qui permet l'initialisation de toutes les fusées. 
+ * @param {Number} fuseecompteur : nombre de fusées générées.
+ */
 function initialisationGenerale(fuseecompteur){
-    c = 299792458;
-    G = 6.67385 * Math.pow(10, -11);				  
-    M = Number(document.getElementById("M").value);
-    r_phy = Number(document.getElementById("r_phy").value);
-    m = G * M / Math.pow(c, 2); 
-    rs=2*m;
-
 	for (compteur = 1; compteur <= fuseecompteur; compteur += 1) {
 	    listejsonfusees[compteur]=initialisation(compteur);  
 	}
-  
 }
 
 //----------------------------------------------------{lancerDeFusees}----------------------------------------------------
@@ -235,9 +234,18 @@ function supprHtml(){
   - Le tracé de la particule et du potentiel 
  */
 function genereHtml(){
+  
+  var nbrefusees_NaN = document.getElementById("nombredefusees").value; 
 
-	//on recupere le nombre de fusées rentré par l'utilisateur
-	var nbredefuseesgenere = Number(document.getElementById("nombredefusees").value);
+  //on recupere le nombre de fusées rentré par l'utilisateur si ce n'est pas un NaN :
+	if(isNaN(nbrefusees_NaN)){
+		alert(texte.pages_trajectoire.alerte_verifier_nbrefusees);
+		document.getElementById("nombredefusees").value=1
+		var nbredefuseesgenere = Number(document.getElementById("nombredefusees").value);
+	
+	}else{
+		var nbredefuseesgenere = Number(document.getElementById("nombredefusees").value);
+	}	
 
 	lenbdefusees=nbredefuseesgenere;
 
@@ -804,7 +812,7 @@ function initialisation(compteur){
 		vr2i = phi0*180/Math.PI; //Je récupère l'angle de la position initiale en degrés. 
 	}
 
-	boutonAvantLancement(); //J'associe aux différents boutons les fonctions associées d'avant le lancement. 
+	boutonAvantLancement(true); //J'associe aux différents boutons les fonctions associées d'avant le lancement. 
 	canvasAvantLancement(); //J'affiche l'échelle du canvas avant le début de la simulation. 
 
 	return mobile; //Je récupère au final de cette fonction l'objet mobile correctement initialisé.
@@ -822,6 +830,7 @@ function verifnbr() {
 	//Je récupère les données remplies par l'utilisateur : 
 	r_phy = document.getElementById("r_phy").value; //Le rayon physique.
 	M = document.getElementById("M").value; //La masse de l'astre. 
+
 	nbrdefuseesverifnbr = Number(document.getElementById("nombredefusees").value); //Le nombre de mobiles. 
 
 	//Pour stocker dans des variables si un des champs n'est pas un nombre pour un mobile :
@@ -1054,6 +1063,8 @@ function trajectoire(compteur,mobile) {
     	new Timer(() => animate(compteur,mobile,mobilefactor),compteur, 1, -1); //Créé un nouvel objet Timer qui répète la fonction animate toutes les 1s indéfiniment. 
 		//animate calcule les coordonnées de la particule à chaque instant. 
 
+		//--------------------------------Dessin de la boule sur l'enregistrement--------------------------------
+
 		document.getElementById('enregistrer2').addEventListener('click', function() { //Lorsque l'on clique sur enregistrer cela permet d'avoir la boule de la particule sur l'enregistrement.
         	element2z=document.getElementById('traject_type2');
 			if (element2z.value != "mobile"){ //Dans le cas de l'observateur distant. 
@@ -1077,19 +1088,29 @@ function trajectoire(compteur,mobile) {
 		//--------------------------------Gestion du pilotage--------------------------------
 
 		var X = Number(document.getElementById("pourcentage_vphi_pilotage").value); //Récupération du pourcentage dont on veut modifier vphi à chaque clic.
+		var temps_acceleration = 50e-3; //Je fixe le temps d'accélération à 50ms.
 
 		if(element2.value == "mobile" ) { //Dans le cas où j'ai un seul mobile et où je suis en mode spationaute. 
 		setInterval(function(){ //Fonction effectuée toutes les 50 ms, qui est le temps de réaction du système fixé. 
-			if(joy.GetPhi()!=0){ 
+
+			if (isNaN(vtotal) || vtotal >=c){ //Si jamais la vitesse du mobile a déja atteint la vitesse de la lumière ou que la vitesse n'est pas définie, on ne peut pas piloter. 
+				pilotage_possible = false;
+			}else{
+				pilotage_possible = true; 
+			}
+
+			if(joy.GetPhi()!=0 && pilotage_possible==true){ 
 
 					vitesse_precedente_nombre_g = vtotal //Stockage de la vitesse précédent l'accélération pour le calcul du nombre de g ressenti. 
 
 					//Pourcentage_vphi_pilotage = X = Delta v tangentielle / vtangentielle
 
+					X_eff = joy.GetPhi()*X;
+
 					//Je calcule les variations de E et L :
-					Delta_E= joy.GetPhi()*X*vp_1*vp_1/(c*c-vtotal*vtotal)*mobile.E;
-         			Delta_L= (X + Delta_E/mobile.E)*mobile.L;
-					puissance_instant=(Delta_E/mobile.E)*c*c/(50e-3);
+					Delta_E= X_eff*vp_1*vp_1/(c*c-vtotal*vtotal)*mobile.E;
+          			Delta_L= (X_eff + Delta_E/mobile.E)*mobile.L;
+					puissance_instant=Math.abs((Delta_E/mobile.E))*c*c/(temps_acceleration);
 					deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/mobile.E); //Calcul de l'énergie ΔE/E consommée au total. 
 
 					mobile.L = mobile.L + Delta_L; //Calcul du nouveau L associé à ce mobile.
@@ -1272,7 +1293,9 @@ function animate(compteur,mobile,mobilefactor)
 {
 	element = document.getElementById('traject_type'); // on recupere le boutton de type de trajectoire
 	var element2=document.getElementById('traject_type2');   //on recupere le boutton de observateur ou mobile
-	var isrebond = document.getElementById("boutton_ammorti").value; // on recupere la valeur de la barre rebond	  								   
+	var isrebond = document.getElementById("boutton_ammorti").value; // on recupere la valeur de la barre rebond	 
+	
+	var temps_acceleration=50e-3; //J'impose le temps d'accélération.
 
 	mobilefactor[compteur] = factGlobalAvecClef //facteur pour l'echelle
 
@@ -1289,12 +1312,13 @@ function animate(compteur,mobile,mobilefactor)
 			/*Cette condition gere la partie trou noir (R_phy=0), dans le cas d'un observateur lointain, on fait les calculs
 			jusqu'a rs puis au dela on met les valeurs aux quelles tendent les variables quand r tend vers rs. L'affichage et le tracé
 			s'arretent c'est pour ça que ya une variable pour cette condition, ya que temps_observateur qui continue*/
-			if (mobile.r_part_obs >rs*1.000001)//pas exactement rs pour eviter les problemes de calculs 
+			if (mobile.r_part_obs >rs*1.001)//pas exactement rs pour eviter les problemes de calculs 
 			{
 				//-----------------------------------------------------PARTIE CALCULE-------------------------------------------------
 
 				//calcul de l'equation differentielle avec RK4 ça donne le r et dr/dt
-				val_obs = rungekutta_obs(mobile.E,mobile.L,mobile.dtau, mobile.r_part_obs, mobile.A_part_obs);
+				val_obs = rungekutta_general(mobile.dtau, mobile.A_part_obs, mobile.r_part_obs, mobile.E, mobile.L, derivee_seconde_Schwarzschild_massif_obs); 
+				
 				mobile.r_part_obs = val_obs[0]; 		//valeur de r calculée par RK (Runge Kutta)
 				mobile.A_part_obs = val_obs[1]; 		//valeur de dr/dtau calculée par RK
 
@@ -1324,8 +1348,8 @@ function animate(compteur,mobile,mobilefactor)
 				if (mobile.r_part_obs > r_phy && !isNaN(vtotal))       {mobile.distance_parcourue_totale += vtotal*(mobile.dtau*(1-rs/mobile.r_part_obs)/(mobile.E));} //Calcul de la distance parcourue dans le referentiel du mobile 
 
 				/* Calcul du gradient : */
-				gm = derivee_seconde_Schwarzchild_massif_obs(mobile.E,mobile.L,mobile.r_part_obs);
-				gmp = derivee_seconde_Schwarzchild_massif_obs(mobile.E,mobile.L,mobile.r_part_obs + 1);
+				gm = derivee_seconde_Schwarzschild_massif_obs(mobile.E,mobile.L,mobile.r_part_obs);
+				gmp = derivee_seconde_Schwarzschild_massif_obs(mobile.E,mobile.L,mobile.r_part_obs + 1);
 				fm = Math.abs(gm - gmp); 
 
 				/*Calcul de la postion [X,Y] (noramilisées) pour dessiner dans le canva (tracé) */
@@ -1364,6 +1388,9 @@ function animate(compteur,mobile,mobilefactor)
 			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //Distance parcourue
 
 			//-----------------------------------------------------PARTIE TRACÉ PARTICULE-------------------------------------------------
+
+			//--------------------------------Tracé pour l'enregistrement--------------------------------
+
 			//Dessin du tracé derriere la particule
 			context.beginPath(); //on ouvre le context
 			context.fillStyle = mobile.couleur; //on choisit la couleur pour remplir parce que c'est fill
@@ -1467,9 +1494,12 @@ function animate(compteur,mobile,mobilefactor)
 		if (mobile.r_part >= 0) 
 		{
 			//-----------------------------------------------------PARTIE CALCULE-------------------------------------------------
-		
-			//calcul avec RK4 avec le dtau par defaut
-			val = rungekutta(mobile.L,mobile.dtau, mobile.r_part, mobile.A_part); 
+
+			if (joy.GetPhi()!=0 && pilotage_possible==true){
+				val = rungekutta_general(temps_acceleration, mobile.A_part, mobile.r_part, null, mobile.L, derivee_seconde_Schwarzschild_massif);
+			}else{
+				val = rungekutta_general(mobile.dtau, mobile.A_part, mobile.r_part, null, mobile.L, derivee_seconde_Schwarzschild_massif); //calcul avec RK4 avec le dtau par defaut lorsque pas de pilotage
+			}
 
 			mobile.r_part = val[0]; //valeur de r calculée par RK
 			mobile.A_part = val[1]; //valeur de dr/dtau calculée par RK
@@ -1478,10 +1508,10 @@ function animate(compteur,mobile,mobilefactor)
 	
 			/*MEME REMARQUE QUE LE CAS DE L'OBSERVATEUR POUR CE QUI SUIT */
 			//vtotal=resultat[0];
-			//vr_1=resultat[1]*Math.sign(mobile.A_part);   // <------------JPC  Remarque quand E très proche de 1 calculs.MSC_Ex_vitess donne un résultat[1] faux 
+			vr_1=resultat[1]*Math.sign(mobile.A_part);   // <------------JPC  Remarque quand E très proche de 1 calculs.MSC_Ex_vitess donne un résultat[1] faux 
 			
 			vp_1=resultat[2]; //calcul de v_phi avec le fichier de calcul de vitesses
-			vr_1=resultat[1]*Math.sign(mobile.A_part);//mobile.A_part/(1-rs/(mobile.r_part));  //calcul de v_r avec le resultat de RK
+			//vr_1=mobile.A_part/(1-rs/(mobile.r_part));  //calcul de v_r avec le resultat de RK
 			vtotal=Math.sqrt(vr_1*vr_1 + vp_1*vp_1) ;	//calcul de v_tot (module de la vitesse)
 
 			varphi = c * mobile.L * mobile.dtau / Math.pow(mobile.r_part, 2); //calcul de la variation de l'angle 
@@ -1501,9 +1531,9 @@ function animate(compteur,mobile,mobilefactor)
 			/*Calcul de la distance parcourue*/
 			mobile.distance_parcourue_totale+=vtotal*mobile.dtau; 
 
-			if(joy.GetPhi()!=0)
+			if(joy.GetPhi()!=0 && pilotage_possible==true)
 			{ 
-				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_precedente_nombre_g)/50e-3)/9.80665 
+				nombre_de_g_calcul = (Math.abs(vtotal-vitesse_precedente_nombre_g)/temps_acceleration)/9.80665 
 				
 				nombre_de_g_calcul_memo = nombre_de_g_calcul;
 			}
@@ -1547,6 +1577,8 @@ function animate(compteur,mobile,mobilefactor)
 			}
 
 			//-----------------------------------------------------PARTIE TRACÉ-------------------------------------------------
+
+			//--------------------------------Tracé pour l'enregistrement--------------------------------
 			//on dessine le trait derriere le mobile
 			context.beginPath();
 			context.fillStyle = mobile.couleur;
@@ -1718,60 +1750,51 @@ function animate(compteur,mobile,mobilefactor)
 
 //----------------------------------------------------{Vr_mob}----------------------------------------------------
 
-// Expression du potentiel divisé par c^2
-function Vr_mob(L,r) {
-	return potentiel_Schwarzchild_massif(L,r);
+/**
+ * Expression du potentiel divisé par c² dans la métrique de Schwarzschild extérieure pour une particule massive, dans le référentiel du mobile.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat du potentiel divisé par c². 
+ */
+function Vr_mob(L,r){
+	return (1-rs/r) * (1+ Math.pow(L/r,2));
 }
 
 //----------------------------------------------------{Vr_obs}----------------------------------------------------
 
-function Vr_obs(E,L,r) {
-	return Math.pow(E,2)-( 1-potentiel_Schwarzchild_massif(L, r)/Math.pow(E,2) )*Math.pow(1-rs/r,2)  ;
-}
-
-//----------------------------------------------------{potentiel_Schwarzschild_massif}----------------------------------------------------
-
-function potentiel_Schwarzchild_massif(L, r) {
-	return (1 - rs / r) * (1 + Math.pow(L / r, 2));
+/**
+ * Expression du potentiel divisé par c² dans la métrique de Schwarzschild extérieure pour une particule massive, dans le référentiel de l'observateur distant. 
+ * @param {Number} E : constante d'intégration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat du potentiel divisé par c². 
+ */
+function Vr_obs(E,L,r){
+	return Math.pow(E,2) - (1/Math.pow(E,2)) * Math.pow(1-rs/r,2) * (Math.pow(E,2) - (1-rs/r)*(1+Math.pow(L/r,2)));
 }
 
 //----------------------------------------------------{derivee_seconde_Schwarzschild_massif}----------------------------------------------------
 
-function derivee_seconde_Schwarzchild_massif(L, r) {
-		return Math.pow(c, 2)/(2*Math.pow(r, 4)) *  (-rs*Math.pow(r,2) + Math.pow(L, 2)*(2*r-3*rs));
+/**
+ * Expression de la dérivée seconde de r par rapport à τ pour une particule massive dans la métrique de Schwarzschild extérieure. 
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat de la dérivée seconde. 
+ */
+function derivee_seconde_Schwarzschild_massif(L,r){
+	return Math.pow(c,2)/(2*Math.pow(r,4)) *  (-rs*Math.pow(r,2) + Math.pow(L, 2)*(2*r-3*rs));
 }
-
-//----------------------------------------------------{rungekutta}----------------------------------------------------
-
-function rungekutta(L, h, r, A) {
-	k = [0, 0, 0, 0];
-	k[0] = derivee_seconde_Schwarzchild_massif(L,r);
-	k[1] = derivee_seconde_Schwarzchild_massif(L,r + 0.5 * h * A);
-	k[2] = derivee_seconde_Schwarzchild_massif(L,r + 0.5 * h * A + 0.25 * h * h * k[0]);
-	k[3] = derivee_seconde_Schwarzchild_massif(L,r + h * A + 0.5 * h * h * k[1]);
-	r = r + h * A + (1 / 6) * h * h * (k[0] + k[1] + k[2]);
-	A = A + (h / 6) * (k[0] + 2 * (k[1] + k[2]) + k[3]);
-	return [r, A];
-}
-
 //----------------------------------------------------{derivee_seconde_Schwarzschild_massif_obs}----------------------------------------------------
 
-function derivee_seconde_Schwarzchild_massif_obs(E,L,r) {
-	return c*c*(r-rs)*(2*E*E*r*r*r*rs + 2*L*L*r*r - 7*L*L*r*rs 
-	+ 5*L*L*rs*rs - 3*r*r*r*rs + 3*r*r*rs*rs)/(2*Math.pow(r,6)*E*E);
-}
-
-//----------------------------------------------------{rungekutta_obs}----------------------------------------------------
-
-function rungekutta_obs(E,L,h, r, A) {
-	k = [0, 0, 0, 0];
-	k[0] = derivee_seconde_Schwarzchild_massif_obs(E,L,r);
-	k[1] = derivee_seconde_Schwarzchild_massif_obs(E,L,r + 0.5 * h * A);
-	k[2] = derivee_seconde_Schwarzchild_massif_obs(E,L,r + 0.5 * h * A + 0.25 * h * h * k[0]);
-	k[3] = derivee_seconde_Schwarzchild_massif_obs(E,L,r + h * A + 0.5 * h * h * k[1]);
-	r = r + h * A + (1 / 6) * h * h * (k[0] + k[1] + k[2]);
-	A = A + (h / 6) * (k[0] + 2 * (k[1] + k[2]) + k[3]);
-	return [r, A];
+/**
+ * Expression de la dérivée seconde de r par rapport à t pour une particule massive dans la métrique de Schwarzschild extérieure. 
+ * @param {Number} E : constante d'intégration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat de la dérivée seconde. 
+ */
+function derivee_seconde_Schwarzschild_massif_obs(E,L,r) {
+	return -(1/2)*(Math.pow(c,2)/Math.pow(E,2))*(-2*(rs/Math.pow(r,2))*(1-rs/r)*(Math.pow(E,2)-(1-rs/r)*(1+Math.pow(L/r,2))) - Math.pow(1-rs/r,2)*(-(rs/Math.pow(r,2))*(1+Math.pow(L/r,2)) - (1-rs/r)*(-2*(Math.pow(L,2)/Math.pow(r,3)))));
 }
 
 //----------------------------------------------------{calcul_rmax}----------------------------------------------------
@@ -1867,56 +1890,63 @@ function rafraichir() {
 
 // -------------------------------------{enregistrer}--------------------------------------------
 
+/**
+ * Fonction qui sert à enregistrer une image de la simulation. 
+ */
 function enregistrer() {
-	var texte = o_recupereJson();
 
-	if (document.getElementById('trace_present').value === "true") {
-		// Demander à l'utilisateur le nom du fichier
-		var nomFichier = prompt(texte.pages_trajectoire.message_nomFichier, "traject_Schaw_B_B");
+	var texte = o_recupereJson(); //Pour avoir accès au contenu des fichiers json.
 
-		if (nomFichier !== null && nomFichier.trim() !== '') {
+	if (document.getElementById('trace_present').value === "true") {//Lorsqu'il y a un tracé de simulation. 
+
+		//On demande à l'utilisateur le nom du fichier, avec "traject_Schaw_B_PM" comme nom du fichier par défaut : 
+		var nomFichier = prompt(texte.pages_trajectoire.message_nomFichier, "traject_Schaw_B_PM");
+
+		//Si l'utilisateur a renseigné un nom de fichier non null et qui n'est pas juste des blancs : 
+		if (nomFichier !== null && nomFichier.trim() !== '') { 
+
+			//Je récupère dans canvas3 l'élément d'ID "myCanvas3three" et dans context3 son context :
 			canvas3 = document.getElementById("myCanvas3three");
 			context3 = canvas3.getContext("2d");
 
-			//Contenu déjà existant :
+			//Je dessine sur context3 ce qu'il y a dans canvas, donc dans context donc le texte, rs et l'astre et le tracé :
 			context3.drawImage(canvas, 0, 0);
 
-			//Dessiner le logo en bas :
-			var logo = new Image() //ManonLogo
-			logo.src='Images/CosmoGravity_logo.png'; //ManonLogo
+			//Dessin du logo :
+			var logo = new Image() 
+			logo.src='Images/CosmoGravity_logo.png'; //Je récupère le chemin de l'image du logo. 
 			logo.onload = function() {
-				var largeurLogo = 100; //ManonLogo
-				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //ManonLogo
-				var x = canvas3.width - largeurLogo; // Position en x pour le coin inférieur droit
-				var y = canvas3.height - hauteurLogo; // Position en y pour le coin inférieur droit
-				context3.drawImage(logo,x,y, largeurLogo, hauteurLogo); //ManonLogo
+				var largeurLogo = 100; //largeur de l'image du logo
+				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //hauteur de l'image du logo
+				var x = canvas3.width - largeurLogo; // Position en x pour le coin inférieur droit du logo.
+				var y = canvas3.height - hauteurLogo; // Position en y pour le coin inférieur droit du logo. 
+				context3.drawImage(logo,x,y, largeurLogo, hauteurLogo); //Je dessine le logo sur context3.
 
-			//Enregistrer le canvas avec le contenu et le logo
-			document.getElementById("enregistrer2").click();
-			canvasToImage(canvas3, {
+
+			document.getElementById("enregistrer2").click(); //Je dessine la boule sur context3. 
+			canvasToImage(canvas3, { //Je transforme le canvas en image :
 				name: nomFichier.trim(),
 				type: 'png'
 			});
+
+			//J'efface tout le contenu du context3 une fois le canvas enregistrer en tant qu'image : 
 			majFondFixe3();
 		};
-		} else {
+		} else { //Si il n'y a pas de nom de renseigné alors j'ai un message d'alerte. 
 			alert(texte.pages_trajectoire.alerte_nomFichier);
 		}
-	} else {
+	} else { //Si il n'y a pas de tracé de simulation alors message d'alerte. 
 		alert(texte.pages_trajectoire.message_enregistrer);
 	}
 }
 
-//----------------------------------------------------{commandes}----------------------------------------------------
 
-function commandes(){
-	var texte = o_recupereJson();
-	alert(texte.page_trajectoire_massive.commandes);
-}
+//----------------------------------------------------{majFondFixe}----------------------------------------------------
 
-// -------------------------------------{fonction majFondFixe}--------------------------------------------
+//--------------------------------Texte pour l'enregistrement--------------------------------
+
 /**
- * Fonction qui efface le text qu'on met sur le canva
+ * Fonction qui efface le text qu'on met sur le canva.
  */
 function majFondFixe(){
 	context.clearRect(0, 0, canvas.width, canvas.height);
@@ -2014,6 +2044,8 @@ function test_inte() {
 }
 
 //----------------------------------------------------{creation_blocs}----------------------------------------------------
+
+//--------------------------------Dessin des rs et astre pour l'enregistrement--------------------------------
 
 // crée les différentes couches visuelles
 function creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur){
@@ -2179,57 +2211,7 @@ function canvasAvantLancement(){
 
 }
 
-function foncPourZoomMoinsAvantLancement(){
-	
-    factGlobalAvecClef = factGlobalAvecClef/1.2;
-	nz_avant_lancement-=1;
-    nzoom-=1;
-    document.getElementById('nzoomtxt').innerHTML= "zoom="+ nzoom.toString();
-    canvasAvantLancement();
-}
-
-function foncPourZoomPlusAvantLancement(){
-	
-		factGlobalAvecClef = factGlobalAvecClef*1.2;
-		nz_avant_lancement+=1;
-		nzoom+=1;
-		document.getElementById('nzoomtxt').innerHTML= "zoom="+ nzoom.toString();
-		canvasAvantLancement();
-	
-}
-
-function recuperation(){
-	if(document.getElementById('trace_present').value!="true"){
-		load_schwarshild_massif();
-		var lenbdefusees = Number(document.getElementById("nombredefusees").value);
-		initialisationGenerale(lenbdefusees);
-	}
-}
-
-function boutonAvantLancement(){
-    //Gestion de l'accélération/décélération de la simu
-    document.getElementById("panneau_mobile").style.visibility='visible';
-    
-    // Gestion des bouttons Zoom moins
-    document.getElementById("panneau_mobile2").style.visibility='visible';
-    
-    document.getElementById('moinszoom').addEventListener('click',foncPourZoomMoinsAvantLancement, false);
-    document.getElementById('pluszoom').addEventListener('click',foncPourZoomPlusAvantLancement, false);
-    document.getElementById('plusvite').addEventListener('click',foncPourVitPlusAvantLancement,false);
-    document.getElementById('moinsvite').addEventListener('click',foncPourVitMoinsAvantLancement,false);
-}
-
-function foncPourVitMoinsAvantLancement(){
-	compteurVitesseAvantLancement -= 1
-	compteurVitesse-=1;
-	document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesse).toString();
-}
-
-function foncPourVitPlusAvantLancement(){
-	compteurVitesseAvantLancement += 1
-	compteurVitesse+=1;
-	document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesse).toString();
-}
+//----------------------------------------------------{choixTrajectoire}----------------------------------------------------
 
 /**
  * Fonction qui permet de préparer le canvas de la simulation en fonction de si on choisit une trajectoire complète ou simple. 
@@ -2247,4 +2229,19 @@ function choixTrajectoire(compteur,context,mobilefactor,rmaxjson,r0ou2) {
 	}else if (element.value=='complete'){
         diametre_particule = DIAMETRE_PART;
     }
+}
+
+//----------------------------------------------------{recuperation}----------------------------------------------------
+
+/**
+ * Fonction qui sert à faire fonctionner le bouton valeurs précédentes lorsque aucune simulation n'a été démarrée. 
+ */
+function recuperation(){
+
+	if(document.getElementById('trace_present').value!="true"){ //Dans le cas où aucune simulation n'a demarée.
+		load_schwarshild_massif(); //Récupère les valeurs de la dernière simulation.
+		var lenbdefusees = Number(document.getElementById("nombredefusees").value); //Récupère le nombre de mobiles.
+		initialisationGenerale(lenbdefusees); //Permet le calcul et l'affichage du tableau fixe de constantes avant le début de la simulation. 
+	}
+
 }

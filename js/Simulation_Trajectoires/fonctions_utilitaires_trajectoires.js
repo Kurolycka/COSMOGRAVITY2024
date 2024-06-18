@@ -324,3 +324,153 @@ function clavierEvenement(SCH){
 	});
 }
 
+//----------------------------------------------------{foncPourZoomMoinsAvantLancement}----------------------------------------------------
+
+/**
+ * Fonction qui permet de dézoomer avant le début de la simulation dans la métrique de SCH. 
+ */
+function foncPourZoomMoinsAvantLancement(){
+    factGlobalAvecClef = factGlobalAvecClef/1.2; //Division de la variable du zoom par 1.2.
+	nz_avant_lancement-=1; //Je comptabilise ce dézoom avant le lancement.
+
+    //J'affiche le zoom correct :
+    nzoom-=1;
+    document.getElementById('nzoomtxt').innerHTML= "zoom="+ nzoom.toString();
+
+    canvasAvantLancement(); //Je mets à jour la position de la particule avec ce nouveau zoom. 
+}
+
+//----------------------------------------------------{foncPourZoomPlusAvantLancement}----------------------------------------------------
+
+/**
+ * Fonction qui permet de zoomer avant le début de la simulation dans la métrique de SCH. 
+ */
+function foncPourZoomPlusAvantLancement(){
+	
+	factGlobalAvecClef = factGlobalAvecClef*1.2; //Multiplication de la variable du zoom par 1.2.
+	nz_avant_lancement+=1; //Je comptabilise ce zoom avant le lancement.
+
+    //J'affiche le zoom correct :
+	nzoom+=1;
+	document.getElementById('nzoomtxt').innerHTML= "zoom="+ nzoom.toString();
+	canvasAvantLancement(); //Je mets à jour la position de la particule avec ce nouveau zoom. 
+
+}
+
+//----------------------------------------------------{foncPourZoomMoinsAvantLancementKerr}----------------------------------------------------
+
+/**
+ * Fonction qui permet de dézoomer avant le début de la simulation dans la métrique de Kerr.
+ */
+function foncPourZoomMoinsAvantLancementKerr(){
+    nz_avant_lancement-=1; //Je comptabilise le dézoom.
+    document.getElementById('nzoomtxt').innerHTML= "zoom="+ nz_avant_lancement.toString(); //Je l'affiche correctement sur la page. 
+}
+
+//----------------------------------------------------{foncPourZoomPlusAvantLancementKerr}----------------------------------------------------
+
+/**
+ * Fonction qui permet de zoomer avant le début de la simulation dans la métrique de Kerr.
+ */
+function foncPourZoomPlusAvantLancementKerr(){
+    nz_avant_lancement+=1; //Je comptabilise le zoom.
+    document.getElementById('nzoomtxt').innerHTML= "zoom="+ nz_avant_lancement.toString(); //Je l'affiche correctement sur la page.
+}
+
+//----------------------------------------------------{boutonAvantLancement}----------------------------------------------------
+
+/**
+ * Fonctions qui prépare les boutons de zoom/dézoom et d'accélération/décélération de la simulation avant le lancement de cette dernière.
+ * @param {boolean} SCH : précise si on est dans la métrique de SCH (true) ou bien de Kerr (false).
+ */
+function boutonAvantLancement(SCH){
+
+    //Fais apparaître les boutons d'accélération/décélération : 
+    document.getElementById("panneau_mobile").style.visibility='visible';
+    
+    //Fais apparaître les boutons zoom/dézoom : 
+    document.getElementById("panneau_mobile2").style.visibility='visible';
+    
+    //J'associe les fonctions d'avant lancement aux boutons de zoom :
+    if(SCH){ //Pour la métrique de SCH : 
+        document.getElementById('moinszoom').addEventListener('click',foncPourZoomMoinsAvantLancement, false);
+        document.getElementById('pluszoom').addEventListener('click',foncPourZoomPlusAvantLancement, false);
+    }else{ //Pour la métrique de Kerr :
+        document.getElementById('moinszoom').addEventListener('click',foncPourZoomMoinsAvantLancementKerr, false);
+        document.getElementById('pluszoom').addEventListener('click',foncPourZoomPlusAvantLancementKerr, false);
+    }
+
+    //J'associe les fonctions d'avant lancement aux bouton d'accélération/décélération. 
+    document.getElementById('plusvite').addEventListener('click',foncPourVitPlusAvantLancement,false);
+    document.getElementById('moinsvite').addEventListener('click',foncPourVitMoinsAvantLancement,false);
+}
+
+//----------------------------------------------------{foncPourVitMoinsAvantLancement}----------------------------------------------------
+
+/**
+ * Fonction qui permet de décélérer la vitesse de la simulation avant le début de cette dernière.
+ */
+function foncPourVitMoinsAvantLancement(){
+
+    //Je mets à jour les compteurs : 
+	compteurVitesseAvantLancement -= 1
+	compteurVitesse-=1;
+
+    //J'affiche correctement simu sur la page :
+	document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesse).toString();
+}
+
+
+//----------------------------------------------------{foncPourVitPlusAvantLancement}----------------------------------------------------
+
+/**
+ * Fonction qui permet d'accélérer la vitesse de la simulation avant le début de cette dernière.
+ */
+function foncPourVitPlusAvantLancement(){
+
+    //Je mets à jour les compteurs :
+	compteurVitesseAvantLancement += 1
+	compteurVitesse+=1;
+
+    //J'affiche correctement simu sur la page :
+	document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesse).toString();
+}
+
+//----------------------------------------------------{rungekutta}----------------------------------------------------
+
+/**
+ * Fonction de runge-kutta d'ordre 4 générale pour ne pas avoir 16 rungekutta différents comme avant. 
+ * @param {Number} h : pas temporel. 
+ * @param {Number} A : correspond à dr/dt ou dr/dτ en fonction du référentiel.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @param {Number} E : constante d'intégration, sans dimension. 
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur
+ * @param {Function} deriveeSeconde : fonction de la dérivée seconde utilisée dans la méthode de runge-kutta.
+ * @returns {Array} [r,A]
+ */
+function rungekutta_general(h,A,r,E,L,deriveeSeconde) {
+    let k=[0,0,0,0];
+
+    if (E === null){
+        if (L === null){
+            k[0] = deriveeSeconde(r);
+            k[1] = deriveeSeconde(r + 0.5 * h * A);
+            k[2] = deriveeSeconde(r + 0.5 * h * A + 0.25 * h * h * k[0]);
+            k[3] = deriveeSeconde(r + h * A + 0.5 * h * h * k[1]);
+        }else{
+            k[0] = deriveeSeconde(L, r);
+            k[1] = deriveeSeconde(L, r + 0.5 * h * A);
+            k[2] = deriveeSeconde(L, r + 0.5 * h * A + 0.25 * h * h * k[0]);
+            k[3] = deriveeSeconde(L, r + h * A + 0.5 * h * h * k[1]);
+        }
+    }else{
+        k[0] = deriveeSeconde(E, L, r);
+        k[1] = deriveeSeconde(E, L, r + 0.5 * h * A);
+        k[2] = deriveeSeconde(E, L, r + 0.5 * h * A + 0.25 * h * h * k[0]);
+        k[3] = deriveeSeconde(E, L, r + h * A + 0.5 * h * h * k[1]);
+    }
+
+    r = r + h * A + (1 / 6) * h * h * (k[0] + k[1] + k[2]);
+    A = A + (h / 6) * (k[0] + 2 * (k[1] + k[2]) + k[3]);
+    return [r, A];
+}

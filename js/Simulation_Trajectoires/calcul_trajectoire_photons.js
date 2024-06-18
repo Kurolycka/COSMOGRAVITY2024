@@ -108,18 +108,14 @@ window.setInterval(Timer.ontick, 1);
 
 // -------------------------------------{fonction initialisationGenerale}-------------------------------------------
 
+/**
+ * Fonction qui permet l'initialisation de toutes les fusées. 
+ * @param {Number} fuseecompteur : nombre de fusées générées.
+ */
 function initialisationGenerale(fuseecompteur){
-    c = 299792458;
-    G = 6.67385 * Math.pow(10, -11);
-    M = Number(document.getElementById("M").value);
-    r_phy = Number(document.getElementById("r_phy").value);
-    m = G * M / Math.pow(c, 2); 
-    rs=2*m;
-
 	for (compteur = 1; compteur <= fuseecompteur; compteur += 1) {
 	    listejsonfusees[compteur]=initialisation(compteur);  
 	}
-
 }
 
 // -------------------------------------{fonction lancerDeFusees}--------------------------------------------
@@ -670,7 +666,7 @@ function initialisation(compteur){
 		vr2i = phi0*180/Math.PI; //Je récupère l'angle de la position initiale en degrés. 
 	}
 
-	boutonAvantLancement(); //J'associe aux différents boutons les fonctions associées d'avant le lancement. 
+	boutonAvantLancement(true); //J'associe aux différents boutons les fonctions associées d'avant le lancement. 
 	canvasAvantLancement(); //J'affiche l'échelle du canvas avant le début de la simulation. 
 
 	return mobile; //Je récupère au final de cette fonction l'objet mobile correctement initialisé.
@@ -1125,10 +1121,11 @@ function animate(compteur,mobile,mobilefactor) {
 			/*Cette condition gere la partie trou noir (R_phy=0), dans le cas d'un observateur lointain, on fait les calculs
 			jusqu'a rs puis au dela on met les valeurs aux quelles tendent les variables quand r tend vers rs. L'affichage et le tracé
 			s'arretent c'est pour ça que ya une variable pour cette condition, ya que temps_observateur qui continue*/
-			if (mobile.r_part_obs >rs*1.000001) //pas exactement rs pour eviter les problemes de calculs 
+			if (mobile.r_part_obs >rs*1.001) //pas exactement rs pour eviter les problemes de calculs 
 			{
 				//-----------------------------------------------------PARTIE CALCULE-------------------------------------------------
-				val_obs = rungekutta_obs(mobile.E,mobile.L,mobile.dtau, mobile.r_part_obs, mobile.A_part_obs); //calcul de l'equation differentielle avec RK4 ça donne le r et dr/dlamda
+
+				val_obs = rungekutta_general(mobile.dtau, mobile.A_part_obs, mobile.r_part_obs, mobile.E, mobile.L, derivee_seconde_Schwarzchild_photon_obs);
 				mobile.r_part_obs = val_obs[0];///valeur de r calculée par RK (Runge Kutta)
 				mobile.A_part_obs = val_obs[1];//valeur de dr/dtau calculée par RK
 
@@ -1231,7 +1228,9 @@ function animate(compteur,mobile,mobilefactor) {
 		{
 			//-----------------------------------------------------PARTIE CALCULE-------------------------------------------------
 			//MEMES ETAPES QUE LA PARTIE OBSERVATEUR
-			val = rungekutta(mobile.L,mobile.dtau, mobile.r_part, mobile.A_part);
+
+			val = rungekutta_general(mobile.dtau, mobile.A_part, mobile.r_part, null, mobile.L, derivee_seconde_Schwarzchild_photon);
+		
 			mobile.r_part = val[0]; //calcul de r
 			mobile.A_part = val[1]; //calcul de sa derivée
 			/*Calcul des vitesses avec le fichier fonctions utilitaires*/
@@ -1335,69 +1334,55 @@ function animate(compteur,mobile,mobilefactor) {
 
 }  
 
-// -------------------------------------{fonction Vr_mob}--------------------------------------------
 
-// Expression du potentiel divisé par c^2
+// -------------------------------------{Vr_mob}--------------------------------------------
 
+/**
+ * Expression du potentiel divisé par c² dans la métrique de Schwarzschild extérieure pour un photon, dans le référentiel du mobile.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat du potentiel divisé par c²
+ */
 function Vr_mob(L,r) {
-	return potentiel_Schwarzchild_photon(L,r);
+	return (1 - rs/r) * Math.pow(L/r, 2);
 }
 
-// -------------------------------------{fonction Vr_obs}--------------------------------------------
+// -------------------------------------{Vr_obs}--------------------------------------------
 
+/**
+ * Expression du potentiel divisé par c² dans la métrique de Schwarzschild extérieure pour un photon, dans le référentiel de l'observateur distant.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat du potentiel divisé par c²
+ */
 function Vr_obs(E,L,r) {
-	return Math.pow(E,2)-( 1-potentiel_Schwarzchild_photon(L,r)/Math.pow(E,2) )*Math.pow(1-rs/r,2)  ;
+	return Math.pow(E,2) - (1/Math.pow(E,2))*Math.pow(1-rs/r,2)*( Math.pow(E,2) - (1 - rs/r) * Math.pow(L/r, 2))  ;
 }
 
-// -------------------------------------{fonction Vr}--------------------------------------------
+// -------------------------------------{derivee_seconde_Schwarzchild_photon}--------------------------------------------
 
-function Vr(L,r) {
-	return potentiel_Schwarzchild_photon(L,r);
-}
-
-// -------------------------------------{fonction potentiel_Schwarzschild_photon}--------------------------------------------
-
-function potentiel_Schwarzchild_photon(L,r) {
-	return (1 - rs / r) * Math.pow(L / r, 2);
-}
-
-// -------------------------------------{fonction derivee_seconde_Schwarzschild_photon}--------------------------------------------
-
+/**
+ * Expression de la dérivée seconde de r par rapport à λ pour un photon dans la métrique de Schwarzschild extérieure. 
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat de la dérivée seconde. 
+ */
 function derivee_seconde_Schwarzchild_photon(L, r) {
-	return Math.pow(c, 2)/(2*Math.pow(r, 4)) * Math.pow(L, 2)*(2*r-3*rs);
+	return (Math.pow(c, 2)/(2*Math.pow(r, 4)))*Math.pow(L, 2)*(2*r-3*rs);
 }				
 
 // -------------------------------------{fonction derivee_seconde_Schwarzschild_photon_obs}--------------------------------------------
 
+/**
+ * Expression de la dérivée seconde de r par rapport à t pour un photon dans la métrique de Schwarzschild extérieure. 
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat de la dérivée seconde. 
+ */
 function derivee_seconde_Schwarzchild_photon_obs(E,L,r) {
-	return c*c*(r-rs)*(2*E*E*r*r*r*rs + 2*L*L*r*r - 7*L*L*r*rs + 5*L*L*rs*rs)/(2*Math.pow(r,6)*E*E); 
+	return ((c*c)/(2*Math.pow(E,2)))*(2*(1-rs/r)*(rs/Math.pow(r,2))*(E*E - (1-rs/r)*Math.pow(L/r,2)) + Math.pow(1-rs/r,2)*((-rs*L*L)/(Math.pow(r,4)) + (1-rs/r)*((2*L*L)/(Math.pow(r,3)))));
 }
 
-// -------------------------------------{fonction rungekutta}--------------------------------------------
- 
-function rungekutta(L,h, r, A) {
-	k = [0, 0, 0, 0];
-	k[0] = derivee_seconde_Schwarzchild_photon(L,r);
-	k[1] = derivee_seconde_Schwarzchild_photon(L,r + 0.5 * h * A);
-	k[2] = derivee_seconde_Schwarzchild_photon(L,r + 0.5 * h * A + 0.25 * h * h * k[0]);
-	k[3] = derivee_seconde_Schwarzchild_photon(L,r + h * A + 0.5 * h * h * k[1]);
-	r = r + h * A + (1 / 6) * h * h * (k[0] + k[1] + k[2]);
-	A = A + (h / 6) * (k[0] + 2 * (k[1] + k[2]) + k[3]);
-	return [r, A];
-}
-
-// -------------------------------------{fonction rungekutta_obs}--------------------------------------------
-			  
-function rungekutta_obs(E,L,h, r, A) {
-	k = [0, 0, 0, 0];
-	k[0] = derivee_seconde_Schwarzchild_photon_obs(E,L,r);
-	k[1] = derivee_seconde_Schwarzchild_photon_obs(E,L,r + 0.5 * h * A);
-	k[2] = derivee_seconde_Schwarzchild_photon_obs(E,L,r + 0.5 * h * A + 0.25 * h * h * k[0]);
-	k[3] = derivee_seconde_Schwarzchild_photon_obs(E,L,r + h * A + 0.5 * h * h * k[1]);
-	r = r + h * A + (1 / 6) * h * h * (k[0] + k[1] + k[2]);
-	A = A + (h / 6) * (k[0] + 2 * (k[1] + k[2]) + k[3]);
-	return [r, A];
-}
 
 // -------------------------------------{fonction calcul_rmax}--------------------------------------------
 
@@ -1490,49 +1475,56 @@ function rafraichir() {
 	document.getElementById("boutton_ammorti").value="0";
 }
 
-// -------------------------------------{fonction enregistrer}--------------------------------------------
 
+// -------------------------------------{enregistrer}--------------------------------------------
+
+/**
+ * Fonction qui sert à enregistrer une image de la simulation. 
+ */
 function enregistrer() {
-	var texte = o_recupereJson();
 
-	if (document.getElementById('trace_present').value === "true") {
-		// Demander à l'utilisateur le nom du fichier
+	var texte = o_recupereJson(); //Pour avoir accès au contenu des fichiers json.
+
+	if (document.getElementById('trace_present').value === "true") { //Lorsqu'il y a un tracé de simulation. 
+		
+		//On demande à l'utilisateur le nom du fichier, avec "traject_Schaw_B_P" comme nom du fichier par défaut :
 		var nomFichier = prompt(texte.pages_trajectoire.message_nomFichier, "traject_Schaw_B_P");
 
+		//Si l'utilisateur a renseigné un nom de fichier non null et qui n'est pas juste des blancs :
 		if (nomFichier !== null && nomFichier.trim() !== '') {
+
+			//Je récupère dans canvas3 l'élément d'ID "myCanvas3three" et dans context3 son context :
 			canvas3 = document.getElementById("myCanvas3three");
 			context3 = canvas3.getContext("2d");
+
+			//Je dessine sur context3 ce qu'il y a dans canvas, donc dans context donc le texte, rs et l'astre et le tracé :
 			context3.drawImage(canvas, 0, 0);
 
-		//Dessiner le logo en bas :
-		var logo = new Image() //ManonLogo
-		logo.src='Images/CosmoGravity_logo.png'; //ManonLogo
-		logo.onload = function() {
-		var largeurLogo = 100; //ManonLogo
-		var hauteurLogo = (logo.height / logo.width) * largeurLogo; //ManonLogo
-		var x = canvas3.width - largeurLogo; // Position en x pour le coin inférieur droit
-		var y = canvas3.height - hauteurLogo; // Position en y pour le coin inférieur droit
-		context3.drawImage(logo,x,y, largeurLogo, hauteurLogo); //ManonLogo
+			//Dessin du logo :
+			var logo = new Image() 
+			logo.src='Images/CosmoGravity_logo.png'; //Je récupère le chemin de l'image du logo. 
+			logo.onload = function() {
+				var largeurLogo = 100; //largeur de l'image du logo
+				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //hauteur de l'image du logo
+				var x = canvas3.width - largeurLogo; // Position en x pour le coin inférieur droit du logo.
+				var y = canvas3.height - hauteurLogo; // Position en y pour le coin inférieur droit du logo.
+				context3.drawImage(logo,x,y, largeurLogo, hauteurLogo); //Je dessine le logo sur context3.
 
-			document.getElementById("enregistrer2").click();
-			canvasToImage(canvas3, {
+			document.getElementById("enregistrer2").click(); //Je dessine la boule sur context3. 
+			canvasToImage(canvas3, { //Je transforme le canvas en image :
 				name: nomFichier.trim(),
 				type: 'png'
 			});
-			majFondFixe3();};
-		} else {
+
+			//J'efface tout le contenu du context3 une fois le canvas enregistrer en tant qu'image : 
+			majFondFixe3();
+		};
+		} else { //Si il n'y a pas de nom de renseigné alors j'ai un message d'alerte. 
 			alert(texte.pages_trajectoire.alerte_nomFichier);
 		}
-	} else {
+	} else { //Si il n'y a pas de tracé de simulation alors message d'alerte. 
 		alert(texte.pages_trajectoire.message_enregistrer);
 	}
-}
-
-// -------------------------------------{fonction commandes}--------------------------------------------
-
-function commandes(){
-	var texte = o_recupereJson();
-	alert(texte.pages_trajectoire.commandes_horsSchwarMassif);
 }
 
 // -------------------------------------{fonction majFondFixe}--------------------------------------------
@@ -1801,29 +1793,6 @@ function canvasAvantLancement(){
 
 }
 
-// -------------------------------------{fonction foncPourZoomPlusAvantLancement}--------------------------------------------
-
-function foncPourZoomPlusAvantLancement(){
-	
-		factGlobalAvecClef = factGlobalAvecClef*1.2;
-		nzoom+=1;
-		nz_avant_lancement+=1;
-		document.getElementById('nzoomtxt').innerHTML= "zoom="+ nzoom.toString();
-		canvasAvantLancement();
-	
-}
-
-// -------------------------------------{fonction foncPourZoomMoinsAvantLancement}--------------------------------------------
-
-function foncPourZoomMoinsAvantLancement(){
-	
-		factGlobalAvecClef = factGlobalAvecClef/1.2;
-		nzoom-=1;
-		nz_avant_lancement-=1;
-		document.getElementById('nzoomtxt').innerHTML= "zoom="+ nzoom.toString();
-		canvasAvantLancement();
-}
-
 // -------------------------------------{fonction MAJGraphePotentiel}--------------------------------------------
 
 function MAJGraphePotentiel(data1,data2,compteur,mobile){
@@ -1837,40 +1806,6 @@ function MAJGraphePotentiel(data1,data2,compteur,mobile){
 
 }
 
-// -------------------------------------{recuperation}--------------------------------------------
-
-function recuperation(){
-	if(document.getElementById('trace_present').value!="true"){
-		load_schwarshild_photon();
-		var lenbdefusees = Number(document.getElementById("nombredefusees").value);
-		initialisationGenerale(lenbdefusees);
-	}
-}
-
-function boutonAvantLancement(){
-    //Gestion de l'accélération/décélération de la simu
-    document.getElementById("panneau_mobile").style.visibility='visible';
-    
-    // Gestion des bouttons Zoom moins
-    document.getElementById("panneau_mobile2").style.visibility='visible';
-    
-    document.getElementById('moinszoom').addEventListener('click',foncPourZoomMoinsAvantLancement, false);
-    document.getElementById('pluszoom').addEventListener('click',foncPourZoomPlusAvantLancement, false);
-    document.getElementById('plusvite').addEventListener('click',foncPourVitPlusAvantLancement,false);
-    document.getElementById('moinsvite').addEventListener('click',foncPourVitMoinsAvantLancement,false);
-}
-
-function foncPourVitMoinsAvantLancement(){
-	compteurVitesseAvantLancement -= 1
-	compteurVitesse-=1;
-	document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesse).toString();
-}
-
-function foncPourVitPlusAvantLancement(){
-	compteurVitesseAvantLancement += 1
-	compteurVitesse+=1;
-	document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesse).toString();
-}
 
 /**
  * Fonction qui permet de préparer le canvas de la simulation en fonction de si on choisit une trajectoire complète ou simple. 
@@ -1888,4 +1823,19 @@ function choixTrajectoire(compteur,context,mobilefactor,rmaxjson,r0ou2) {
 	}else if (element.value=='complete'){
         diametre_particule = DIAMETRE_PART;
     }
+}
+
+//----------------------------------------------------{recuperation}----------------------------------------------------
+
+/**
+ * Fonction qui sert à faire fonctionner le bouton valeurs précédentes lorsque aucune simulation n'a été démarrée. 
+ */
+function recuperation(){
+
+	if(document.getElementById('trace_present').value!="true"){ //Dans le cas où aucune simulation n'a demarée.
+		load_schwarshild_photon(); //Récupère les valeurs de la dernière simulation.
+		var lenbdefusees = Number(document.getElementById("nombredefusees").value); //Récupère le nombre de mobiles.
+		initialisationGenerale(lenbdefusees); //Permet le calcul et l'affichage du tableau fixe de constantes avant le début de la simulation. 
+	}
+
 }

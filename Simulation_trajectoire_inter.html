@@ -9,7 +9,6 @@
 		<!-- Css de la page -->
 		<link rel="stylesheet" href="./Css/Simu_grav.css">
 		<link rel="stylesheet" href="./Css/Simu_avertissement.css">
-		<script src="./js/Simulation_Trajectoires/agrandit.js"></script>
 		<script src="./js/avertissement.js"></script>
 
 		<!-- Latex dans Html -->
@@ -178,7 +177,7 @@
 
 			</span>
 			<span id="bouton">
-				<button type="button" id="clear" class="myButton" onclick="save_nbfusees_recupvaleurs();save_schwarshild_massif_nonBar(lenbdefusees);rafraichir();"></button>
+				<button type="button" id="clear" class="myButton" onclick="save_schwarshild_massif_nonBar(lenbdefusees);rafraichir();"></button>
 			</span>
 			<span id="enregistrer">
 				<button id="boutton_enregis" type="button" class="myButton" onclick="enregistrer();"></button>
@@ -186,10 +185,6 @@
 			<span id="recup">
 				<button id="boutton_recup" type="button" class="myButton" onclick="recuperation();"></button>
 			</span>
-			<!--<span id="rrrrrrrrrrr">
-				Boutton pour basculer sur les pages en grand plus nésaire mais conserver au cas ou
-				<button type="button" class="myButton" id="ouvreengrand" onclick="ouvre_trajEnGrand();"></button>
-			</span>-->
 		</div>
 
 		</form>
@@ -266,7 +261,6 @@
 			//on lance si ya true en return
 			if(typeof test_inte() === 'boolean')
 			{
-				save_nbfusees_recupvaleurs();
 				save_schwarshild_massif_nonBar(lenbdefusees);
 				lancerDeFusees(lenbdefusees);
 			}
@@ -275,6 +269,11 @@
 			{
 				alert(test_inte());
 			}
+		}
+
+		function commandes(){ //Fonction qui affiche l'alerte pour les commandes claviers. 
+			var texte = o_recupereJson();
+			alert(texte.page_trajectoire_massive.commandes);
 		}
 
 		function updatenbredefusees(){
@@ -339,6 +338,5 @@
 		</script>
 
 		<span id="enregistrer2"></span>
-		<a id="idouvreengrand" type="hidden" href="Simulation_trajectoire_inter_en_grand.html" target="_blank"><a/>
 	</body>
 </html>

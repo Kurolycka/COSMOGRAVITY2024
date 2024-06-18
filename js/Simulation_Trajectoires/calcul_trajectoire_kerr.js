@@ -26,6 +26,7 @@ var compteurVitesse = 0;
 var compteurVitesseAvantLancement =0; 
 
 var point; //pour le graphe du potentiel
+var pilotage_possible = true; //Pour savoir si on peut piloter ou pas.
 
 
 //puisqu'il faux initaliser data1 et data2 avant l'appel dans graphique_creation_pot
@@ -237,7 +238,7 @@ function initialisation(){
 	}
 
 	textegravetetc_Kerr(); //Pour afficher les infobulles des tableaux etc.
-	boutonAvantLancement(); //J'associe aux différents boutons les fonctions associées d'avant le lancement. 
+	boutonAvantLancement(false); //J'associe aux différents boutons les fonctions associées d'avant le lancement. 
 }
 
 //----------------------------------------------------{verifnbr}----------------------------------------------------
@@ -429,6 +430,7 @@ function trajectoire() {
 		//--------------------------------Gestion du pilotage--------------------------------
 		
 		var X = Number(document.getElementById("pourcentage_vphi_pilotage").value); //Récupération du pourcentage dont on veut modifier vphi à chaque clic.
+		var temps_acceleration = 50e-3; //Le temps d'accélération est imposé et fixé à 50ms. 
 
 
 		if (element2.value=="mobile"){//Dans le cas spationaute
@@ -447,29 +449,33 @@ function trajectoire() {
 					document.getElementById('DivClignotantePilot').style.color = "red";
 				}
 
-				if (joy.GetPhi()!=0){ //Contrôle du pilotage
-					if (isNaN(vtot)){ //Dans le cas où je n'ai pas de vitesse une fois rs dépassée je ne dois pas pouvoir piloter.
-						joy.GetPhi()=0; 
-					}else{ //Autrement il est possible de piloter.
+				if (isNaN(vtot) || vtot >=c){ //Si jamais la vitesse du mobile a déja atteint la vitesse de la lumière ou que la vitesse n'est pas définie, on ne peut pas piloter. 
+					pilotage_possible = false;
+				}else{
+					pilotage_possible = true; 
+				}
 
-						vitesse_precedente_nombre_g = vtot //Stockage de la vitesse précédent l'accélération pour le calcul du nombre de g ressenti. 
+				if (joy.GetPhi()!=0 && pilotage_possible ==true){ //Contrôle du pilotage
 
-						//Pourcentage_vphi_pilotage = X = Delta v tangentielle / vtangentielle
+					vitesse_precedente_nombre_g = vtot //Stockage de la vitesse précédent l'accélération pour le calcul du nombre de g ressenti. 
 
-						//Je calcule les variations de E et L :
-						Delta_E= joy.GetPhi()*X*vp_3*vp_3/(c*c-vtot*vtot)*E;
-                		Delta_L= (X + Delta_E/E)*L;
-						puissance_instant=(Delta_E/E)*c*c/(50e-3);
-						deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/E); //Calcul de l'énergie ΔE/E consommée au total. 
+					//Pourcentage_vphi_pilotage = X = Delta v tangentielle / vtangentielle
 
-						L = L + Delta_L; //Calcul du nouveau L associé à ce mobile.
-						E = E + Delta_E; //Calcul du nouveau E associé à ce mobile. 
+					X_eff = joy.GetPhi()*X;
+
+					//Je calcule les variations de E et L :
+					Delta_E= X_eff*vp_3*vp_3/(c*c-vtot*vtot)*E;
+                	Delta_L= (Delta_E/E + ((E*r_part*Math.sqrt(delta(r_part)))/(c*L*(r_part -rs)))*X_eff*vp_3)*L
+					puissance_instant=Math.abs((Delta_E/E))*c*c/(temps_acceleration);
+					deltam_sur_m = deltam_sur_m + Math.abs(Delta_E/E); //Calcul de l'énergie ΔE/E consommée au total. 
+
+					L = L + Delta_L; //Calcul du nouveau L associé à ce mobile.
+					E = E + Delta_E; //Calcul du nouveau E associé à ce mobile. 
 									
-						document.getElementById("E").innerHTML = E.toExponential(3); //Affichage sur le site du nouveau E. 
-						document.getElementById("L").innerHTML = L.toExponential(3); //Affichage sur le site du nouveau L. 
-						document.getElementById("decal").innerHTML = deltam_sur_m.toExponential(3); //Affichage sur le site de l'énergie consommée. 
-						document.getElementById("puissance_consommee").innerHTML = puissance_instant.toExponential(3); //Affichage sur le site de la puissance consommée.
-					}
+					document.getElementById("E").innerHTML = E.toExponential(3); //Affichage sur le site du nouveau E. 
+					document.getElementById("L").innerHTML = L.toExponential(3); //Affichage sur le site du nouveau L. 
+					document.getElementById("decal").innerHTML = deltam_sur_m.toExponential(3); //Affichage sur le site de l'énergie consommée. 
+					document.getElementById("puissance_consommee").innerHTML = puissance_instant.toExponential(3); //Affichage sur le site de la puissance consommée.
 
 				}
 			}, 50);
@@ -528,8 +534,8 @@ function trajectoire() {
 
 		//--------------------------------Gestion des boutons de zoom--------------------------------
 
-		document.getElementById('moinszoom').removeEventListener('click',function(){foncPourZoomMoinsAvantLancement(false)}, false); //Je désassocie foncPourZoomMoinsAvantLancement du bouton pour dézoomer une fois la simulation commencée.
-		document.getElementById('pluszoom').removeEventListener('click',function(){foncPourZoomPlusAvantLancement(false)}, false); //Je désassocie foncPourZoomPlusAvantLancement du bouton pour zoomer une fois la simulation commencée.
+		document.getElementById('moinszoom').removeEventListener('click',foncPourZoomMoinsAvantLancementKerr, false); //Je désassocie foncPourZoomMoinsAvantLancement du bouton pour dézoomer une fois la simulation commencée.
+		document.getElementById('pluszoom').removeEventListener('click',foncPourZoomPlusAvantLancementKerr, false); //Je désassocie foncPourZoomPlusAvantLancement du bouton pour zoomer une fois la simulation commencée.
 
 		document.getElementById('moinszoom').addEventListener('click', function() { //J'associe le bouton dézoomer à la fonction suivante une fois la simulation lancée.
 			scale_factor /= 1.2;
@@ -667,6 +673,8 @@ function animate() {
 	SurTelephone();//on verifie si on est sur telephone ou ordinateur
 	choixTrajectoire(context);// on vérifie le type de trajectoire sélectionné
 
+	var temps_acceleration = 50e-3; //Temps d'accélération imposé à 50ms.
+
 	/*----------------------------------------------------------{{{{  CAS_OBSERVATEUR  }}}-----------------------------------------------------------*/
 	if (element2.value != "mobile")
 	//Tout ce qui est dans cette condition concerne le cas du referentiel de l'observateur	
@@ -675,7 +683,8 @@ function animate() {
 		if(r_part_obs >rhp*1.0000001)
 		{
 			//-----------------------------------------------------PARTIE CALCULE-----------------------------------------------------------
-			val_obs = rungekutta_obs(dtau, r_part_obs, A_part_obs); //calcul de l'equation differentielle avec RK4 ça donne le r et dr/dt
+
+			val_obs = rungekutta_general(dtau, A_part_obs, r_part_obs, null, null, derivee_seconde_Kerr_massif_obs); //calcul de l'equation differentielle avec RK4 ça donne le r et dr/dt
 
 			r_part_obs = val_obs[0]; //valeur de r calculée par RK (Runge Kutta)
 			A_part_obs = val_obs[1]; //valeur de dr/dtau calculée par RK
@@ -779,8 +788,12 @@ function animate() {
 		/* Une condition pour ne pas calculer audela attiendre zero */
 		if(r_part>0)
 		{
-			//calcul avec RK4 avec le dtau par defaut
-			val = rungekutta(dtau, r_part, A_part); 
+
+			if (joy.GetPhi()!=0 && pilotage_possible==true){
+				val = rungekutta_general(temps_acceleration, A_part, r_part, null, null, derivee_seconde_Kerr_massif); //Si un pilotage est détecté, calcul avec RK4 avec le temps d'accélération.
+			}else{
+				val = rungekutta_general(dtau, A_part, r_part, null, null, derivee_seconde_Kerr_massif);//Autrement, calcul avec RK4 avec le dtau par défaut.
+			}
 			
 
 			r_part = val[0]; //on recupere le resultat de RK pour le rayon
@@ -797,9 +810,9 @@ function animate() {
 			if(J==0) {vp_3= c*L/r_part;} //pour calculer la vitesse angulaire si J=0 
 
 			/*Ce qui suit verifie si on a appuyé pour accelerer et calcul le nombre de g :*/
-			if(joy.GetPhi()!=0)
+			if(joy.GetPhi()!=0 && pilotage_possible==true)
 			{ 
-				nombre_de_g_calcul = (Math.abs(vtot-vitesse_precedente_nombre_g)/(50e-3))/9.80665 //calcul du nombre de g ressenti
+				nombre_de_g_calcul = (Math.abs(vtot-vitesse_precedente_nombre_g)/(temps_acceleration))/9.80665 //calcul du nombre de g ressenti
 				nombre_de_g_calcul_memo = nombre_de_g_calcul; // on stocke sa valeur pour afficher la derniere valeur calculée
 			}
 			else //apres chaque acceleration il devient nul
@@ -982,17 +995,6 @@ function derivee_seconde_Kerr_massif(r) {
 	return -c * c / (2 * Math.pow(r, 4)) * (rs * r * r + 2 * r * (a * a * (E * E - 1) - L * L) + 3 * rs * Math.pow(L - a * E, 2));
 }
 
-function rungekutta(h, r, A) {
-	k = [0, 0, 0, 0];
-	k[0] = derivee_seconde_Kerr_massif(r);
-	k[1] = derivee_seconde_Kerr_massif(r + 0.5 * h * A);
-	k[2] = derivee_seconde_Kerr_massif(r + 0.5 * h * A + 0.25 * h * h * k[0]);
-	k[3] = derivee_seconde_Kerr_massif(r + h * A + 0.5 * h * h * k[1]);
-	r = r + h * A + (1 / 6) * h * h * (k[0] + k[1] + k[2]);
-	A = A + (h / 6) * (k[0] + 2 * (k[1] + k[2]) + k[3]);
-	return [r, A];
-}
-
 
 function delta(r) {
 	var d=r**2-rs*r+a**2;
@@ -1010,17 +1012,6 @@ function derivee_seconde_Kerr_massif_obs(r) {
             +2*(Math.pow(E,2)-1+rs/r+(EaL2_a2)/Math.pow(r,2)+rs*Ea_L2/Math.pow(r,3))*(2*r-rs)  
 
             -2*(Math.pow(E,2)-1+rs/r+(EaL2_a2)/Math.pow(r,2)+rs*Ea_L2/Math.pow(r,3))*delta(r)*((2*r-rs*Math.pow(a,2)/Math.pow(r,2))*E+rs*a*L/Math.pow(r,2))/denom )   ;
-}
-
-function rungekutta_obs(h, r, A) {
-	k = [0, 0, 0, 0];
-	k[0] = derivee_seconde_Kerr_massif_obs(r);
-	k[1] = derivee_seconde_Kerr_massif_obs(r + 0.5 * h * A);
-	k[2] = derivee_seconde_Kerr_massif_obs(r + 0.5 * h * A + 0.25 * h * h * k[0]);
-	k[3] = derivee_seconde_Kerr_massif_obs(r + h * A + 0.5 * h * h * k[1]);
-	r = r + h * A + (1 / 6) * h * h * (k[0] + k[1] + k[2]);
-	A = A + (h / 6) * (k[0] + 2 * (k[1] + k[2]) + k[3]);
-	return [r, A];
 }
 
 
@@ -1107,76 +1098,68 @@ function rafraichir() {
 	element2.value="observateur";
 }
 
+// -------------------------------------{enregistrer}--------------------------------------------
 
+/**
+ * Fonction qui sert à enregistrer une image de la simulation. 
+ */
 function enregistrer(){
-	// ces 2 fonctions sont issues des biblios saveSvgAsPng.js et canvas-to-image.js
-	var texte = o_recupereJson();
+	
+	var texte = o_recupereJson(); //Pour avoir accès au contenu des fichiers json.
 
-	if(document.getElementById('trace_present').value=="true") {
-		var nomFichier = prompt(texte.pages_trajectoire.message_nomFichier, "traject_Kerr_B_B");
+	if(document.getElementById('trace_present').value=="true") { //Lorsqu'il y a un tracé de simulation. 
 
+		//On demande à l'utilisateur le nom du fichier, avec "traject_Kerr_B_PM" comme nom du fichier par défaut :
+		var nomFichier = prompt(texte.pages_trajectoire.message_nomFichier, "traject_Kerr_B_PM");
+
+		//Si l'utilisateur a renseigné un nom de fichier non null et qui n'est pas juste des blancs :
 		if (nomFichier !== null && nomFichier.trim() !== '') {
+
+			//Je récupère dans canvas3 l'élément d'ID "myCanvas3three" et dans context3 son context :
 			canvas3 = document.getElementById("myCanvas3");
 			context3 = canvas3.getContext("2d");
+
+			//Je dessine sur context3 ce qu'il y a dans canvas, donc dans context donc le texte, rs et l'astre et le tracé :
 			context3.drawImage(canvas, 0, 0);
-			if (element2.value != "mobile") {
-				context3.beginPath();
-				context3.fillStyle = COULEUR_BLEU;
+
+			//Tracé sur le context3 de la boule du mobile :
+			context3.beginPath();
+			context3.fillStyle = COULEUR_BLEU;
+			if (element2.value != "mobile"){ //Dans le référentiel de l'observateur distant : 
 				context3.arc(posX2, posY2, 5, 0, Math.PI * 2);
-				context3.lineWidth = "1";
-				context3.fill();
-
-				//Dessiner le logo en bas :
-				var logo = new Image() //ManonLogo
-				logo.src='Images/CosmoGravity_logo.png'; //ManonLogo
-				logo.onload = function() {
-				var largeurLogo = 100; //ManonLogo
-				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //ManonLogo
-				var x = canvas3.width - largeurLogo; // Position en x pour le coin inférieur droit
-				var y = canvas3.height - hauteurLogo; // Position en y pour le coin inférieur droit
-				context3.drawImage(logo,x,y, largeurLogo, hauteurLogo); //ManonLogo
-
-				canvasToImage(canvas3, {
-					name: nomFichier.trim(),
-					type: 'png'
-				});
-				majFondFixe3();};
-			} else {
-				context3.beginPath();
-				context3.fillStyle = COULEUR_BLEU;
+			}else{ //Dans le référentiel du mobile :
 				context3.arc(posX1, posY1, 5, 0, Math.PI * 2);
-				context3.lineWidth = "1";
-				context3.fill();
-
-				//Dessiner le logo en bas :
-				var logo = new Image() //ManonLogo
-				logo.src='Images/CosmoGravity_logo.png'; //ManonLogo
-				logo.onload = function() {
-				var largeurLogo = 100; //ManonLogo
-				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //ManonLogo
-				var x = canvas3.width - largeurLogo; // Position en x pour le coin inférieur droit
-				var y = canvas3.height - hauteurLogo; // Position en y pour le coin inférieur droit
-				context3.drawImage(logo,x,y, largeurLogo, hauteurLogo); //ManonLogo
-
-				canvasToImage(canvas3, {
-					name: nomFichier.trim(),
-					type: 'png'
-				});
-				majFondFixe3();};
 			}
+			context3.lineWidth = "1";
+			context3.fill();
 
-		} else {
+			//Dessin du logo :
+			var logo = new Image()
+			logo.src='Images/CosmoGravity_logo.png'; //Je récupère le chemin de l'image du logo.
+			logo.onload = function() {
+				var largeurLogo = 100; //largeur de l'image du logo
+				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //hauteur de l'image du logo
+				var x = canvas3.width - largeurLogo; // Position en x pour le coin inférieur droit du logo.
+				var y = canvas3.height - hauteurLogo; // Position en y pour le coin inférieur droit du logo.
+				context3.drawImage(logo,x,y, largeurLogo, hauteurLogo); //Je dessine le logo sur context3. 
+
+			canvasToImage(canvas3, { //Je transforme le canvas en image :
+				name: nomFichier.trim(),
+				type: 'png'
+			});
+
+			//J'efface tout le contenu du context3 une fois le canvas enregistrer en tant qu'image :
+			majFondFixe3();};
+
+		} else { //Si il n'y a pas de nom de renseigné alors j'ai un message d'alerte. 
 			alert(texte.pages_trajectoire.alerte_nomFichier);
 		} 
-	} else {
+	} else { //Si il n'y a pas de tracé de simulation alors message d'alerte.
 		alert(texte.pages_trajectoire.message_enregistrer);
 	}
 }
 
-function commandes(){
-	var texte = o_recupereJson();
-	alert(texte.pages_trajectoire.commandes_horsSchwarMassif);
-}
+// -------------------------------------{majFondFixe}--------------------------------------------
 
 // utile pour l'exportation d'images
 function majFondFixe(){ phi_degres=phi0*180/Math.PI;
@@ -1444,42 +1427,6 @@ function MAJGraphePotentiel(){
 	graphique_creation_pot();
 }
 
-
-function foncPourZoomPlusAvantLancement(){
-		nz_avant_lancement+=1;
-		document.getElementById('nzoomtxt').innerHTML= "zoom="+ nz_avant_lancement.toString();
-		
-}
-
-function foncPourZoomMoinsAvantLancement(){
-		nz_avant_lancement-=1;
-		document.getElementById('nzoomtxt').innerHTML= "zoom="+ nz_avant_lancement.toString();
-}
-
-function boutonAvantLancement(){
-    //Gestion de l'accélération/décélération de la simu
-    document.getElementById("panneau_mobile").style.visibility='visible';
-    
-    // Gestion des bouttons Zoom moins
-    document.getElementById("panneau_mobile2").style.visibility='visible';
-    
-    document.getElementById('moinszoom').addEventListener('click',foncPourZoomMoinsAvantLancement, false);
-    document.getElementById('pluszoom').addEventListener('click',foncPourZoomPlusAvantLancement, false);
-    document.getElementById('plusvite').addEventListener('click',foncPourVitPlusAvantLancement,false);
-    document.getElementById('moinsvite').addEventListener('click',foncPourVitMoinsAvantLancement,false);
-}
-
-function foncPourVitMoinsAvantLancement(){
-	compteurVitesseAvantLancement -= 1
-	compteurVitesse-=1;
-	document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesse).toString();
-}
-
-function foncPourVitPlusAvantLancement(){
-	compteurVitesseAvantLancement += 1
-	compteurVitesse+=1;
-	document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesse).toString();
-}
 
 /**
  * Fonction qui permet de préparer le canvas de la simulation en fonction de si on choisit une trajectoire complète ou simple. 
