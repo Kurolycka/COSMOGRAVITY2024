@@ -157,13 +157,13 @@ function lancerDeFusees(fuseecompteur){
 	/*C'est mieux de les mettre là que dans trejectoire ou autre car on veut que 
 	ça soit global et pas relié à un mobile comme ça on pause quand on veut et pareil pour les touches du clavier */
 	
-	//si le boutton pause est cliqué on appelle la fonction pause
+	//si le bouton pause est cliqué on appelle la fonction pause
 	document.getElementById("pause/resume").addEventListener("click", function() 
 	{
         pausee()
 	}); 
 
-	//si le boutton pause en bas est cliqué en appelle la fonction pause 
+	//si le bouton pause en bas est cliqué en appelle la fonction pause 
 	document.getElementById('bouton_pause').addEventListener('click', function() {
 		pausee();
 	});
