@@ -1910,17 +1910,24 @@ function pausee()
 }
 
 //----------------------------------------------------{rafraichir2}----------------------------------------------------
-
-function rafraichir2(context,mobilefactor,rmaxjson,r0ou2,compteur) {
-	majFondFixe();
-	creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur);
+/**
+ * Fonction qui permet d'effacer le fond du canva pour mettre le texte et dessiner l'astre.
+ */
+function rafraichir2(context,mobilefactor,rmaxjson,r0ou2,compteur) 
+{
+	majFondFixe(); //efface le fond et met le text
+	creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur); //dessine l'astre et l'echelle
 }
 
 //----------------------------------------------------{rafraichir}----------------------------------------------------
 
-//ici  le rafraichir appeler avec reset element2 n'est pas defini donc il y a une erreur
-function rafraichir() {
-	window.location.reload();
+/**
+ * Fonction qui permet de rafraichir la page quand on clique sur reset.
+ */
+function rafraichir() 
+{
+	//on rafraichit la page et on met fait de sorte qu'on choisit observateur
+	window.location.reload(); 
 	element2.value="observateur";
 }
 
@@ -1984,31 +1991,50 @@ function enregistrer() {
 /**
  * Fonction qui efface le text qu'on met sur le canva.
  */
-function majFondFixe(){
-	context.clearRect(0, 0, canvas.width, canvas.height);
-	// Ajout d'un fond blanc pour l'exportation
+function majFondFixe()
+{
+	context.clearRect(0, 0, canvas.width, canvas.height); //on efface ce qui ya sur le canva
+	// Ajout d'un fond blanc 
 	context.fillStyle = 'white';
 	context.fillRect(0, 0, canvas.width, canvas.height);
 	context.font = "15pt bold";
+	//on met le text (titre et entrées)
+	/*TITRE*/
 	context.fillStyle = "black";
 	context.fillText(texte.page_trajectoire_massive.titre2,5,40);
 	context.font = "13pt bold";
+	/*ENTREES*/
 	context.fillText(texte.pages_trajectoire.entrees,5,70);
 	context.font = "11pt normal";
+	/*MASSE*/
 	context.fillText("M = "+M.toExponential(3)+" kg",5,90);
+	/*RAYON PHYSIQUE*/
 	context.fillText("r\u209A\u2095\u1D67 = "+r_phy.toExponential(3)+" m",5,110);
-	if (document.getElementById("boutton_ammorti").value == 1){context.fillText(texte.page_trajectoire_massive.amortissement+" = " +mobile.Rebond,5,130)};
-	if(document.getElementById('traject_type2').value=="observateur"){
+	/*POUR REBOND */
+	if (document.getElementById("boutton_ammorti").value == 1)
+	{
+		context.fillText(texte.page_trajectoire_massive.amortissement+" = " +mobile.Rebond,5,130);
+	}
+	/*POUR LE MODE */
+	if(document.getElementById('traject_type2').value=="observateur")
+	{
 		context.fillText(texte.pages_trajectoire.observateur,5,150);
 	} 
-	else { context.fillText(texte.pages_trajectoire.mobile,5,150); }
-		context.fillText("mobile1:",5,170);
-		context.fillText("r\u2080 = "+(r0o2[1]).toExponential(3)+" m",5,190);
-		context.fillText("V\u2080 = "+vphiblab.toExponential(3)+" m.s\u207B\u00B9",5,210);
-		context.fillText("\u03C6\u2080 = "+vrblab.toExponential(3)+" °",5,230);
-		nombeuhreudefusees = Number(document.getElementById("nombredefusees").value);
-	if (nombeuhreudefusees>=2) {
-		context.fillText("mobile2:",5,250);
+	else 
+	{ 
+		context.fillText(texte.pages_trajectoire.mobile,5,150);
+	}
+	/*ENTREES MOBILE*/
+	context.fillText("mobile1:",5,170); //mobile1
+	context.fillText("r\u2080 = "+(r0o2[1]).toExponential(3)+" m",5,190);//r0
+	context.fillText("V\u2080 = "+vphiblab.toExponential(3)+" m.s\u207B\u00B9",5,210); //v0
+	context.fillText("\u03C6\u2080 = "+vrblab.toExponential(3)+" °",5,230); //phi0
+
+	//on met au max 2 mobiles avec les memes etaps
+	nombeuhreudefusees = Number(document.getElementById("nombredefusees").value);
+	if (nombeuhreudefusees>=2) 
+	{
+		context.fillText("mobile2:",5,250); //mobile2
 		context.fillText("r\u2080 = "+r0o2[2].toExponential(3)+" m",5,270);
 		context.fillText("V\u2080 = "+vphi2i.toExponential(3)+" m.s\u207B\u00B9",5,290);
 		context.fillText("\u03C6\u2080= "+vr2i.toExponential(3)+"°",5,310);

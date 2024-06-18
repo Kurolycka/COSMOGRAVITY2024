@@ -807,12 +807,27 @@ function pausee()
 
 	}
 }
+//----------------------------------------------------{rafraichir}----------------------------------------------------
 
-function rafraichir() {
+/**
+ * Fonction qui permet de rafraichir la page quand on clique sur reset.
+ */
+function rafraichir() 
+{
+	//on rafraichit la page et on met fait de sorte qu'on choisit observateur
 	window.location.reload(); 						   
 	element2.value="non";
 }
 
+//----------------------------------------------------{rafraichir2}----------------------------------------------------
+/**
+ * Fonction qui permet d'effacer le fond du canva pour mettre le texte et dessiner l'astre.
+ */
+function rafraichir2(context) 
+{
+	majFondFixe();//efface le fond et met le text
+	creation_blocs(context); //dessine l'astre et l'echelle
+}
 
 // -------------------------------------{enregistrer}--------------------------------------------
 
@@ -875,35 +890,59 @@ function enregistrer(){
 	}
 }
 
-// -------------------------------------{majFondFixe}--------------------------------------------
+//----------------------------------------------------{majFondFixe}----------------------------------------------------
 
-function majFondFixe(){phi_degres=phi0*180/Math.PI;
-	context.clearRect(0, 0, canvas.width, canvas.height);
-	// Ajout d'un fond blanc pour l'exportation
+//--------------------------------Texte pour l'enregistrement--------------------------------
+
+/**
+ * Fonction qui efface le text qu'on met sur le canva.
+ */
+function majFondFixe()
+{
+	phi_degres=phi0*180/Math.PI;
+	context.clearRect(0, 0, canvas.width, canvas.height);//on efface ce qui ya sur le canva
+	// Ajout d'un fond blanc 
 	context.fillStyle = 'white';
 	context.fillRect(0, 0, canvas.width, canvas.height);
 	context.font = "15pt bold";
 	context.fillStyle = "black";
+	//on met le text (titre et entrées)
+	/*TITRE*/
 	context.fillText(texte.page_trajectoire_photon_kerr.titre,5,40);
 	context.font = "13pt bold";
+	/*ENTREES*/
 	context.fillText(texte.pages_trajectoire.entrees,5,70);
 	context.font = "11pt normal";
+	/*MASSE*/
 	context.fillText("M = "+M.toExponential(3)+" kg",5,90);
-	context.fillText("r\u2080 = "+r0.toExponential(3)+" m",5,110);
-	context.fillText("a = "+a.toExponential(3)+" m",5,130);
-	context.fillText("V\u2080 = "+c.toExponential(3)+" m.s\u207B\u00B9",5,150);
-	context.fillText("\u03C6\u2080 = "+phi_degres.toExponential(3)+" °",5,170);
-	if(document.getElementById('traject_type2').value=="observateur"){
+	/*CHARGE(A)*/
+	context.fillText("a = "+a.toExponential(3)+" m",5,110);
+	/*ENTREES MOBILE*/
+	context.fillText("r\u2080 = "+r0.toExponential(3)+" m",5,130);//ro
+	context.fillText("V\u2080 = "+c.toExponential(3)+" m.s\u207B\u00B9",5,150);//v0
+	context.fillText("\u03C6\u2080 = "+phi_degres.toExponential(3)+" °",5,170);//phi0
+	/*POUR LE MODE */
+	if(document.getElementById('traject_type2').value=="observateur")
+	{
 		context.fillText(texte.pages_trajectoire.observateur,5,190);
 	} 
-	else { context.fillText(texte.pages_trajectoire.photon,5,190); }
+	else 
+	{
+		 context.fillText(texte.pages_trajectoire.photon,5,190); 
+	}
 
 }
-
+// -------------------------------------{fonction majFondFixe22}--------------------------------------------
+/**
+ * Fonction qui efface le canva associé au mobile.
+ */
 function majFondFixe22(){
 	context22.clearRect(0, 0, canvas.width, canvas.height);
 }
-
+// -------------------------------------{fonction majFondFixe33}--------------------------------------------
+/**
+ * Fonction qui efface le canva pour enregistrement
+ */
 function majFondFixe3(){
 	context3.clearRect(0, 0, canvas.width, canvas.height);
 }
@@ -1218,7 +1257,4 @@ function choixTrajectoire(context) {
 	}
 }
 
-function rafraichir2(context) {
-	majFondFixe();
-	creation_blocs(context); 
-}
+
