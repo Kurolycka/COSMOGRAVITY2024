@@ -612,6 +612,8 @@ function trajectoire() {
 	
 		creation_blocs(context); //Je trace Rh+, Rh- et rs. 
 	  
+		//-----------------------------------------------------TRACÉ POTENTIEL -------------------------------------------------
+		
 		setInterval(function(){ //Fonction qui permet d'avoir un graphe de potentiel dynamique. Ce graphe est renouvelé toutes les 300ms. 												
 			$('#grsvg_2').empty(); //Je vide le contenue du canvas du potentiel. 
 			data1=[]; 
@@ -645,7 +647,7 @@ function trajectoire() {
 
 			point=graphique_creation_pot(0,data1,data2,null,null); //Trace le graphe du potentiel.
 	
-		},300);	
+		},120);	
 	
 	} else { //Dans le cas où ce n'est pas le début de la simulation et où je ne suis pas en pause.
     	myInterval = setInterval(animate, 10/6); //La fonction animate est exécutée toutes les 10/6 ms pour créer la simulation;
@@ -755,12 +757,6 @@ function animate() {
 		posX2 = scale_factor * r_part_obs * (Math.cos(phi_obs) / rmax) + (canvas.width / 2.);
 		posY2 = scale_factor * r_part_obs * (Math.sin(phi_obs) / rmax) + (canvas.height / 2.);
 
-		//-----------------------------------------------------PARTIE TRACÉ POTENTIEL -------------------------------------------------
-		data2 = []; //on vide la liste dans la quelle on met nos données
-		V = Vr_obs(r_part_obs); // on recupere la valeur du poteniel au rayon actuel
-		data2.push({date: r_part_obs, close: V }); //on met les valeur dans la liste
-		if(point !== undefined){update_graphique_2(point,data2,null);} // on appelle la fonction qui dessine le potentiel (Fonctions_utilitaires)
-
 		//-----------------------------------------------------PARTIE TRACÉ -------------------------------------------------
 		//on dessine le trait derriere le mobile
 		context.beginPath();//on ouvre le context
@@ -860,6 +856,7 @@ function animate() {
 			//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> APRES RS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 			else
 			{
+				document.getElementById("to").innerHTML = temps_observateur.toExponential(3); //temps observateur
 				document.getElementById("ga").innerHTML = fm.toExponential(3);// gradient d'acceleration
 				//on affiche que les vitesses et distance parcourue ne sont plus definies	
 				document.getElementById("v_tot").innerHTML = texte.page_trajectoire_massive_kerr.vitesse_pas_définie; //vitesse total (module)
@@ -910,13 +907,6 @@ function animate() {
 		else{ context22.arc(posX1, posY1 , 5, 0, Math.PI * 2);}
 		context22.lineWidth = "1";
 		context22.fill();
-
-		//-----------------------------------------------------PARTIE TRACÉ POTENTIEL -------------------------------------------------
-		
-		data2 = []; //on vide la liste dans la quelle on met nos données
-		V = Vr_mob(r_part);// on recupere la valeur du poteniel au rayon actuel
-		data2.push({date: r_part, close: V });	//on met les valeur dans la liste
-		if(point !== undefined){update_graphique_2(point,data2,null)} ; // on appelle la fonction qui dessine le potentiel (Fonctions_utilitaires)
 
 		//-----------------------------------------------------NE PAS DEPASSER RH_ -------------------------------------------------
 		//l'utilisateur veut arrêter la trajectoire à Rh- et ne pas le depasser
@@ -1068,26 +1058,36 @@ function calcul_rmax(){
 	else{rmax=r0;}
 }
 
+/*ATTENTIEN : cette fonction est differente de celle utilisé dans la partie SCH car on a pas besoin de plusieurs
+mobiles, ni de Timers, pusique SetInterval suffit bien, alors on a gardé cette fonction pour Kerr Ainsi */
 
-// Fonction bouton pause
-function pausee() {
-	if (! pause) {
-		//dtau = 0;
-		pause = true;
-		document.getElementById("pau").src = "Images/lecture.png";
-		document.getElementById("pau").title = texte.pages_trajectoire.bouton_lecture;
-		document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_enpause;
-		document.getElementById("pause/resume").innerHTML =texte.pages_trajectoire.bouton_resume;
-		clearInterval(myInterval);
+/**
+ * Cette fonction est associé aux bouttons pause, avec les quels on peut pauser et reprendre la simulaiton.
+ */
+function pausee() 
+{
+	//si la simultion est en marche
+	if (! pause) 
+	{
+		pause = true; //on la met en pause
+		document.getElementById("pause/resume").innerHTML =texte.pages_trajectoire.bouton_resume;//on change le texte du boutton pause en haut
+		document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_enpause;//on change le texte qui s'affiche "Calculs en pause"
+		document.getElementById("pau").title = texte.pages_trajectoire.bouton_lecture;//on change l'icone du boutton pause en bas
+		document.getElementById("pau").src = "Images/lecture.png";//infobulle du boutton pause en bas
+		clearInterval(myInterval); // on arrete l'appel de animte
 	} 
-	else {
-		if(peuxonrelancer) {
-			pause = false;
-			document.getElementById("pause/resume").innerHTML = texte.pages_trajectoire.bouton_pause;
-			document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_encours;
-			document.getElementById("pau").title = texte.pages_trajectoire.bouton_pause;
-			document.getElementById("pau").src = "Images/pause.png";
-			myInterval = setInterval(animate, 10 / 6);
+	//si la simultion est en pause
+	else 
+	{
+		//on verifie si on peut relancer
+		if(peuxonrelancer) 
+		{
+			pause = false;//on la met en pause
+			document.getElementById("pause/resume").innerHTML = texte.pages_trajectoire.bouton_pause;//on change le texte du boutton pause en haut
+			document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_encours;//on change le texte qui s'affiche "Calculs en pause"
+			document.getElementById("pau").title = texte.pages_trajectoire.bouton_pause;//infobulle du boutton pause en bas
+			document.getElementById("pau").src = "Images/pause.png";//on change l'icone du boutton pause en bas
+			myInterval = setInterval(animate, 10 / 6); //on appelle animate à chaque 10/6 ms avec setInterval et on stocke dans myInterval
 		}
 
 	}

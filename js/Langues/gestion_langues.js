@@ -245,7 +245,9 @@ function textegravetetc_Kerr(){
   document.getElementById("horizon1").title = texte.pages_trajectoire.horizon1;
   document.getElementById("horizon2").title = texte.pages_trajectoire.horizon2;
   document.getElementById("gravSurface").title = texte.pages_trajectoire.gravSurface_BulleInfo;
- var canvaswidthheightt = document.getElementById("canvaswidthheight").value;
+  
+ var canvaswidthheightt = '750';
+
   if(canvaswidthheightt=="750"){
   document.getElementById("labelgp").innerHTML = texte.pages_trajectoire.labelgp;
   document.getElementById("label_depasser").innerHTML = texte.pages_trajectoire.label_depasser;																		 
@@ -274,7 +276,7 @@ function textegravetetc(){
   document.getElementById("massetxt").title = texte.pages_trajectoire.massetxt;
   document.getElementById("txt_rphysique").title = texte.pages_trajectoire.txt_rphysique;															   
   document.getElementById("labelnumberfusees").innerHTML = texte.pages_trajectoire.labelnumberfusees;
-  var canvaswidthheightt = document.getElementById("canvaswidthheight").value;
+  var canvaswidthheightt = '750';
   if(canvaswidthheightt=="750"){
     document.getElementById("labelgp").innerHTML = texte.pages_trajectoire.labelgp;
   }
@@ -665,7 +667,7 @@ function texteTrajectoireMassive(nbrderockets) {
 
 		
 	}
-  var canvaswidthheightt = document.getElementById("canvaswidthheight").value;
+  var canvaswidthheightt = '750';
 
 }
   
@@ -724,7 +726,7 @@ function texteTrajectoirePhoton(nbrderockets) {
     document.getElementById("rayon_orbite_circ_res"+count.toString()+"").title=texte.pages_trajectoire.orbite_circulaire_instable; //ManonCirculaire
 
 	}
-  var canvaswidthheightt = document.getElementById("canvaswidthheight").value;
+  var canvaswidthheightt = '750';
 
 }
 function texteTrajectoireMassiveNonBar(nbrderockets) {
@@ -791,7 +793,7 @@ function texteTrajectoirePhotonNonBar(nbrderockets) {
   document.getElementById("massetxt").title = texte.pages_trajectoire.massetxt;
   document.getElementById("txt_rphysique").title = texte.pages_trajectoire.txt_rphysique;
   document.getElementById("labelnumberfusees").innerHTML = texte.pages_trajectoire.labelnumberfusees;
-  var canvaswidthheightt = document.getElementById("canvaswidthheight").value;
+  var canvaswidthheightt = '750';
   if(canvaswidthheightt=="750"){
   document.getElementById("labelgp").innerHTML = texte.pages_trajectoire.labelgp;}
   

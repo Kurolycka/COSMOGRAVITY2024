@@ -104,6 +104,7 @@ var calculs = calculs || (function() {
             dt=E/(1-(rs/r)); //dt/dtau ou dt/dlambda pour photon
             dphi=c*L/(r**2);// dphi/dtau ou dphi/dlambda pour photon
             vphi=  r*dphi/dt*Math.sqrt(1/(1-rs/r));
+            
             if(photon){ // calcule photon
                 dr=E**2-(1-rs/r)*((L/r)**2);   //dr=(c/E)**2*(1-rs/r)**2*(E**2-(1-rs/r)*((L/r)**2));
                 vr=c/E*Math.sqrt(Math.abs(dr));    //vr=Math.sqrt(dr/((1-rs/r)**2));
