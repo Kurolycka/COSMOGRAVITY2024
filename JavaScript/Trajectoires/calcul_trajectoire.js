@@ -8,7 +8,6 @@ var observateur=0;
 var vtotal=0;
 var nzoom=0
 var nz_avant_lancement=0;
-var facteurDeMalheur=[];
 var cle;
 var fact_defaut;
 var temps_observateur_distant=0
@@ -16,6 +15,8 @@ var c = 299792458;
 var G = 6.67385 * Math.pow(10, -11);
 var compteurVitesse = 0;
 var compteurVitesseAvantLancement =0; 
+
+var texte = o_recupereJson();
 
 var pilotage_possible = true; //Pour savoir si on peut piloter ou pas.
 var temps_acceleration; //Pour imposer le temps d'accélération du pilotage.
@@ -54,7 +55,6 @@ var mobilefactor = {};
 var r0o2 ={};
 
 var maximum;
-var cle;
 var fuseecompteur;
 var listejsonfusees={};
 
@@ -1167,7 +1167,7 @@ function trajectoire(compteur,mobile) {
     		mobilefactor=retour[1]; //Récupère le nouveau facteur d'échelle. 
 			factGlobalAvecClef /= Math.pow(1.2,1/nbredefusees ); //Je dézoome de 20%. 
 			majFondFixe22(mobile); //Je mets à jour tout ce qui est relié au dessin du mobile. 
-        	rafraichir2(context,mobilefactor,rmaxjson,maximum,compteur); //Redessine le rayon de SCH et si besoin l'astre sur un fond blanc avec les entrées à gauche. 
+        	rafraichir2(context,mobilefactor,rmaxjson,maximum); //Redessine le rayon de SCH et si besoin l'astre sur un fond blanc avec les entrées à gauche. 
 			nzoom-=1/nbredefusees; 
 			document.getElementById('nzoomtxt').innerHTML= "zoom="+ Math.round(nzoom).toString(); //Mets à jour l'affichage du zoom sur le site. 
     	}, false);
@@ -1179,7 +1179,7 @@ function trajectoire(compteur,mobile) {
     		mobilefactor=retour[1]; //Récupère le nouveau facteur d'échelle. 
 			factGlobalAvecClef *= Math.pow(1.2,1/nbredefusees ); //Je zoome de 20%.
 			majFondFixe22(mobile); //Je mets à jour tout ce qui est relié au dessin du mobile.
-			rafraichir2(context,mobilefactor,rmaxjson,maximum,compteur); //Redessine le rayon de SCH et si besoin l'astre sur un fond blanc avec les entrées à gauche. 
+			rafraichir2(context,mobilefactor,rmaxjson,maximum); //Redessine le rayon de SCH et si besoin l'astre sur un fond blanc avec les entrées à gauche. 
 			nzoom+=1/nbredefusees;
 			document.getElementById('nzoomtxt').innerHTML= "zoom="+ Math.round(nzoom).toString(); //Mets à jour l'affichage du zoom sur le site. 
 		}, false);
@@ -1191,7 +1191,7 @@ function trajectoire(compteur,mobile) {
 			mobilefactor=retour[1]; //Récupère le nouveau facteur d'échelle. 
 			factGlobalAvecClef = fact_defaut; //Le zoom redevient celui initial de la simulation. 
 			majFondFixe22(mobile); //Je mets à jour tout ce qui est relié au dessin du mobile.
-			rafraichir2(context,mobilefactor,rmaxjson,maximum,compteur); //Redessine le rayon de SCH et si besoin l'astre sur un fond blanc avec les entrées à gauche. 
+			rafraichir2(context,mobilefactor,rmaxjson,maximum); //Redessine le rayon de SCH et si besoin l'astre sur un fond blanc avec les entrées à gauche. 
 			nzoom=0;
 			document.getElementById('nzoomtxt').innerHTML= "zoom="+ nzoom.toString(); //Mets à jour l'affichage du zoom sur le site. 
     	}, false);
@@ -1232,7 +1232,7 @@ function trajectoire(compteur,mobile) {
 			}
 		}
 
-    	creation_blocs(context,mobilefactor,rmaxjson,maximum,compteur); //Je trace le rayon et SCH et si besoin l'astre. 
+    	creation_blocs(context,mobilefactor,rmaxjson,maximum); //Je trace le rayon et SCH et si besoin l'astre. 
 
 		//-----------------------------------------------------TRACÉ POTENTIEL -------------------------------------------------
 		
@@ -1300,7 +1300,7 @@ function animate(compteur,mobile,mobilefactor)
 	mobilefactor[compteur] = factGlobalAvecClef //facteur pour l'echelle
 
 	SurTelephone(); //on verifie si on est sur telephone ou ordinateur
-	choixTrajectoire(compteur,context,mobilefactor,rmaxjson,maximum); // on vérifie le type de trajectoire sélectionné
+	choixTrajectoire(context,mobilefactor,rmaxjson,maximum); // on vérifie le type de trajectoire sélectionné
 	
 	/*----------------------------------------------------------{{{{  CAS_OBSERVATEUR  }}}-----------------------------------------------------------*/
 	if (element2.value != "mobile") 
@@ -1875,9 +1875,9 @@ function pausee()
 
 //----------------------------------------------------{rafraichir2}----------------------------------------------------
 
-function rafraichir2(context,mobilefactor,rmaxjson,r0ou2,compteur) {
+function rafraichir2(context,mobilefactor,rmaxjson,r0ou2) {
 	majFondFixe();
-	creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur);
+	creation_blocs(context,mobilefactor,rmaxjson,r0ou2);
 }
 
 //----------------------------------------------------{rafraichir}----------------------------------------------------
@@ -1893,7 +1893,7 @@ function rafraichir() {
 /**
  * Fonction qui sert à enregistrer une image de la simulation. 
  */
-function enregistrer() {
+function enregistrer_trajectoires() {
 
 	var texte = o_recupereJson(); //Pour avoir accès au contenu des fichiers json.
 
@@ -2045,17 +2045,21 @@ function test_inte() {
 
 //----------------------------------------------------{creation_blocs}----------------------------------------------------
 
-//--------------------------------Dessin des rs et astre pour l'enregistrement--------------------------------
+/**
+ * Fonction qui dessine le cercle du rayon de SCH (cercle ou cible), si besoin l'astre, le texte du titre et des entrées
+ * ainsi que l'échelle sur le canvas de la simulation. 
+ * @param {Object} context : contexte du canvas de la simulation. 
+ * @param {Array} mobilefactor : Liste qui contient les facteurs d'échelle des mobiles.
+ * @param {Array} rmaxjson : Liste qui contient les coordonnées radiales maximales des mobiles.
+ * @param {Array} r0ou2 : Liste qui contient les distances initiales des mobiles.
+ */
+function creation_blocs(context,mobilefactor,rmaxjson,r0ou2){
 
-// crée les différentes couches visuelles
-function creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur){
-	r2bis=(80*r0ou2)/(factGlobalAvecClef);
-	r1bis=Math.round((80*r0ou2)/(factGlobalAvecClef*10**testnum(r2bis)));
-	ech=r1bis*10**testnum(r2bis);
-	//console.log(r1bis,r2bis);
-	context.lineWidth = "1";
-	context.fillStyle = COULEUR_NOIR;
-	if ((mobilefactor[cle] * m / rmaxjson[cle]) < 3) {
+	context.lineWidth = "1"; //Définit l'épaisseur de la ligne utilisée pour les tracés à 1 pixel.
+
+	if ((mobilefactor[cle] * m / rmaxjson[cle]) < 3) { //Si le cercle du rayon de SCH est trop petit vis à vis de l'échelle du graphe :
+
+		//Alors j'affiche l'astre comme une cible bleu : 
 		context.beginPath();
 		context.strokeStyle = COULEUR_RS;
 		context.moveTo(posX3 - 10, posY3);
@@ -2073,142 +2077,70 @@ function creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur){
 		context.moveTo(posX3, posY3 + 3);
 		context.lineTo(posX3, posY3 + 10);
 		context.stroke();
+
   	} 
-	else {
+	else { //Autrement j'affiche le cercle du rayon de SCH :
+
 		context.beginPath();
 		context.strokeStyle = COULEUR_RS;
 		context.setLineDash([5, 5]);
 		context.arc(posX3, posY3, ((mobilefactor[cle] * 2 * m / rmaxjson[cle])), 0, Math.PI * 2);
 		context.stroke();
+
   	}
-	if (m < r_phy) {
+
+	if (m < r_phy) { //Si le rayon physique est plus grand que la moitié de rs alors : 
+
+		//Je dessine le disque pour le rayon physique : 
 		context.beginPath();
 		context.fillStyle = COULEUR_RPHY;
 		context.setLineDash([]);
 		context.arc(posX3, posY3, (mobilefactor[cle] * r_phy / rmaxjson[cle]), 0, Math.PI * 2);
 		context.fill();
+
+		//Et le cercle pour le rayon de SCH :
 		context.beginPath();
 		context.strokeStyle = COULEUR_RS;
 		context.setLineDash([5, 5]);
 		context.arc(posX3, posY3, ((mobilefactor[cle] * 2 * m / rmaxjson[cle])), 0, Math.PI * 2); 
 		context.stroke();
 	}
-	context.fillStyle = 'white';
 
-// Ajout d'un fond blanc pour l'exportation
+	context.fillStyle = 'white'; //Ajout d'un fond blanc pour l'exportation.
+
+	//--------------------Dessin du texte du titre et des entrées--------------------
 	context.font = "15pt bold";
 	context.fillStyle = "black";
 	context.fillText(texte.page_trajectoire_massive.titre2,5,40);
 	context.font = "13pt bold";
 	context.fillText(texte.pages_trajectoire.entrees,5,70);
+
+	//--------------------calculs pour la barre d'échelle--------------------
+	r2bis=(80*r0ou2)/(factGlobalAvecClef);
+	r1bis=Math.round((80*r0ou2)/(factGlobalAvecClef*10**testnum(r2bis)));
+	ech=r1bis*10**testnum(r2bis);
+
+	//--------------------Dessin du texte de la barre d'échelle--------------------
 	context.font = "11pt normal";
 	context.fillStyle = COULEUR_RS;
 	context.fillText(ech.toExponential(1)+" m",605,90);
 	context.stroke();
-	context.beginPath(); // Début du chemin
+
+	//--------------------Dessin de la barre d'échelle--------------------
 	context.strokeStyle = COULEUR_RS;
-	//context.moveTo(canvas.width / 2.0,canvas.height / 2.0);    // Tracé test1
-	//context.lineTo((canvas.width / 2.0)+280,canvas.height / 2.0);  // Tracé test2
+	context.beginPath();
 	context.setLineDash([]);
+
 	context.moveTo(600,110);
 	context.lineTo(600+((r1bis*10**testnum(r2bis))*factGlobalAvecClef)/r0ou2,110);
+
 	context.moveTo(600,105);
 	context.lineTo(600,115);
+
 	context.moveTo(600+((r1bis*10**testnum(r2bis))*factGlobalAvecClef)/r0ou2,105);
 	context.lineTo(600+((r1bis*10**testnum(r2bis))*factGlobalAvecClef)/r0ou2,115);
-	// Fermeture du chemin (facultative)
-	context.stroke();
-}
-
-//----------------------------------------------------{canvasAvantLancement}----------------------------------------------------
-
-function canvasAvantLancement(){
-	nbrFusee = document.getElementById("nombredefusees").value
-	//for (countt = 1; countt <= nbrFusee; countt += 1) {
-	//	console.log(r0o2[countt])
-	//}
-	cle = -1
-
-	if(ifUneFois3){
-	if(nbrFusee ==1){
-		maximum=r0o2[1]
-		cle = 1;
-	}
-	else{
-		cle=0;
-		for (key = 1; key <= nbrFusee; key += 1) {
-			if(r0o2[key]>=maximum){
-				maximum=r0o2[key];
-				cle=key;
-			}
-		}
-	}
-
-	//facteurDeMalheur = [] // Je suis désespéré
-	
-	for (key = 1; key <= nbrFusee; key += 1) {
-		facteurDeMalheur[key] = Number(document.getElementById("scalefactor").value);  	
-	
-	}
-	for (key = 1; key <= nbrFusee; key += 1) {
-		if(key!=cle){
-			facteurDeMalheur[key] = Number(document.getElementById("scalefactor").value)/(r0o2[cle]/r0o2[key]);
-		}
-	}
-	factGlobalAvecClef = facteurDeMalheur[cle];
-	fact_defaut=facteurDeMalheur[cle];
-
-	ifUneFois3 = false
-    }
-
-
-
-	canvas = document.getElementById("myCanvas");
-    if (!canvas) {
-		alert(texte.pages_trajectoire.impossible_canvas);
-		return;
-    }
-
-	canvas.style = "margin: auto;";
-	
-
-    context = canvas.getContext("2d");
-    if (!context) {
-		alert(texte.pages_trajectoire.impossible_context);
-		return;
-    } 
-	context.clearRect(0, 0, canvas.width, canvas.height);
-
-	context.lineWidth = "1";
-
-
-	//Texte 
-	context.font = "11pt normal"; 
-	r2bis=(80*maximum)/(factGlobalAvecClef);
-	r1bis=Math.round((80*maximum)/(factGlobalAvecClef*10**testnum(r2bis)));
-	ech=r1bis*10**testnum(r2bis);
-	context.beginPath();
-	context.fillStyle = COULEUR_RS;
-	context.fillText(ech.toExponential(1)+" m",605,90);
-	context.stroke();
-
-	//Barre
-	context.strokeStyle = COULEUR_RS;
-	context.beginPath(); // Début du chemin
-	context.setLineDash([]);
-
-	context.moveTo(600,105);
-	context.lineTo(600,115);
-
-	context.moveTo(600,110);
-	context.lineTo(600+((r1bis*10**testnum(r2bis))*factGlobalAvecClef)/maximum,110);
-
-	context.moveTo(600+((r1bis*10**testnum(r2bis))*factGlobalAvecClef)/maximum,105);
-	context.lineTo(600+((r1bis*10**testnum(r2bis))*factGlobalAvecClef)/maximum,115);
 
 	context.stroke();
-
-
 }
 
 //----------------------------------------------------{choixTrajectoire}----------------------------------------------------
@@ -2221,10 +2153,10 @@ function canvasAvantLancement(){
  * @param {Number} rmaxjson : valeur maximale de la coordonnée radiale, en m.   
  * @param {Number} r0ou2 : distance initiale au centre de l'astre qui est la plus grande parmi les différentes mobiles, en m.  
  */
-function choixTrajectoire(compteur,context,mobilefactor,rmaxjson,r0ou2) {
+function choixTrajectoire(context,mobilefactor,rmaxjson,r0ou2) {
     if (element.value == 'simple') {
 		majFondFixe();
-        creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur);
+        creation_blocs(context,mobilefactor,rmaxjson,r0ou2);
 		diametre_particule = DIAMETRE_PART*2;
 	}else if (element.value=='complete'){
         diametre_particule = DIAMETRE_PART;

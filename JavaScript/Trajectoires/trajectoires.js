@@ -29,24 +29,35 @@ function changerBouttonRebond() {
   }
 }
 
-
+//----------------------------------------------------{pressionBouttonObservateur}----------------------------------------------------
 
 // actualisation bouton observateur quand pression
-function pressionBouttonObservateur() {
+function pressionBouttonObservateur(Kerr) {
   if (document.getElementById("r3").className == "myButton2") {
     document.getElementById("r3").className = "myButton";
     document.getElementById("r4").className = "myButton2";
+
+    if (Kerr){
+      document.getElementById("case_depasser").style="display: none;";
+    }
+
   }
 }
 
+//----------------------------------------------------{pressionBouttonMobile}----------------------------------------------------
+
 // actualisation bouton mobile quand pression
-function pressionBouttonMobile() {
+function pressionBouttonMobile(Kerr) {
   if (document.getElementById("r4").className == "myButton2") {
     document.getElementById("r4").className = "myButton";
     document.getElementById("r3").className = "myButton2";
+
+    if(Kerr){
+      document.getElementById("case_depasser").style="display: block;";
+    }
+
   }
 }
-
 
 
 

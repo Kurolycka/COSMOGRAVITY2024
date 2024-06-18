@@ -239,10 +239,6 @@ function rendreVisibleNbG() {
 	var puissance_consommee_label_Cells = document.querySelectorAll('[id^="puissance_consommee_label"]'); 
 
 	var puissance_consommee_Cells = document.querySelectorAll('[id^="puissance_consommee"]'); 
-
-    var distance_metrique_cell = document.querySelectorAll('[id^="distance_metrique"]'); 
-
-    var distance_metrique_res_cell = document.querySelectorAll('[id^="distance_parcourue"]'); 
     
     // Si element2.value est "mobile" et que y a que 1 mobile, rend les cellules visibles, sinon les cache
     if (element2.value == "mobile" && blyo==1) {
@@ -473,4 +469,375 @@ function rungekutta_general(h,A,r,E,L,deriveeSeconde) {
     r = r + h * A + (1 / 6) * h * h * (k[0] + k[1] + k[2]);
     A = A + (h / 6) * (k[0] + 2 * (k[1] + k[2]) + k[3]);
     return [r, A];
+}
+
+//----------------------------------------------------{canvasAvantLancement}----------------------------------------------------
+
+/**
+ * Fonction qui permet d'afficher sur le graphe l'échelle avant le début de la simulation.
+ * Permet aussi de définir par défaut l'échelle du graphe avant tout changement de zoom. 
+ * @returns 
+ */
+function canvasAvantLancement(){
+
+	nbrFusee = document.getElementById("nombredefusees").value //Je récupère le nombre de mobiles voulu par l'utilisateur. 
+
+	if(ifUneFois3){ //Je fais en sorte que le bloc qui suit ne s'exécute qu'une fois.
+
+		if(nbrFusee ==1){//Si je n'ai qu'un seul mobile :
+			maximum=r0o2[1] //Je stocke dans la variable maximum la distance initiale de mon unique mobile.
+		}
+		else{ //Si j'ai plusieurs mobiles :
+			for (key = 1; key <= nbrFusee; key += 1) { //Je parcours tous les mobiles :
+			
+				//Je récupère dans maximum la distance initiale la plus grande parmi ces mobiles, 
+				//et dans cle l'indice du mobile associé :
+				if(r0o2[key]>=maximum){
+					maximum=r0o2[key];
+				}
+			}
+		}
+
+		//Je stocke dans des variables le facteur d'échelle par défaut : 
+		factGlobalAvecClef = Number(document.getElementById("scalefactor").value); 
+		fact_defaut= Number(document.getElementById("scalefactor").value); 
+
+		ifUneFois3 = false //Je fais en sorte de ne passer dans la boucle qu'une fois.
+    }
+
+	canvas = document.getElementById("myCanvas"); //Je récupère le canvas d'ID "myCanvas" dans la variable canvas. 
+
+    if (!canvas) { //Si le canvas avec cet ID n'existe pas j'affiche un message d'alerte :
+		alert(texte.pages_trajectoire.impossible_canvas);
+		return;
+    }
+	
+    context = canvas.getContext("2d"); //Je récupère le contexte de mon canvas.
+
+    if (!context) { //Si je n'ai pas de contexte alors j'affiche un message d'alerte :
+		alert(texte.pages_trajectoire.impossible_context);
+		return;
+    } 
+
+	//J'efface tout ce qu'il y a actuellement sur le canvas : 
+	context.clearRect(0, 0, canvas.width, canvas.height);
+
+	context.lineWidth = "1"; //Epaisseur de la ligne pour les tracés fixée à 1 pixel. 
+
+    //--------------------calculs pour la barre d'échelle--------------------
+    r2bis=(80*maximum)/(factGlobalAvecClef);
+	r1bis=Math.round((80*maximum)/(factGlobalAvecClef*10**testnum(r2bis)));
+	ech=r1bis*10**testnum(r2bis);
+
+	//--------------------Dessin du texte de la barre d'échelle--------------------
+	context.font = "11pt normal";
+	context.beginPath();
+	context.fillStyle = COULEUR_RS;
+	context.fillText(ech.toExponential(1)+" m",605,90);
+	context.stroke();
+
+	//--------------------Dessin de la barre d'échelle--------------------
+	context.strokeStyle = COULEUR_RS;
+	context.beginPath(); // Début du chemin
+	context.setLineDash([]);
+
+	context.moveTo(600,105);
+	context.lineTo(600,115);
+
+	context.moveTo(600,110);
+	context.lineTo(600+((r1bis*10**testnum(r2bis))*factGlobalAvecClef)/maximum,110);
+
+	context.moveTo(600+((r1bis*10**testnum(r2bis))*factGlobalAvecClef)/maximum,105);
+	context.lineTo(600+((r1bis*10**testnum(r2bis))*factGlobalAvecClef)/maximum,115);
+
+	context.stroke();
+}
+
+//----------------------------------------------------{creation_blocs_kerr}----------------------------------------------------
+
+/**
+ * Fonction qui dessine les différents cercles qui apparaissent sur le canvas, la cible si on est trop éloignée, 
+ * l'échelle ainsi que le texte du titre et des entrées.
+ * @param {Object} context : contexte du canvas de la simulation. 
+ */
+function creation_blocs_kerr(context){
+
+	context.lineWidth = "1"; //Définit l'épaisseur de la ligne utilisée pour les tracés à 1 pixel.
+
+	//Position du centre du canvas : 
+	var posX3 = (canvas.width / 2.0);
+	var posY3 = (canvas.height / 2.0);
+
+	if (((scale_factor * rs / rmax)) < 6) { //Si le cercle du rayon de SCH est trop petit vis à vis de l'échelle du graphe :
+
+		//Alors j'affiche l'astre comme une cible bleu :
+		context.beginPath();
+		context.strokeStyle = COULEUR_RS;
+		context.moveTo(posX3 - 10, posY3);
+		context.lineTo(posX3 - 3, posY3);
+		context.stroke();
+		context.beginPath();
+		context.moveTo(posX3 + 3, posY3);
+		context.lineTo(posX3 + 10, posY3);
+		context.stroke();
+		context.beginPath();
+		context.moveTo(posX3, posY3 - 10);
+		context.lineTo(posX3, posY3 - 3);
+		context.stroke();
+		context.beginPath();
+		context.moveTo(posX3, posY3 + 3);
+		context.lineTo(posX3, posY3 + 10);
+		context.stroke();
+
+	} 
+	else { //Autrement j'affiche les différents cercles :
+
+		//Je dessine la zone jaune entre rs et Rh+ : 
+		context.beginPath();
+		context.setLineDash([]);
+		context.fillStyle = COULEUR_ERGOS;
+		context.arc((canvas.width / 2.0), (canvas.height / 2.0), ((scale_factor * rs / rmax)), 0, Math.PI * 2);
+		context.fill();
+
+		//Je dessine la zone blanche entre le centre et Rh+ :
+		context.beginPath();
+		context.setLineDash([5, 5]);
+		context.arc((canvas.width / 2.0), (canvas.height / 2.0), ((scale_factor * rhp / rmax)), 0, Math.PI * 2);
+		context.fillStyle = 'white';
+		context.fill();
+
+		//Je dessine le cercle en pointillé bleu pour Rh- :
+		context.strokeStyle = 'blue';
+		context.beginPath()
+		context.setLineDash([5, 5]);
+		context.arc(posX3, posY3, (rhm * scale_factor)/rmax, 0, 2 * Math.PI);
+		context.stroke();
+
+		//Je dessine le cercle en pointillé rouge pour Rh+ :
+		context.strokeStyle = 'red';
+		context.beginPath();
+		context.setLineDash([5, 5]);
+		context.arc(posX3, posY3, (rhp * scale_factor)/rmax, 0, 2 * Math.PI);
+		context.stroke();
+
+		//Je dessine le cercle en pointillé bleu pour rs :
+		context.strokeStyle = COULEUR_RS;
+		context.beginPath();
+		context.setLineDash([5, 5]);
+		context.arc(posX3, posY3, (rs * scale_factor)/rmax, 0, 2 * Math.PI);
+		context.stroke();
+
+		//--------------------Infobulles des cercles--------------------
+
+		//Création de l'élément qui servira à afficher les info-bulles avec du texte formaté en LaTex : 
+		var infobulle = document.createElement('div');
+		infobulle.id = 'infobulle_graphe';
+		infobulle.className = 'infobulle_graphe';
+		document.body.appendChild(infobulle);
+
+		//Je récupère le canvas avec l'ID "myCanvas4" et son contexte :
+		var canvas4 = document.getElementById('myCanvas4');
+		var ctx = canvas4.getContext('2d');
+
+		//Définition des trois objets représentant les 3 cercles du canvas : 
+		var circle_RHM = { x: posX3, y: posY3, radius: (rhm * scale_factor)/rmax };
+		var circle_RHP = { x: posX3, y: posY3, radius: (rhp* scale_factor)/rmax };
+		var circle_RS = { x: posX3, y: posY3, radius: (rs* scale_factor)/rmax };
+
+		//Je dessine trois cercles sans remplissage ni contour, juste pour définir leur position sur le canvas :
+		ctx.fillStyle = 'rgba(0, 0, 0, 0)';  // Remplissage transparent
+		ctx.strokeStyle = 'rgba(0, 0, 0, 0)';  // Contour transparent
+		ctx.beginPath();
+		ctx.arc(circle_RHM.x, circle_RHM.y, circle_RHM.radius, 0, 2 * Math.PI);
+		ctx.arc(circle_RHP.x, circle_RHP.y, circle_RHP.radius, 0, 2 * Math.PI);
+		ctx.arc(circle_RS.x, circle_RS.y, circle_RS.radius, 0, 2 * Math.PI);
+		ctx.fill();
+		ctx.closePath();
+		
+		//A chaque fois que la souris bouge je calcule sa position par rapport aux cercles définis :
+		canvas4.addEventListener('mousemove', function(event) {
+
+			//Position de la souris sur le canvas :
+			var rect = canvas4.getBoundingClientRect();
+			var mouseX = event.clientX - rect.left;
+			var mouseY = event.clientY - rect.top;
+
+			// Calculer la distance entre la souris et le centre du cercle pour Rh- :
+			var dx_RHM= mouseX - circle_RHM.x;
+			var dy_RHM = mouseY - circle_RHM.y;
+			var distanceFromCenter_RHM = Math.sqrt(dx_RHM * dx_RHM + dy_RHM * dy_RHM);
+
+			// Calculer la distance entre la souris et le centre du cercle pour Rh+ :
+			var dx_RHP= mouseX - circle_RHP.x;
+			var dy_RHP = mouseY - circle_RHP.y;
+			var distanceFromCenter_RHP = Math.sqrt(dx_RHP * dx_RHP + dy_RHP * dy_RHP);
+
+			// Calculer la distance entre la souris et le centre du cercle pour rs :
+			var dx_RS= mouseX - circle_RS.x;
+			var dy_RS = mouseY - circle_RS.y;
+			var distanceFromCenter_RS = Math.sqrt(dx_RS * dx_RS + dy_RS * dy_RS);
+
+			//Je regarde si je suis proche du tracé des cercles : 
+			var onEdge_RHM = Math.abs(distanceFromCenter_RHM - circle_RHM.radius) <= 5;
+			var onEdge_RHP= Math.abs(distanceFromCenter_RHP - circle_RHP.radius) <= 5;
+			var onEdge_RS= Math.abs(distanceFromCenter_RS - circle_RS.radius) <= 5;
+
+			if (onEdge_RHM) { //Si je suis proche du cercle Rh- :
+
+				//J'affiche l'infobulle :
+				infobulle.style.visibility = 'visible';
+				infobulle.style.left = event.clientX + 'px';
+				infobulle.style.top = "800" + 'px';
+				var latex = 'Rh-';
+				infobulle.innerHTML = '\\(' + latex + '\\)';
+				MathJax.typeset();
+			} 
+			else if (onEdge_RHP) { //Si je suis proche du cercle Rh+ :
+
+				//J'affiche l'infobulle :
+				infobulle.style.visibility = 'visible';
+				infobulle.style.left = event.clientX + 'px';
+				infobulle.style.top = "750" + 'px';
+				var latex = 'Rh+';
+				infobulle.innerHTML = '\\(' + latex + '\\)';
+				MathJax.typeset();
+			} 
+			else if (onEdge_RS) { //Si je suis proche du cercle rs :
+
+				//J'affiche l'infobulle :
+				infobulle.style.visibility = 'visible';
+				infobulle.style.left = event.clientX + 'px';
+				infobulle.style.top = "700" + 'px';
+				var latex = 'rs';
+				infobulle.innerHTML = '\\(' + latex + '\\)';
+				MathJax.typeset();
+			} 
+			else { //Si je ne suis proche d'aucun cercle je n'affiche aucune infobulle :
+				infobulle.style.visibility = 'hidden';
+			}
+		});
+	}
+
+	context.fillStyle = 'white'; //Ajout d'un fond blanc pour l'exportation.
+
+	//--------------------calculs pour la barre d'échelle--------------------
+	r2bis=(80*r0)/(scale_factor);
+	r1bis=Math.round((80*r0)/(scale_factor*10**testnum(r2bis)));
+	ech=r1bis*10**testnum(r2bis);
+
+	//--------------------Dessin du texte de la barre d'échelle--------------------
+	context.font = "11pt normal";
+	context.fillStyle = COULEUR_RS;
+	context.fillText(ech.toExponential(1)+" m",605,90);
+	context.stroke();
+
+	//--------------------Dessin de la barre d'échelle--------------------
+	context.strokeStyle = COULEUR_RS;
+	context.beginPath();
+
+	context.moveTo(600,110);
+	context.lineTo(600+((r1bis*10**testnum(r2bis))*scale_factor)/r0,110);
+
+	context.moveTo(600,105);
+	context.lineTo(600,115);
+
+	context.moveTo(600+((r1bis*10**testnum(r2bis))*scale_factor)/r0,105);
+	context.lineTo(600+((r1bis*10**testnum(r2bis))*scale_factor)/r0,115);
+
+	context.stroke();
+}
+
+
+//----------------------------------------------------{test_Jmax}----------------------------------------------------
+
+/**
+ * Fonction qui indique avec un pop up si le J choisi par l'utilisateur est au-dessus de la valeur maximale. 
+ * @returns {boolean} : true si le J choisit est correct et false si il est plus grand que la valeur maximale.
+ */
+function test_Jmax() { //teste si la valeur de J est supérieure à sa valeur maximale
+
+	var texte = o_recupereJson(); //Je fais en sorte de pouvoir accéder aux json.
+	var J = Number(document.getElementById("J").value); //Moment angulaire du trou noir.
+	J_max=G*Math.pow(M, 2)/c; //Je calcule le J maximal qu'on peut avoir pour ce M.
+  
+	if (Math.abs(J) > J_max) { //Si le J rempli par l'utilisateur est plus grand que le J maximal :
+	  //J'affiche un message d'alerte et la fonction renvoie false :
+	  alert(texte.page_trajectoire_massive_kerr.moment_angulaire +"("  + J_max.toExponential(4) + "\u0020kg.m\u00b2s\u207B\u00B9)");
+	  return false;
+	}else{ //Sinon la fonction renvoie true :
+	  return true;
+	}
+}
+
+//----------------------------------------------------{test_r0}----------------------------------------------------
+
+/**
+ * Fonction qui indique avec un pop up si le r0 choisit par l'utilisateur convient et si E ou L sont des NaN (Not a Number). 
+ * @returns {boolean} : true si r0 convient et si E et L ne sont pas des NaN, false autrement. 
+ */
+function test_r0(photon){
+
+	var texte = o_recupereJson(); //Je fais en sorte de pouvoir accéder aux json.
+
+	initialisation(); //Pour récupérer les différentes valeurs des paramètres.
+
+	if (photon){ //Dans le cas du photon.
+		if(dr_sur_dlambda==0 && dphi_sur_dlambda==0) { //Lorque le photon est au repos :
+			
+			//J'affiche un pop-up d'avertissement et la simulation se termine immédiatement : 
+			alert(texte.pages_trajectoire.vitesses_initiales_nulles);
+			arretkerr();
+		}
+	}
+	if(r0<=rhp){ //Dans le cas où ma distance initiale est plus petite ou égale à Rh+ :
+
+		//J'affiche un pop-up d'avertissement et la fonction retourne false.
+		alert(texte.pages_trajectoire.rayonHorzInfRayon);
+		return false;
+	}
+	else if(isNaN(E) || isNaN(L)){ //Dans le cas où E ou L sont des NaN :
+
+		//J'affiche un pop-up d'avertissement et la fonction retourne false.
+		alert(texte.pages_trajectoire.EouLisNaN);
+		return false;
+	}
+	else{ //Sinon la fonction renvoie true :
+		return true;
+							
+	}
+}
+
+
+//----------------------------------------------------{tests_lancement}----------------------------------------------------
+
+// teste si r0 et J0 sont valides pour la simulation
+function tests_lancement(photon){
+
+	/*Je regarde si J et r0 conviennent. Si le photon est au repos ou non. Si E et L sont des NaN ou pas :*/
+	if (photon){
+		var val_test=test_Jmax()&&test_r0(true);
+	}else{
+		var val_test=test_Jmax()&&test_r0(false);
+	}
+
+	if(val_test==true){ //Si toutes les conditions citées au dessus sont vérifiées :
+
+		save_kerr_massif(); //Je sauvegarde les données de la simulation.
+		trajectoire(); //Et je la lance.
+	}
+}
+
+
+function tests_lancement(){
+	var val_test=test_Jmax()&&test_r0();
+	if(val_test==true){
+	save_generalise(false);
+	trajectoire();
+
+    //  Le cas où les valeurs de E et L ne sont pas calculables(Test)
+	if (isNaN(E) || isNaN(L)){
+		document.getElementById("L").innerHTML = "Non calculable" ;
+		document.getElementById("E").innerHTML = "Non calculable";
+	}
+  }
 }

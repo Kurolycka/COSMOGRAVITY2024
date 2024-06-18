@@ -166,8 +166,8 @@ ga('send', 'pageview');
 		<div id="radio_button">
 			<button id="r1" type="button" name="traj" class="myButton" value="complete" onclick="document.getElementById('traject_type').value = this.value;pressionBouttonTrajectoireComplete()"></button>
 			<button id="r2" type="button" name="traj2" class="myButton2" value="simple" onclick="document.getElementById('traject_type').value = this.value;pressionBouttonTrajectoireSimple()"></button>
-			<button id="r3" type="button" name="observateur" class="myButton" title="" value="observateur" onclick="document.getElementById('traject_type2').value = this.value;pressionBouttonObservateur();notationvitesseree2()"></button>
-			<button id="r4" type="button" name="mobile" class="myButton2" value="mobile" onclick="document.getElementById('traject_type2').value = this.value;pressionBouttonMobile();notationvitesseree2()"></button>  
+			<button id="r3" type="button" name="observateur" class="myButton" title="" value="observateur" onclick="document.getElementById('traject_type2').value = this.value;pressionBouttonObservateur(false);notationvitesseree2()"></button>
+			<button id="r4" type="button" name="mobile" class="myButton2" value="mobile" onclick="document.getElementById('traject_type2').value = this.value;pressionBouttonMobile(false);notationvitesseree2()"></button>  
 
 			<span id="sp_reb">
 			</span>
@@ -193,7 +193,7 @@ ga('send', 'pageview');
 		<button type="button" id="clear" class="myButton" onclick="save_schwarshild_massif(lenbdefusees);rafraichir();"></button>
 		</span>
 		<span id="enregistrer">
-		<button id="boutton_enregis" type="button" class="myButton" onclick="enregistrer();"></button>
+		<button id="boutton_enregis" type="button" class="myButton" onclick="enregistrer_trajectoires();"></button>
 		</span>
 		<span id="recup">
 		<button id="boutton_recup" type="button" class="myButton" onclick="recuperation();"></button>
