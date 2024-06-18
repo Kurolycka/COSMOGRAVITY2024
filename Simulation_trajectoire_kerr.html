@@ -7,7 +7,7 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
 
 	<!-- Css de la page -->
-	<link rel="stylesheet" href="./CSS/Ancien/Css/Simu_grav.css">
+	<link rel="stylesheet" href="./CSS/Ancien/Css/Simu_grav_kerr.css"
 	<link rel="stylesheet" href="./CSS/Ancien/Css/Simu_avertissement.css">
 	<link rel="stylesheet" href="./CSS/styleNav.css">
 
@@ -23,6 +23,8 @@
 	<!-- To automatically render math in text elements, include the auto-render extension: -->
 	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
 			onload="renderMathInElement(document.body);"></script>
+	
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> <!--AJoouté par Khaled juste pour afficher latex dans les infobulles des graphes-->
 
 
 	<link rel="stylesheet" type="text/css"
@@ -324,7 +326,9 @@
 	$(function() {
 		$("#positionNav").load("Navigation.html");
 	});
-
+	
+	pause = true;
+	debut = true;
     initialisation();
     /*  d3.select(window).on('resize', resize); */ //khaled l'a enlevé car il voit pas à quoi ça sert
     $(function() {

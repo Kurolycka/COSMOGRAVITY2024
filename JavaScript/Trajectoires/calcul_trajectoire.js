@@ -75,12 +75,12 @@ var expl3 =new Image();
 var expl4 =new Image();
 var expl5 =new Image();
 var expl6 =new Image();
-expl1.src='../../Images/Anciennes_images/explose/expl1.png';
-expl2.src='../../Images/Anciennes_images/explose/expl2.png';
-expl3.src='../../Images/Anciennes_images/explose/expl3.png';
-expl4.src='../../Images/Anciennes_images/explose/expl4.png';
-expl5.src='../../Images/Anciennes_images/explose/expl5.png';
-expl6.src='../../Images/Anciennes_images/explose/expl6.png';
+expl1.src='./Anciennes_images/explose/expl1.png';
+expl2.src='./Anciennes_images/explose/expl2.png';
+expl3.src='./Anciennes_images/explose/expl3.png';
+expl4.src='./Anciennes_images/explose/expl4.png';
+expl5.src='./Anciennes_images/explose/expl5.png';
+expl6.src='./Anciennes_images/explose/expl6.png';
 
 
 ///variables globales pour les calculs
