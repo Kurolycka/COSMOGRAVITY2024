@@ -1268,51 +1268,119 @@ function animate(compteur,mobile,mobilefactor) {
 
 }  //fin fonction animate
 
-// Expression du potentiel divisée par c^2
+
+// -------------------------------------{potentiel_externe_photon}--------------------------------------------
+
+/**
+ * Expression du potentiel divisé par c² dans la métrique de Schwarzschild extérieure pour un photon, dans le référentiel du mobile.
+ * Permet de simplifier les expressions pour le cas de l'observateur distant. 
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @param {Number} E : constante d'integration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur. 
+ * @returns le résultat du potentiel divisé par c². 
+ */
+function potentiel_externe_photon(r,L) {
+	return (1-rs/r) * Math.pow(L/r, 2);
+}
+
+
+// -------------------------------------{potentiel_interne_photon}--------------------------------------------
+
+/**
+ * Expression du potentiel divisé par c² dans la métrique de Schwarzschild intérieure pour un photon, dans le référentiel du mobile.
+ * Permet de simplifier les expressions pour le cas de l'observateur distant. 
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @param {Number} E : constante d'integration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur. 
+ * @returns le résultat du potentiel divisé par c². 
+ */
+function potentiel_interne_photon(r,E,L) {
+	return Math.pow(E,2) - alpha(r)* (Math.pow(E/beta(r),2)- Math.pow(L/r, 2));
+}
+
+
+// -------------------------------------{Vr_mob}--------------------------------------------
+
 
 function Vr_mob(r,E,L) {
 	if(r > r_phy) { return potentiel_externe_photon(r,L);}
 	else{ return potentiel_interne_photon(r,E,L);}
 }
 
+// -------------------------------------{Vr_obs}--------------------------------------------
+
+
 function Vr_obs(r,E,L) {
 	if(r > r_phy) { return Math.pow(E,2)-( 1-potentiel_externe_photon(r,L)/Math.pow(E,2) )*Math.pow(1-rs/r,2) ;}
 	else{ return Math.pow(E,2)- Math.pow(beta(r),4)*( 1-potentiel_interne_photon(r,E,L)/Math.pow(E,2) ); } 
 }
-			
-function potentiel_interne_photon(r,E,L) {
-	return Math.pow(E,2) - alpha(r)* (Math.pow(E/beta(r),2)- Math.pow(L / r, 2));
-}
 
-function potentiel_externe_photon(r,L) {
-	return (1 - rs / r) * Math.pow(L / r, 2);
-}
 
+
+// -------------------------------------{alpha}--------------------------------------------
+
+/**
+ * Fonction pour faciliter les calculs dans la métrique de SCH intérieure.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns {Number} : le résultat de alpha(r). 
+ */
 function alpha(r){
 	return 1-(Math.pow(r, 2)*rs) / Math.pow(r_phy, 3);
 }
 
+// -------------------------------------{beta}--------------------------------------------
 
+/**
+ * Fonction pour faciliter les calculs dans la métrique de SCH intérieure.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns {Number} : le résultat de beta(r). 
+ */
 function beta(r){
-	return 1.5 * Math.sqrt(Math.abs(1-(rs/r_phy))) - 0.5 *Math.sqrt(1-(Math.pow(r, 2)*rs)/Math.pow(r_phy, 3));
+	return 1.5 * Math.sqrt(1-(rs/r_phy)) - 0.5 *Math.sqrt(1-(Math.pow(r, 2)*rs)/Math.pow(r_phy, 3));
 }
 
-// fonctions utilisées pour Runge Kutta
 
+
+// -------------------------------------{derivee_seconde_externe_photon_obs}--------------------------------------------
+
+/**
+ * Expression de la dérivée seconde de r par rapport à t pour un photon dans la métrique de Schwarzschild extérieure. 
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat de la dérivée seconde. 
+ */
+function derivee_seconde_externe_photon_obs(E,L,r) {
+	return ((c*c)/(2*Math.pow(E,2)))*(2*(1-rs/r)*(rs/Math.pow(r,2))*(E*E - (1-rs/r)*Math.pow(L/r,2)) + Math.pow(1-rs/r,2)*((-rs*L*L)/(Math.pow(r,4)) + (1-rs/r)*((2*L*L)/(Math.pow(r,3)))));
+}
+
+
+// -------------------------------------{derivee_seconde_externe_photon}--------------------------------------------
+
+/**
+ * Expression de la dérivée seconde de r par rapport à λ pour un photon dans la métrique de Schwarzschild extérieure. 
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat de la dérivée seconde. 
+ */
+function derivee_seconde_externe_photon(L, r) {
+	return (Math.pow(c, 2)/(2*Math.pow(r, 4)))*Math.pow(L, 2)*(2*r-3*rs);
+}
+
+// -------------------------------------{derivee_seconde_interne_photon}--------------------------------------------
+
+/**
+ * Expression de la dérivée seconde de r par rapport à λ pour un photon dans la métrique de Schwarzschild intérieure. 
+ * @param {Number} E : constante d'intégration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat de la dérivée seconde. 
+ */
 function derivee_seconde_interne_photon(E,L,r) {
-	/*-(Math.pow(c, 2)*r*rs) / Math.pow(r_phy, 3)*(Math.pow(E,2)/Math.pow(beta(r), 2)- Math.pow(L, 2)/Math.pow(r, 2) )
-   +  Math.pow(c, 2)* alpha(r)/2 * ( 2* Math.pow(L, 2)/Math.pow(r, 3)-(Math.pow(E,2)*r*rs)/(Math.pow(beta(r), 3)*Math.sqrt(alpha(r))*Math.pow(r_phy, 3)));
-	*/
-	resulta=-(c**2 * r * rs / r_phy**3) * (Math.pow(E /beta(r), 2) - Math.pow(L / r, 2))
-		+ c**2 * alpha(r) * 0.5 * (-(E**2 * r * rs) / ((beta(r) * r_phy)**3 * Math.sqrt(alpha(r))) + 2 * L**2 / r**3);
-	//console.log("al"+alpha(r));
-	//resulta=cc*El+ca*el2;
-	return resulta ;
+	return -((Math.pow(c,2)*r*rs)/(Math.pow(r_phy,3)))*(Math.pow(E/beta(r),2) - Math.pow(L/r,2)) 
+	+ ((Math.pow(c,2)*alpha(r))/(2))*((-Math.pow(E,2)*r*rs)/(Math.pow(beta(r),3)*Math.sqrt(alpha(r))*Math.pow(r_phy,3)) + 2*(Math.pow(L,2)/Math.pow(r,3)));
 }
 
-function derivee_seconde_externe_photon(L,r) {
-	return Math.pow(c, 2)/(2*Math.pow(r, 4)) * (Math.pow(L, 2)*(2*r-3*rs));
-}
+// -------------------------------------{derivee_seconde_interne_photon}--------------------------------------------
 
 function derivee_seconde_interne_photon_obs(E,L,r) {
 	return - Math.pow(c, 2)*r*rs/Math.pow(E,2)/ Math.pow(r_phy, 3) * (Math.pow(E*beta(r),2)- Math.pow(L/r, 2)*Math.pow(beta(r),4) )
@@ -1320,10 +1388,9 @@ function derivee_seconde_interne_photon_obs(E,L,r) {
 	+Math.pow(c, 2)*Math.sqrt(alpha(r))/Math.pow(E,2)/ Math.pow(r_phy, 3)*(Math.pow(E,2)*beta(r)- Math.pow(L/r, 2)*Math.pow(beta(r),3) )*r*rs;
 }
 
-function derivee_seconde_externe_photon_obs(E,L,r) {
-	return   c*c*(r-rs)*(2*E*E*r*r*r*rs + 2*L*L*r*r - 7*L*L*r*rs + 5*L*L*rs*rs )/(2*Math.pow(r,6)*E*E);
-}
 
+
+// -------------------------------------{calcul_rmax}--------------------------------------------
 
 function calcul_rmax(L,E,vr,r0,rmax1ou2){
   // Vr different de 0

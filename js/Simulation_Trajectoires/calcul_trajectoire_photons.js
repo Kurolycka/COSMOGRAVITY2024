@@ -1216,43 +1216,55 @@ function animate(compteur,mobile,mobilefactor) {
 
 }  
 
-// -------------------------------------{fonction Vr_mob}--------------------------------------------
 
-// Expression du potentiel divisé par c^2
+// -------------------------------------{Vr_mob}--------------------------------------------
 
+/**
+ * Expression du potentiel divisé par c² dans la métrique de Schwarzschild extérieure pour un photon, dans le référentiel du mobile.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat du potentiel divisé par c²
+ */
 function Vr_mob(L,r) {
-	return potentiel_Schwarzchild_photon(L,r);
+	return (1 - rs/r) * Math.pow(L/r, 2);
 }
 
-// -------------------------------------{fonction Vr_obs}--------------------------------------------
+// -------------------------------------{Vr_obs}--------------------------------------------
 
+/**
+ * Expression du potentiel divisé par c² dans la métrique de Schwarzschild extérieure pour un photon, dans le référentiel de l'observateur distant.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat du potentiel divisé par c²
+ */
 function Vr_obs(E,L,r) {
-	return Math.pow(E,2)-( 1-potentiel_Schwarzchild_photon(L,r)/Math.pow(E,2) )*Math.pow(1-rs/r,2)  ;
+	return Math.pow(E,2) - (1/Math.pow(E,2))*Math.pow(1-rs/r,2)*( Math.pow(E,2) - (1 - rs/r) * Math.pow(L/r, 2))  ;
 }
 
-// -------------------------------------{fonction Vr}--------------------------------------------
+// -------------------------------------{derivee_seconde_Schwarzchild_photon}--------------------------------------------
 
-function Vr(L,r) {
-	return potentiel_Schwarzchild_photon(L,r);
-}
-
-// -------------------------------------{fonction potentiel_Schwarzschild_photon}--------------------------------------------
-
-function potentiel_Schwarzchild_photon(L,r) {
-	return (1 - rs / r) * Math.pow(L / r, 2);
-}
-
-// -------------------------------------{fonction derivee_seconde_Schwarzschild_photon}--------------------------------------------
-
+/**
+ * Expression de la dérivée seconde de r par rapport à λ pour un photon dans la métrique de Schwarzschild extérieure. 
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat de la dérivée seconde. 
+ */
 function derivee_seconde_Schwarzchild_photon(L, r) {
-	return Math.pow(c, 2)/(2*Math.pow(r, 4)) * Math.pow(L, 2)*(2*r-3*rs);
+	return (Math.pow(c, 2)/(2*Math.pow(r, 4)))*Math.pow(L, 2)*(2*r-3*rs);
 }				
 
 // -------------------------------------{fonction derivee_seconde_Schwarzschild_photon_obs}--------------------------------------------
 
+/**
+ * Expression de la dérivée seconde de r par rapport à t pour un photon dans la métrique de Schwarzschild extérieure. 
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat de la dérivée seconde. 
+ */
 function derivee_seconde_Schwarzchild_photon_obs(E,L,r) {
-	return c*c*(r-rs)*(2*E*E*r*r*r*rs + 2*L*L*r*r - 7*L*L*r*rs + 5*L*L*rs*rs)/(2*Math.pow(r,6)*E*E); 
+	return ((c*c)/(2*Math.pow(E,2)))*(2*(1-rs/r)*(rs/Math.pow(r,2))*(E*E - (1-rs/r)*Math.pow(L/r,2)) + Math.pow(1-rs/r,2)*((-rs*L*L)/(Math.pow(r,4)) + (1-rs/r)*((2*L*L)/(Math.pow(r,3)))));
 }
+
 
 // -------------------------------------{fonction calcul_rmax}--------------------------------------------
 
