@@ -238,7 +238,7 @@ function initialisation(){
 	}
 
 	textegravetetc_Kerr(); //Pour afficher les infobulles des tableaux etc.
-	boutonAvantLancement(); //J'associe aux différents boutons les fonctions associées d'avant le lancement. 
+	boutonAvantLancement(false); //J'associe aux différents boutons les fonctions associées d'avant le lancement. 
 }
 
 //----------------------------------------------------{verifnbr}----------------------------------------------------
@@ -534,8 +534,8 @@ function trajectoire() {
 
 		//--------------------------------Gestion des boutons de zoom--------------------------------
 
-		document.getElementById('moinszoom').removeEventListener('click',function(){foncPourZoomMoinsAvantLancement(false)}, false); //Je désassocie foncPourZoomMoinsAvantLancement du bouton pour dézoomer une fois la simulation commencée.
-		document.getElementById('pluszoom').removeEventListener('click',function(){foncPourZoomPlusAvantLancement(false)}, false); //Je désassocie foncPourZoomPlusAvantLancement du bouton pour zoomer une fois la simulation commencée.
+		document.getElementById('moinszoom').removeEventListener('click',foncPourZoomMoinsAvantLancementKerr, false); //Je désassocie foncPourZoomMoinsAvantLancement du bouton pour dézoomer une fois la simulation commencée.
+		document.getElementById('pluszoom').removeEventListener('click',foncPourZoomPlusAvantLancementKerr, false); //Je désassocie foncPourZoomPlusAvantLancement du bouton pour zoomer une fois la simulation commencée.
 
 		document.getElementById('moinszoom').addEventListener('click', function() { //J'associe le bouton dézoomer à la fonction suivante une fois la simulation lancée.
 			scale_factor /= 1.2;
@@ -681,7 +681,8 @@ function animate() {
 		if(r_part_obs >rhp*1.0000001)
 		{
 			//-----------------------------------------------------PARTIE CALCULE-----------------------------------------------------------
-			val_obs = rungekutta_obs(dtau, r_part_obs, A_part_obs); //calcul de l'equation differentielle avec RK4 ça donne le r et dr/dt
+
+			val_obs = rungekutta_general(dtau, A_part_obs, r_part_obs, null, null, derivee_seconde_Kerr_massif_obs); //calcul de l'equation differentielle avec RK4 ça donne le r et dr/dt
 
 			r_part_obs = val_obs[0]; //valeur de r calculée par RK (Runge Kutta)
 			A_part_obs = val_obs[1]; //valeur de dr/dtau calculée par RK
@@ -793,9 +794,9 @@ function animate() {
 		{
 
 			if (joy.GetPhi()!=0 && pilotage_possible==true){
-				val = rungekutta(temps_acceleration, r_part, A_part); //Si un pilotage est détecté, calcul avec RK4 avec le temps d'accélération.
+				val = rungekutta_general(temps_acceleration, A_part, r_part, null, null, derivee_seconde_Kerr_massif); //Si un pilotage est détecté, calcul avec RK4 avec le temps d'accélération.
 			}else{
-				val = rungekutta(dtau, r_part, A_part); //Autrement, calcul avec RK4 avec le dtau par défaut.
+				val = rungekutta_general(dtau, A_part, r_part, null, null, derivee_seconde_Kerr_massif);//Autrement, calcul avec RK4 avec le dtau par défaut.
 			}
 			
 
@@ -1004,17 +1005,6 @@ function derivee_seconde_Kerr_massif(r) {
 	return -c * c / (2 * Math.pow(r, 4)) * (rs * r * r + 2 * r * (a * a * (E * E - 1) - L * L) + 3 * rs * Math.pow(L - a * E, 2));
 }
 
-function rungekutta(h, r, A) {
-	k = [0, 0, 0, 0];
-	k[0] = derivee_seconde_Kerr_massif(r);
-	k[1] = derivee_seconde_Kerr_massif(r + 0.5 * h * A);
-	k[2] = derivee_seconde_Kerr_massif(r + 0.5 * h * A + 0.25 * h * h * k[0]);
-	k[3] = derivee_seconde_Kerr_massif(r + h * A + 0.5 * h * h * k[1]);
-	r = r + h * A + (1 / 6) * h * h * (k[0] + k[1] + k[2]);
-	A = A + (h / 6) * (k[0] + 2 * (k[1] + k[2]) + k[3]);
-	return [r, A];
-}
-
 
 function delta(r) {
 	var d=r**2-rs*r+a**2;
@@ -1032,17 +1022,6 @@ function derivee_seconde_Kerr_massif_obs(r) {
             +2*(Math.pow(E,2)-1+rs/r+(EaL2_a2)/Math.pow(r,2)+rs*Ea_L2/Math.pow(r,3))*(2*r-rs)  
 
             -2*(Math.pow(E,2)-1+rs/r+(EaL2_a2)/Math.pow(r,2)+rs*Ea_L2/Math.pow(r,3))*delta(r)*((2*r-rs*Math.pow(a,2)/Math.pow(r,2))*E+rs*a*L/Math.pow(r,2))/denom )   ;
-}
-
-function rungekutta_obs(h, r, A) {
-	k = [0, 0, 0, 0];
-	k[0] = derivee_seconde_Kerr_massif_obs(r);
-	k[1] = derivee_seconde_Kerr_massif_obs(r + 0.5 * h * A);
-	k[2] = derivee_seconde_Kerr_massif_obs(r + 0.5 * h * A + 0.25 * h * h * k[0]);
-	k[3] = derivee_seconde_Kerr_massif_obs(r + h * A + 0.5 * h * h * k[1]);
-	r = r + h * A + (1 / 6) * h * h * (k[0] + k[1] + k[2]);
-	A = A + (h / 6) * (k[0] + 2 * (k[1] + k[2]) + k[3]);
-	return [r, A];
 }
 
 
@@ -1183,11 +1162,6 @@ function enregistrer(){
 	} else {
 		alert(texte.pages_trajectoire.message_enregistrer);
 	}
-}
-
-function commandes(){
-	var texte = o_recupereJson();
-	alert(texte.pages_trajectoire.commandes_horsSchwarMassif);
 }
 
 // utile pour l'exportation d'images
@@ -1456,42 +1430,6 @@ function MAJGraphePotentiel(){
 	graphique_creation_pot();
 }
 
-
-function foncPourZoomPlusAvantLancement(){
-		nz_avant_lancement+=1;
-		document.getElementById('nzoomtxt').innerHTML= "zoom="+ nz_avant_lancement.toString();
-		
-}
-
-function foncPourZoomMoinsAvantLancement(){
-		nz_avant_lancement-=1;
-		document.getElementById('nzoomtxt').innerHTML= "zoom="+ nz_avant_lancement.toString();
-}
-
-function boutonAvantLancement(){
-    //Gestion de l'accélération/décélération de la simu
-    document.getElementById("panneau_mobile").style.visibility='visible';
-    
-    // Gestion des bouttons Zoom moins
-    document.getElementById("panneau_mobile2").style.visibility='visible';
-    
-    document.getElementById('moinszoom').addEventListener('click',foncPourZoomMoinsAvantLancement, false);
-    document.getElementById('pluszoom').addEventListener('click',foncPourZoomPlusAvantLancement, false);
-    document.getElementById('plusvite').addEventListener('click',foncPourVitPlusAvantLancement,false);
-    document.getElementById('moinsvite').addEventListener('click',foncPourVitMoinsAvantLancement,false);
-}
-
-function foncPourVitMoinsAvantLancement(){
-	compteurVitesseAvantLancement -= 1
-	compteurVitesse-=1;
-	document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesse).toString();
-}
-
-function foncPourVitPlusAvantLancement(){
-	compteurVitesseAvantLancement += 1
-	compteurVitesse+=1;
-	document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesse).toString();
-}
 
 /**
  * Fonction qui permet de préparer le canvas de la simulation en fonction de si on choisit une trajectoire complète ou simple. 

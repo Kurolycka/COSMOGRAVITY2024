@@ -9,7 +9,6 @@
 		<!-- Css de la page -->
 		<link rel="stylesheet" href="./Css/Simu_grav.css">
 		<link rel="stylesheet" href="./Css/Simu_avertissement.css">
-		<script src="./js/Simulation_Trajectoires/agrandit.js"></script>
 		<script src="./js/avertissement.js"></script>
 
 		<!-- Latex dans Html -->
@@ -272,6 +271,11 @@
 			{
 				alert(test_inte());
 			}
+		}
+
+		function commandes(){ //Fonction qui affiche l'alerte pour les commandes claviers. 
+			var texte = o_recupereJson();
+			alert(texte.page_trajectoire_massive.commandes);
 		}
 
 		function updatenbredefusees(){

@@ -11,7 +11,6 @@
   <link rel="stylesheet" href="./Css/Simu_avertissement.css">
 
   <script src="./js/avertissement.js"></script>
-  <script src="./js/Simulation_Trajectoires/agrandit.js"></script>
   <!-- Latex dans Html -->
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
 
@@ -295,6 +294,11 @@ Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-u
 				alert(test_inte());
 			}
 		}
+
+    function commandes(){ //Fonction qui permet l'alerte pour les commandes claviers. 
+	    var texte = o_recupereJson();
+	    alert(texte.page_trajectoire_massive.commandes);
+    }
 
     function updatenbredefusees(){
         var nbredefuseesupdatenbr = Number(document.getElementById("nombredefusees").value);	

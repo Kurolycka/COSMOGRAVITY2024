@@ -306,7 +306,7 @@
 	"lancerInterdit":"Starting from within the physical radius is forbidden!\nr0 must be greater than R_phy",
 	"simuavertissement":"Warning",
 	"avertissement":"The simulations of the trajectories respect the velocity dynamics. When the initial conditions are chosen to make this dynamic too big, the calculation step becomes too big(the trajectory appears in dots) near the periaster and this creates mistakes in the rest of the trajectory. The plus and minus buttons are there to interactively adapt the calculation step for those excentric orbitals. <br> A too big of a modification on this 'speed' will alter the precision of the trajectory. <br><br> For the calculation of speeds, it is assumed that a fixed observer (following a geodesic) measures the speed of the mobile when it passes to its position. In the case of the Kerr metric when r is less than rs there can be no geodesic having the previous property so no observer of can remain fixed. So once rs exceeded, the calculation of speeds is not possible hence the 'undefined'. <br><br> The sudden change in rotation of the trajectory of the mobile/photon at Rh+/Rh- is predicted in the theory.",
-	"message_enregistrer":"Plot before saving !",
+	"message_enregistrer":"You have to plot before saving.",
 	"entrees":"Inputs :",
 	"horiz_ext_atteint":"Outer horizon is reached !",
 	"vitesses_initiales_nulles":"photon at rest !!!!",													   	
@@ -340,13 +340,14 @@
 	"alerte_v0_superieure_c" : "Be careful, your speed v0 is greater than c.",
 	"alerte_r0_inferieure_rs" : "Be careful, your initial distance from the center of the celestial body r0 is smaller than the Schwarzschild's radius.",
 	"alerte_singularite_non_baryonique" : "Particle stops, calculations are not stable, try to slow down next time.",
-	"alerte_verifier_r0" : "Be careful, please check the entry in r₀.",
-	"alerte_verifier_M" : "Be careful, please check the entry in M.",
-	"alerte_verifier_v0" : "Be careful, please check the entry in v₀.",
-	"alerte_verifier_phi0" : "Be careful, please check the entry in the angle of the initial position.",
-	"alerte_verifier_teta" : "Be careful, please check the entry in ɸ₀.",
-	"alerte_verifier_rphy" : "Be careful, please check the entry in the physical radius.",
-	"alerte_verifier_J" : "Be careful, please check the entry in the angular momentum J."
+	"alerte_verifier_r0" : "Be careful, please enter a correct value for r₀.",
+	"alerte_verifier_M" : "Be careful, please enter a correct value for M.",
+	"alerte_verifier_v0" : "Be careful, please enter a correct value for v₀.",
+	"alerte_verifier_phi0" : "Be careful, please enter a correct value for the angle of the initial position.",
+	"alerte_verifier_teta" : "Be careful, please enter a correct value for ɸ₀.",
+	"alerte_verifier_rphy" : "Be careful, please enter a correct value for the physical radius.",
+	"alerte_verifier_J" : "Be careful, please enter a correct value for the angular momentum J.",
+	"alerte_verifier_nbrefusees" : "Be careful, please enter a correct value for the number of rockets."
 },
 
 "page_trajectoire_massive":{

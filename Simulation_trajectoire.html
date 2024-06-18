@@ -54,7 +54,6 @@ document.addEventListener("DOMContentLoaded", function() {
 <script src="./js/Simulation_Trajectoires/graphe_potentiel.js"></script>
 <script src="./js/Simulation_Trajectoires/Get_para.js"></script>
 <script src="./js/Langues/gestion_langues.js"></script>
-<script src="./js/Simulation_Trajectoires/agrandit.js"></script>
 <script src="./js/Simulation_Trajectoires/pilotage.js"></script> 
 <script src="./js/Simulation_Trajectoires/fonctions_utilitaires_trajectoires.js"></script>
 
@@ -303,6 +302,12 @@ ga('send', 'pageview');
 		{
 			alert(test_inte());
 		}
+	}
+
+	
+	function commandes(){ //Permet l'affichage de l'alerte pour les commandes clavier.
+		var texte = o_recupereJson();
+		alert(texte.page_trajectoire_massive.commandes);
 	}
 
 	function updatenbredefusees(){

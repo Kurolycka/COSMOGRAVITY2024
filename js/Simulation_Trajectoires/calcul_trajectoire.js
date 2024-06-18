@@ -143,18 +143,14 @@ window.setInterval(Timer.ontick, 1);
 
 //----------------------------------------------------{initialisationGenerale}----------------------------------------------------
 
+/**
+ * Fonction qui permet l'initialisation de toutes les fusées. 
+ * @param {Number} fuseecompteur : nombre de fusées générées.
+ */
 function initialisationGenerale(fuseecompteur){
-    c = 299792458;
-    G = 6.67385 * Math.pow(10, -11);				  
-    M = Number(document.getElementById("M").value);
-    r_phy = Number(document.getElementById("r_phy").value);
-    m = G * M / Math.pow(c, 2); 
-    rs=2*m;
-
 	for (compteur = 1; compteur <= fuseecompteur; compteur += 1) {
 	    listejsonfusees[compteur]=initialisation(compteur);  
 	}
-  
 }
 
 //----------------------------------------------------{lancerDeFusees}----------------------------------------------------
@@ -224,10 +220,22 @@ function supprHtml(){
 //----------------------------------------------------{genereHtml}----------------------------------------------------
 
 function genereHtml(){
-	var nbredefuseesgenere = Number(document.getElementById("nombredefusees").value);
+
+	texte=o_recupereJson();
+
+	var nbrefusees_NaN = document.getElementById("nombredefusees").value; 
+
+	if(isNaN(nbrefusees_NaN)){
+		alert(texte.pages_trajectoire.alerte_verifier_nbrefusees);
+		document.getElementById("nombredefusees").value=1
+		var nbredefuseesgenere = Number(document.getElementById("nombredefusees").value);
 	
+	}else{
+		var nbredefuseesgenere = Number(document.getElementById("nombredefusees").value);
+	}	
 	
 	lenbdefusees = nbredefuseesgenere;
+
 	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) {
 		var span = document.createElement("span");
 		span.setAttribute("id","rayon"+countt.toString()+"");
@@ -639,7 +647,7 @@ function initialisation(compteur){
 		vr2i = phi0*180/Math.PI; //Je récupère l'angle de la position initiale en degrés. 
 	}
 
-	boutonAvantLancement(); //J'associe aux différents boutons les fonctions associées d'avant le lancement. 
+	boutonAvantLancement(true); //J'associe aux différents boutons les fonctions associées d'avant le lancement. 
 	canvasAvantLancement(); //J'affiche l'échelle du canvas avant le début de la simulation. 
 
 	return mobile; //Je récupère au final de cette fonction l'objet mobile correctement initialisé.
@@ -657,6 +665,7 @@ function verifnbr() {
 	//Je récupère les données remplies par l'utilisateur : 
 	r_phy = document.getElementById("r_phy").value; //Le rayon physique.
 	M = document.getElementById("M").value; //La masse de l'astre. 
+
 	nbrdefuseesverifnbr = Number(document.getElementById("nombredefusees").value); //Le nombre de mobiles. 
 
 	//Pour stocker dans des variables si un des champs n'est pas un nombre pour un mobile :
@@ -1144,7 +1153,8 @@ function animate(compteur,mobile,mobilefactor)
 				//-----------------------------------------------------PARTIE CALCULE-------------------------------------------------
 
 				//calcul de l'equation differentielle avec RK4 ça donne le r et dr/dt
-				val_obs = rungekutta_obs(mobile.E,mobile.L,mobile.dtau, mobile.r_part_obs, mobile.A_part_obs);
+				val_obs = rungekutta_general(mobile.dtau, mobile.A_part_obs, mobile.r_part_obs, mobile.E, mobile.L, derivee_seconde_Schwarzchild_massif_obs); 
+				
 				mobile.r_part_obs = val_obs[0]; 		//valeur de r calculée par RK (Runge Kutta)
 				mobile.A_part_obs = val_obs[1]; 		//valeur de dr/dtau calculée par RK
 
@@ -1314,11 +1324,11 @@ function animate(compteur,mobile,mobilefactor)
 		if (mobile.r_part >= 0) 
 		{
 			//-----------------------------------------------------PARTIE CALCULE-------------------------------------------------
-		
+
 			if (joy.GetPhi()!=0 && pilotage_possible==true){
-				val = rungekutta(mobile.L,temps_acceleration, mobile.r_part, mobile.A_part); //calcul avec RK4 avec le temps d'accélération lorsque pilotage
+				val = rungekutta_general(temps_acceleration, mobile.A_part, mobile.r_part, null, mobile.L, derivee_seconde_Schwarzchild_massif);
 			}else{
-				val = rungekutta(mobile.L,mobile.dtau, mobile.r_part, mobile.A_part); //calcul avec RK4 avec le dtau par defaut lorsque pas de pilotage
+				val = rungekutta_general(mobile.dtau, mobile.A_part, mobile.r_part, null, mobile.L, derivee_seconde_Schwarzchild_massif); //calcul avec RK4 avec le dtau par defaut lorsque pas de pilotage
 			}
 			
 
@@ -1598,37 +1608,11 @@ function derivee_seconde_Schwarzchild_massif(L, r) {
 		return Math.pow(c, 2)/(2*Math.pow(r, 4)) *  (-rs*Math.pow(r,2) + Math.pow(L, 2)*(2*r-3*rs));
 }
 
-//----------------------------------------------------{rungekutta}----------------------------------------------------
-
-function rungekutta(L, h, r, A) {
-	k = [0, 0, 0, 0];
-	k[0] = derivee_seconde_Schwarzchild_massif(L,r);
-	k[1] = derivee_seconde_Schwarzchild_massif(L,r + 0.5 * h * A);
-	k[2] = derivee_seconde_Schwarzchild_massif(L,r + 0.5 * h * A + 0.25 * h * h * k[0]);
-	k[3] = derivee_seconde_Schwarzchild_massif(L,r + h * A + 0.5 * h * h * k[1]);
-	r = r + h * A + (1 / 6) * h * h * (k[0] + k[1] + k[2]);
-	A = A + (h / 6) * (k[0] + 2 * (k[1] + k[2]) + k[3]);
-	return [r, A];
-}
-
 //----------------------------------------------------{derivee_seconde_Schwarzschild_massif_obs}----------------------------------------------------
 
 function derivee_seconde_Schwarzchild_massif_obs(E,L,r) {
 	return c*c*(r-rs)*(2*E*E*r*r*r*rs + 2*L*L*r*r - 7*L*L*r*rs 
 	+ 5*L*L*rs*rs - 3*r*r*r*rs + 3*r*r*rs*rs)/(2*Math.pow(r,6)*E*E);
-}
-
-//----------------------------------------------------{rungekutta_obs}----------------------------------------------------
-
-function rungekutta_obs(E,L,h, r, A) {
-	k = [0, 0, 0, 0];
-	k[0] = derivee_seconde_Schwarzchild_massif_obs(E,L,r);
-	k[1] = derivee_seconde_Schwarzchild_massif_obs(E,L,r + 0.5 * h * A);
-	k[2] = derivee_seconde_Schwarzchild_massif_obs(E,L,r + 0.5 * h * A + 0.25 * h * h * k[0]);
-	k[3] = derivee_seconde_Schwarzchild_massif_obs(E,L,r + h * A + 0.5 * h * h * k[1]);
-	r = r + h * A + (1 / 6) * h * h * (k[0] + k[1] + k[2]);
-	A = A + (h / 6) * (k[0] + 2 * (k[1] + k[2]) + k[3]);
-	return [r, A];
 }
 
 //----------------------------------------------------{calcul_rmax}----------------------------------------------------
@@ -1721,10 +1705,16 @@ function rafraichir() {
 
 // -------------------------------------{enregistrer}--------------------------------------------
 
+/**
+ * 
+ */
 function enregistrer() {
-	var texte = o_recupereJson();
 
-	if (document.getElementById('trace_present').value === "true") {
+	var texte = o_recupereJson(); //Pour avoir accès au contenu des fichiers json.
+	
+	if (document.getElementById('trace_present').value === "true") {//Lorsqu'il y a un tracé de simulation. 
+
+
 		// Demander à l'utilisateur le nom du fichier
 		var nomFichier = prompt(texte.pages_trajectoire.message_nomFichier, "traject_Schaw_B_B");
 
@@ -1761,12 +1751,6 @@ function enregistrer() {
 	}
 }
 
-//----------------------------------------------------{commandes}----------------------------------------------------
-
-function commandes(){
-	var texte = o_recupereJson();
-	alert(texte.page_trajectoire_massive.commandes);
-}
 
 //----------------------------------------------------{majFondFixe}----------------------------------------------------
 
@@ -2035,58 +2019,6 @@ function canvasAvantLancement(){
 
 }
 
-function foncPourZoomMoinsAvantLancement(){
-	
-    factGlobalAvecClef = factGlobalAvecClef/1.2;
-	nz_avant_lancement-=1;
-    nzoom-=1;
-    document.getElementById('nzoomtxt').innerHTML= "zoom="+ nzoom.toString();
-    canvasAvantLancement();
-}
-
-function foncPourZoomPlusAvantLancement(){
-	
-		factGlobalAvecClef = factGlobalAvecClef*1.2;
-		nz_avant_lancement+=1;
-		nzoom+=1;
-		document.getElementById('nzoomtxt').innerHTML= "zoom="+ nzoom.toString();
-		canvasAvantLancement();
-	
-}
-
-function recuperation(){
-	if(document.getElementById('trace_present').value!="true"){
-		load_schwarshild_massif();
-		var lenbdefusees = Number(document.getElementById("nombredefusees").value);
-		initialisationGenerale(lenbdefusees);
-	}
-}
-
-function boutonAvantLancement(){
-    //Gestion de l'accélération/décélération de la simu
-    document.getElementById("panneau_mobile").style.visibility='visible';
-    
-    // Gestion des bouttons Zoom moins
-    document.getElementById("panneau_mobile2").style.visibility='visible';
-    
-    document.getElementById('moinszoom').addEventListener('click',foncPourZoomMoinsAvantLancement, false);
-    document.getElementById('pluszoom').addEventListener('click',foncPourZoomPlusAvantLancement, false);
-    document.getElementById('plusvite').addEventListener('click',foncPourVitPlusAvantLancement,false);
-    document.getElementById('moinsvite').addEventListener('click',foncPourVitMoinsAvantLancement,false);
-}
-
-function foncPourVitMoinsAvantLancement(){
-	compteurVitesseAvantLancement -= 1
-	compteurVitesse-=1;
-	document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesse).toString();
-}
-
-function foncPourVitPlusAvantLancement(){
-	compteurVitesseAvantLancement += 1
-	compteurVitesse+=1;
-	document.getElementById('nsimtxt').innerHTML= "simu="+ Math.round(compteurVitesse).toString();
-}
-
 /**
  * Fonction qui permet de préparer le canvas de la simulation en fonction de si on choisit une trajectoire complète ou simple. 
  * @param {Number} compteur : numéro de la fusée entre 0 et le nombre de fusées total, sans dimension. 
@@ -2103,4 +2035,19 @@ function choixTrajectoire(compteur,context,mobilefactor,rmaxjson,r0ou2) {
 	}else if (element.value=='complete'){
         diametre_particule = DIAMETRE_PART;
     }
+}
+
+//----------------------------------------------------{recuperation}----------------------------------------------------
+
+/**
+ * Fonction qui sert à faire fonctionner le bouton valeurs précédentes lorsque aucune simulation n'a été démarrée. 
+ */
+function recuperation(){
+
+	if(document.getElementById('trace_present').value!="true"){ //Dans le cas où aucune simulation n'a demarée.
+		load_schwarshild_massif(); //Récupère les valeurs de la dernière simulation.
+		var lenbdefusees = Number(document.getElementById("nombredefusees").value); //Récupère le nombre de mobiles.
+		initialisationGenerale(lenbdefusees); //Permet le calcul et l'affichage du tableau fixe de constantes avant le début de la simulation. 
+	}
+
 }

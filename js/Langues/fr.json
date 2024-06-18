@@ -312,7 +312,7 @@
 		"lancerInterdit":"Lancer depuis l'intérieur du rayon physique interdit !",
 		"simuavertissement":"Avertissement",
 		"avertissement":"Les simulations trajectoires respectent la cinématique. Pour certaines  conditions initiales le pas de calcul devient trop grand  près des périastres et cela entraine des erreurs sur la suite de la trajectoire. Pour la matière non baryonique, les trajectoires calculées numériquement au voisinage de r=0 sont parfois imprévisibles (les équations des géodésiques ont « r » en dénominateur). <br> Le bouton « Décélérer » permet, en diminuant interactivement le pas de calcul, de palier (la plupart du temps) à ces  difficultés numériques.<br><br> Pour le calcul des vitesses on suppose qu'un observateur fixe (suivant une géodésique) mesure la vitesse du mobile quand celui-ci passe à sa position. Dans le cas de la métrique de Kerr lorsque r est inférieur à rs il ne peut y avoir de géodésique ayant la propriété précédente donc aucun observateur de ne peut demeurer fixe. Ainsi une fois rs dépassé le calcul des vitesses n'est pas possible d'où le 'pas définie'. <br><br> Le changement brusque de rotation de la trajectoire du mobile/photon à Rh+/Rh- est prédit dans la théorie.",
-		"message_enregistrer":"Tracez avant d'enregistrer !",
+		"message_enregistrer":"Il faut tracer avant d'enregistrer.",
 		"entrees":"Entrées :",
 		"horiz_ext_atteint":"Horizon extérieur atteint !",
 		"vitesses_initiales_nulles":"photon au repos !!!!",
@@ -344,13 +344,14 @@
 		"alerte_v0_superieure_c" : "Attention votre vitesse v0 est supérieure à c.",
 		"alerte_r0_inferieure_rs" : "Attention votre distance initiale au centre de l'astre r0 est plus petite que le rayon de Schwarzschild.",
 		"alerte_singularite_non_baryonique" : "Le mobile s'arrete le calcul n'est pas stable, il faut décélérer la prochaine fois.",
-		"alerte_verifier_r0" : "Attention, veuillez vérifier la saisie en r₀.",
-		"alerte_verifier_M" : "Attention, veuillez vérifier la saisie en M.",
-		"alerte_verifier_v0" : "Attention, veuillez vérifier la saisie en v₀.",
-		"alerte_verifier_phi0" : "Attention, veuillez vérifier la saisie de l'angle de la position initiale.",
-		"alerte_verifier_teta" : "Attention, veuillez vérifier la saisie en ɸ₀.",
-		"alerte_verifier_rphy" : "Attention, veuillez vérifier la saisie du rayon physique.",
-		"alerte_verifier_J" : "Attention, veuillez vérifier la saisie du moment angulaire J."
+		"alerte_verifier_r0" : "Attention, veuillez bien saisir la valeur de r₀.",
+		"alerte_verifier_M" : "Attention, veuillez bien saisir la valeur de M.",
+		"alerte_verifier_v0" : "Attention, veuillez bien saisir la valeur de v₀.",
+		"alerte_verifier_phi0" : "Attention, veuillez bien saisir la valeur de l'angle de la position initiale.",
+		"alerte_verifier_teta" : "Attention, veuillez bien saisir la valeur de ɸ₀.",
+		"alerte_verifier_rphy" : "Attention, veuillez bien saisir la valeur du rayon physique.",
+		"alerte_verifier_J" : "Attention, veuillez bien saisir la valeur du moment angulaire J.",
+		"alerte_verifier_nbrefusees" : "Attention, veuillez bien saisir la valeur du nombre de fusées."
 	},
 
 	"page_trajectoire_massive":{
