@@ -4,9 +4,9 @@ function arrondie_affichage(nombre){
     }else if(nombre===0){
         return nombre
     }
-    else{;
+    else{
         return nombre.toExponential(4);
-    };
+    }
 }
 
 /**

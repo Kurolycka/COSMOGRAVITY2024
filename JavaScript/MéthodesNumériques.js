@@ -14,43 +14,16 @@
  * @return liste de 3 valeurs : [x_n+1, y_n+1, y'_n+1]
  */
 function RungeKuttaEDO2(pas, xn, yn, ypn, fonctionCarac) {
- 
-    let k1 = 0;
-    let k2 = 0;
-    let k3 = 0;
-    let k4 = 0;
+    let k1 = fonctionCarac(xn, yn, ypn);
+    let k2 = fonctionCarac(xn + pas/2, yn + 0.5 * pas * ypn, ypn + 0.5 * pas * k1);
+    let k3 = fonctionCarac(xn + pas/2, yn + 0.5 * pas * ypn + pas * pas * 0.25 * k1, ypn + 0.5 * pas * k2);
+    let k4 = fonctionCarac(xn + pas, yn + pas * ypn + pas * pas * 0.5 * k2, ypn + pas * k3);
 
-
-    let yn1 = 0;
-    let ypn1 = 0;
-    let xn1 = 0
-
-    k1 = fonctionCarac(xn, yn, ypn);
-    k2 = fonctionCarac(xn + pas/2, yn + 0.5 * pas * ypn, ypn + 0.5 * pas * k1);
-    k3 = fonctionCarac(xn + pas/2, yn + 0.5 * pas * ypn + pas * pas * 0.25 * k1, ypn + 0.5 * pas * k2);
-    k4 = fonctionCarac(xn + pas, yn + pas * ypn + pas * pas * 0.5 * k2, ypn + pas * k3);
-
-    ypn1 = ypn + (pas / 6) * (k1 + 2*k2 + 2*k3 + k4);
-    yn1 = yn + pas * ypn + (pas * pas / 6) * (k1 + k2 + k3);
-    xn1 = xn + pas
+    let ypn1 = ypn + (pas / 6) * (k1 + 2*k2 + 2*k3 + k4);
+    let yn1 = yn + pas * ypn + (pas * pas / 6) * (k1 + k2 + k3);
+    let xn1 = xn + pas
 
     return [xn1, yn1, ypn1]
-}
-
-
-/**
- * Fonction qui permet de fusionner les solutions qui ont un pas négatif avec les solutions qui ont un pas positif
- * @param solutions_neg {[number[], number[]]} solution avec un pas négatif
- * @param solutions_pos {[number[], number[]]} solution avec un pas positif
- * @returns {*[]} solution avec un pas négatif et positif
- */
-function fusion_solutions(solutions_neg, solutions_pos) {
-    solutions_neg[0].reverse()
-    solutions_neg[0].pop()
-    solutions_neg[1].reverse()
-    solutions_neg[1].pop()
-    return [solutions_neg[0].concat(solutions_pos[0]),
-            solutions_neg[1].concat(solutions_pos[1])]
 }
 
 
@@ -74,30 +47,6 @@ function simpson_composite(fonction, borne_inf, borne_sup, subdivisions=100) {
     return (pas / 6) * integrale;
 }
 
-
-function secante(fonction, x0, x1, precision) {
-    let xn = x0;
-    let xn1 = x1;
-    let xn2;
-
-    let deltaX, deltaF;
-    let fn = fonction(xn) * fonction(xn);
-    let fn1 = fonction(xn1) * fonction(xn1);
-    let iteration = 0
-
-    while (iteration < 20 && Math.abs(fn) > precision) {
-        fn = fonction(xn)
-        fn1 = fonction(xn1)
-        deltaX = xn1 - xn
-        deltaF = fn1 - fn
-        xn2 = xn1 - ( (deltaX / deltaF) * fn1 )
-
-        xn = xn1
-        xn1 = xn2
-        iteration = iteration + 1
-    }
-    return xn2
-};
 
 /**
  * Permet de trouver l'abscisser correspond a un ordonée d'une fonction monotone
@@ -145,41 +94,3 @@ function Dichotomie(fonction, cible, borneDebut, borneFin, precision){
     }
     return milieu;
 }
-
-function Dichotomie_Remy(fonction, cible, borneDebut, borneFin, precision){
-    let iterations_max=200;
-    let iterations=0
-
-    if (fonction(borneDebut)<fonction(borneFin)){
-        while (Math.abs(borneFin - borneDebut) > precision && iterations<iterations_max){
-            iterations = iterations+1;
-            var milieu = (borneDebut+borneFin)/2;
-            let dm_milieu=fonction(milieu);
-
-            if (cible>dm_milieu){
-                borneDebut= milieu;
-            }else if (cible<dm_milieu){
-                borneFin = milieu;
-            }else{
-                return milieu
-            };
-        };
-    }else{//pour le cas où la fonction est décroissante
-        
-        while (Math.abs(borneFin - borneDebut) > precision && iterations<iterations_max){
-            iterations = iterations+1;
-            var milieu = (borneDebut+borneFin)/2;
-            let dm_milieu=fonction(milieu);
-            
-            if (cible<dm_milieu){
-                borneDebut= milieu;
-            }else if (cible>dm_milieu){
-                borneFin = milieu;
-            }else{
-                return milieu
-            };
-        };
-        
-    };
-    return milieu;
-};
