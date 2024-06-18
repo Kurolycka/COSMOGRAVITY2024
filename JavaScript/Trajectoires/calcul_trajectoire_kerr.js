@@ -1414,19 +1414,7 @@ function creation_blocs(context){
 
 }
 
-function MAJGraphePotentiel(){
-	data1=[]
-	dr = 0.6*r_part /50;
-	for (r = 0.7*r_part; r < 1.3*r_part; r += dr) {									   
-		V = Vr_mob(r);
-		data1.push({date: r, close: V });
-	}
-	V = Vr_mob(r0);
-	data2.push({date: r0, close: V });
-	$('#grsvg_2').empty();   //<----------------------JPC
-	graphique_creation_pot();
-}
-
+// -------------------------------------{fonction choixTrajectoire}--------------------------------------------
 
 /**
  * Fonction qui permet de préparer le canvas de la simulation en fonction de si on choisit une trajectoire complète ou simple. 

@@ -2215,16 +2215,7 @@ function canvasAvantLancement(){
 
 }
 
-function MAJGraphePotentiel(data1,data2,compteur,mobile){
-	data1 = []
-	for (r = 0.7*mobile.r_part; r < 1.3*mobile.r_part; r += mobile.dr) {
-		V = Vr_mob(r,mobile.E,mobile.L)-1;
-		data1.push({date: r,close: V});
-	}
-	
-	graphique_creation_pot(0,data1,data2,compteur,mobile);
-
-}
+// -------------------------------------{fonction choixTrajectoire}--------------------------------------------
 
 /**
  * Fonction qui permet de préparer le canvas de la simulation en fonction de si on choisit une trajectoire complète ou simple. 
