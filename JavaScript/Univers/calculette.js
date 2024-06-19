@@ -61,9 +61,19 @@ function affichage_des_z(fonction_EouF){
     
 
     
-    //? -----------Calcul des temps----------------
-    let t1=calcul_ages(fonction_EouF,H0_parSecondes(H0),1e-30,1/(1+z1)); //calcul des temps en seconde grâce a la formule de théorie
-    let t2=calcul_ages(fonction_EouF,H0_parSecondes(H0),1e-30,1/(1+z2));
+    //? -----------Calcul des temps----------------$
+    let z1;
+    let z2;
+    if (z1<0){
+        t1=calcul_ages(fonction_EouF,H0_parSecondes(H0),z2,0,true); //calcul des temps en seconde grâce a la formule de théorie
+    }else{
+        t1=calcul_ages(fonction_EouF,H0_parSecondes(H0),1e-30,1/(1+z1)); //calcul des temps en seconde grâce a la formule de théorie
+    }
+    if (z2<0){
+        t1=calcul_ages(fonction_EouF,H0_parSecondes(H0),z2,0,true); //calcul des temps en seconde grâce a la formule de théorie
+    }else{
+        t1=calcul_ages(fonction_EouF,H0_parSecondes(H0),1e-30,1/(1+z2)); //calcul des temps en seconde grâce a la formule de théorie
+    }
     let delta_t=calcul_ages(fonction_EouF,H0_parSecondes(H0),1/(1+z1),1/(1+z2));
     document.getElementById('output_t1').value=arrondie_affichage(t1);
     document.getElementById('output_t1_annee').value=arrondie_affichage(seconde_vers_annee(t1));
@@ -203,10 +213,12 @@ function generer_graphique_distance(fonction_EouF){
     if (fonction_EouF.name==="fonction_E"){
         let Omega_l0 = Number(document.getElementById("Omégal0").value);
         text_omegal0_graph ='   \Ω<sub>Λ0</sub>:  '+Omega_l0;
+        w0w1="";
         equa_diff_2=equa_diff_2_LCDM;
     }else if (fonction_EouF.name==="fonction_F"){
         let Omega_DE0 = Number(document.getElementById('OmégaDE0').value);
         text_omegal0_graph ='   \Ω<sub>DE0</sub>:  '+Omega_DE0;
+        w0w1="  w<sub>0</sub>: "+document.getElementById("w0").value+"  w<sub>1</sub>: "+document.getElementById("w1").value;
         equa_diff_2=equa_diff_2_DE;
     };
 
@@ -247,11 +259,11 @@ function generer_graphique_distance(fonction_EouF){
     //affichage des omega0 sous le titre
     let annots = [{xref: 'paper',
 		yref: 'paper',
-		x: 0.725,
+		x: 0.95,
 		xanchor: 'right',
 		y: 1,
 		yanchor: 'bottom',
-		text:'T<sub>0</sub>: '+T0.toExponential(3)+'   H<sub>0</sub>:'+H0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+Omega_m0.toExponential(3)+text_omegal0_graph+'   \Ω<sub>r0</sub>: ' +Omega_r0+'  \Ω<sub>k0</sub>:   '+Omega_k0.toExponential(3),
+		text:'T<sub>0</sub>: '+T0.toExponential(3)+'   H<sub>0</sub>:'+H0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+Omega_m0.toExponential(3)+text_omegal0_graph+'   \Ω<sub>r0</sub>: ' +Omega_r0+'  \Ω<sub>k0</sub>:   '+Omega_k0.toExponential(3)+w0w1,
 		showarrow: false}];
 
     
@@ -354,7 +366,8 @@ function generer_graphique_Omega(fonction_EouF){
             return;
         };
         text_omegal0_graph ='   \Ω<sub>Λ0</sub>:  '+Omega_l(0); //texte et titre dans lequel omegalambda ou omegaDE apparait
-        titre_omegal='<b>&#x3A9;<sub>&#x39B;</sub><b>'
+        titre_omegal='<b>&#x3A9;<sub>&#x39B;</sub><b>';
+        w0w1="";
         // valeurs des ordonnées
         OrArr = [];    //Paramètre de densité de rayonement
         OmArr = [];    //Paramètre de densite de matière
@@ -380,7 +393,8 @@ function generer_graphique_Omega(fonction_EouF){
             return;
         };
         text_omegal0_graph ='   \Ω<sub>DE0</sub>:  '+Omega_DE(0); //texte et titre dans lequel omegalambda ou omegaDE apparait
-        titre_omegal='<b>&#x3A9;<sub>DE</sub><b>'
+        titre_omegal='<b>&#x3A9;<sub>DE</sub><b>';
+        w0w1="  w<sub>0</sub>: "+document.getElementById("w0").value+"  w<sub>1</sub>: "+document.getElementById("w1").value;
     
         // valeurs des ordonnées
         OrArr = [];    //Paramètre de densité de rayonement
@@ -409,11 +423,11 @@ function generer_graphique_Omega(fonction_EouF){
     //affichage des omega0 sous le titre
     let annots = [{xref: 'paper',
 		yref: 'paper',
-		x: 0.725,
+		x: 0.95,
 		xanchor: 'right',
 		y: 1,
 		yanchor: 'bottom',
-		text:'T<sub>0</sub>: '+T0.toExponential(3)+'   H<sub>0</sub>:'+H0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+Omega_m(0).toExponential(3)+text_omegal0_graph+'   \Ω<sub>r0</sub>: ' +Omega_r(0).toExponential(3)+'  \Ω<sub>k0</sub>:   '+Omega_k(0).toExponential(3),
+		text:'T<sub>0</sub>: '+T0.toExponential(3)+'   H<sub>0</sub>:'+H0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+Omega_m(0).toExponential(3)+text_omegal0_graph+'   \Ω<sub>r0</sub>: ' +Omega_r(0).toExponential(3)+'  \Ω<sub>k0</sub>:   '+Omega_k(0).toExponential(3)+w0w1,
 		showarrow: false}];
 
     
@@ -502,8 +516,10 @@ function generer_graphique_TempsDecalage(fonction_EouF){
     if (fonction_EouF.name==="fonction_E"){
         text_omegal0_graph ='   \Ω<sub>Λ0</sub>:  '+Omega_l(0);
         equa_diff_2=equa_diff_2_LCDM;
+        w0w1="";
     }else if (fonction_EouF.name==="fonction_F"){
         text_omegal0_graph ='   \Ω<sub>DE0</sub>:  '+Omega_DE(0);
+        w0w1="  w<sub>0</sub>: "+document.getElementById("w0").value+"  w<sub>1</sub>: "+document.getElementById("w1").value;
         equa_diff_2=equa_diff_2_DE;
     };
 
@@ -525,7 +541,12 @@ function generer_graphique_TempsDecalage(fonction_EouF){
 
     //calculs des longueurs
     abscisse.forEach(i => {
-        let zdet = calcul_ages(fonction_EouF,H0_parAnnees(H0),1e-15,1/(1+i));
+        let zdet
+        if (i<0){
+            zdet = calcul_ages(fonction_EouF,H0_parAnnees(H0),i,0,true);
+        }else{
+            zdet = calcul_ages(fonction_EouF,H0_parAnnees(H0),1e-15,1/(1+i));
+        }
 
         zArr.push(zdet);
     });
@@ -533,11 +554,11 @@ function generer_graphique_TempsDecalage(fonction_EouF){
     //affichage des omega0 sous le titre
     let annots = [{xref: 'paper',
 		yref: 'paper',
-		x: 0.725,
+		x: .95,
 		xanchor: 'right',
 		y: 1,
 		yanchor: 'bottom',
-		text:'T<sub>0</sub>: '+T0.toExponential(3)+'   H<sub>0</sub>:'+H0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+Omega_m(0).toExponential(3)+text_omegal0_graph+'   \Ω<sub>r0</sub>: ' +Omega_r(0)+'  \Ω<sub>k0</sub>:   '+Omega_k(0).toExponential(3),
+		text:'T<sub>0</sub>: '+T0.toExponential(3)+'   H<sub>0</sub>:'+H0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+Omega_m(0).toExponential(3)+text_omegal0_graph+'   \Ω<sub>r0</sub>: ' +Omega_r(0)+'  \Ω<sub>k0</sub>:   '+Omega_k(0).toExponential(3)+w0w1,
 		showarrow: false}];
 
     
