@@ -16,17 +16,17 @@ function toggleEntreeSortie (IDpanel) {
             '"Nav"' +
             '"Graphe"';
     } else if (entreeCachee) {
-        grillePrincipale.style.gridTemplateColumns = '3fr 1fr';
+        grillePrincipale.style.gridTemplateColumns = '4fr 1fr';
         grillePrincipale.style.gridTemplateAreas = '' +
             '"Nav Nav"' +
             '"Graphe Sortie"';
     } else if (sortieCachee) {
-        grillePrincipale.style.gridTemplateColumns = '1fr 3fr';
+        grillePrincipale.style.gridTemplateColumns = '1fr 4fr';
         grillePrincipale.style.gridTemplateAreas = '' +
             '"Nav Nav"' +
             '"Entree Graphe"';
     } else {
-        grillePrincipale.style.gridTemplateColumns = '1fr 2fr 1fr';
+        grillePrincipale.style.gridTemplateColumns = '1fr 3fr 1fr';
         grillePrincipale.style.gridTemplateAreas = '' +
             '"Nav Nav Nav"' +
             '"Entree Graphe Sortie"';

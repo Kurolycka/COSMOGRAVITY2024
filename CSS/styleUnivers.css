@@ -42,7 +42,7 @@ body {
 
 .grillePrincipale {
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-columns: 1fr 3fr 1fr;
     grid-template-rows: 38px 1fr;
     grid-template-areas:
             "Nav Nav Nav"
