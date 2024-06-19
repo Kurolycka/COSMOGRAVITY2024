@@ -129,7 +129,108 @@
             <button class="grosBoutton">Actualiser</button>
         </div>
 
-        <div class="boiteGenerateurGraphique" style="flex: 1";>
+
+        <div class="boiteCalculAnnexe" style="flex: 1;">
+            <div class="CalculAnnexe" id="Calcul_Diametre" >
+                <h4 id="diametre_apparent_titre" class="infobullable" style="margin-bottom: 2px;margin-top: 3px;margin-inline: auto;"></h4>
+                <div>
+                    <input id="select_z1_diametre" type="radio" name="choix_z1_z2" checked>
+                    <label for="select_z1_diametre">z1</label>
+                    <input id="select_z2_diametre" type="radio" name="choix_z1_z2">
+                    <label for="select_z2_diametre">z2</label>
+                </div>
+                <div style="align-items: left;">
+                    <div class="paramètre">
+                        <label id="label_d_m" class="infobullable" for="Diametre_m">D = </label>
+                        <input id="Diametre_m" type="number" value="0" step="1e20" min="0" onchange="afficher_seconde_valeur('Diametre_m')">
+                        <span>m</span>
+                    </div>
+                    <div class="paramètre">
+                        <label id="label_d_kpc" class="infobullable" for="Diametre_kpc">D = </label>
+                        <input id="Diametre_kpc" type="number" value="0" step="1" min="0" onchange="afficher_seconde_valeur('Diametre_kpc')">
+                        <span>kpc</span>
+                    </div>
+                </div>
+                <div style="display: flex;flex-direction: row; gap: 2px;margin-inline: 15%;">
+                    <button class="petitBoutton" onclick="calcul_theta_vers_diametre()">&uparrow;</button>
+                    <button class="petitBoutton" onclick="calcul_diamtre_vers_theta()">&DownArrow;</button>
+                </div>
+                <div class="paramètre">
+                    <label id="label_theta" class="infobullable" for="theta">&Theta; = </label>
+                    <input id="theta" type="number" value="0" step="0.1" min="0" max="1000">
+                    <span style="font-size: 16px;">ArcSecond</span>
+                </div>
+            </div>
+
+            <div class="CalculAnnexe" id="Calcul_inverse">
+                <h4 id="calcul_inverse_titre" style="margin-bottom: 2px;margin-top: 3px;margin: auto;"></h4>
+                <div class="paramètre">
+                    <label id="label_dminverse" class="infobullable" for="dm_inverse">dm = </label>
+                    <input id="dm_inverse" type="number" value="0" step="0.1" min="0">
+                    <span>(m)</span>
+                    <label>z<sub>dm</sub> = </label>
+                    <output id="output_z_dm"></output>
+                    
+                </div>
+                <div class="paramètre">
+                    <label id="label_teminverse" class="infobullable" for="tem_inverse">t<sub>em</sub> = </label>
+                    <input id="tem_inverse" type="number" value="0" step="0.1" min="0">
+                    <span>(</span><span class="unite_annee"></span><span>)</span>
+                    <label>z<sub>tem</sub> = </label>
+                    <output id="output_z_tem"></output>
+                </div>
+                <div class="paramètre">
+                    <label id="label_trecinverse" class="infobullable" for="trec_inverse">t<sub>rec</sub> = </label>
+                    <input id="trec_inverse" type="number" value="0" step="0.1" min="0">
+                    <span>(</span><span class="unite_annee"></span><span>)</span>
+                    <label>z<sub>trec</sub> = </label>
+                    <output id="output_z_trec"></output>
+                </div>
+                <div style="display: flex; gap: 8%;">
+                    <button id="bouton_calculer_inverse" class="petitBoutton" onclick="affichage_t_inverse(fonction_E);calcul_dm_inverse(fonction_E)"></button>
+                    <div style="display: flex; flex-direction: row;">
+                        <label id="label_zneg" class="infobullable" for="z_negatif_dm_inverse">z&lt;0</label>
+                        <input type="checkbox" id="z_negatif_dm_inverse">
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="CalculAnnexe" id="Calcul_Horizon" style="flex: 1;">
+                <h4 id="horizons_titre" style="margin-bottom: 2px;margin-top: 3px; margin-inline: auto;"></h4>
+                <div class="paramètre">
+                    <label id="label_t_hori" class="infobullable" for="t_pour_calcul_horizon">t = </label>
+                    <input id="t_pour_calcul_horizon" type="number" value="0" step="0.1" min="0" max="1000">
+                    <span>(s)</span>
+                </div>
+                <div>
+                    <label id="label_deven" class="infobullable" for="resultat_dm_evenement_t">d<sub>e</sub> = </label>
+                    <output id="resultat_dm_evenement_m"></output>
+                    m =
+                    <output id="resultat_dm_evenement_pc"></output>
+                    pc =
+                    <output id="resultat_dm_evenement_al"></output>
+                    <span class="unite_al"></span>
+                </div>
+                <div>
+                    <label id="label_dpart" class="infobullable" for="resultat_dm_particule_t">d<sub>p</sub> = </label>
+                    <output id="resultat_dm_particule_m"></output>
+                    m =
+                    <output id="resultat_dm_particule_pc"></output>
+                    pc =
+                    <output id="resultat_dm_particule_al"></output>
+                    <span class="unite_al"></span>
+                </div>
+                <button id="bouton_calculer_horizon" class="petitBoutton" onclick="calcul_horizons_annexe(fonction_E)">Calculer</button>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!--Fenêtre graphe-->
+    <div id="PanneauCentral">
+        <div class="boiteGenerateurGraphique" style="flex: 1;">
             <h3 id="generateur_graphique"></h3>
             <div class="parametreGraphique">
                 <div style="display: flex;gap: 10px;">
@@ -174,6 +275,35 @@
                             <label id="label_check_log_ord" class="infobullable" for="check_log_ord"></label>
                         </div>
                     </fieldset>
+                    <fieldset>
+                        <div>
+                            Affichage
+                        </div>        
+                        <div>
+                            <input type="checkbox" id="check_distance_z" class="check_graph" onchange="document.getElementById('graphique_d_z').classList.toggle('cache')">
+                            <label for="check_distance_z">distance(z)</label>
+                        </div>                
+                        <div>
+                            <input type="checkbox" id="check_distance_t" class="check_graph" onchange="document.getElementById('graphique_d_t').classList.toggle('cache')">
+                            <label for="check_distance_t">distance(t)</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="check_omega_z" class="check_graph" onchange="document.getElementById('graphique_omega_z').classList.toggle('cache')">
+                            <label for="check_omega_z">omega(z)</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="check_omega_t" class="check_graph" onchange="document.getElementById('graphique_omega_t').classList.toggle('cache')">
+                            <label for="check_omega_t">omega(t)</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="check_z_t" class="check_graph" onchange="document.getElementById('graphique_z_t').classList.toggle('cache')">
+                            <label for="check_z_t">z(t)</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="check_t_z" class="check_graph" onchange="document.getElementById('graphique_t_z').classList.toggle('cache')">
+                            <label for="check_t_z">t(z)</label>
+                        </div>
+                    </fieldset>
                 </div>
                 <br>
                 <div style="display: flex; flex-direction: row;gap: 10px;">
@@ -184,96 +314,6 @@
                 <div>
                     <span id="temps_calcul_graph" style="color:blue"></span>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!--Fenêtre graphe-->
-    <div id="PanneauCentral">
-        <div class="boiteCalculAnnexe">
-            <div class="CalculAnnexe" id="Calcul_Diametre" style="align-items: center;">
-                <h4 id="diametre_apparent_titre" class="infobullable" style="margin-bottom: 2px;margin-top: 3px;"></h4>
-                <div>
-                    <input id="select_z1_diametre" type="radio" name="choix_z1_z2" checked>
-                    <label for="select_z1_diametre">z1</label>
-                    <input id="select_z2_diametre" type="radio" name="choix_z1_z2">
-                    <label for="select_z2_diametre">z2</label>
-                </div>
-                <div style="align-items: left;">
-                    <div class="paramètre">
-                        <label id="label_d_m" class="infobullable" for="Diametre_m">D = </label>
-                        <input id="Diametre_m" type="number" value="0" step="1e20" min="0" onchange="afficher_seconde_valeur('Diametre_m')">
-                        <span>m</span>
-                    </div>
-                    <div class="paramètre">
-                        <label id="label_d_kpc" class="infobullable" for="Diametre_kpc">D = </label>
-                        <input id="Diametre_kpc" type="number" value="0" step="1" min="0" onchange="afficher_seconde_valeur('Diametre_kpc')">
-                        <span>kpc</span>
-                    </div>
-                </div>
-                <div style="display: flex;flex-direction: row; gap: 2px;">
-                    <button class="petitBoutton" onclick="calcul_theta_vers_diametre()">&uparrow;</button>
-                    <button class="petitBoutton" onclick="calcul_diamtre_vers_theta()">&DownArrow;</button>
-                </div>
-                <div class="paramètre">
-                    <label id="label_theta" class="infobullable" for="theta">&Theta; = </label>
-                    <input id="theta" type="number" value="0" step="0.1" min="0" max="1000">
-                    <span style="font-size: 16px;">ArcSecond</span>
-                </div>
-            </div>
-
-            <div class="CalculAnnexe" id="Calcul_inverse">
-                <h4 id="calcul_inverse_titre" style="margin-bottom: 2px;margin-top: 3px;"></h4>
-                <div class="paramètre">
-                    <label id="label_dminverse" class="infobullable" for="dm_inverse">dm = </label>
-                    <input id="dm_inverse" type="number" value="0" step="0.1" min="0">
-                    <span>(m)</span>
-                    <label>z<sub>dm</sub> = </label>
-                    <output id="output_z_dm"></output>
-                    
-                </div>
-                <div class="paramètre">
-                    <label id="label_teminverse" class="infobullable" for="tem_inverse">t<sub>em</sub> = </label>
-                    <input id="tem_inverse" type="number" value="0" step="0.1" min="0">
-                    <span>(</span><span class="unite_annee"></span><span>)</span>
-                    <label>z<sub>tem</sub> = </label>
-                    <output id="output_z_tem"></output>
-                </div>
-                <div class="paramètre">
-                    <label id="label_trecinverse" class="infobullable" for="trec_inverse">t<sub>rec</sub> = </label>
-                    <input id="trec_inverse" type="number" value="0" step="0.1" min="0">
-                    <span>(</span><span class="unite_annee"></span><span>)</span>
-                    <label>z<sub>trec</sub> = </label>
-                    <output id="output_z_trec"></output>
-                </div>
-                <div style="display: flex; gap: 8%;">
-                    <button id="bouton_calculer_inverse" class="petitBoutton" onclick="affichage_t_inverse(fonction_E);calcul_dm_inverse(fonction_E)"></button>
-                    <div>
-                        <label id="label_zneg" class="infobullable" for="z_negatif_dm_inverse">z&lt;0</label>
-                        <input type="checkbox" id="z_negatif_dm_inverse">
-                    </div>
-                </div>
-                
-            </div>
-
-            <div class="CalculAnnexe" id="Calcul_Horizon">
-                <h4 id="horizons_titre" style="margin-bottom: 2px;margin-top: 3px;"></h4>
-                <div class="paramètre">
-                    <label id="label_t_hori" class="infobullable" for="t_pour_calcul_horizon">t = </label>
-                    <input id="t_pour_calcul_horizon" type="number" value="0" step="0.1" min="0" max="1000">
-                    <span>(s)</span>
-                </div>
-                <div>
-                    <label id="label_deven" class="infobullable" for="resultat_dm_evenement_t">d<sub>e</sub> = </label>
-                    <output id="resultat_dm_evenement_t"></output>
-                    <span>G</span><span class="unite_al"></span>
-                </div>
-                <div>
-                    <label id="label_dpart" class="infobullable" for="resultat_dm_particule_t">d<sub>p</sub> = </label>
-                    <output id="resultat_dm_particule_t"></output>
-                    <span>G</span><span class="unite_al"></span>
-                </div>
-                <button id="bouton_calculer_horizon" class="petitBoutton" onclick="calcul_horizons_annexe(fonction_E)">Calculer</button>
             </div>
         </div>
         <div id="panneauGraphe" class="Graphe" style="position: relative;background-color: rgb(255,255,255);">

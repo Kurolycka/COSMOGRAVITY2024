@@ -272,10 +272,12 @@ function generer_graphique_distance(fonction_EouF){
         xaxis_title=xaxis_temps;
         graphdivid="graphique_d_t"
         abscisse=abscisse.map((x) => calcul_ages(fonction_EouF,H0_parAnnees(H0),1e-15,1/(1+x)));
+        document.getElementById('check_distance_t').checked=true;
     }else{
         plot_title = "d<sub>i</sub>(z)";
         xaxis_title = "z";
         graphdivid="graphique_d_z"
+        document.getElementById('check_distance_z').checked=true;
     };
 
     if (log_abs){
@@ -436,10 +438,12 @@ function generer_graphique_Omega(fonction_EouF){
         xaxis_title=xaxis_temps;
         graphdivid="graphique_omega_t"
         abscisse=abscisse.map((x) => calcul_ages(fonction_EouF,H0_parAnnees(H0),1e-15,1/(1+x)));
+        document.getElementById('check_omega_t').checked=true;
     }else{
         plot_title = "&#x3A9;<sub>i</sub>(z)";
         xaxis_title = "z";
         graphdivid="graphique_omega_z"
+        document.getElementById('check_omega_z').checked=true;
     };
 
     if (log_abs){
@@ -570,11 +574,14 @@ function generer_graphique_TempsDecalage(fonction_EouF){
         let abscisse_temp=zArr; //inverser les deux axes
         zArr=abscisse;
         abscisse=abscisse_temp;
+        document.getElementById('check_t_z').checked=true;
     }else{
         yaxis_TempsDecalage=yaxis_temps;
         plot_title = "t(z)";
         xaxis_title = "z";
         graphdivid="graphique_t_z"
+        
+        document.getElementById('check_z_t').checked=true;
     };
 
     if (log_abs){
@@ -684,11 +691,17 @@ function calcul_horizons_annexe(fonction_EouF){
 	}else{
 		z_pour_horizon=calcul_t_inverse(t_pour_horizon,fonction_EouF,H0_parSecondes(H0));
 		let dm_horizon_particule_m=calcul_horizon_particule(fonction_EouF,z_pour_horizon);
-		let dm_horizon_particule_Ga=m_vers_AL(dm_horizon_particule_m)/1e9;
+		let dm_horizon_particule_pc=m_vers_pc(dm_horizon_particule_m);
+		let dm_horizon_particule_al=m_vers_AL(dm_horizon_particule_m);
 		let dm_horizon_evenement_m=calcul_horizon_evenements(fonction_EouF,z_pour_horizon);
-		let dm_horizon_evenement_Ga=m_vers_AL(dm_horizon_evenement_m)/1e9;
-		document.getElementById("resultat_dm_particule_t").value=arrondie_affichage(dm_horizon_particule_Ga);
-		document.getElementById("resultat_dm_evenement_t").value=arrondie_affichage(dm_horizon_evenement_Ga);
+		let dm_horizon_evenement_pc=m_vers_pc(dm_horizon_evenement_m);
+		let dm_horizon_evenement_al=m_vers_AL(dm_horizon_evenement_m);
+		document.getElementById("resultat_dm_particule_m").value=arrondie_affichage(dm_horizon_particule_m);
+		document.getElementById("resultat_dm_particule_pc").value=arrondie_affichage(dm_horizon_particule_pc);
+		document.getElementById("resultat_dm_particule_al").value=arrondie_affichage(dm_horizon_particule_al);
+		document.getElementById("resultat_dm_evenement_m").value=arrondie_affichage(dm_horizon_evenement_m);
+		document.getElementById("resultat_dm_evenement_pc").value=arrondie_affichage(dm_horizon_evenement_pc);
+		document.getElementById("resultat_dm_evenement_al").value=arrondie_affichage(dm_horizon_evenement_al);
         };
 };
 
