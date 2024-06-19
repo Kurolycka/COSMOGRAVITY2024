@@ -472,6 +472,7 @@ function debut_fin_univers(equa_diff) {
         set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff)
         nombre_point = nombre_point + 1
     }
+    console.log(set_solution)
 
     // Si le dernier set de solution contient des valeurs non définies on utilise celui du pas précédent
     if ( (isNaN(set_solution[1]) && isNaN(set_solution[2])) ) {
@@ -479,10 +480,11 @@ function debut_fin_univers(equa_diff) {
     }
 
     // On récupère le maximum entre la valeur du facteur d'échelle et la dérivée du facteur d'échelle
-    let max = Math.max(Math.abs(set_solution[1]), Math.abs(set_solution[2]))
+    let max = Math.max(Math.abs(set_solution[1]))
 
     if ( option === "optionLDE" || ( max <= limite && set_solution[1] > 1 ) ) {
         naissance_univers = texte.univers.pasDebut
+        age_debut = 0
     }
     else {
         age_debut = set_solution[0] / H0_parGAnnees(H0)
@@ -519,8 +521,8 @@ function debut_fin_univers(equa_diff) {
         set_solution = save_set_solution
     }
 
-    // On récupère le maximum entre la valeur du facteur d'échelle et la dérivée du facteur d'échelle
-    max = Math.max(Math.abs(set_solution[1]), Math.abs(set_solution[2]))
+    // On récupère le maximum entre la valeur du facteur d'échelle
+    max = Math.max(Math.abs(set_solution[1]))
 
     if ( option === "optionLDE" || ( max <= limite && set_solution[1] > 1 ) ) {
         mort_univers = texte.univers.pasMort
@@ -551,6 +553,8 @@ function debut_fin_univers(equa_diff) {
 function tauEnTemps(listeTaus, t_debut) {
     let H0 = Number(document.getElementById("H0").value);
     let H0parGAnnee = H0_parGAnnees(H0);
+
+    console.log(t_debut)
 
     for (let index = 0; index < listeTaus.length; index = index + 1) {
         listeTaus[index] = listeTaus[index] / H0parGAnnee
@@ -584,8 +588,8 @@ function calcul_ages(fonction, H0, a1, a2) {
 
 //Partie Remy
 /** renvoie la fonction Sk pour calculer les distances cosmologiques en fontion de la courbure de l'espace
- * (Univers,simple,DarkEnergy et monofluide)
- * @param {*} x Paramètre d'entré
+ * (Univers, simple, DarkEnergy et monofluide)
+ * @param {*} x Paramètre d'entrée
  * @param {*} OmegaK paramètre de densité de courbure
  * @returns
  */
@@ -672,8 +676,9 @@ function calcul_t_inverse(temps,fonction,H0){
  * @param solution {[number[], number[]]} Liste contenant la liste des temps et les valeurs du facteur d'échelle
  * @param t_debut {number} temps écoulé depuis le début de l'univers
  * @param t_fin {number} temps restant avant la fin de l'univers
+ * @param t_0 {number} age actuel de l'univers
  */
-function graphique_facteur_echelle(solution, t_debut, t_fin) {
+function graphique_facteur_echelle(solution, t_debut, t_fin, t_0) {
     let texte = o_recupereJson()
     let a_min = Number(document.getElementById("a_min").value)
     let a_max = Number(document.getElementById("a_max").value)
@@ -691,7 +696,8 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
     let temps_fin = abscisse[abscisse.length - 1]
     let facteur_fin = ordonnee[ordonnee.length - 1]
 
-    if (temps_debut !== 0 && H0 >0) {
+
+    if (t_0 !== 0 && H0 > 0) {
         for (let index = 0; index < abscisse.length; index = index + 1) {
             abscisse[index] = abscisse[index] - temps_debut
         }

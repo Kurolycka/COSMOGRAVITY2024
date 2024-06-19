@@ -135,10 +135,11 @@ function affichage_site_DE() {
     let sorties = calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_1)
     let donnee = sorties[0]
 
+    let age_univers = sorties[1]
     let debutEtFin = sorties[2]
 
     document.getElementById("début").innerHTML = debutEtFin[0]
     document.getElementById("fin").innerHTML = debutEtFin[1]
 
-    graphique_facteur_echelle(donnee, debutEtFin[2], debutEtFin[3])
+    graphique_facteur_echelle(donnee, debutEtFin[2], debutEtFin[3], age_univers)
 }
