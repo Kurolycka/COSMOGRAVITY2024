@@ -138,7 +138,7 @@
       									<label  title= ""  id="massetxt" for="M">M (kg) =</label>
 		   
 
-      										<input id="M" value="8e36" align="left" maxlength="10" type="text" size="10" onchange="verifnbr();initialisationGenerale(lenbdefusees)">
+      										<input id="M" value="8e36" align="left" maxlength="10" type="text" size="10" onchange="verifnbr();initialisationGenerale(lenbdefusees)" oninput="initialisationGenerale(lenbdefusees)">
       						</span>		
 		
 									
@@ -167,8 +167,8 @@
       <button id="r1" type="button" name="traj" class="myButton" value="complete" onclick="document.getElementById('traject_type').value = this.value;pressionBouttonTrajectoireComplete()"></button>
       <button id="r2" type="button" name="traj2" class="myButton2" value="simple" onclick="document.getElementById('traject_type').value = this.value;pressionBouttonTrajectoireSimple()"></button>
 
-      <button id="r3" type="button" name="observateur" class="myButton" value="observateur" onclick="document.getElementById('traject_type2').value = this.value;pressionBouttonObservateur();notationvitesseree1()"></button>
-      <button id="r4" type="button" name="mobile" class="myButton2" value="mobile" onclick="document.getElementById('traject_type2').value = this.value;pressionBouttonMobile();notationvitesseree1()"></button> 
+      <button id="r3" type="button" name="observateur" class="myButton" value="observateur" onclick="document.getElementById('traject_type2').value = this.value;pressionBouttonObservateur(false);notationvitesseree1()"></button>
+      <button id="r4" type="button" name="mobile" class="myButton2" value="mobile" onclick="document.getElementById('traject_type2').value = this.value;pressionBouttonMobile(false);notationvitesseree1()"></button> 
 
       <span id="sp_reb">
                 </span>
@@ -190,7 +190,7 @@
             </span>
 
         	<span id="enregistrer">
-                  <button id="boutton_enregis" type="button" class="myButton" onclick="enregistrer();"></button>
+                  <button id="boutton_enregis" type="button" class="myButton" onclick="enregistrer_trajectoires();"></button>
               </span>
 
         	<span id="recup">
@@ -334,7 +334,9 @@
         document.getElementById("r01").value=r01;
         document.getElementById("phi01").value=phi01;
         document.getElementById("teta1").value=teta1;
-
+        
+		    initialisationGenerale(1);//on actualise les valeurs de simulation
+        
         inputNbfusees.style.display = "none"; // Masquer le input et le label de nbfusees si button spationaute est cliqué 
         labelNbfusees.style.display = "none";
         });

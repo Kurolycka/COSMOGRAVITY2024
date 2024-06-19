@@ -64,7 +64,6 @@ var bouttons = bouttons || (function(){
 				} 
 				else { //Si ce n'est pas le cas :
 					mobile.dtau += mobile.dtau; //Je double dtau. 
-					clicks += 1 ; //Je comptabilise cette incrémentation dans clicks. 
 				}
 			}	
 			else{ //Si je souhaite décélérer :
@@ -74,7 +73,6 @@ var bouttons = bouttons || (function(){
 				} 
 				else { //Si ce n'est pas le cas :
 					mobile.dtau /= 2; //Je divise dtau par 2.
-					clicks-=1; //Je comptabilise cette décrémentation dans clicks.
 				}
 			}
 			return mobile;

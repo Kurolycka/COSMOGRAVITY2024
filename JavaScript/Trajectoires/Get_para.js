@@ -248,11 +248,11 @@ function load_generalise(SCH){
 
 			//Je fais apparaître la case pour choisir le nombre de mobile si je suis en mode observateur sinon non :
 			if (document.getElementById("traject_type2").value == "observateur") {
-				pressionBouttonObservateur(); //Je me mets en mode observateur si c'est ce qui était stocké.
+				pressionBouttonObservateur(false); //Je me mets en mode observateur si c'est ce qui était stocké.
 				inputNbfusees.style.display = "inline";
 				labelNbfusees.style.display = "inline"; 
 			} else if (document.getElementById("traject_type2").value == "mobile") {
-				pressionBouttonMobile(); //Je me mets en mode spationaute/photon si c'est ce qui était stocké.
+				pressionBouttonMobile(false); //Je me mets en mode spationaute/photon si c'est ce qui était stocké.
 				inputNbfusees.style.display = "none"; 
 				labelNbfusees.style.display = "none"; 
 			}
@@ -288,9 +288,9 @@ function load_generalise(SCH){
 
 			//Je récupère et remets si j'étais en mode observateur ou spationaute/photon :
 			if (document.getElementById("traject_type2").value == "observateur") {
-				pressionBouttonObservateur2();
+				pressionBouttonObservateur(true);
 			} else if (document.getElementById("traject_type2").value == "mobile") {
-				pressionBouttonMobile2();
+				pressionBouttonMobile(true);
 				if (rh_moins_check=="true"){ //Dans le cas où la case dépasser rh- était cochée :
 					document.getElementById("depasser").checked = true; //Alors je la coche. 
 				}

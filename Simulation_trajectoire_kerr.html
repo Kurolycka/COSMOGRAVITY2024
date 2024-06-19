@@ -134,15 +134,15 @@
         <div id="champs_a_remplir">
           	<span id="masse">
 				<label id= "massetxt" for="M">M (kg) =</label>
-				<input id="M" value="2e39" align="left" maxlength="10" type="text" size="10" onchange="verifnbr();initialisation()">
+				<input id="M" value="2e39" align="left" maxlength="10" type="text" size="10" onchange="verifnbr();initialisation()" oninput="initialisation()">
 			</span>
 			<span id="rayon">
 				<label id="ctreastre" title="" for="r0">r<sub>0</sub> (m) =</label>
-				<input id="r0" value="5e12" align="left" maxlength="10" type="text" size="10" onchange="verifnbr();initialisation()" >
+				<input id="r0" value="5e12" align="left" maxlength="10" type="text" size="10" onchange="verifnbr();initialisation()" oninput="initialisation()">
 			</span>
           	<span id="momentcinetique">
 				<label  id="moment"for="J">J (kg.m<sup>2</sup>.s<sup>-1</sup>)=</label>
-				<input id="J" value="8e59" align="left" maxlength="15" type="text" size="15" onchange="verifnbr();initialisation()">
+				<input id="J" value="8e59" align="left" maxlength="15" type="text" size="15" onchange="verifnbr();initialisation()" oninput="initialisation()">
           	</span>
 			  
 			<span id="vitesse0">
@@ -173,8 +173,8 @@
         <div id="radio_button">
 			<button id="r1" type="button" name="traj" class="myButton" value="complete" onclick="document.getElementById('traject_type').value = this.value;pressionBouttonTrajectoireComplete()"></button>
 			<button id="r2" type="button" name="traj2" class="myButton2" value="simple" onclick="document.getElementById('traject_type').value = this.value;pressionBouttonTrajectoireSimple()"></button>
-			<button id="r3" type="button" name="observateur" class="myButton" value="observateur" onclick="document.getElementById('traject_type2').value = this.value;pressionBouttonObservateur2();notationvitesseree2kerr();"></button>
-			<button id="r4" type="button" name="mobile" class="myButton2" value="mobile" onclick="document.getElementById('traject_type2').value = this.value;pressionBouttonMobile2();notationvitesseree2kerr();"></button>					
+			<button id="r3" type="button" name="observateur" class="myButton" value="observateur" onclick="document.getElementById('traject_type2').value = this.value;pressionBouttonObservateur(true);notationvitesseree2kerr();"></button>
+			<button id="r4" type="button" name="mobile" class="myButton2" value="mobile" onclick="document.getElementById('traject_type2').value = this.value;pressionBouttonMobile(true);notationvitesseree2kerr();"></button>					
 			<div style="display: inline-block;">
 				<span id="case_depasser"style="display:none">
 					<label id="label_depasser" for="vr"></label>
@@ -196,7 +196,7 @@
 			</span>
 
 			<span id="enregistrer">
-				<button id="boutton_enregis" type="button" class="myButton" onclick="enregistrer();"></button>
+				<button id="boutton_enregis" type="button" class="myButton" onclick="enregistrer_trajectoires();"></button>
 			</span>
 
 			<span id="recup">
