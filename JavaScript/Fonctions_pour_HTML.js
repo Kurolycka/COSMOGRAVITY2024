@@ -8,17 +8,28 @@ function toggleEntreeSortie (IDpanel) {
 
     const grillePrincipale = document.querySelector(".grillePrincipale")
     let entreeCachee = document.getElementById("panneauEntree").classList.contains("cache")
+    let sortieCachee = document.getElementById("panneauSortie").classList.contains("cache")
 
-    if (entreeCachee) {
+    if (entreeCachee && sortieCachee) {
         grillePrincipale.style.gridTemplateColumns = '1fr';
         grillePrincipale.style.gridTemplateAreas = '' +
             '"Nav"' +
             '"Graphe"';
-    } else {
+    } else if (entreeCachee) {
+        grillePrincipale.style.gridTemplateColumns = '4fr 1fr';
+        grillePrincipale.style.gridTemplateAreas = '' +
+            '"Nav Nav"' +
+            '"Graphe Sortie"';
+    } else if (sortieCachee) {
         grillePrincipale.style.gridTemplateColumns = '1fr 4fr';
         grillePrincipale.style.gridTemplateAreas = '' +
             '"Nav Nav"' +
             '"Entree Graphe"';
+    } else {
+        grillePrincipale.style.gridTemplateColumns = '1fr 3fr 1fr';
+        grillePrincipale.style.gridTemplateAreas = '' +
+            '"Nav Nav Nav"' +
+            '"Entree Graphe Sortie"';
     }
 
     if (IDpanel === "panneauEntree") {

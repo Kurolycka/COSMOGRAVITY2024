@@ -49,7 +49,6 @@
 
 			"infoOmégaK0": "Paramètre de densité de courbure actuel. Vous pouvez le mettre à 0 ce qui correspond à un univers plat",
 			"label_Omégak0": " Univers plat ? <br /> (&Omega;<sub>k<sub>0</sub></sub> = 0)",
-			"interactif": "Graphique intéracif, cliquez!",
 
 			"Tracé": "<h2>Tracé</h2>",
 				"infoAmin": "Le tracé n'ira pas en dessous de cette valeur. Ne peut pas être supérieur à 1 si l'univers n'as pas de début.",
