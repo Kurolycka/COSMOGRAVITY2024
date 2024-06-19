@@ -8,7 +8,6 @@ le facteur d'échelle dans le cas du modèle DE.
  * @param equa_diff_1 {function} Fonction qui décrit la première dérivée du facteur d'échelle en fonction de tau
  * @param equa_diff_2 {function} Fonction qui décrit la deuxième dérivée du facteur d'échelle en fonction de tau
  * @param fonction_simplifiant_1 Fonction utilisé dans l'expression de F et des équations différentielles
- * @param fonction_simplifiant_2 Fonction utilisée dans le calcul des âges.
  * @return Liste des abscisses ou la fonction a été calculée et liste des valeurs de la fonction.
  */
 function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifiant_1) {

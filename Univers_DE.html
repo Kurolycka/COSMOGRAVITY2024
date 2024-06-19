@@ -155,57 +155,10 @@
                 <span></span>
             </div>
         </div>
-    </div>
 
-    <!--Fenêtre graphe-->
-    <div id="panneauGraphe" class="Graphe" style="position: relative;">
-        <div class="boiteGraphe">
-            <div id="headGraphiqueDE"></div>
-
-            <button style="background-color: #BCA7DCFF; position: absolute; top: 50px; right: 50px; cursor: pointer;" class="petitBoutton" onclick=avertissement()>
-                <img id="panneauAvertissement"
-                     style="width: 25px; height: 25px"
-                     src="./Images/panneau_avertissement.png"
-                     alt="avertissement">
-            </button>
-
-            <div class="avertissement" id="avertissementUnivers"></div>
-
-            <div id="graphique_DE"></div>
-
-            <div style="display: flex; gap: 10px">
-                <div style="justify-self: left">
-                    <h3 id="entreeEnregistrer" style="text-align: center"></h3>
-                    <div id="Om_enregistrer"></div>
-                    <div id="ODE_enregistrer"></div>
-                    <div id="Or_enregistrer"></div>
-                    <div id="Ok_enregistrer"></div>
-                </div>
-                <div style="justify-self: right">
-                    <h3 id="sortieEnregistrer" style="text-align: center"></h3>
-                    <div id="tdébut_enregistrer"></div>
-                    <div id="tfin_enregistrer"></div>
-                    <div id="hp_enregistrer"></div>
-                    <div id="he_enregistrer"></div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <!--Fenêtre sortie-->
-    <button onclick="toggleEntreeSortie('panneauSortie')" class="petitBoutton"
-            style="background-color: #BCA7DCFF; display:block; top: 60px; right:10px; position: absolute">
-        <img id="flecheDroite" class="flècheMenu tournee"
-             src="./Images/fleche_menu.png"
-             alt="">
-    </button>
-    <div id="panneauSortie" class="Sortie">
         <div class="boiteSortie">
+
             <div><h2 id="Sorties"></h2></div>
-
-            <div id="Omégas"></div>
-
             <div class="résultats">
                 <label for="Omégar0">
                     <img id="infoOmégar0Sortie" src="./Images/icone_info.png" alt="" width="20" height="20">
@@ -224,17 +177,9 @@
                 <span></span>
             </div>
 
-            <br />
-
-            <div id="Temps"></div>
-
             <div id="début" class="résultats" style="display: flex"></div>
 
             <div id="fin" class="résultats" style="display: flex"></div>
-
-            <br />
-
-            <div id="horizons"></div>
 
             <div id="horizonEvenement" class="résultats" style="display: flex">
                 <span id="DmHorizonEvenement_label">d<sub>e0</sub> =</span>
@@ -281,6 +226,49 @@
             </div>
 
         </div>
+    </div>
+
+    <!--Fenêtre graphe-->
+    <div id="panneauGraphe" class="Graphe" style="position: relative;">
+        <div class="boiteGraphe">
+            <div id="headGraphiqueDE"></div>
+
+            <button style="background-color: #BCA7DCFF; position: absolute; top: 50px; right: 50px; cursor: pointer;" class="petitBoutton" onclick=avertissement()>
+                <img id="panneauAvertissement"
+                     style="width: 25px; height: 25px"
+                     src="./Images/panneau_avertissement.png"
+                     alt="avertissement">
+            </button>
+
+            <div class="avertissement" id="avertissementUnivers"></div>
+
+            <div id="graphique_DE"></div>
+
+            <div style="display: flex; gap: 10px">
+                <div style="justify-self: left">
+                    <h3 id="entreeEnregistrer" style="text-align: center"></h3>
+                    <div id="Om_enregistrer"></div>
+                    <div id="ODE_enregistrer"></div>
+                    <div id="Or_enregistrer"></div>
+                    <div id="Ok_enregistrer"></div>
+                    <div id="w0_enregistrer"></div>
+                    <div id="w1_enregistrer"></div>
+                </div>
+                <div style="justify-self: right">
+                    <h3 id="sortieEnregistrer" style="text-align: center"></h3>
+                    <div id="tdébut_enregistrer"></div>
+                    <div id="tfin_enregistrer"></div>
+                    <div id="hp_enregistrer"></div>
+                    <div id="he_enregistrer"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!--Fenêtre sortie-->
+    <div id="panneauSortie" class="Sortie">
+
     </div>
 </div>
 

@@ -279,6 +279,8 @@ function updateUnivers() {
     if (document.getElementById("OmégaDE0")) {
         document.getElementById("OmégaDE0").value = Omega_DE(0).toExponential(4)
         document.getElementById("ODE_enregistrer").innerHTML = "&Omega;<sub>DE<sub>0</sub></sub> = " + Omega_DE(0).toExponential(4)
+        document.getElementById("w0_enregistrer").innerHTML = "w<sub>0</sub> = " + document.getElementById("w0").value
+        document.getElementById("w1_enregistrer").innerHTML = "w<sub>0</sub> = " + document.getElementById("w1").value
     }
 
     document.getElementById("Omégar0").value = Omega_r(0).toExponential(4)

@@ -666,8 +666,8 @@ function calcul_t_inverse(temps,fonction,H0){
 /**
  * Fonction permettant de tracer le facteur d'échelle en fonction du temps.
  * @param solution {[number[], number[]]} Liste contenant la liste des temps et les valeurs du facteur d'échelle
- * @param t_debut
- * @param t_fin
+ * @param t_debut {number} temps écoulé depuis le début de l'univers
+ * @param t_fin {number} temps restant avant la fin de l'univers
  */
 function graphique_facteur_echelle(solution, t_debut, t_fin) {
     let texte = o_recupereJson()
@@ -686,6 +686,12 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
     let facteur_debut = ordonnee[0]
     let temps_fin = abscisse[abscisse.length - 1]
     let facteur_fin = ordonnee[ordonnee.length - 1]
+
+    if (temps_debut !== 0 && H0 >0) {
+        for (let index = 0; index < abscisse.length; index = index + 1) {
+            abscisse[index] = abscisse[index] - temps_debut
+        }
+    }
 
 
     if ( t_debut && facteur_debut < Math.abs(a_max - a_min) * 1e-1 ) {
