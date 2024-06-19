@@ -200,6 +200,7 @@ function texte_univers_LCDM() {
     document.getElementById("Omégar0_optionRien").innerHTML = texte.univers.Omégar0_Rien
     document.getElementById("infoOmégaK0").title = texte.univers.infoOmégaK0
     document.getElementById("label_optionsOmégak0").insertAdjacentHTML("beforeend", texte.univers.label_Omégak0)
+    document.getElementById("graphiqueInteractif").innerHTML = texte.univers.interactif
 
     document.getElementById("Tracé").innerHTML = texte.univers.Tracé;
     document.getElementById("infoAmin").title = texte.univers.infoAmin;
@@ -214,11 +215,9 @@ function texte_univers_LCDM() {
 
 
     document.getElementById("Sorties").innerHTML = texte.univers.Sorties
-    document.getElementById("Omégas").innerHTML = texte.univers.Omégas
     document.getElementById("infoOmégar0Sortie").title = texte.univers.infoOmégaR0Sortie
     document.getElementById("infoOmégak0Sortie").title = texte.univers.infoOmégaK0Sortie
-    document.getElementById("Temps").innerHTML = texte.univers.Temps
-    document.getElementById("horizons").innerHTML = texte.univers.horizons
+
 
 
     document.getElementById("Enregistrer").innerHTML = texte.univers.Enregistrer

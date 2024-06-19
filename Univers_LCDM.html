@@ -110,6 +110,8 @@
                 <input id="OptionsOmégak0" type="checkbox">
             </div>
 
+            <p id="graphiqueInteractif"></p>
+
             <div id="conteneurCanvas">
                 <canvas id="canvas"></canvas>
             </div>
@@ -145,6 +147,80 @@
 
             </div>
         </div>
+
+        <div class="boiteSortie">
+            <div><h2 id="Sorties"></h2></div>
+
+            <div class="résultats">
+                <label for="Omégar0">
+                    <img id="infoOmégar0Sortie" src="./Images/icone_info.png" alt="" width="20" height="20">
+                    &Omega;<sub>r<sub>0</sub></sub> =
+                </label>
+                <input style="cursor: not-allowed" readonly id="Omégar0" type="number" value="∅" step="0.01">
+                <span></span>
+            </div>
+
+            <div class="résultats">
+                <label for="Omégak0">
+                    <img id="infoOmégak0Sortie" src="./Images/icone_info.png" alt="" width="20" height="20">
+                    &Omega;<sub>k<sub>0</sub></sub> =
+                </label>
+                <input style="cursor: not-allowed" readonly id="Omégak0" type="number" value="" step="0.01">
+                <span></span>
+            </div>
+
+
+            <div id="début" class="résultats" style="display: flex"></div>
+
+            <div id="fin" class="résultats" style="display: flex"></div>
+
+
+            <div id="horizonEvenement" class="résultats" style="display: flex">
+                <span id="DmHorizonEvenement_label">d<sub>e0</sub>=</span>
+                <span id="resultat_DmHorizonEvenement"></span> GAL
+                <span id="ZHorizonEvenement_label">z<sub>e0</sub>=</span>
+                <span id="resultat_ZHorizonEvenement">-1</span>
+            </div>
+
+            <div id="horizonParticule" class="résultats" style="display: flex">
+                <span id="DmHorizonParticule_label">d<sub>p0</sub>= </span>
+                <span id="resultat_DmHorizonParticule"></span> GAL
+                <span id="ZHorizonParticule_label">z<sub>p0</sub>= </span>
+                <span id="resultat_ZHorizonParticule">+∞</span>
+            </div>
+        </div>
+
+        <div class="boiteSortie">
+            <div id="Enregistrer">
+                <h2>Enregistrement</h2>
+            </div>
+
+            <div class="résultats">
+                <label id="labelNom_fichier" for="nom_fichier">
+                    <img id="infoNomFichier" src="./Images/icone_info.png" alt="" width="20" height="20">
+                </label>
+                <input id="nom_fichier" type="text" value="">
+            </div>
+
+            <div class="résultats">
+                <label for="optionsEnregistrement">Format : </label>
+                <select name="Format enregistrement" id="optionsEnregistrement">
+                    <option value="PNG">PNG</option>
+                    <option value="SVG">SVG</option>
+                    <option value="JPG">JPG</option>
+                </select>
+            </div>
+
+            <br />
+
+            <div class="résultats">
+                <span></span>
+                <button onclick="enregistrer()" id="bouttonEnregistrer" class="grosBoutton">Enregistrer</button>
+                <span></span>
+            </div>
+
+        </div>
+
     </div>
 
     <!--Fenêtre graphe-->
@@ -179,96 +255,6 @@
                     <div id="he_enregistrer"></div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!--Fenêtre sortie-->
-    <button onclick="toggleEntreeSortie('panneauSortie')" class="petitBoutton"
-            style="background-color: #BCA7DCFF; display:block; top: 60px; right:10px; position: absolute">
-        <img id="flecheDroite" class="flècheMenu tournee"
-             src="./Images/fleche_menu.png"
-             alt="">
-    </button>
-    <div id="panneauSortie" class="Sortie">
-        <div class="boiteSortie">
-            <div><h2 id="Sorties"></h2></div>
-
-            <div id="Omégas"></div>
-
-            <div class="résultats">
-                <label for="Omégar0">
-                    <img id="infoOmégar0Sortie" src="./Images/icone_info.png" alt="" width="20" height="20">
-                    &Omega;<sub>r<sub>0</sub></sub> =
-                </label>
-                <input style="cursor: not-allowed" readonly id="Omégar0" type="number" value="∅" step="0.01">
-                <span></span>
-            </div>
-
-            <div class="résultats">
-                <label for="Omégak0">
-                    <img id="infoOmégak0Sortie" src="./Images/icone_info.png" alt="" width="20" height="20">
-                    &Omega;<sub>k<sub>0</sub></sub> =
-                </label>
-                <input style="cursor: not-allowed" readonly id="Omégak0" type="number" value="∅" step="0.01">
-                <span></span>
-            </div>
-
-            <br />
-
-            <div id="Temps"></div>
-
-            <div id="début" class="résultats" style="display: flex"></div>
-
-            <div id="fin" class="résultats" style="display: flex"></div>
-
-            <br />
-
-            <div id="horizons"></div>
-
-            <div id="horizonEvenement" class="résultats" style="display: flex">
-                <span id="DmHorizonEvenement_label">d<sub>e0</sub>=</span>
-				<span id="resultat_DmHorizonEvenement"></span> GAL
-				<span id="ZHorizonEvenement_label">z<sub>e0</sub>=</span>
-				<span id="resultat_ZHorizonEvenement">-1</span>
-            </div>
-
-            <div id="horizonParticule" class="résultats" style="display: flex">
-                <span id="DmHorizonParticule_label">d<sub>p0</sub>= </span>
-				<span id="resultat_DmHorizonParticule"></span> GAL
-				<span id="ZHorizonParticule_label">z<sub>p0</sub>= </span>
-				<span id="resultat_ZHorizonParticule">+∞</span>
-            </div>
-        </div>
-
-        <div class="boiteSortie">
-            <div id="Enregistrer">
-                <h2>Enregistrement</h2>
-            </div>
-
-            <div class="résultats">
-                <label id="labelNom_fichier" for="nom_fichier">
-                    <img id="infoNomFichier" src="./Images/icone_info.png" alt="" width="20" height="20">
-                </label>
-                <input id="nom_fichier" type="text" value="">
-            </div>
-
-            <div class="résultats">
-                <label for="optionsEnregistrement">Format : </label>
-                <select name="Format enregistrement" id="optionsEnregistrement">
-                    <option value="PNG">PNG</option>
-                    <option value="SVG">SVG</option>
-                    <option value="JPG">JPG</option>
-                </select>
-            </div>
-
-            <br />
-
-            <div class="résultats">
-                <span></span>
-                <button onclick="enregistrer()" id="bouttonEnregistrer" class="grosBoutton">Enregistrer</button>
-                <span></span>
-            </div>
-
         </div>
     </div>
 </div>
