@@ -1,20 +1,14 @@
-// variables globales
-var z=0;
-var z_obs=0;
-var title = "V(r)/c² - 1";
-var clicks = 0;
-const DIAMETRE_PART = 1;
-var c = 299792458;
-var nzoom=0;
-var nz_avant_lancement=0;
-var facteurDeMalheur;
-var fact_defaut;
-var G = 6.6743* Math.pow(10, -11);
-var compteurVitesse = 0;
-var compteurVitesseAvantLancement =0; 
-var texte=o_recupereJson();
 
-// liste de couleurs en hexa
+//----------------------------------------------------{DEFINITION DES VARIABLES GLOBALES}----------------------------------------------------
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Constantes physiques ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+var c = 299792458; //Vitesse de la lumière.
+var G = 6.67385 * Math.pow(10, -11); //Constante gravitationnelle. 
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Constantes pour les couleurs ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+//Définition de couleurs en hexadécimal :
 const COULEUR_NOIR = '#2F2D2B';
 const COULEUR_BLEU = '#4080A4';
 const COULEUR_CYAN = '#008B8B';
@@ -24,27 +18,47 @@ const COULEUR_ROUGE_COSMO= '#b54b3a';
 const COULEUR_GRIS = '#CCCCCC';
 const COULEUR_MARRON = '#673B15';
 
-// couleurs rayons et particule
+//Association des couleurs à des éléments de la simulation : 
 const COULEUR_PART = COULEUR_ROUGE_COSMO;
 const COULEUR_RS = COULEUR_BLEU;
 const COULEUR_RPHY = COULEUR_GRIS;
 
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Variables pour le zoom ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-ifUneFois=true // booleen qui permet plus bas d'utiliser la condition if une seule fois durant la simulation
+var nzoom=0; //Comptabilisation du zoom de manière générale.
+var nz_avant_lancement=0; //Comptabilisation du zoom d'avant lancement. 
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Variables pour l'accélération/décélération ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+var compteurVitesse = 0; //Comptabilisation de simu de manière générale.
+var compteurVitesseAvantLancement =0; //Comptabilisation de simu avant lancement. 
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Boolean ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+//Variables pour passer une seule fois dans des boucles : 
+ifUneFois=true 
 ifUneFois2=true
 ifUneFois3=true
 
-var factGlobalAvecClef = 280 //pour l'échelle avant lancement
-//variable globale, key value
-var rmaxjson = {};
-var mobilefactor = {};
-var r0o2 ={};
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Initialisation de listes ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-var maximum;
+var rmaxjson = {}; //Liste contenant les coordonnées radiales maximales atteintes pour chaque mobile.
+var mobilefactor = {}; //Liste contenant les facteurs d'échelle pour chaque mobile.
+var r0o2 ={}; //Liste contenant les distances initiales au centre de l'astre pour chaque mobile. 
+var listejsonfusees={}; //Liste regroupant l'initialisation de tous les compteurs. 
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Autres variables ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+var title = "V(r)/c² - 1"; //Stockage du titre du graphe de potentiel.
+const DIAMETRE_PART = 1; //Pour fixer la taille du mobile.
 var cle;
-var fuseecompteur;
-var listejsonfusees={};
-
+var fact_defaut; //Stockage du facteur d'échelle par défaut. 
+var texte=o_recupereJson(); //Récupération du texte des json. 
+var factGlobalAvecClef = 280; //Facteur d'échelle du graphe qui peut être modifié avec le zoom.
+var maximum; //Stockage de la distance initiale maximale parmi les mobiles.
+var fuseecompteur; //Stockage du nombre de fusées générées.
+var z=0; //Stockage du décalage spectrale dans le référentiel du mobile.
+var z_obs=0; //Stockage du décalage spectrale dans le référentiel de l'observateur.
 
 //-----------------------------------------------------------KHALED--------------------------------------------------
 //ceci est une fonction que j'ai trouvé sur StackOverflow de ce brave monsieur Nisse Engström
@@ -606,7 +620,7 @@ function initialisation(compteur){
 		rmax=r0;
 		if(rmax<r0) {rmax=2*r0;}
 	}else {
-		calcul_rmax(L,E,vr,r0,1) ;  
+		calcul_rmax(L,r0) ;  
 		if(rmax<r0) {rmax=r0 ;} 
 	} 
 	if(r0 < r_phy) {rmax=1.5*r_phy;}
@@ -1518,57 +1532,85 @@ function derivee_seconde_interne_photon_obs(E,L,r) {
 
 // -------------------------------------{calcul_rmax}--------------------------------------------
 
-function calcul_rmax(L,E,vr,r0,rmax1ou2){
-  // Vr different de 0
-  //JPC mis en commentaire ici rmax = eq3d(L, m, E);
-  // Vr=0
-  //JPC et ici if (vr == 0) {
-    r1 = (L * (L - Math.sqrt(Math.pow(L, 2) - 12 * Math.pow(m, 2))) / (2 * m));
-    r2 = (L * (L + Math.sqrt(Math.pow(L, 2) - 16 * Math.pow(m, 2))) / (4 * m));
+/**
+ * Fonction servant à calculer la distance radiale maximale que peu atteindre le mobile avant de retourner vers le trou noir.
+ * @param {Number} L : Constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} E : Constante d'intégration, sans dimensions.
+ * @param {Number} r0 : distance initiale au centre de l'astre.
+ * @returns {Number} rmax : la distance radiale maximale.
+ */
+function calcul_rmax(L,r0){
+
+	//J'obtiens r1 et r2 qui sont des conditions pour avoir des orbites stables autour d'un trou noir.
+    r1 = (L * (L - Math.sqrt(Math.pow(L, 2) - 12 * Math.pow(m, 2))) / (2 * m)); //Distance radiale critique où des transitions d'orbites peuvent se produire. 
+    r2 = (L * (L + Math.sqrt(Math.pow(L, 2) - 16 * Math.pow(m, 2))) / (4 * m)); //Distance radiale critique où des transitions d'orbites peuvent se produire pour des L plus élevés.
+
+	/*calculs pour r3, r3 qui est la distance maximale à laquelle une particule peut s'éloigner avant de retourner vers le trou noir :*/
     ra = 2 * m * Math.pow(L, 2);
     rb = ((2 * m / r0) - 1) * Math.pow(L, 2);
     X0 = 1 / r0;
     rc = 2 * m - Math.pow(L, 2) * X0 + 2 * m * Math.pow(L * X0, 2);
     DELTA = Math.pow(rb, 2) - 4 * ra * rc;
-    r3 = (-rb - Math.sqrt(DELTA)) / (2*ra);
-	//console.log("r3",r3);
-	//console.log("r0",r0);
-    // la particule tombe au centre
+    r3 = (-rb - Math.sqrt(DELTA)) / (2*ra); //Point tournant extérieur maximal. 
+
     if (L < 2 * Math.sqrt(3) * m) {
+		/*Cas où je n'ai pas de maximum ou de minimum réel à mon potentiel. 
+		Dans ce cas il n'y a pas de changement de direction du mouvement et
+		la particule tombe directement dans le trou noir.*/
     	rmax = r0;
     }
+
 	else if ( (L <= 4*m) && (L > 2*Math.sqrt(3)*m) ) {
-		// dans ce cas, r varie entre 2 valeurs r0 et r3
-			if ( (Vr(r0) <= Vr(r1)) && (r0 > r1) ) {
-				if (r3 > r0) {
-					rmax = r3;
-				}
-				else if (r3 < r0) {
-					rmax = r0;
-				}
-			}
-		// comprend les cas r0<=r1 et V(r0)>V(r1) où la particule tombe au centre
-		else {
-			rmax = r0;
-		}
-	}
-    // dans ce cas r varie entre les 2 valeurs r0 et r3
-    else if (L > 4 * m) {
-		if (r0 > r2) {
+		/*Je suis dans la zone où L > 2*Math.sqrt(3)*m donc je peux éviter de tomber
+		directement dans le trou noir mais aussi où je ne peux pas trop m'en éloigner.
+		La particule peut donc osciller entre deux points spécifiques.*/
+
+		if ( (Vr(r0) <= Vr(r1)) && (r0 > r1) ) {
+		/*Si l'énergie potentielle effective en r0 est inférieure
+		ou égale à r1 alors r0 se trouve en dehors du potentiel local
+		minimum et donc la particule oscille entre r0 et r3.
+		De plus r0>r1 donc je commence mon mouvement à une 
+		position radiale plus éloignée que le premier point tournant r1.*/
+
 			if (r3 > r0) {
-			rmax = r3;
+				/*La particule peut atteindre r3 avant de revenir.*/
+				rmax = r3;
 			}
 			else if (r3 < r0) {
-			rmax = r0;
+				/*r0 est encore au-delà des oscillations donc c'est la valeur max.*/
+				rmax = r0;
 			}
 		}
 		else {
+			/*La particule est en-dessous du point tournant intérieur et tombe donc vers le centre.*/
 			rmax = r0;
 		}
 	}
-	
+    else if (L > 4 * m) {
+		/* La particule peut maintenir des orbites plus étendues et potentiellement plus stables autour du trou noir, 
+		en évitant les orbites instables plus proches de celui-ci.*/
+
+		if (r0 > r2) {
+			/*La particule a assez d'énergie pour atteindre une position radiale r3 avant
+			de subir les effets gravitationnels significatis et revenir vers l'intérieur*/
+
+			if (r3 > r0) {
+				/*r3 est la distance maximale à laquelle la particule peut s'éloigner avant
+				de revenir vers l'intérieur.*/
+				rmax = r3;
+			}
+			else if (r3 < r0) {
+				/*r0 est déjà la distance maximale atteinte par la particule.*/
+				rmax = r0;
+			}
+		}
+		else { /*La particule n'a pas assez d'énergie et est obligée de revenir vers l'intérieur.*/
+			rmax = r0;
+		}
+	}
 }
 
+// -------------------------------------{pausee}--------------------------------------------
 
 /**
  * Cette fonction est associé aux bouttons pause, avec les quels on peut pauser et reprendre la simulaiton.
