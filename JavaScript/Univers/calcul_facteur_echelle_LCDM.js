@@ -53,14 +53,14 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
 
         // On calcule le pas qui sera utilisé
         if ( (isNaN(tau_min) || isNaN(tau_max)) && !isNaN(t_0)) {
-            pas = Math.abs(t_0) * 1e-5
+            pas = Math.abs(t_0) * 1e-3
         } else {
-            pas = 1e-4
+            pas = 1e-3
         }
 
         let option = document.getElementById("optionsMonofluide").value
         if (!isNaN(tau_min) && !isNaN(tau_max) && option !== "optionLDE") {
-            pas = Math.abs(tau_max - tau_min) * 1e-5
+            pas = Math.abs(tau_max - tau_min) * 1e-3
         }
 
         return [tau_init, a_init, ap_init, pas]
