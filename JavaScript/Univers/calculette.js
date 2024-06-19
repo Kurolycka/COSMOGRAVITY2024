@@ -62,17 +62,17 @@ function affichage_des_z(fonction_EouF){
 
     
     //? -----------Calcul des temps----------------$
-    let z1;
-    let z2;
+    let t1;
+    let t2;
     if (z1<0){
         t1=calcul_ages(fonction_EouF,H0_parSecondes(H0),z2,0,true); //calcul des temps en seconde grâce a la formule de théorie
     }else{
         t1=calcul_ages(fonction_EouF,H0_parSecondes(H0),1e-30,1/(1+z1)); //calcul des temps en seconde grâce a la formule de théorie
     }
     if (z2<0){
-        t1=calcul_ages(fonction_EouF,H0_parSecondes(H0),z2,0,true); //calcul des temps en seconde grâce a la formule de théorie
+        t2=calcul_ages(fonction_EouF,H0_parSecondes(H0),z2,0,true); //calcul des temps en seconde grâce a la formule de théorie
     }else{
-        t1=calcul_ages(fonction_EouF,H0_parSecondes(H0),1e-30,1/(1+z2)); //calcul des temps en seconde grâce a la formule de théorie
+        t2=calcul_ages(fonction_EouF,H0_parSecondes(H0),1e-30,1/(1+z2)); //calcul des temps en seconde grâce a la formule de théorie
     }
     let delta_t=calcul_ages(fonction_EouF,H0_parSecondes(H0),1/(1+z1),1/(1+z2));
     document.getElementById('output_t1').value=arrondie_affichage(t1);
@@ -136,9 +136,11 @@ function affichage_des_z(fonction_EouF){
     document.getElementById("omegaK_z1").value = arrondie_affichage(Omega_kz1);
     if (fonction_EouF.name==="fonction_E"){
         document.getElementById("omegaL_z1").value = arrondie_affichage(Omega_lz1);
+        document.getElementById("omegaTotal_z1").value=arrondie_affichage(Omega_rz1+Omega_mz1+Omega_kz1+Omega_lz1);
     }else if (fonction_EouF.name==="fonction_F"){
         document.getElementById("omegaDE_z1").value = arrondie_affichage(Omega_DEz1);
         document.getElementById("omegaDEN_z1").value = arrondie_affichage(Omega_DENz1);
+        document.getElementById("omegaTotal_z1").value=arrondie_affichage(Omega_rz1+Omega_mz1+Omega_kz1+Omega_DENz1);
     };
     document.getElementById("output_dz1dt").value = arrondie_affichage(dz1);
 
@@ -149,9 +151,11 @@ function affichage_des_z(fonction_EouF){
     document.getElementById("omegaK_z2").value = arrondie_affichage(Omega_kz2);
     if (fonction_EouF.name==="fonction_E"){
         document.getElementById("omegaL_z2").value = arrondie_affichage(Omega_lz2);
+        document.getElementById("omegaTotal_z2").value=arrondie_affichage(Omega_rz2+Omega_mz2+Omega_kz2+Omega_lz2);
     }else if (fonction_EouF.name==="fonction_F"){
         document.getElementById("omegaDE_z2").value = arrondie_affichage(Omega_DEz2);
         document.getElementById("omegaDEN_z2").value = arrondie_affichage(Omega_DENz2);
+        document.getElementById("omegaTotal_z2").value=arrondie_affichage(Omega_rz2+Omega_mz2+Omega_kz2+Omega_DENz2);
     };
     document.getElementById("output_dz2dt").value = arrondie_affichage(dz2);
 

@@ -115,6 +115,9 @@
 		"yaxis_decalage":"decalage vers le rouge z",
 		"xaxis_temps":"temps (année)",
 		"constantes": "Constantes universelles",
+		
+		"infobulle_omegatotalz1":"Somme des Omegas (doit être égale à 1)",
+		"infobulle_omegatotalz2":"Somme des Omegas (doit être égale à 1)",
 		"infobulle_generateur_graph":"Partie qui génère différents graphiques en fonction des paramètres actuel de l'univers pour voir comment ces valeurs évolue avec le temps",
 		"infobulle_zmin":"valeur minimale de z (inférieur à zmax)",
 		"infobulle_zmax":"valeur maximale de z (supérieur à zmin)",
