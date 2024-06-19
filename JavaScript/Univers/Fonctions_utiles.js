@@ -706,7 +706,7 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
         type: "scatter",
         mode: "lines",
         name: "Facteur d'échelle",
-        line: { color: '#a62e2e' }
+        line: { color: 'purple' }
     }];
 
     if (t_debut && facteur_debut > Math.abs(a_max - a_min) * 1e-1 && temps_debut < Math.abs(t_debut) * 1e-1 ) {

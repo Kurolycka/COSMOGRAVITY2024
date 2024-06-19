@@ -11,6 +11,8 @@ le facteur d'échelle dans le cas du modèle LCDM.
  * @return Liste des abscisses ou la fonction a été calculée et liste des valeurs de la fonction.
  */
 function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifiant) {
+    let texte = o_recupereJson();
+
     let H0 = document.getElementById("H0").value;
     let H0parGAnnee = H0_parGAnnees(H0)
 
@@ -51,14 +53,14 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
 
         // On calcule le pas qui sera utilisé
         if ( (isNaN(tau_min) || isNaN(tau_max)) && !isNaN(t_0)) {
-            pas = Math.abs(t_0) * 1e-3
+            pas = Math.abs(t_0) * 1e-5
         } else {
-            pas = 1e-2
+            pas = 1e-4
         }
 
         let option = document.getElementById("optionsMonofluide").value
         if (!isNaN(tau_min) && !isNaN(tau_max) && option !== "optionLDE") {
-            pas = Math.abs(tau_max - tau_min) * 1e-3
+            pas = Math.abs(tau_max - tau_min) * 1e-5
         }
 
         return [tau_init, a_init, ap_init, pas]
@@ -74,7 +76,7 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     let nombre_point = 0;
 
     // Résolution dans le sens négatif
-    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 20/Math.abs(pas)) {
+    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 10/Math.abs(pas)) {
         set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
         if (set_solution[1] >= a_min && set_solution[1] <= a_max) {
             taus.push(set_solution[0])
@@ -90,7 +92,7 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     nombre_point = 0;
 
     // Résolution dans le sens positif
-    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 20/Math.abs(pas)) {
+    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 10   /Math.abs(pas)) {
         set_solution = RungeKuttaEDO2(pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
         if (set_solution[1] >= a_min && set_solution[1] <= a_max) {
             taus.push(set_solution[0])
@@ -132,4 +134,5 @@ function affichage_site_LCDM() {
 
 
     graphique_facteur_echelle(donnee, debutEtFin[2], debutEtFin[3])
+    update_point()
 }
