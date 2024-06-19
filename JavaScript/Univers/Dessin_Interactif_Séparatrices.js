@@ -5,15 +5,11 @@ const omegaL0Min = -1.5;
 const omegaL0Max = 3;
 
 window.onload = function() {
-    resizeCanvas();
     update_graphe_interactif();
-    update_point()
 };
 
 window.onresize = function() {
-    resizeCanvas();
     update_graphe_interactif();
-    update_point()
 };
 
 function resizeCanvas() {
@@ -49,6 +45,8 @@ function omegam0_to_px(value) {
 }
 
 function update_graphe_interactif() {
+    resizeCanvas()
+
     let texte = o_recupereJson()
     let canvas = document.getElementById("canvas");
     let context = canvas.getContext("2d");
@@ -228,6 +226,8 @@ function update_graphe_interactif() {
     context.fillText(texte.grapheSéparatrices.BB, 0, 15);
     context.fillText(texte.grapheSéparatrices.pBB, 0, 5);
     context.restore();
+
+    update_point()
 }
 
 // Fonction pour convertir les coordonnées de pixels en valeurs Omega
@@ -248,6 +248,7 @@ function px_to_omegalambda0(x) {
 }
 
 function update_point() {
+    console.log("Point mis à jour")
     let canvas = document.getElementById("canvas");
     let context = canvas.getContext("2d");
 

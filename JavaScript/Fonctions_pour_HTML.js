@@ -62,6 +62,19 @@ function fenetreCalculette() {
     }
 }
 
+/**
+ * Fonction permettant d'ouvrir la fenêtre contenant le tracé du facteur d'échelle
+ */
+function fenetreFacteur() {
+    if (document.getElementById("Omégal0")) {
+        savevalues(false);
+        window.location.href = "Univers_LCDM.html"
+    } else {
+        savevalues(true);
+        window.location.href = "Univers_DE.html"
+    }
+}
+
 function savevalues(darkenergy=false){
     localStorage.setItem('T0',document.getElementById('T0').value);
     localStorage.setItem('H0',document.getElementById('H0').value);
@@ -92,19 +105,6 @@ function loadvalues(darkenergy=false){
         }
         document.getElementById('optionsOmégar0').value = localStorage.getItem('optionsOmégar0');
         localStorage.clear();
-    }
-}
-
-/**
- * Fonction permettant d'ouvrir la fenêtre contenant la calculette cosmologique
- */
-function fenetreFacteur() {
-    if (document.getElementById("Omégal0")) {
-        savevalues(false);
-        window.location.href = "Univers_LCDM.html"
-    } else {
-        savevalues(true);
-        window.location.href = "Univers_DE.html"
     }
 }
 
@@ -260,19 +260,22 @@ function universMonofluides() {
 /**
  * Fonction qui permet de rafraichir les valeurs du site pour chaque changement effectué
  */
-function ajouterEcouteurs(fonctionUpdate) {
+function ajouterEcouteurs() {
     const elements = document.querySelectorAll('input, select, list');
-    const UpdateDelais = delaisUpdate(fonctionUpdate, 100);
+    let UpdateDelais
+    if (window.location.pathname==="/Calculette_cosomologique_LCDM.html") {
+        UpdateDelais = delaisUpdate(updateCalculette, 1000);
+    } else {
+        UpdateDelais = delaisUpdate(updateUnivers, 1000);
+    }
     elements.forEach(element => {
         element.addEventListener('input', UpdateDelais);
         element.addEventListener('change', UpdateDelais);
     });
 }
 
-if (window.location.pathname==="/Calculette_cosomologique_LCDM.html"){
-    window.onload = ajouterEcouteurs(updateCalculette);
-} else {
-    window.onload = ajouterEcouteurs(updateUnivers);
+window.onload = function() {
+    ajouterEcouteurs()
 }
 
 /**
