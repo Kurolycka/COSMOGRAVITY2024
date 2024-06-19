@@ -201,7 +201,7 @@ function initialisation(){
 		CirculaireProgradeBarCell.style.display='none';
 		CirculaireProgradeBarLabelCell.style.display='none';
 	}else{ //Sinon je les affiches avec la valeur de la vitesse nécessaire.
-		document.getElementById("circulaire_prograde_res_bar").innerHTML=vitesse_orbite_circulaire_prograde_bar.toExponential(4); 
+		document.getElementById("circulaire_prograde_res_bar").innerHTML=vitesse_orbite_circulaire_prograde_bar.toExponential(3); 
 		CirculaireProgradeBarCell.style.display='';
 		CirculaireProgradeBarLabelCell.style.display='';
 	}
@@ -211,7 +211,7 @@ function initialisation(){
 		CirculaireRetrogradeBarCell.style.display='none';
 		CirculaireRetrogradeBarLabelCell.style.display='none';
 	}else{ //Sinon je les affiches avec la valeur de la vitesse nécessaire.
-		document.getElementById("circulaire_retrograde_res_bar").innerHTML=vitesse_orbite_circulaire_retrograde_bar.toExponential(4); 
+		document.getElementById("circulaire_retrograde_res_bar").innerHTML=vitesse_orbite_circulaire_retrograde_bar.toExponential(3); 
 		CirculaireRetrogradeBarCell.style.display='';
 		CirculaireRetrogradeBarLabelCell.style.display='';
 	}

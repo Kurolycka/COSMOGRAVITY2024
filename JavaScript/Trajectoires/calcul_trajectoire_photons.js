@@ -589,7 +589,7 @@ function initialisation(compteur){
 	document.getElementById("L"+compteur.toString()).innerHTML = L.toExponential(3);
 	document.getElementById("E"+compteur.toString()).innerHTML = E.toExponential(3);
 	document.getElementById("m").innerHTML = rs.toExponential(3);
-	document.getElementById("rayon_orbite_circ_res"+compteur.toString()).innerHTML = rayon_orbite.toExponential(5); //ManonCirculaire
+	document.getElementById("rayon_orbite_circ_res"+compteur.toString()).innerHTML = rayon_orbite.toExponential(3); //ManonCirculaire
 
 	//Je récupère mon facteur d'échelle : 
 	scale_factor = Number(document.getElementById("scalefactor").value);

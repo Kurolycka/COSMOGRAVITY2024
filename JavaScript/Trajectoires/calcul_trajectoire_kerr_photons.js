@@ -120,8 +120,8 @@ function initialisation(){
 	rayon_orbite_pro=rs*(1+Math.cos((2/3)*Math.acos(-(2*a)/rs))); //Orbite circulaire prograde.
 	rayon_orbite_retro=rs*(1+Math.cos((2/3)*Math.acos((2*a)/rs))); //Orbite circulaire retrograde.
 	//Puis affichage de ces distances radiales : 
-	document.getElementById("circulaire_prograde_res").innerHTML=rayon_orbite_pro.toExponential(5);
-	document.getElementById("circulaire_retrograde_res").innerHTML=rayon_orbite_retro.toExponential(5); 
+	document.getElementById("circulaire_prograde_res").innerHTML=rayon_orbite_pro.toExponential(3);
+	document.getElementById("circulaire_retrograde_res").innerHTML=rayon_orbite_retro.toExponential(3); 
 
 	//--------------------------------Affichage--------------------------------
 			   

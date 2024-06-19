@@ -322,6 +322,8 @@ function genereHtml(){
 		/*On lui associe la fonction *verifnbr* et *initialisationGenerale*,
 		 si jamais y a un changement on appelle les deux fonctions*/
 		newinput.setAttribute("onchange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")"); 
+		newinput.setAttribute("oninput","initialisationGenerale("+nbredefuseesgenere.toString()+")"); 
+
 		span.appendChild(newinput);//on ajoute l'input créé au span
 	}
 
@@ -714,7 +716,7 @@ function initialisation(compteur){
 	//J'affiche dans le tableau les valeurs calculée de L, E, rs, la vitesse pour une orbite circulaire :
 	document.getElementById("L"+compteur.toString()).innerHTML = L.toExponential(3);
 	document.getElementById("E"+compteur.toString()).innerHTML = E.toExponential(3);
-	document.getElementById("Vcirc"+compteur.toString()).innerHTML = v_rotation.toExponential(20); 
+	document.getElementById("Vcirc"+compteur.toString()).innerHTML = v_rotation.toExponential(3); 
 	document.getElementById("m").innerHTML = rs.toExponential(3);
 
 	//Je prépare le fait qu'initialement aucune énergie n'a été consommée : 
@@ -1040,15 +1042,8 @@ function trajectoire(compteur,mobile) {
 		Rebond = document.getElementById("reb").value / 100.0; //Je récupère la valeur du rebond remplie par l'utilisateur et je la divise par 100.
     	mobile["Rebond"]=Rebond;
 
-		//dtau=temps_chute_libre/1e3;	//Je fixe le pas de temps à une fraction du temps de chute libre. 
+		dtau=temps_chute_libre/1e3;	//Je fixe le pas de temps à une fraction du temps de chute libre. 
 
-		/* MARCHE BIEN MASI TEMPORAIRE:*/
-		dtau3=temps_chute_libre/10**Math.floor(Math.log10(temps_chute_libre));	//on prend que la partie sans puissance
-		//dtau=r0*c**2*rs/(2*G*M*v0*1e1);
-		dtau=r0*rs*c**2/M/1e1; //marche pas mal
-
-		dtau=dtau3*10**Math.floor(Math.log10(dtau)) //on multiplie fois la partie puissance de dtau pour adapter le pas en fonction des parametres
-	
     	mobile["dtau"]=dtau;
 
 		//--------------------------------Positions de départ du mobile--------------------------------
@@ -1588,7 +1583,7 @@ function animate(compteur,mobile,mobilefactor)
 				
 				document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3); //temps mobile
 				document.getElementById("to"+compteur.toString()).innerHTML = mobile.temps_observateur_distant.toExponential(3); //temps observateur
-				document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part.toExponential(20);//rayon
+				document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part.toExponential(3);//rayon
 				document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_1.toExponential(3); //vitesse angulaire (v_phi)
 				document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_1.toExponential(3); //vitesse radiale (v_r)
 				document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(3); //vitesse totale

@@ -603,7 +603,7 @@ function initialisation(compteur){
 	if (r_phy > limite_basse && r_phy < limite_haute){ //Dans ce cas on peut avoir une orbite circulaire. 
 		//Je calcule cette distance à l'astre pour avoir l'orbite circulaire et je l'affiche dans une case visible : 
 		r_circ_int = (1/3)*r_phy*((Math.sqrt(r_phy*(8*r_phy - 9*rs)))/(Math.sqrt(rs*(r_phy-rs))));
-		document.getElementById("r_circ_int_res"+compteur.toString()).innerHTML = r_circ_int.toExponential(10);
+		document.getElementById("r_circ_int_res"+compteur.toString()).innerHTML = r_circ_int.toExponential(3);
 		document.getElementById("r_circ_int_res"+compteur.toString()).title = texte.pages_trajectoire.orbite_circulaire_stable;
 		rCircIntLabelCell.style.display='';
 		rCircIntResCell.style.display='';
@@ -623,7 +623,7 @@ function initialisation(compteur){
 	r_circ_ext = (3/2)*rs; //Je calcule cette distance r.
 
 	if (r_circ_ext >= r_phy){ //Si je suis bien à l'extérieure de l'astre j'affiche cette distance r. 
-		document.getElementById("r_circ_ext_res"+compteur.toString()).innerHTML = r_circ_ext.toExponential(10);
+		document.getElementById("r_circ_ext_res"+compteur.toString()).innerHTML = r_circ_ext.toExponential(3);
 		document.getElementById("r_circ_ext_res"+compteur.toString()).title = texte.pages_trajectoire.orbite_circulaire_instable;
 		rCircExtLabelCell.style.display='';
 		rCircExtResCell.style.display='';
@@ -1375,7 +1375,7 @@ function animate(compteur,mobile,mobilefactor) {
 		document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3); //temps particule
 		document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part.toExponential(3);  //rayon
 		document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_1.toExponential(3);	//vitesse radiale
-		document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_1.toExponential(8);	//vitesse angulaire
+		document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_1.toExponential(3);	//vitesse angulaire
 		document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(8); 	//vitesse total (module)
 
 		//-----------------------------------------------------PARTIE TRACÉ PARTICULE-------------------------------------------------

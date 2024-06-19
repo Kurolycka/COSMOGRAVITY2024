@@ -136,7 +136,7 @@
 			<div id="champs_a_remplir">
 				<span id="masse">
 					<label id= "massetxt"for="M">M (kg) =</label>
-					<input id="M" value="2e30" align="left" maxlength="10" type="text" size="10" onchange="verifnbr();initialisation()">
+					<input id="M" value="2e30" align="left" maxlength="10" type="text" size="10" onchange="verifnbr();initialisation()" oninput="initialisation()">
 				</span>
 
 				<span id="rayon">
@@ -146,7 +146,7 @@
 				
 				<span id="momentcinetique">
 					<label id="moment"for="J">J (kg.m<sup>2</sup>.s<sup>-1</sup>)=</label>
-					<input id="J" value="8.5e41" align="left" maxlength="15" type="text" size="15" onchange="verifnbr();initialisation()">
+					<input id="J" value="8.5e41" align="left" maxlength="15" type="text" size="15" onchange="verifnbr();initialisation()" oninput="initialisation()">
 				</span>
 				
 				<span id="vitesse1">

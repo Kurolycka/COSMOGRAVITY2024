@@ -42,8 +42,8 @@ function graphique_creation_pot(Onresize=0,data1,data2,compteur,mobile)
     taille_carac = 14; //taille des caracteres
 
   
-    width = 600 ; // on definit la largeur
-    height = 500 ; // on definit la hauteur
+    width = 370 ; // on definit la largeur
+    height = 300 ; // on definit la hauteur
 
     /* DÉFINITION DES ÉCHELLES POUR L'AXE X ET L'AXE Y */
 

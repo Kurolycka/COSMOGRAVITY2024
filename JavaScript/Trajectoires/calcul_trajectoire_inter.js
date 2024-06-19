@@ -284,6 +284,8 @@ function genereHtml()
 		/*On lui associe la fonction *verifnbr* et *initialisationGenerale*,
 		si jamais y a un changement on appelle les deux fonctions*/
 		newinput.setAttribute("onchange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
+		newinput.setAttribute("oninput","initialisationGenerale("+nbredefuseesgenere.toString()+")");
+
 		span.appendChild(newinput);//on ajoute l'input créé au span
 	}
 
