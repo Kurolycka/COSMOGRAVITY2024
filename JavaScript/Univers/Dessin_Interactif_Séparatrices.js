@@ -91,12 +91,12 @@ function update_graphe_interactif() {
     context.textAlign = 'center';
     context.textBaseline = 'top';
     context.save()
-    context.translate(omegam0_to_px(omegaM0Max), canvas.width - 20);
-    context.rotate(Math.PI / 2)
-    context.fillText("Ωm0",-20, -15);
+    context.translate(omegam0_to_px(omegaM0Min), omegal0_to_px(omegaL0Max));
+    context.rotate(-Math.PI / 2)
+    context.fillText("ΩΛ0",-17, 3);
     context.restore()
     context.textAlign = 'left';
-    context.fillText("ΩΛ0",omegam0_to_px(omegaM0Min), 0);  // Label pour l'axe y
+    context.fillText("Ωm0",omegam0_to_px(omegaM0Max) - 35, omegal0_to_px(omegaL0Min) - 15);  // Label pour l'axe y
 
     // Dessiner les marqueurs des valeurs
     context.font = '12px Arial';
@@ -242,7 +242,7 @@ function update_graphe_interactif() {
     context.rotate(-Math.PI / 4.9);
     context.fillText(texte.grapheSéparatrices.BB, 0, -15);
     context.fillText(texte.grapheSéparatrices.BB, 0, 15);
-    context.fillText(texte.grapheSéparatrices.pBB, 0, 5);
+    context.fillText(texte.grapheSéparatrices.pBB, 0, -30);
     context.restore();
 
     update_point()

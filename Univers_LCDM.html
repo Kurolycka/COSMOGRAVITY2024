@@ -28,7 +28,12 @@
 <div class="grillePrincipale">
     <div id="positionNav" class="Nav"></div>
     <!--Fenêtre entrée-->
-
+    <button onclick="toggleEntreeSortie('panneauEntree')" class="petitBoutton"
+            style="background-color: #BCA7DCFF; display:block; top: 60px; left:10px; position: absolute">
+        <img id="flecheGauche" class="flècheMenu"
+             src="./Images/fleche_menu.png"
+             alt="">
+    </button>
     <div id="panneauEntree" class="Entree">
         <div class="boiteEntree">
             <div><h2 id="Entrées"></h2></div>
@@ -86,7 +91,7 @@
                 <span></span>
             </div>
 
-            <div class="paramètre">
+            <div class="paramètre" style="grid-template-columns: 1fr 1fr">
                 <label id="label_optionsOmégar0" for="optionsOmégar0">
                     <img id="infoOmégaR0" src="./Images/icone_info.png" alt="" width="20" height="20">
                 </label>
@@ -97,12 +102,14 @@
                 </select>
             </div>
 
-            <div class="paramètre">
+            <div class="paramètre" style="grid-template-columns: 1fr 1fr">
                 <label id="label_optionsOmégak0" for="OptionsOmégak0">
                     <img id="infoOmégaK0" src="./Images/icone_info.png" alt="" width="20" height="20">
                 </label>
                 <input id="OptionsOmégak0" type="checkbox">
             </div>
+
+            <p id="selecParam"></p>
 
             <div id="conteneurCanvas">
                 <canvas id="canvas"></canvas>

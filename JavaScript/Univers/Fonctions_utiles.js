@@ -488,11 +488,13 @@ function debut_fin_univers(equa_diff) {
         age_debut = set_solution[0] / H0_parGAnnees(H0)
 
         if (set_solution[1] <= 1) {
-            naissance_univers = texte.univers.Debut + "BigBang " + Math.abs(age_debut).toExponential(4) + " Ga"
+            naissance_univers = texte.univers.Debut + "BigBang " + Math.abs(age_debut).toExponential(4) + " Ga = "
+                + gigaannee_vers_seconde(Math.abs(age_debut)).toExponential(4) + " s"
         }
 
         if ( max >= limite ) {
-            naissance_univers = texte.univers.Debut + "BigFall " + Math.abs(age_debut).toExponential(4) + " Ga"
+            naissance_univers = texte.univers.Debut + "BigFall " + Math.abs(age_debut).toExponential(4) + " Ga = "
+                + gigaannee_vers_seconde(Math.abs(age_debut)).toExponential(4) + " s"
         }
     }
 
@@ -527,11 +529,13 @@ function debut_fin_univers(equa_diff) {
         age_fin = set_solution[0] / H0_parGAnnees(H0)
 
         if (set_solution[1] <= 1) {
-            mort_univers = texte.univers.Mort + "BigCrunch " + Math.abs(age_fin).toExponential(4) + " Ga"
+            mort_univers = texte.univers.Mort + "BigCrunch " + Math.abs(age_fin).toExponential(4) + " Ga = "
+                + gigaannee_vers_seconde(Math.abs(age_fin)).toExponential(4) + " s"
         }
 
         if ( max >= limite ) {
-            mort_univers = texte.univers.Mort + "BigRip " + Math.abs(age_fin).toExponential(4) + " Ga"
+            mort_univers = texte.univers.Mort + "BigRip " + Math.abs(age_fin).toExponential(4) + " Ga = "
+                + gigaannee_vers_seconde(Math.abs(age_fin)).toExponential(4) + " s"
         }
     }
 
