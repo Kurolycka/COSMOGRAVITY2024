@@ -1,19 +1,15 @@
-// variables globales
-var z=0;
-var z_obs=0;
-var title = "V(r)/c² - 1";
-var clicks = 0;
-const DIAMETRE_PART = 1;
-var c = 299792458;
-var nzoom=0;
-var nz_avant_lancement=0;
-var facteurDeMalheur;
-var fact_defaut;
-var G = 6.6743* Math.pow(10, -11);
-var compteurVitesse = 0;
-var compteurVitesseAvantLancement =0; 
 
-// liste de couleurs en hexa
+
+//----------------------------------------------------{DEFINITION DES VARIABLES GLOBALES}----------------------------------------------------
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Constantes physiques ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+var c = 299792458; //Vitesse de la lumière.
+var G = 6.67385 * Math.pow(10, -11); //Constante gravitationnelle. 
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Constantes pour les couleurs ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+//Définition de couleurs en hexadécimal :
 const COULEUR_NOIR = '#2F2D2B';
 const COULEUR_BLEU = '#4080A4';
 const COULEUR_CYAN = '#008B8B';
@@ -23,27 +19,48 @@ const COULEUR_ROUGE_COSMO= '#b54b3a';
 const COULEUR_GRIS = '#CCCCCC';
 const COULEUR_MARRON = '#673B15';
 
-// couleurs rayons et particule
+
+//Association des couleurs à des éléments de la simulation : 
 const COULEUR_PART = COULEUR_ROUGE_COSMO;
 const COULEUR_RS = COULEUR_BLEU;
 const COULEUR_RPHY = COULEUR_GRIS;
 
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Variables pour le zoom ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-ifUneFois=true // booleen qui permet plus bas d'utiliser la condition if une seule fois durant la simulation
+var nzoom=0; //Comptabilisation du zoom de manière générale.
+var nz_avant_lancement=0; //Comptabilisation du zoom d'avant lancement. 
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Variables pour l'accélération/décélération ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+var compteurVitesse = 0; //Comptabilisation de simu de manière générale.
+var compteurVitesseAvantLancement =0; //Comptabilisation de simu avant lancement. 
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Boolean ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+//Variables pour passer une seule fois dans des boucles : 
+ifUneFois=true 
 ifUneFois2=true
 ifUneFois3=true
 
-var factGlobalAvecClef = 280 //pour l'échelle avant lancement
-//variable globale, key value
-var rmaxjson = {};
-var mobilefactor = {};
-var r0o2 ={};
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Initialisation de listes ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-var maximum;
+var rmaxjson = {}; //Liste contenant les coordonnées radiales maximales atteintes pour chaque mobile.
+var mobilefactor = {}; //Liste contenant les facteurs d'échelle pour chaque mobile.
+var r0o2 ={}; //Liste contenant les distances initiales au centre de l'astre pour chaque mobile. 
+var listejsonfusees={}; //Liste regroupant l'initialisation de tous les compteurs. 
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Autres variables ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+var title = "V(r)/c² - 1"; //Stockage du titre du graphe de potentiel.
+const DIAMETRE_PART = 1; //Pour fixer la taille du mobile.
 var cle;
-var fuseecompteur;
-var listejsonfusees={};
-
+var fact_defaut; //Stockage du facteur d'échelle par défaut. 
+var texte=o_recupereJson(); //Récupération du texte des json. 
+var factGlobalAvecClef = 280; //Facteur d'échelle du graphe qui peut être modifié avec le zoom.
+var maximum; //Stockage de la distance initiale maximale parmi les mobiles.
+var fuseecompteur; //Stockage du nombre de fusées générées.
+var z=0; //Stockage du décalage spectrale dans le référentiel du mobile.
+var z_obs=0; //Stockage du décalage spectrale dans le référentiel de l'observateur.
 
 
 //-----------------------------------------------------------{TIMER}--------------------------------------------------
@@ -136,6 +153,7 @@ function initialisationGenerale(fuseecompteur){
 }
 
 //----------------------------------------------------{lancerDeFusees}----------------------------------------------------
+
 /**
  * Fonction qui permet de lancer la simulation pour tout les mobiles.
  * @param {*} fuseecompteur : nombre de fusées générées.
@@ -647,7 +665,7 @@ function initialisation(compteur){
 		rmax=r0;
 		if(rmax<r0) {rmax=2*r0;}
 	}else {
-		calcul_rmax(L,E,vr,r0,1) ;  
+		calcul_rmax(L,r0) ;  
 		if(rmax<r0) {rmax=r0 ;} 
 	} 
 	if(r0 < r_phy) {rmax=1.5*r_phy;}
@@ -1030,7 +1048,7 @@ function trajectoire(compteur,mobile) {
         	mobilefactor=retour[1]; //Récupère le nouveau facteur d'échelle. 
 			factGlobalAvecClef /= Math.pow(1.2,1/nbredefusees ); //Je dézoome de 20%. 
         	majFondFixe22(mobile); //Je mets à jour tout ce qui est relié au dessin du mobile. 
-        	rafraichir2(context,mobilefactor,rmaxjson,maximum,compteur); //Redessine le rayon de SCH et si besoin l'astre sur un fond blanc avec les entrées à gauche. 
+        	rafraichir2(context,mobilefactor,rmaxjson,maximum); //Redessine le rayon de SCH et si besoin l'astre sur un fond blanc avec les entrées à gauche. 
 			nzoom-=1/nbredefusees;
 			document.getElementById('nzoomtxt').innerHTML= "zoom="+ Math.round(nzoom).toString(); //Mets à jour l'affichage du zoom sur le site. 
     	}, false);
@@ -1042,7 +1060,7 @@ function trajectoire(compteur,mobile) {
         	mobilefactor=retour[1]; //Récupère le nouveau facteur d'échelle. 
 			factGlobalAvecClef *= Math.pow(1.2,1/nbredefusees ); //Je zoome de 20%.
 			majFondFixe22(mobile); //Je mets à jour tout ce qui est relié au dessin du mobile.
-        	rafraichir2(context,mobilefactor,rmaxjson,maximum,compteur); //Redessine le rayon de SCH et si besoin l'astre sur un fond blanc avec les entrées à gauche. 
+        	rafraichir2(context,mobilefactor,rmaxjson,maximum); //Redessine le rayon de SCH et si besoin l'astre sur un fond blanc avec les entrées à gauche. 
 			nzoom+=1/nbredefusees;
 			document.getElementById('nzoomtxt').innerHTML= "zoom="+ Math.round(nzoom).toString(); //Mets à jour l'affichage du zoom sur le site. 
 		}, false);
@@ -1054,7 +1072,7 @@ function trajectoire(compteur,mobile) {
       		mobilefactor=retour[1]; //Récupère le nouveau facteur d'échelle. 
 			factGlobalAvecClef = fact_defaut; //Le zoom redevient celui initial de la simulation. 
 			majFondFixe22(mobile); //Je mets à jour tout ce qui est relié au dessin du mobile.
-        	rafraichir2(context,mobilefactor,rmaxjson,maximum,compteur); //Redessine le rayon de SCH et si besoin l'astre sur un fond blanc avec les entrées à gauche. 
+        	rafraichir2(context,mobilefactor,rmaxjson,maximum); //Redessine le rayon de SCH et si besoin l'astre sur un fond blanc avec les entrées à gauche. 
 			nzoom=0;
 			document.getElementById('nzoomtxt').innerHTML= "zoom="+ Math.round(nzoom).toString(); //Mets à jour l'affichage du zoom sur le site. 
     	}, false);
@@ -1096,7 +1114,7 @@ function trajectoire(compteur,mobile) {
 			}
 		}
 			   
-    	creation_blocs(context,mobilefactor,rmaxjson,maximum,compteur); //Je trace le rayon et SCH et si besoin l'astre. 
+    	creation_blocs(context,mobilefactor,rmaxjson,maximum); //Je trace le rayon et SCH et si besoin l'astre. 
 																		  
 		//-----------------------------------------------------TRACÉ POTENTIEL -------------------------------------------------
 		
@@ -1161,7 +1179,7 @@ function animate(compteur,mobile,mobilefactor) {
 	mobilefactor[compteur] = factGlobalAvecClef //facteur pour l'echelle
 	
 	SurTelephone(); //on verifie si on est sur telephone ou ordinateur
-	choixTrajectoire(compteur,context,mobilefactor,rmaxjson,maximum);// on vérifie le type de trajectoire sélectionné
+	choixTrajectoire(context,mobilefactor,rmaxjson,maximum);// on vérifie le type de trajectoire sélectionné
 
 	/*----------------------------------------------------------{{{{  CAS_OBSERVATEUR  }}}-----------------------------------------------------------*/
 	if(element2.value != "mobile")
@@ -1407,7 +1425,7 @@ function animate(compteur,mobile,mobilefactor) {
 	}
 
 
-}  //fin fonction animate
+} 
 
 
 // -------------------------------------{potentiel_externe_photon}--------------------------------------------
@@ -1442,21 +1460,38 @@ function potentiel_interne_photon(r,E,L) {
 
 // -------------------------------------{Vr_mob}--------------------------------------------
 
-
+/**
+ * Fonction qui donne le potentiel divisé par c² en fonction de si on est à l'intérieur ou à l'extérieur de l'astre pour un photon en métrique de Schwarzschild, dans le référentiel du mobile.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @param {Number} E : constante d'integration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @returns le résultat du potentiel divisé par c². 
+ */
 function Vr_mob(r,E,L) {
-	if(r > r_phy) { return potentiel_externe_photon(r,L);}
-	else{ return potentiel_interne_photon(r,E,L);}
+	if(r > r_phy) { //Métrique extérieure :
+		return potentiel_externe_photon(r,L);
+	}else{ //Métrique intérieure :
+		return potentiel_interne_photon(r,E,L);
+	}
 }
 
 // -------------------------------------{Vr_obs}--------------------------------------------
 
-
+/**
+ * Fonction qui donne le potentiel divisé par c² en fonction de si on est à l'intérieur ou à l'extérieur de l'astre pour un photon en métrique de Schwarzschild, 
+ * dans le référentiel de l'observateur distant.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @param {Number} E : constante d'integration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @returns le résultat du potentiel divisé par c². 
+ */
 function Vr_obs(r,E,L) {
-	if(r > r_phy) { return Math.pow(E,2)-( 1-potentiel_externe_photon(r,L)/Math.pow(E,2) )*Math.pow(1-rs/r,2) ;}
-	else{ return Math.pow(E,2)- Math.pow(beta(r),4)*( 1-potentiel_interne_photon(r,E,L)/Math.pow(E,2) ); } 
+	if(r > r_phy) { //Métrique extérieure :
+		return Math.pow(E,2)-(1 - potentiel_externe_photon(r,L)/Math.pow(E,2))*Math.pow(1-rs/r,2) ;
+	}else{ //Métrique intérieure : 
+		return Math.pow(E,2)- Math.pow(beta(r),4)*(1 - potentiel_interne_photon(r,E,L)/Math.pow(E,2)); 
+	} 
 }
-
-
 
 // -------------------------------------{alpha}--------------------------------------------
 
@@ -1523,67 +1558,104 @@ function derivee_seconde_interne_photon(E,L,r) {
 
 // -------------------------------------{derivee_seconde_interne_photon}--------------------------------------------
 
+/**
+ * Expression de la dérivée seconde de r par rapport à t pour un photon dans la métrique de Schwarzschild intérieure. 
+ * @param {Number} E : constante d'intégration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat de la dérivée seconde. 
+ */
 function derivee_seconde_interne_photon_obs(E,L,r) {
-	return - Math.pow(c, 2)*r*rs/Math.pow(E,2)/ Math.pow(r_phy, 3) * (Math.pow(E*beta(r),2)- Math.pow(L/r, 2)*Math.pow(beta(r),4) )
-	+  0.5*Math.pow(c, 2)* alpha(r)/Math.pow(E,2) * ( 2* Math.pow(L, 2)*Math.pow(beta(r),4)/Math.pow(r, 3)- Math.pow(E,2)*r*rs*beta(r)/(Math.sqrt(alpha(r))*Math.pow(r_phy, 3)))
-	+Math.pow(c, 2)*Math.sqrt(alpha(r))/Math.pow(E,2)/ Math.pow(r_phy, 3)*(Math.pow(E,2)*beta(r)- Math.pow(L/r, 2)*Math.pow(beta(r),3) )*r*rs;
+
+	terme1 = Math.pow(E/beta(r),2) - Math.pow(L/r,2);
+	derivee_alpha = (-2*r*rs)/Math.pow(r_phy,3);
+	derivee_beta = ((r*rs)/(2*Math.pow(r_phy,3)))*(1/Math.sqrt(alpha(r)));
+
+	return ((c*c)/(2*Math.pow(E,2)))*(derivee_alpha*Math.pow(beta(r),4)*terme1 + 4*alpha(r)*derivee_beta*Math.pow(beta(r),3)*terme1 
+	+ 2*alpha(r)*Math.pow(beta(r),4)*((-Math.pow(E,2)*derivee_beta)/(Math.pow(beta(r),3)) + Math.pow(L,2)/Math.pow(r,3)));
 }
-
-
 
 // -------------------------------------{calcul_rmax}--------------------------------------------
 
-function calcul_rmax(L,E,vr,r0,rmax1ou2){
-  // Vr different de 0
-  //JPC mis en commentaire ici rmax = eq3d(L, m, E);
-  // Vr=0
-  //JPC et ici if (vr == 0) {
-    r1 = (L * (L - Math.sqrt(Math.pow(L, 2) - 12 * Math.pow(m, 2))) / (2 * m));
-    r2 = (L * (L + Math.sqrt(Math.pow(L, 2) - 16 * Math.pow(m, 2))) / (4 * m));
+/**
+ * Fonction servant à calculer la distance radiale maximale que peu atteindre le mobile avant de retourner vers le trou noir.
+ * @param {Number} L : Constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} E : Constante d'intégration, sans dimensions.
+ * @param {Number} r0 : distance initiale au centre de l'astre.
+ * @returns {Number} rmax : la distance radiale maximale.
+ */
+function calcul_rmax(L,r0){
+
+	//J'obtiens r1 et r2 qui sont des conditions pour avoir des orbites stables autour d'un trou noir.
+    r1 = (L * (L - Math.sqrt(Math.pow(L, 2) - 12 * Math.pow(m, 2))) / (2 * m)); //Distance radiale critique où des transitions d'orbites peuvent se produire. 
+    r2 = (L * (L + Math.sqrt(Math.pow(L, 2) - 16 * Math.pow(m, 2))) / (4 * m)); //Distance radiale critique où des transitions d'orbites peuvent se produire pour des L plus élevés.
+
+	/*calculs pour r3, r3 qui est la distance maximale à laquelle une particule peut s'éloigner avant de retourner vers le trou noir :*/
     ra = 2 * m * Math.pow(L, 2);
     rb = ((2 * m / r0) - 1) * Math.pow(L, 2);
     X0 = 1 / r0;
     rc = 2 * m - Math.pow(L, 2) * X0 + 2 * m * Math.pow(L * X0, 2);
     DELTA = Math.pow(rb, 2) - 4 * ra * rc;
-    r3 = (-rb - Math.sqrt(DELTA)) / (2*ra);
-	//console.log("r3",r3);
-	//console.log("r0",r0);
-    // la particule tombe au centre
+    r3 = (-rb - Math.sqrt(DELTA)) / (2*ra); //Point tournant extérieur maximal. 
+
     if (L < 2 * Math.sqrt(3) * m) {
+		/*Cas où je n'ai pas de maximum ou de minimum réel à mon potentiel. 
+		Dans ce cas il n'y a pas de changement de direction du mouvement et
+		la particule tombe directement dans le trou noir.*/
     	rmax = r0;
     }
+
 	else if ( (L <= 4*m) && (L > 2*Math.sqrt(3)*m) ) {
-		// dans ce cas, r varie entre 2 valeurs r0 et r3
-			if ( (Vr(r0) <= Vr(r1)) && (r0 > r1) ) {
-				if (r3 > r0) {
-					rmax = r3;
-				}
-				else if (r3 < r0) {
-					rmax = r0;
-				}
-			}
-		// comprend les cas r0<=r1 et V(r0)>V(r1) où la particule tombe au centre
-		else {
-			rmax = r0;
-		}
-	}
-    // dans ce cas r varie entre les 2 valeurs r0 et r3
-    else if (L > 4 * m) {
-		if (r0 > r2) {
+		/*Je suis dans la zone où L > 2*Math.sqrt(3)*m donc je peux éviter de tomber
+		directement dans le trou noir mais aussi où je ne peux pas trop m'en éloigner.
+		La particule peut donc osciller entre deux points spécifiques.*/
+
+		if ( (Vr(r0) <= Vr(r1)) && (r0 > r1) ) {
+		/*Si l'énergie potentielle effective en r0 est inférieure
+		ou égale à r1 alors r0 se trouve en dehors du potentiel local
+		minimum et donc la particule oscille entre r0 et r3.
+		De plus r0>r1 donc je commence mon mouvement à une 
+		position radiale plus éloignée que le premier point tournant r1.*/
+
 			if (r3 > r0) {
-			rmax = r3;
+				/*La particule peut atteindre r3 avant de revenir.*/
+				rmax = r3;
 			}
 			else if (r3 < r0) {
-			rmax = r0;
+				/*r0 est encore au-delà des oscillations donc c'est la valeur max.*/
+				rmax = r0;
 			}
 		}
 		else {
+			/*La particule est en-dessous du point tournant intérieur et tombe donc vers le centre.*/
 			rmax = r0;
 		}
 	}
-	
+    else if (L > 4 * m) {
+		/* La particule peut maintenir des orbites plus étendues et potentiellement plus stables autour du trou noir, 
+		en évitant les orbites instables plus proches de celui-ci.*/
+
+		if (r0 > r2) {
+			/*La particule a assez d'énergie pour atteindre une position radiale r3 avant
+			de subir les effets gravitationnels significatis et revenir vers l'intérieur*/
+
+			if (r3 > r0) {
+				/*r3 est la distance maximale à laquelle la particule peut s'éloigner avant
+				de revenir vers l'intérieur.*/
+				rmax = r3;
+			}
+			else if (r3 < r0) {
+				/*r0 est déjà la distance maximale atteinte par la particule.*/
+				rmax = r0;
+			}
+		}
+		else { /*La particule n'a pas assez d'énergie et est obligée de revenir vers l'intérieur.*/
+			rmax = r0;
+		}
+	}
 }
 
+// -------------------------------------{pausee}--------------------------------------------
 
 /**
  * Cette fonction est associé aux bouttons pause, avec les quels on peut pauser et reprendre la simulaiton.
@@ -1615,10 +1687,10 @@ function pausee()
 /**
  * Fonction qui permet d'effacer le fond du canva pour mettre le texte et dessiner l'astre.
  */
-function rafraichir2(context,mobilefactor,rmaxjson,r0ou2,compteur) 
+function rafraichir2(context,mobilefactor,rmaxjson,r0ou2) 
 {
 	majFondFixe();//efface le fond et met le text
-	creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur);//dessine l'astre et l'echelle
+	creation_blocs(context,mobilefactor,rmaxjson,r0ou2);//dessine l'astre et l'echelle
 }
 //----------------------------------------------------{rafraichir}----------------------------------------------------
 
@@ -1639,7 +1711,7 @@ function rafraichir()
 /**
  * Fonction qui sert à enregistrer une image de la simulation. 
  */
-function enregistrer() {
+function enregistrer_trajectoires() {
 
 	var texte = o_recupereJson(); //Pour avoir accès au contenu des fichiers json.
 
@@ -1800,15 +1872,24 @@ function test_inte() {
 	}
 }
 
-// crée les différentes couches visuelles
-function creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur){
-	r2bis=(80*r0ou2)/(factGlobalAvecClef);
-	r1bis=Math.round((80*r0ou2)/(factGlobalAvecClef*10**testnum(r2bis)));
-	ech=r1bis*10**testnum(r2bis);
+//----------------------------------------------------{creation_blocs}----------------------------------------------------
 
-	context.lineWidth = "1";
-	context.fillStyle = COULEUR_NOIR;
-if ((mobilefactor[cle] * m / rmaxjson[cle]) < 3) {
+/**
+ * Fonction qui dessine le cercle du rayon de SCH (cercle ou cible), si besoin l'astre, le texte du titre et des entrées
+ * ainsi que l'échelle sur le canvas de la simulation. 
+ * @param {Object} context : contexte du canvas de la simulation. 
+ * @param {Array} mobilefactor : Liste qui contient les facteurs d'échelle des mobiles.
+ * @param {Array} rmaxjson : Liste qui contient les coordonnées radiales maximales des mobiles.
+ * @param {Array} r0ou2 : Liste qui contient les distances initiales des mobiles.
+ */
+function creation_blocs(context,mobilefactor,rmaxjson,r0ou2){
+
+	context.lineWidth = "1"; //Définit l'épaisseur de la ligne utilisée pour les tracés à 1 pixel.
+
+
+	if ((mobilefactor[cle] * m / rmaxjson[cle]) < 3) { //Si le cercle du rayon de SCH est trop petit vis à vis de l'échelle du graphe :
+
+		//Alors j'affiche l'astre comme une cible bleu : 
 		context.beginPath();
 		context.strokeStyle = COULEUR_BLEU;
 		context.moveTo(posX3 - 10, posY3);
@@ -1826,143 +1907,65 @@ if ((mobilefactor[cle] * m / rmaxjson[cle]) < 3) {
 		context.moveTo(posX3, posY3 + 3);
 		context.lineTo(posX3, posY3 + 10);
 		context.stroke();
-	} else {
+	} 
+	else { //Autrement j'affiche le cercle du rayon de SCH :
+
 		context.beginPath();
 		context.strokeStyle = COULEUR_BLEU;
 		context.setLineDash([5, 5]);
 		context.arc(posX3, posY3, ((mobilefactor[cle] * 2 * m / rmaxjson[cle])), 0, Math.PI * 2);
 		context.stroke();
+
 	}
-//	if (rs < r_phy) {
-		context.beginPath();
-		context.fillStyle = COULEUR_RPHY;
-		context.setLineDash([]);
-		context.arc(posX3, posY3, (factGlobalAvecClef * r_phy / rmaxjson[cle]), 0, Math.PI * 2);
-		context.fill();
-		context.beginPath();
-		context.strokeStyle = COULEUR_GRIS;
-		//context.setLineDash([5, 5]);
-		//context.arc(posX3, posY3, ((mobilefactor[cle] * 2 * m / rmaxjson[cle])), 0, Math.PI * 2); 
-		context.stroke();
-//	}
-	context.fillStyle = 'white';
 
+	//Je dessine le disque pour le rayon physique : 
+	context.beginPath();
+	context.fillStyle = COULEUR_RPHY;
+	context.setLineDash([]);
+	context.arc(posX3, posY3, (factGlobalAvecClef * r_phy / rmaxjson[cle]), 0, Math.PI * 2);
+	context.fill();
+	context.beginPath();
+	context.strokeStyle = COULEUR_GRIS;
+	context.stroke();
 
-	// Ajout d'un fond blanc pour l'exportation
+	context.fillStyle = 'white'; //Ajout d'un fond blanc pour l'exportation.
+
+	//--------------------Dessin du texte du titre et des entrées--------------------
 	context.font = "15pt bold";
 	context.fillStyle = "black"; 
 	context.fillText(texte.page_trajectoire_photon.non_baryonique_photon,5,40);
 	context.font = "13pt bold";
 	context.fillText(texte.pages_trajectoire.entrees,5,70);
+
+	//--------------------calculs pour la barre d'échelle--------------------
+	r2bis=(80*r0ou2)/(factGlobalAvecClef);
+	r1bis=Math.round((80*r0ou2)/(factGlobalAvecClef*10**testnum(r2bis)));
+	ech=r1bis*10**testnum(r2bis);
+
+	//--------------------Dessin du texte de la barre d'échelle--------------------
 	context.font = "11pt normal";
 	context.fillStyle = COULEUR_RS;
 	context.fillText(ech.toExponential(1)+" m",605,90);
 	context.stroke();
-	context.beginPath();      // Début du chemin
+
+	//--------------------Dessin de la barre d'échelle--------------------
 	context.strokeStyle = COULEUR_RS;
+	context.beginPath();    
 	context.setLineDash([]);
+
 	context.moveTo(600,110);
 	context.lineTo(600+ech*factGlobalAvecClef/r0ou2,110);
+
 	context.moveTo(600,105);
 	context.lineTo(600,115);
+
 	context.moveTo(600+ech*factGlobalAvecClef/r0ou2,105);
 	context.lineTo(600+ech*factGlobalAvecClef/r0ou2,115);
-	// Fermeture du chemin (facultative)
+
 	context.stroke();
-	
-	
 }
 
-function canvasAvantLancement(){
-	nbrFusee = document.getElementById("nombredefusees").value
-	//for (countt = 1; countt <= nbrFusee; countt += 1) {
-	//	console.log(r0o2[countt])
-	//}
-	cle = -1
-
-	if(ifUneFois3){
-	if(nbrFusee ==1){
-		maximum=r0o2[1]
-		cle = 1;
-	}
-	else{
-		cle=0;
-		for (key = 1; key <= nbrFusee; key += 1) {
-			if(r0o2[key]>=maximum){
-				maximum=r0o2[key];
-				cle=key;
-			}
-		}
-	}
-
-	facteurDeMalheur = [] // Je suis désespéré
-	
-	for (key = 1; key <= nbrFusee; key += 1) {
-		facteurDeMalheur[key] = Number(document.getElementById("scalefactor").value);  	
-	
-	}
-	for (key = 1; key <= nbrFusee; key += 1) {
-		if(key!=cle){
-			facteurDeMalheur[key] = Number(document.getElementById("scalefactor").value)/(r0o2[cle]/r0o2[key]);
-		}
-	}
-
-	factGlobalAvecClef = facteurDeMalheur[cle];
-	fact_defaut= facteurDeMalheur[cle];
-
-	ifUneFois3 = false
-    }
-
-
-
-	canvas = document.getElementById("myCanvas");
-    if (!canvas) {
-		alert(texte.pages_trajectoire.impossible_canvas);
-		return;
-    }
-
-	canvas.style = "margin: auto;";
-	
-
-    context = canvas.getContext("2d");
-    if (!context) {
-		alert(texte.pages_trajectoire.impossible_context);
-		return;
-    } 
-	context.clearRect(0, 0, canvas.width, canvas.height);
-
-	context.lineWidth = "1";
-
-
-	//Texte 
-	context.font = "11pt normal"; 
-	r2bis=(80*maximum)/(factGlobalAvecClef);
-	r1bis=Math.round((80*maximum)/(factGlobalAvecClef*10**testnum(r2bis)));
-	ech=r1bis*10**testnum(r2bis);
-	context.beginPath();
-	context.fillStyle = COULEUR_RS;
-	context.fillText(ech.toExponential(1)+" m",605,90);
-	context.stroke();
-
-	//Barre
-	context.strokeStyle = COULEUR_RS;
-	context.beginPath(); // Début du chemin
-	context.setLineDash([]);
-
-	context.moveTo(600,105);
-	context.lineTo(600,115);
-
-	context.moveTo(600,110);
-	context.lineTo(600+((r1bis*10**testnum(r2bis))*factGlobalAvecClef)/maximum,110);
-
-	context.moveTo(600+((r1bis*10**testnum(r2bis))*factGlobalAvecClef)/maximum,105);
-	context.lineTo(600+((r1bis*10**testnum(r2bis))*factGlobalAvecClef)/maximum,115);
-
-	context.stroke();
-
-
-}
-
+//----------------------------------------------------{choixTrajectoire}----------------------------------------------------
 
 /**
  * Fonction qui permet de préparer le canvas de la simulation en fonction de si on choisit une trajectoire complète ou simple. 
@@ -1972,10 +1975,10 @@ function canvasAvantLancement(){
  * @param {Number} rmaxjson : valeur maximale de la coordonnée radiale, en m.   
  * @param {Number} r0ou2 : distance initiale au centre de l'astre qui est la plus grande parmi les différentes mobiles, en m.  
  */
-function choixTrajectoire(compteur,context,mobilefactor,rmaxjson,r0ou2) {
+function choixTrajectoire(context,mobilefactor,rmaxjson,r0ou2) {
     if (element.value == 'simple') {
 		majFondFixe();
-        creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur);
+        creation_blocs(context,mobilefactor,rmaxjson,r0ou2);
 		diametre_particule = DIAMETRE_PART*2;
 	}else if (element.value=='complete'){
         diametre_particule = DIAMETRE_PART;

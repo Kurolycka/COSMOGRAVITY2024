@@ -1,44 +1,16 @@
-// variables globales
-var r_part = 0;
-var A_part = 0;
-var J=0;
-var A_init=0;
-var A_part_obs = 0;
-var A_init_obs=0;				   
-var Dtau1=0;
-var Dtau2=0;
-var i = 1;
-var j = 1;
-var title = "V(r)/c² - 1";
-var mini_obs=0;
-var mini_mob=0;
-var clicks = 0;
-const DIAMETRE_PART = 1;
-var scale_factor=280;
-var z=0;
-var z_obs=0;
-var input=0;
-var distance_parcourue_totale=0; //Manon
-var nz_avant_lancement=0;
-var c = 299792458;
-var G = 6.67385 * Math.pow(10, -11);
-var compteurVitesse = 0;
-var compteurVitesseAvantLancement =0; 
-
-var point; //pour le graphe du potentiel
-var pilotage_possible = true; //Pour savoir si on peut piloter ou pas.
 
 
-//puisqu'il faux initaliser data1 et data2 avant l'appel dans graphique_creation_pot
-var data1 = [];
-var data2 = [];
+//----------------------------------------------------{DEFINITION DES VARIABLES GLOBALES}----------------------------------------------------
 
-var onestarrete=0;
-var peuxonrelancer = true;
-var obs=0;
-// liste de couleurs en hexa
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Constantes physiques ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+var c = 299792458; //Vitesse de la lumière.
+var G = 6.67385 * Math.pow(10, -11); //Constante gravitationnelle. 
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Constantes pour les couleurs ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+//Définition de couleurs en hexadécimal :
 const COULEUR_NOIR = '#2F2D2B';
-
 const COULEUR_BLEU = '#4080A4';
 const COULEUR_TURQUOISE='#AEEEEE';
 const COULEUR_CYAN = '#7F008B8B';
@@ -49,31 +21,60 @@ const COULEUR_GRIS = '#C0C0C0';
 const COULEUR_GRIS_FONCE = '#A9A9A9';
 const COULEUR_JAUNE='#F0E36B';
 
-// couleurs rayons et particule
+//Association des couleurs à des éléments de la simulation : 
 const COULEUR_PART = COULEUR_ROUGE_COSMO;
 const COULEUR_RS = COULEUR_BLEU;
 const COULEUR_RH = COULEUR_GRIS_FONCE;
 const COULEUR_ERGOS = COULEUR_JAUNE;
 
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Variables pour le zoom ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-function pressionBouttonObservateur2() {
-	if (document.getElementById("r3").className == "myButton2") {
-		document.getElementById("r3").className = "myButton";
-		document.getElementById("r4").className = "myButton2";
-		document.getElementById("case_depasser").style="display: none;";
+var nz_avant_lancement=0; //Comptabilisation du zoom d'avant lancement. 
+var input=0; //Comptabilisation du zoom de manière générale.
 
- 	}	
-}
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Variables pour l'accélération/décélération ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-// actualisation bouton mobile quand pression
-function pressionBouttonMobile2() {
-	if (document.getElementById("r4").className == "myButton2") {
-		document.getElementById("r4").className = "myButton";
-		document.getElementById("r3").className = "myButton2";
-		document.getElementById("case_depasser").style="display: block;";
+var clicks = 0;//Comptabilisation de simu de manière générale après le lancement.
+var compteurVitesseAvantLancement =0; //Comptabilisation de simu avant lancement. 
+var compteurVitesse = 0; //Comptabilisation de simu de manière générale.
 
-	}
-}
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Variables pour le pilotage ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+var pilotage_possible = true; //Pour savoir si on peut piloter ou pas.
+var temps_acceleration; //Temps d'accélération ou décélération. 
+var nombre_de_g_calcul_memo =0 //Dernier nombre de g ressenti.
+var nombre_de_g_calcul=0; //g ressenti instantanné. 
+var puissance_instant =0; //Puissance instantannée initialisée.
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Initialisation de listes ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+//Liste pour le tracé du graphe de potentiel :
+var data1 = [];
+var data2 = [];
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Variables de la trajectoire ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+//Initialisation de différentes valeurs de la trajectoire :
+var r_part = 0;
+var A_part = 0;
+var A_part_obs = 0;
+var A_init_obs=0;
+var A_init=0;	
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Autres variables ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	   
+var Dtau1=0; //Variable initialisée pour le dtau maximal.
+var Dtau2=0; //Variable initialisée pour le dtau minimal.
+var title = "V(r)/c² - 1"; //Stockage du titre du graphe de potentiel.
+const DIAMETRE_PART = 1; //Pour fixer la taille du mobile.
+var scale_factor=280; //Stockage du facteur d'échelle par défaut. 
+var z=0; //Stockage du décalage spectrale dans le référentiel du mobile.
+var z_obs=0; //Stockage du décalage spectrale dans le référentiel de l'observateur.
+var distance_parcourue_totale=0;  //Initialisation de la distance métrique parcourue.
+var point; //Variable utilisé pour le graphe du potentiel. 
+var texte = o_recupereJson(); //Récupération du texte des json. 
+var onestarrete=0; //Variable pour préciser si le mobile est à l'arrêt ou non.
+var peuxonrelancer = true; //Variable pour préciser si on peut relancer la simulation ou non.
 
 //----------------------------------------------------{initialisation}----------------------------------------------------
 
@@ -610,7 +611,7 @@ function trajectoire() {
 			rafraichir();
 		}, false);		
 	
-		creation_blocs(context); //Je trace Rh+, Rh- et rs. 
+		creation_blocs_kerr(context); //Je trace Rh+, Rh- et rs. 
 	  
 		//-----------------------------------------------------TRACÉ POTENTIEL -------------------------------------------------
 		
@@ -971,92 +972,181 @@ function animate() {
 		
 	}
 
-}    // fin fonction animate
+}
 
 
-// Expression du potentiel divisé par c^2
+// -------------------------------------{delta}--------------------------------------------
+
+/**
+ * Fonction pour faciliter les calculs dans la métrique de Kerr.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns {Number} : le résultat de delta(r). 
+ */
+function delta(r) {
+	return r**2-rs*r+a**2;
+}
+
+//----------------------------------------------------{potentiel_Kerr_massif}----------------------------------------------------
+
+/**
+ * Expression du potentiel divisé par c² dans la métrique de Kerr pour une particule massive, dans le référentiel du mobile.
+ * Permet de simplifier les expressions pour le cas de l'observateur distant. 
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @param {Number} E : constante d'integration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @returns le résultat du potentiel divisé par c². 
+ */
+function potentiel_Kerr_massif(r) {
+	return 1 - rs/r - ((Math.pow(a,2)*(Math.pow(E,2)-1)-Math.pow(L,2))/Math.pow(r,2)) - (rs/Math.pow(r,3))*Math.pow(L-a*E,2);
+}
+
+// -------------------------------------{Vr_mob}--------------------------------------------
+
+/**
+ * Fonction qui renvoie (Vr_mob/c²)-1 dans la métrique de Kerr pour une particule massive, dans le référentiel du mobile.
+ * Vr_mob étant le potentiel. 
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat du potentiel divisé par c². 
+ */
 function Vr_mob(r) {
 	return  potentiel_Kerr_massif(r)-1;
 }
 
+// -------------------------------------{Vr_obs}--------------------------------------------
+
+/**
+ * Fonction qui renvoie (Vr_obs/c²)-1 dans la métrique de Kerr pour une particule massive, dans le référentiel de l'observateur distant.
+ * Vr_obs étant le potentiel. 
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @param {Number} E : constante d'integration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur. 
+ * @returns le résultat du potentiel divisé par c². 
+ */
 function Vr_obs(r) {
-	denom=(Math.pow(r,2)+Math.pow(a,2)+rs*Math.pow(a,2)/r)*E-rs*a*L/r;
-	dtausurdtaucarre = Math.pow(delta(r)/denom,2);
-	return Math.pow(E,2)-( Math.pow(E,2)-potentiel_Kerr_massif(r) )*dtausurdtaucarre -1 ;
+	denominateur = Math.pow((Math.pow(r,2) + Math.pow(a,2) + rs*Math.pow(a,2)/r)*E - rs*a*L/r,2);
+	return (Math.pow(E,2) - ((Math.pow(E,2)-potentiel_Kerr_massif(r))*Math.pow(delta(r),2))/denominateur) - 1;
 }
 
+// -------------------------------------{derivee_seconde_Kerr_massif}--------------------------------------------
 
-function potentiel_Kerr_massif(r) {
-	return 1 - rs / r - (a * a * (E * E - 1) - L * L) / (r * r) - rs / Math.pow(r, 3) * Math.pow(L - a * E, 2);
-}
-
-
+/**
+ * Expression de la dérivée seconde de r par rapport à τ pour une particule massive dans la métrique de Kerr. 
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @param {Number} E : constante d'integration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur. 
+ * @returns le résultat de la dérivée seconde. 
+ */
 function derivee_seconde_Kerr_massif(r) {
-	return -c * c / (2 * Math.pow(r, 4)) * (rs * r * r + 2 * r * (a * a * (E * E - 1) - L * L) + 3 * rs * Math.pow(L - a * E, 2));
+
+	//Attention il manque un moins dans la formule de la théorie.
+
+	return -(Math.pow(c,2)/(2*Math.pow(r,4)))*(rs*Math.pow(r,2) + 2*r*(Math.pow(a,2)*(Math.pow(E,2)-1)-Math.pow(L,2)) + 3*rs*Math.pow(L-a*E,2));
 }
 
+// -------------------------------------{derivee_seconde_Kerr_massif_obs}--------------------------------------------
 
-function delta(r) {
-	var d=r**2-rs*r+a**2;
-	return d;
-}
-
+/**
+ * Expression de la dérivée seconde de r par rapport à t pour une particule massive dans la métrique de Kerr. 
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @param {Number} E : constante d'integration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur. 
+ * @returns le résultat de la dérivée seconde. 
+ */
 function derivee_seconde_Kerr_massif_obs(r) {
-	EaL2_a2=Math.pow(E*a,2)-Math.pow(L,2)- Math.pow(a,2);  
-	Ea_L2=Math.pow(L-a*E,2) ;  
-	denom=(Math.pow(r,2)+Math.pow(a,2)+rs*Math.pow(a,2)/r)*E-rs*a*L/r ;
-    return   0.5*Math.pow(c,2)*delta(r)/Math.pow(denom,2)*( 
 
-             ( -rs/Math.pow(r,2)-2*(EaL2_a2)/Math.pow(r,3)-3*rs*Ea_L2/Math.pow(r,4) )*delta(r)
+	//J'obtiens la formule en faisant -(1/2)*(dVobs/dr) donc on dérive quelque chose de la forme w*z/u
 
-            +2*(Math.pow(E,2)-1+rs/r+(EaL2_a2)/Math.pow(r,2)+rs*Ea_L2/Math.pow(r,3))*(2*r-rs)  
+	w = Math.pow(E,2) - 1 + rs/r + (Math.pow(a,2)*(E*E - 1) - Math.pow(L,2))/Math.pow(r,2) + (rs/Math.pow(r,3))*Math.pow(L-a*E,2);
+	z = Math.pow(delta(r),2)
+	u = Math.pow((Math.pow(r,2) + Math.pow(a,2) + rs*Math.pow(a,2)/r)*E - rs*a*L/r,2);
 
-            -2*(Math.pow(E,2)-1+rs/r+(EaL2_a2)/Math.pow(r,2)+rs*Ea_L2/Math.pow(r,3))*delta(r)*((2*r-rs*Math.pow(a,2)/Math.pow(r,2))*E+rs*a*L/Math.pow(r,2))/denom )   ;
+	derivee_w = (-rs/Math.pow(r,2)) - 2*(Math.pow(a,2)*(E*E - 1) - Math.pow(L,2))/Math.pow(r,3) - ((3*rs)/Math.pow(r,4))*Math.pow(L-a*E,2);
+	derivee_z = 2*(2*r-rs)*delta(r);
+	derivee_u = 2*(E*(2*r - (rs*a*a)/Math.pow(r,2)) + (rs*a*L)/Math.pow(r,2))*((Math.pow(r,2) + Math.pow(a,2) + rs*Math.pow(a,2)/r)*E - rs*a*L/r);
+
+	return ((c*c)/2)*((derivee_w*z + w*derivee_z)*u - w*z*derivee_u)/Math.pow(u,2);
 }
 
+//----------------------------------------------------{calcul_rmax}----------------------------------------------------
 
+/**
+ * Fonction servant à calculer la distance radiale maximale que peu atteindre le mobile avant de retourner vers le trou noir.
+ * @returns {Number} rmax : la distance radiale maximale.
+ */
 function calcul_rmax(){
-	r1 = (L * (L - Math.sqrt(Math.pow(L, 2) - 3 * Math.pow(rh, 2))) / (rh));
-	r2 = (L * (L + Math.sqrt(Math.pow(L, 2) - 4 * Math.pow(rh, 2))) / (2 * rh));
+	
+	//J'obtiens r1 et r2 qui sont des conditions pour avoir des orbites stables autour d'un trou noir.
+	r1 = (L * (L - Math.sqrt(Math.pow(L, 2) - 3 * Math.pow(rh, 2))) / (rh)); //Distance radiale critique où des transitions d'orbites peuvent se produire. 
+	r2 = (L * (L + Math.sqrt(Math.pow(L, 2) - 4 * Math.pow(rh, 2))) / (2 * rh));  //Distance radiale critique où des transitions d'orbites peuvent se produire pour des L plus élevés.
 
+	/*calculs pour r3, r3 qui est la distance maximale à laquelle une particule peut s'éloigner avant de retourner vers le trou noir :*/
 	ra = rh * Math.pow(L, 2);
 	rb = ((rh / r0) - 1) * Math.pow(L, 2);
 	X0 = 1 / r0;
 	rc = rh - Math.pow(L, 2) * X0 + rh * Math.pow(L * X0, 2);
 	DELTA = Math.pow(rb, 2) - 4 * ra * rc;
-	r3 = (-rb - Math.sqrt(DELTA)) / (2*ra);
-
+	r3 = (-rb - Math.sqrt(DELTA)) / (2*ra); //Point tournant extérieur maximal. 
+	
 	if (L < Math.sqrt(3) * rh) {
+		/*Cas où je n'ai pas de maximum ou de minimum réel à mon potentiel. 
+		Dans ce cas il n'y a pas de changement de direction du mouvement et
+		la particule tombe directement dans le trou noir.*/
 		rmax = r0;
-	} 
+	}
+
+
 	else if (L <= 2 * rh && L > Math.sqrt(3) * rh) {
+		/*Je suis dans la zone où L > Math.sqrt(3)*rh donc je peux éviter de tomber
+		directement dans le trou noir mais aussi où je ne peux pas trop m'en éloigner.
+		La particule peut donc osciller entre deux points spécifiques.*/
+
 		if (Vr_mob(r0) <= Vr_mob(r1) && r0 > r1) {
+			/*Si l'énergie potentielle effective en r0 est inférieure
+			ou égale à r1 alors r0 se trouve en dehors du potentiel local
+			minimum et donc la particule oscille entre r0 et r3.
+			De plus r0>r1 donc je commence mon mouvement à une 
+			position radiale plus éloignée que le premier point tournant r1.*/
+
 			if (r3 > r0) {
+				/*La particule peut atteindre r3 avant de revenir.*/
 				rmax = r3;
-			} 
+			}
 			else if (r3 < r0) {
+				/*r0 est encore au-delà des oscillations donc c'est la valeur max.*/
 				rmax = r0;
 			}
-		} 
-		else {
-			rmax = r0;
 		}
-	} 
-	else if (L > 2 * rh) {
-		if (r0 > r2) {
-			if (r3 > r0) {
-				rmax = r3;
-			} 
-			else if (r3 < r0) {
-				rmax = r0;
-			}
-		} 
-		else{
+		else {
+			/*La particule est en-dessous du point tournant intérieur et tombe donc vers le centre.*/
 			rmax = r0;
 		}
 	}
-	else{rmax=r0;}
+	else if (L > 2 * rh) {
+		/* La particule peut maintenir des orbites plus étendues et potentiellement plus stables autour du trou noir, 
+		en évitant les orbites instables plus proches de celui-ci.*/
+
+		if (r0 > r2) {
+			/*La particule a assez d'énergie pour atteindre une position radiale r3 avant
+			de subir les effets gravitationnels significatis et revenir vers l'intérieur*/
+
+			if (r3 > r0) {
+				/*r3 est la distance maximale à laquelle la particule peut s'éloigner avant
+				de revenir vers l'intérieur.*/
+				rmax = r3;
+			}
+			else if (r3 < r0) {
+				/*r0 est déjà la distance maximale atteinte par la particule.*/
+				rmax = r0;
+			}
+		}
+		else { /*La particule n'a pas assez d'énergie et est obligée de revenir vers l'intérieur.*/
+			rmax = r0;
+		}
+	}
+	return rmax;
 }
+
+// -------------------------------------{pausee}--------------------------------------------
 
 /*ATTENTIEN : cette fonction est differente de celle utilisé dans la partie SCH car on a pas besoin de plusieurs
 mobiles, ni de Timers, pusique SetInterval suffit bien, alors on a gardé cette fonction pour Kerr Ainsi */
@@ -1111,14 +1201,15 @@ function rafraichir()
 function rafraichir2(context) 
 {
 	majFondFixe();//efface le fond et met le text
-	creation_blocs(context);//dessine l'astre et l'echelle
+	creation_blocs_kerr(context);//dessine l'astre et l'echelle
 }	
 // -------------------------------------{enregistrer}--------------------------------------------
 
 /**
  * Fonction qui sert à enregistrer une image de la simulation. 
  */
-function enregistrer(){
+
+function enregistrer_trajectoires(){
 	
 	var texte = o_recupereJson(); //Pour avoir accès au contenu des fichiers json.
 
@@ -1174,6 +1265,7 @@ function enregistrer(){
 	}
 }
 
+
 //----------------------------------------------------{majFondFixe}----------------------------------------------------
 
 //--------------------------------Texte pour l'enregistrement--------------------------------
@@ -1225,6 +1317,7 @@ function majFondFixe22(){
 	context22.clearRect(0, 0, canvas.width, canvas.height);
 }
 
+
 // -------------------------------------{fonction majFondFixe33}--------------------------------------------
 /**
  * Fonction qui efface le canva pour enregistrement
@@ -1234,227 +1327,24 @@ function majFondFixe3(){
 }
 
 
-function test_Jmax() { //teste si la valeur de J est supérieure à sa valeur maximale
-  var texte = o_recupereJson();
-  initialisation();
-  J_max=G * Math.pow(M, 2) / c;
-  if (Math.abs(J) > J_max) {
-    alert(texte.page_trajectoire_massive_kerr.moment_angulaire +"("  + J_max.toExponential(4) + "\u0020kg.m\u00b2s\u207B\u00B9)"   );
-    return false;
-  }
-  else{
-    return true;
-  }
-}
+//----------------------------------------------------{tests_lancement}----------------------------------------------------
 
-function test_r0(){
-	var texte = o_recupereJson();
-	initialisation();
-	if(r0<=rhp){
-		alert(texte.pages_trajectoire.rayonHorzInfRayon);
-		return false;
-	}
-	else if(isNaN(E) || isNaN(L)){
-		alert(texte.pages_trajectoire.EouLisNaN);
-		return false;
-	}
-	else{
-		return true;
-							
-	}
-}
-// teste si r0 et J0 sont valides pour la simulation
+/**
+ * Fonction qui lance la simulation si les paramètres J et r0 conviennent et que E et L ne sont pas NaN.
+ */
 function tests_lancement(){
-	var val_test=test_Jmax()&&test_r0();
-	if(val_test==true){
-		save_kerr_massif();
-		trajectoire();
-	//  Le cas où les valeurs de E et L ne sont pas calculables(Test)
-		if (isNaN(E) || isNaN(L)){
-			document.getElementById("L").innerHTML = "Non calculable" ;
-			document.getElementById("E").innerHTML = "Non calculable";
-		}
+
+	/*Je regarde si J et r0 conviennent.Si E et L sont des NaN ou pas :*/
+	var val_test=test_Jmax()&&test_r0(false);
+
+	if(val_test==true){ //Si toutes les conditions citées au dessus sont vérifiées :
+
+		save_kerr_massif(); //Je sauvegarde les données de la simulation.
+		trajectoire(); //Et je la lance.
 	}
 }
 
-// crée les différentes couches visuelles
-function creation_blocs(context){
-	context.lineWidth = "1";
-	var posX3 = (canvas.width / 2.0);
-	var posY3 = (canvas.height / 2.0);
-	if (((scale_factor * rs / rmax)) < 6) {
-		context.beginPath();
-		context.strokeStyle = COULEUR_RS;
-		context.moveTo(posX3 - 10, posY3);
-		context.lineTo(posX3 - 3, posY3);
-		context.stroke();
-		context.beginPath();
-		context.moveTo(posX3 + 3, posY3);
-		context.lineTo(posX3 + 10, posY3);
-		context.stroke();
-		context.beginPath();
-		context.moveTo(posX3, posY3 - 10);
-		context.lineTo(posX3, posY3 - 3);
-		context.stroke();
-		context.beginPath();
-		context.moveTo(posX3, posY3 + 3);
-		context.lineTo(posX3, posY3 + 10);
-		context.stroke();
-	} 
-	else {
-		context.beginPath();
-		context.setLineDash([]);
-		context.fillStyle = COULEUR_ERGOS;
-		context.arc((canvas.width / 2.0), (canvas.height / 2.0), ((scale_factor * rs / rmax)), 0, Math.PI * 2);
-		context.fill();
-		context.beginPath();
-		context.setLineDash([5, 5]);
-		context.arc((canvas.width / 2.0), (canvas.height / 2.0), ((scale_factor * rhp / rmax)), 0, Math.PI * 2);
-		context.fillStyle = 'white';
-		context.fill();
-		context.beginPath();
-		context.setLineDash([5, 5]);
-		context.arc((canvas.width / 2.0), (canvas.height / 2.0), ((scale_factor * rhp / rmax)), 0, Math.PI * 2);
-		context.strokeStyle = COULEUR_RS;
-		context.stroke();
-		// tracé de RH- en bleue
-		context.strokeStyle = 'blue';
-		context.beginPath()
-		
-		context.setLineDash([5, 5]);
-
-		context.arc(posX3, posY3, (rhm * scale_factor)/rmax, 0, 2 * Math.PI);
-		context.stroke();
-		// tracé de RH+ en rouge
-		context.strokeStyle = 'red';
-		context.beginPath();
-		context.setLineDash([5, 5]);
-		context.arc(posX3, posY3, (rhp * scale_factor)/rmax, 0, 2 * Math.PI);
-		context.stroke();
-		context.closePath();
-		context.closePath();
-		context.strokeStyle = COULEUR_RS;
-		context.beginPath();
-		context.setLineDash([5, 5]);
-		context.arc(posX3, posY3, (rs * scale_factor)/rmax, 0, 2 * Math.PI);
-		context.stroke();
-		context.closePath();
-		context.closePath();
-
-
-
-		//la partie qui vient est ajouté par Khaled elle gere les infos bulles sur le graphe
-		var infobulle = document.createElement('div');
-		infobulle.id = 'infobulle_graphe';
-		infobulle.className = 'infobulle_graphe';
-		document.body.appendChild(infobulle);
-
-		var canvas4 = document.getElementById('myCanvas4');
-		var ctx = canvas4.getContext('2d');
-
-		// Dessiner un cercle
-		var circle_RHM = { x: posX3, y: posY3, radius: (rhm * scale_factor)/rmax };
-		var circle_RHP = { x: posX3, y: posY3, radius: (rhp* scale_factor)/rmax };
-		var circle_RS = { x: posX3, y: posY3, radius: (rs* scale_factor)/rmax };
-
-
-
-		ctx.fillStyle = 'rgba(0, 0, 0, 0)';  // Remplissage transparent
-		ctx.strokeStyle = 'rgba(0, 0, 0, 0)';  // Contour transparent
-		ctx.beginPath();
-		ctx.arc(circle_RHM.x, circle_RHM.y, circle_RHM.radius, 0, 2 * Math.PI);
-		ctx.arc(circle_RHP.x, circle_RHP.y, circle_RHP.radius, 0, 2 * Math.PI);
-		ctx.arc(circle_RS.x, circle_RS.y, circle_RS.radius, 0, 2 * Math.PI);
-		ctx.fill();
-		ctx.closePath();
-		// Vérifier si la souris est proche du bord du cercle
-		canvas4.addEventListener('mousemove', function(event) {
-			var rect = canvas4.getBoundingClientRect();
-			var mouseX = event.clientX - rect.left;
-			var mouseY = event.clientY - rect.top;
-
-			// Calculer la distance entre la souris et le centre du cercle
-			var dx_RHM= mouseX - circle_RHM.x;
-			var dy_RHM = mouseY - circle_RHM.y;
-
-			var dx_RHP= mouseX - circle_RHP.x;
-			var dy_RHP = mouseY - circle_RHP.y;
-
-			var dx_RS= mouseX - circle_RS.x;
-			var dy_RS = mouseY - circle_RS.y;
-
-			var distanceFromCenter_RHM = Math.sqrt(dx_RHM * dx_RHM + dy_RHM * dy_RHM);
-			var distanceFromCenter_RHP = Math.sqrt(dx_RHP * dx_RHP + dy_RHP * dy_RHP);
-			var distanceFromCenter_RS = Math.sqrt(dx_RS * dx_RS + dy_RS * dy_RS);
-
-
-			var onEdge_RHM = Math.abs(distanceFromCenter_RHM - circle_RHM.radius) <= 5;
-			var onEdge_RHP= Math.abs(distanceFromCenter_RHP - circle_RHP.radius) <= 5;
-			var onEdge_RS= Math.abs(distanceFromCenter_RS - circle_RS.radius) <= 5;
-
-
-
-
-			if (onEdge_RHM) {
-				infobulle.style.visibility = 'visible';
-				infobulle.style.left = event.clientX + 'px';
-				infobulle.style.top = "800" + 'px';//event.clientY + 'px';
-				var latex = 'Rh-';
-				infobulle.innerHTML = '\\(' + latex + '\\)';
-				MathJax.typeset();
-			} 
-			else if (onEdge_RHP) {
-				infobulle.style.visibility = 'visible';
-				infobulle.style.left = event.clientX + 'px';
-				infobulle.style.top = "750" + 'px';//event.clientY + 'px';
-				var latex = 'Rh+';
-				infobulle.innerHTML = '\\(' + latex + '\\)';
-				MathJax.typeset();
-			} 
-			
-			else if (onEdge_RS) {
-				infobulle.style.visibility = 'visible';
-				infobulle.style.left = event.clientX + 'px';
-				infobulle.style.top = "700" + 'px';//event.clientY + 'px';
-				var latex = 'rs';
-				infobulle.innerHTML = '\\(' + latex + '\\)';
-				MathJax.typeset();
-			} 
-			
-			
-			else {
-				infobulle.style.visibility = 'hidden';
-			}
-		});
-
-  	}
-	context.fillStyle = 'white';
-	
-	r2bis=(80*r0)/(scale_factor);
-	r1bis=Math.round((80*r0)/(scale_factor*10**testnum(r2bis)));
-	ech=r1bis*10**testnum(r2bis);
-	xe=((r1bis*10**testnum(r2bis))*scale_factor)/r0;
-
-	context.fillStyle = COULEUR_RS;
-	context.fillText(ech.toExponential(1)+" m",605,90);
-	context.stroke();
-	context.beginPath();      // Début du chemin
-	context.strokeStyle = COULEUR_RS;
-
-	//context.moveTo(canvas.width / 2.0,canvas.height / 2.0);    // Tracé test1
-	//context.lineTo((canvas.width / 2.0)+280,canvas.height / 2.0);  // Tracé test2
-	context.moveTo(600,110);
-	context.lineTo(600+((r1bis*10**testnum(r2bis))*scale_factor)/r0,110);
-	context.moveTo(600,105);
-	context.lineTo(600,115);
-	context.moveTo(600+((r1bis*10**testnum(r2bis))*scale_factor)/r0,105);
-	context.lineTo(600+((r1bis*10**testnum(r2bis))*scale_factor)/r0,115);
-	// Fermeture du chemin (facultative)
-	context.stroke();
-
-}
-
-// -------------------------------------{fonction choixTrajectoire}--------------------------------------------
+//----------------------------------------------------{choixTrajectoire}----------------------------------------------------
 
 /**
  * Fonction qui permet de préparer le canvas de la simulation en fonction de si on choisit une trajectoire complète ou simple. 
@@ -1468,7 +1358,7 @@ function choixTrajectoire(context) {
     if (element.value == 'simple') {
 		majFondFixe();
 		// Tracé du Rayon de Schwarzchild,...
-        creation_blocs(context);
+        creation_blocs_kerr(context);
 		diametre_particule = DIAMETRE_PART*2;
 	}else if (element.value=='complete'){
         diametre_particule = DIAMETRE_PART;

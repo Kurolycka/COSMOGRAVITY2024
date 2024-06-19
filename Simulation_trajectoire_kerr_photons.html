@@ -169,8 +169,8 @@
 			<div id="radio_button">
 				<button id="r1" type="button" name="traj" class="myButton" value="complete" onclick="document.getElementById('traject_type').value = this.value;pressionBouttonTrajectoireComplete()"></button>
 				<button id="r2" type="button" name="traj2" class="myButton2" value="simple" onclick="document.getElementById('traject_type').value = this.value;pressionBouttonTrajectoireSimple()"></button>
-				<button id="r3" type="button" name="observateur" class="myButton" value="observateur" onclick="document.getElementById('traject_type2').value = this.value;pressionBouttonObservateur2();notationvitesseree1kerr();"></button>
-				<button id="r4" type="button" name="mobile" class="myButton2" value="mobile" onclick="document.getElementById('traject_type2').value = this.value;pressionBouttonMobile2();notationvitesseree1kerr();"></button> 
+				<button id="r3" type="button" name="observateur" class="myButton" value="observateur" onclick="document.getElementById('traject_type2').value = this.value;pressionBouttonObservateur(true);notationvitesseree1kerr();"></button>
+				<button id="r4" type="button" name="mobile" class="myButton2" value="mobile" onclick="document.getElementById('traject_type2').value = this.value;pressionBouttonMobile(true);notationvitesseree1kerr();"></button> 
 				<div style="display: inline-block;">
 					<span id="case_depasser"style="display:none">
 						<label id="label_depasser" for="vr"></label>
@@ -190,7 +190,7 @@
 				</span>
 
 				<span id="enregistrer">
-					<button id="boutton_enregis" type="button" class="myButton" onclick="enregistrer();"></button>
+					<button id="boutton_enregis" type="button" class="myButton" onclick="enregistrer_trajectoires();"></button>
 				</span>
 
 				<span id="recup">

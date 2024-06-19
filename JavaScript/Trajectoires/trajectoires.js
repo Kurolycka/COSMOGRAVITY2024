@@ -1,4 +1,5 @@
 
+
 /*Ce fichier est appelé pour s'occuper du changement des bouttons (observateur,spationaute,
 trajectoire_simple, trajectoire_complete,rebond) quand on clique dessus*/
 
@@ -61,31 +62,39 @@ function changerBouttonRebond()
  * Fonction qui est appellé quand on appuie sur observateur, elle change le style 
  * du bouton observateur et le bouton spationaute.
  */
-function pressionBouttonObservateur() 
-{
+function pressionBouttonObservateur(Kerr) {
   //on verifie d'abord le style du bouton
-  if (document.getElementById("r3").className == "myButton2") 
-  {
-    //On change le style des deux boutons 
-    document.getElementById("r3").className = "myButton";//observateur
-    document.getElementById("r4").className = "myButton2";//spationaute
+  if (document.getElementById("r3").className == "myButton2") {
+    document.getElementById("r3").className = "myButton";
+    document.getElementById("r4").className = "myButton2";
+
+    if (Kerr){
+      document.getElementById("case_depasser").style="display: none;";
+    }
+
   }
 }
+
+
 
 /**
  * Fonction qui est appellé quand on appuie sur spationaute, elle change le style 
  * du bouton observateur et le bouton spationaute.
  */
-function pressionBouttonMobile() 
-{
+function pressionBouttonMobile(Kerr) {
   //on verifie d'abord le style du bouton
-  if (document.getElementById("r4").className == "myButton2") 
-  {
-    //On change le style des deux boutons 
-    document.getElementById("r4").className = "myButton";//spationaute
-    document.getElementById("r3").className = "myButton2";//observateur
+  if (document.getElementById("r4").className == "myButton2") {
+    document.getElementById("r4").className = "myButton";
+    document.getElementById("r3").className = "myButton2";
+
+    if(Kerr){
+      document.getElementById("case_depasser").style="display: block;";
+    }
+
   }
 }
+
+
 
 /**
  * Fonction associée à rebond qui fait afficher la barre du coefficient d'amortissement.
@@ -125,7 +134,7 @@ function ammort_photon() {
 
 
 /**
- * Fonctiion qui s'occupe de l'actualisation de la valeur sélectionnée du 
+ * Fonction qui s'occupe de l'actualisation de la valeur sélectionnée du 
  * coefficient d'amortissement pour visuel avec chiffre.
  * @param {*} val : valeur avec la quelle on va mettre à jour la barre.
  */
