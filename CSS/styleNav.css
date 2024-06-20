@@ -27,7 +27,7 @@ nav {
         height: fit-content;
         width: 100%;
         background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4)),
-        url("../Images/DeepFieldWebb.png") no-repeat;
+        url("../Images/DeepFieldWebbNav.png") no-repeat;
         background-size: cover;
     }
 
@@ -146,7 +146,7 @@ nav {
             opacity: 0;
             transform: translateX(-20px);
             background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.6)),
-            url("../Images/DeepFieldWebb.png") no-repeat;
+            url("../Images/DeepFieldWebbNav.png") no-repeat;
             background-size: cover;
         }
 

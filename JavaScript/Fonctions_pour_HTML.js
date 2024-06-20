@@ -329,6 +329,7 @@ function updateUnivers() {
 
     if (document.getElementById("Omégal0")) {
         update_graphe_interactif()
+        update_point()
     }
 }
 /**

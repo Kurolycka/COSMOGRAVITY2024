@@ -220,7 +220,8 @@ function texte_univers_LCDM() {
     document.getElementById("infoOmégar0Sortie").title = texte.univers.infoOmégaR0Sortie
     document.getElementById("infoOmégak0Sortie").title = texte.univers.infoOmégaK0Sortie
     document.getElementById("Temps").innerHTML = texte.univers.Temps
-    document.getElementById("horizons").innerHTML = texte.univers.horizons
+    document.getElementById("evenement").innerHTML = texte.univers.evenement
+    document.getElementById("particule").innerHTML = texte.univers.particules
 
 
     document.getElementById("Enregistrer").innerHTML = texte.univers.Enregistrer
@@ -273,7 +274,8 @@ function texte_univers_DE() {
     document.getElementById("infoOmégar0Sortie").title = texte.univers.infoOmégaR0Sortie
     document.getElementById("infoOmégak0Sortie").title = texte.univers.infoOmégaK0Sortie
     document.getElementById("Temps").innerHTML = texte.univers.Temps
-    document.getElementById("horizons").innerHTML = texte.univers.horizons
+    document.getElementById("evenement").innerHTML = texte.univers.evenement
+    document.getElementById("particule").innerHTML = texte.univers.particules
 
     document.getElementById("Enregistrer").innerHTML = texte.univers.Enregistrer
     document.getElementById("infoNomFichier").title = texte.univers.infoNomFichier
@@ -479,21 +481,10 @@ function textesimutraj(){
     //document.getElementById("acceleration1").title = texte.pages_trajectoire.diffderive;   génère une erreur dans la console pour Kerr car aussi utilisé pour Kerr --> à voir
 }
 
-function textesimuuniv(){
-    var texte = o_recupereJson();
-    document.getElementById("txt_avertissementuniv").innerHTML = texte.page_univers_general.simuavertissement;
-}
-
 function textesfinarret(){
     var texte = o_recupereJson();
     document.getElementById("vr_sc_mas").innerHTML = texte.pages_trajectoire.vrarret;
     document.getElementById("vp_sc_mas").innerHTML = texte.pages_trajectoire.vphiarret;
-}
-
-function textesfinarret_kerr(){
-    var texte = o_recupereJson();
-    //document.getElementById("vrk").innerHTML = texte.pages_trajectoire.vrarret;
-    document.getElementById("vpk").innerHTML = texte.pages_trajectoire.vphikerrarret;
 }
 
 function textesfinarret_kerrphoton(){
@@ -533,12 +524,6 @@ function notationvitesseree2(){
         }
     }
 
-}
-
-
-function zoom() {
-    var texte = o_recupereJson();
-    document.getElementById("zoomtxt").title = texte.page_univers_general.zoomtxt;
 }
 
 
