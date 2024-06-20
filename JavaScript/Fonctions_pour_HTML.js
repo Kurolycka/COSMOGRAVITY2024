@@ -311,8 +311,8 @@ function updateUnivers() {
     }
 
     let dm_horizon_particule_m = calcul_horizon_particule(fonction_simplifiante);
-    dm_horizon_particule_pc = m_vers_pc(dm_horizon_particule_m);
-    dm_horizon_particule_al = m_vers_AL(dm_horizon_particule_m);
+    let dm_horizon_particule_pc = m_vers_pc(dm_horizon_particule_m);
+    let dm_horizon_particule_al = m_vers_AL(dm_horizon_particule_m);
     document.getElementById("resultat_dm_particule_m").innerHTML = arrondie_affichage(dm_horizon_particule_m);
     document.getElementById("resultat_dm_particule_pc").innerHTML = arrondie_affichage(dm_horizon_particule_pc);
     document.getElementById("resultat_dm_particule_al").innerHTML = arrondie_affichage(dm_horizon_particule_al);
@@ -320,12 +320,12 @@ function updateUnivers() {
 
 
     let dm_horizon_evenement_m = calcul_horizon_evenements(fonction_simplifiante);
-    dm_horizon_evenement_pc = m_vers_pc(dm_horizon_evenement_m);
-    dm_horizon_evenement_al = m_vers_AL(dm_horizon_evenement_m);
+    let dm_horizon_evenement_pc = m_vers_pc(dm_horizon_evenement_m);
+    let dm_horizon_evenement_al = m_vers_AL(dm_horizon_evenement_m);
     document.getElementById("resultat_dm_evenement_m").innerHTML = arrondie_affichage(dm_horizon_evenement_m);
     document.getElementById("resultat_dm_evenement_pc").innerHTML = arrondie_affichage(dm_horizon_evenement_pc);
     document.getElementById("resultat_dm_evenement_al").innerHTML = arrondie_affichage(dm_horizon_evenement_al);
-    document.getElementById("he_enregistrer").innerHTML = "d<sub>e<sub>0</sub></sub> = " + dm_horizon_evenement.toExponential(4) + " GAL"
+    document.getElementById("he_enregistrer").innerHTML = "d<sub>e<sub>0</sub></sub> = " + dm_horizon_evenement_pc.toExponential(4) + " pc"
 
     if (document.getElementById("Omégal0")) {
         update_graphe_interactif()
@@ -348,6 +348,12 @@ function updateCalculette() {
     document.getElementById("Omégar0").value = Omega_r(0).toExponential(4)
 
     document.getElementById("Omégam0").value = Omega_m(0).toExponential(4)
+
+    if (document.getElementById("Omégal0")) {
+        resizeCanvas()
+        update_graphe_interactif()
+        update_point()
+    }
 }
 
 /**

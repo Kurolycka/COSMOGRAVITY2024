@@ -105,7 +105,7 @@
                 <span></span>
             </div>
 
-            <div class="paramètre">
+            <div class="paramètre" style="grid-template-columns: 1fr 1fr">
                 <label id="label_optionsOmégar0" for="optionsOmégar0">
                     <img id="infoOmégaR0" src="./Images/icone_info.png" alt="" width="20" height="20">
                 </label>
@@ -116,7 +116,7 @@
                 </select>
             </div>
 
-            <div class="paramètre">
+            <div class="paramètre" style="grid-template-columns: 1fr 1fr">
                 <label id="label_optionsOmégak0" for="OptionsOmégak0">
                     <img id="infoOmégaK0" src="./Images/icone_info.png" alt="" width="20" height="20">
                 </label>
@@ -126,6 +126,7 @@
             <div id="conteneurCanvas">
                 <canvas id="canvas"></canvas>
             </div>
+
             <button class="grosBoutton">Actualiser</button>
         </div>
 
@@ -554,6 +555,7 @@
     <script src="./JavaScript/Univers/calcul_facteur_echelle_LCDM.js"></script>
     <script src="./JavaScript/MéthodesNumériques.js"></script>
     <script src="JavaScript/Univers/calculette.js"></script>
+    <script src="./JavaScript/Univers/Dessin_Interactif_Séparatrices.js"></script>
 
 
 <script>
@@ -565,6 +567,7 @@
     
     window.onload = loadvalues();
     updateCalculette()
+    update_point()
 </script> 
 </body>
 </html>

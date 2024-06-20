@@ -5,7 +5,7 @@ body {
 }
 
 .grosBoutton {
-    background-color: rgb(181,75,58);
+    background-color: rgb(104, 45, 104);
     color: white;
     font-size: 20px;
     border: none;
@@ -17,12 +17,12 @@ body {
 }
 
     .grosBoutton:active {
-        background-color: rgb(148, 67, 55);
+        background-color: rgb(149, 65, 149);
         transform: translateY(2px);
     }
 
 .petitBoutton {
-    background-color: rgb(181,75,58);
+    background-color: rgb(104, 45, 104);
     color: white;
     font-size: 18px;
     border: none;
@@ -36,7 +36,7 @@ body {
 }
 
     .petitBoutton:active {
-        background-color: rgb(148, 67, 55);
+        background-color: rgb(149, 65, 149);
         transform: translateY(2px);
     }
 

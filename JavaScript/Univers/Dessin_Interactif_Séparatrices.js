@@ -253,8 +253,6 @@ function update_graphe_interactif() {
     context.fillText(texte.grapheSéparatrices.BB, 0, 15);
     context.fillText(texte.grapheSéparatrices.pBB, 0, -30);
     context.restore();
-
-    update_point()
 }
 
 function update_point() {
@@ -307,11 +305,16 @@ canvas.addEventListener('click', function(event) {
         if (omegam0 > omegaM0Max && omegaL0Min > omegal0) { update_omegas(omegaL0Min, omegaM0Max); }
         if (omegam0 > omegaM0Max && omegal0 > omegaL0Max) { update_omegas(omegaL0Max, omegaM0Max); }
     }
-    updateUnivers();
-    if (document.getElementById("Omégal0")) {
+    if (document.getElementById("Ok_enregistrer")) {
+        updateUnivers();
+    }
+    if (document.getElementById("omegaL_z1")) {
+        updateCalculette();
+    }
+
+    if (document.getElementById("Omégal0") && (document.getElementById("Ol_enregistrer"))) {
         affichage_site_LCDM();
         }
-    update_point();
 });
 
 
