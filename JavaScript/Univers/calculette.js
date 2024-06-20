@@ -319,7 +319,7 @@ function generer_graphique_distance(fonction_EouF){
         }
     ];
     //configuration de la fenetre plotly
-    let layout = {  width: 1000 , height:450 , 
+    let layout = {  width: 900 , height:450 , 
         title: plot_title,
         titlefont:{family:"Time New Roman, sans-serif",size:20,color:"#111111"},
         xaxis: {
@@ -485,7 +485,7 @@ function generer_graphique_Omega(fonction_EouF){
         }
     ];
     //configuration de la fenetre plotly
-    let layout = {  width: 1000 , height:450 , 
+    let layout = {  width: 900 , height:450 , 
         title: plot_title,
         titlefont:{family:"Time New Roman, sans-serif",size:20,color:"#111111"},
         xaxis: {
@@ -608,7 +608,7 @@ function generer_graphique_TempsDecalage(fonction_EouF){
         }
     ];
     //configuration de la fenetre plotly
-    let layout = {  width: 1000 , height:450 , 
+    let layout = {  width: 900 , height:450 , 
         title: plot_title,
         titlefont:{family:"Time New Roman, sans-serif",size:20,color:"#111111"},
         xaxis: {

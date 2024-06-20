@@ -132,7 +132,7 @@
 
         <div class="boiteCalculAnnexe" style="flex: 1;">
             <div class="CalculAnnexe" id="Calcul_Diametre" >
-                <h4 id="diametre_apparent_titre" class="infobullable" style="margin-bottom: 2px;margin-top: 3px;margin-inline: auto;"></h4>
+                <h4 id="diametre_apparent_titre" class="infobullable" style="margin-bottom:10px; margin-top: 10px;margin-inline: auto;"></h4>
                 <div>
                     <input id="select_z1_diametre" type="radio" name="choix_z1_z2" checked>
                     <label for="select_z1_diametre">z1</label>
@@ -163,7 +163,7 @@
             </div>
 
             <div class="CalculAnnexe" id="Calcul_inverse">
-                <h4 id="calcul_inverse_titre" style="margin-bottom: 2px;margin-top: 3px;margin: auto;"></h4>
+                <h4 id="calcul_inverse_titre" style="margin-bottom:10px; margin-top: 10px;margin-inline: auto;"></h4>
                 <div class="paramètre">
                     <label id="label_dminverse" class="infobullable" for="dm_inverse">dm = </label>
                     <input id="dm_inverse" type="number" value="0" step="0.1" min="0">
@@ -197,7 +197,7 @@
             </div>
 
             <div class="CalculAnnexe" id="Calcul_Horizon" style="flex: 1;">
-                <h4 id="horizons_titre" style="margin-bottom: 2px;margin-top: 3px; margin-inline: auto;"></h4>
+                <h4 id="horizons_titre" style="margin-bottom:10px; margin-top: 10px;margin-inline: auto;"></h4>
                 <div class="paramètre">
                     <label id="label_t_hori" class="infobullable" for="t_pour_calcul_horizon">t = </label>
                     <input id="t_pour_calcul_horizon" type="number" value="0" step="0.1" min="0" max="1000">
@@ -229,8 +229,8 @@
     </div>
 
     <!--Fenêtre graphe-->
-    <div id="PanneauCentral">
-        <div class="boiteGenerateurGraphique" style="flex: 1;">
+    <div id="PanneauCentral" class="fenetre_calculette" >
+        <div class="boiteGenerateurGraphique">
             <h3 id="generateur_graphique"></h3>
             <div class="parametreGraphique">
                 <div style="display: flex;gap: 10px;">
@@ -316,13 +316,13 @@
                 </div>
             </div>
         </div>
-        <div id="panneauGraphe" class="Graphe" style="position: relative;background-color: rgb(255,255,255);">
+        <div id="panneauGraphe" class="Graphe" style="position: relative;background-color: rgb(255,255,255);border-radius: 3px;flex-grow: 1;display: flex;flex-direction: column;">
             <div id="graphique_d_z"></div>
             <div id="graphique_d_t"></div>
             <div id="graphique_omega_z"></div>
             <div id="graphique_omega_t"></div>
             <div id="graphique_t_z"></div>
-            <div id="graphique_z_t"></div>
+            <div id="graphique_z_t" style="flex-grow: 1;"></div>
         </div>
     </div>
 
