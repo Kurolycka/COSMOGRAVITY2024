@@ -578,14 +578,13 @@ function generer_graphique_TempsDecalage(fonction_EouF){
         let abscisse_temp=zArr; //inverser les deux axes
         zArr=abscisse;
         abscisse=abscisse_temp;
-        document.getElementById('check_t_z').checked=true;
+        document.getElementById('check_z_t').checked=true;
     }else{
         yaxis_TempsDecalage=yaxis_temps;
         plot_title = "t(z)";
         xaxis_title = "z";
         graphdivid="graphique_t_z"
-        
-        document.getElementById('check_z_t').checked=true;
+        document.getElementById('check_t_z').checked=true;
     };
 
     if (log_abs){
