@@ -201,6 +201,7 @@ function texte_univers_LCDM() {
     document.getElementById("Omégar0_optionRien").innerHTML = texte.univers.Omégar0_Rien
     document.getElementById("infoOmégaK0").title = texte.univers.infoOmégaK0
     document.getElementById("label_optionsOmégak0").insertAdjacentHTML("beforeend", texte.univers.label_Omégak0)
+    document.getElementById("selecParam").innerHTML = texte.univers.selecParam
 
     document.getElementById("Tracé").innerHTML = texte.univers.Tracé;
     document.getElementById("infoAmin").title = texte.univers.infoAmin;
@@ -399,6 +400,11 @@ function texte_constantes() {
     document.getElementById("enregistrer").innerHTML = texte.constante.enregistrer
     document.getElementById("réinitialiser").innerHTML = texte.constante.reinitialiser
     document.getElementById("retour").innerHTML = texte.constante.retour
+}
+
+function texte_Apropos() {
+    let texte = o_recupereJson()
+
 }
 
 

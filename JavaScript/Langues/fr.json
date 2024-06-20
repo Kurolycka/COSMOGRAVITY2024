@@ -49,6 +49,7 @@
 
 			"infoOmégaK0": "Paramètre de densité de courbure actuel. Vous pouvez le mettre à 0 ce qui correspond à un univers plat",
 			"label_Omégak0": " Univers plat ? <br /> (&Omega;<sub>k<sub>0</sub></sub> = 0)",
+			"selecParam": "Vous pouvez sélectionner les Omégas en cliquant sur ce graphique :",
 
 			"Tracé": "<h2>Tracé</h2>",
 				"infoAmin": "Le tracé n'ira pas en dessous de cette valeur. Ne peut pas être supérieur à 1 si l'univers n'as pas de début.",
@@ -186,6 +187,23 @@
 		"pBC": "Pas de BigCrunch",
 		"BB": "BigBang",
 		"pBB": "Pas de"
+	},
+
+	"Apropos": {
+		"desc": "Cosmogravity est une application codé dans le cadre du Master 1 de Physique Numérique à la faculté des sciences de montpellier qui permet de simuler de nombreux phénomène cosmologique comme :",
+			"desc1": "L'évolution du facteur d'échelle réduit en fonction des différents paramètres cosmologique dans le modèle LCDM et DE",
+			"desc2": "La trajectoire de différents mobiles autours de différents corps dans les métriques de Schwarzschild et de Kerr"
+		"Directeurs": "Responsables du parcours de Physique Numérique :",
+			"Directeur1": "Brahim Guizal (LCC)",
+			"Directeur2": "David Cassagne (LCC)",
+		"Encadrant": "Ce projet a été encadré par",
+			"Encadrant1": "Isabelle Mougenot (Espace Dev)",
+			"Encadrant2": "Jean-Pierre Cordoni",
+			"Encadrant3": "Henri Reboul (LUPM)",
+		"Participant": "Il y a aussi eu d'autre participants comme :",
+			"Participant1": "Matthieu Carrère (LUPM)",
+			"Participant2": "Matthieu Carrère (LUPM)",
+			"Participant3": "Matthieu Carrère (LUPM)",
 	},
 
 

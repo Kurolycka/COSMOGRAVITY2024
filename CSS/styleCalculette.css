@@ -1,3 +1,19 @@
+.grillePrincipale {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-rows: 38px 1fr;
+    grid-template-areas:
+            "Nav Nav Nav"
+            "Entree Graphe Sortie";
+    gap: 5px;
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+    width: 100vw;
+    box-sizing: border-box;
+    position: absolute;
+}
+
 .boiteGenerateurGraphique {
     display: flex;
     flex-direction: column;

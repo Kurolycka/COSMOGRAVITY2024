@@ -16,17 +16,17 @@ function toggleEntreeSortie (IDpanel) {
             '"Nav"' +
             '"Graphe"';
     } else if (entreeCachee) {
-        grillePrincipale.style.gridTemplateColumns = '3fr 1fr';
+        grillePrincipale.style.gridTemplateColumns = '4fr 1fr';
         grillePrincipale.style.gridTemplateAreas = '' +
             '"Nav Nav"' +
             '"Graphe Sortie"';
     } else if (sortieCachee) {
-        grillePrincipale.style.gridTemplateColumns = '1fr 3fr';
+        grillePrincipale.style.gridTemplateColumns = '1fr 4fr';
         grillePrincipale.style.gridTemplateAreas = '' +
             '"Nav Nav"' +
             '"Entree Graphe"';
     } else {
-        grillePrincipale.style.gridTemplateColumns = '1fr 2fr 1fr';
+        grillePrincipale.style.gridTemplateColumns = '1fr 3fr 1fr';
         grillePrincipale.style.gridTemplateAreas = '' +
             '"Nav Nav Nav"' +
             '"Entree Graphe Sortie"';
@@ -290,6 +290,8 @@ function updateUnivers() {
     if (document.getElementById("OmégaDE0")) {
         document.getElementById("OmégaDE0").value = Omega_DE(0).toExponential(4)
         document.getElementById("ODE_enregistrer").innerHTML = "&Omega;<sub>DE<sub>0</sub></sub> = " + Omega_DE(0).toExponential(4)
+        document.getElementById("w0_enregistrer").innerHTML = "w<sub>0</sub> = " + document.getElementById("w0").value
+        document.getElementById("w1_enregistrer").innerHTML = "w<sub>0</sub> = " + document.getElementById("w1").value
     }
 
     document.getElementById("Omégar0").value = Omega_r(0).toExponential(4)
