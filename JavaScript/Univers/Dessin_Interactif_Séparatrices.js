@@ -2,7 +2,7 @@ const omegaM0Min = 0;
 const omegaM0Max = 3;
 
 const omegaL0Min = -1.5;
-const omegaL0Max = 3;
+const omegaL0Max = 3.5;
 
 window.onload = function() {
     update_graphe_interactif();
@@ -21,7 +21,7 @@ function resizeCanvas() {
     canvas.height = size;
 }
 
-// Ol est dans le sens des y
+// Om est dans le sens des x
 /**
  * Fonction permettant de convertir une valeur de oméga lambda en pixel
  * @param value {number} Valeur de oméga
@@ -29,11 +29,11 @@ function resizeCanvas() {
  */
 function omegam0_to_px(value) {
     let canvas = document.getElementById("canvas");
-    let echelle = (canvas.height - 30) / Math.abs(omegaM0Max - omegaM0Min);
+    let echelle = (canvas.width - 30) / Math.abs(omegaM0Max - omegaM0Min);
     return echelle * (value - omegaM0Min) + 15;
 }
 
-// Om est dans le sens des x
+// Ol est dans le sens des y
 /**
  * Fonction permettant de convertir une valeur de oméga matière en pixel
  * @param value {number} Valeur de oméga
@@ -41,11 +41,15 @@ function omegam0_to_px(value) {
  */
 function omegal0_to_px(value) {
     let canvas = document.getElementById("canvas");
-    let echelle = (canvas.width - 30) / Math.abs(omegaL0Max - omegaL0Min);
-    return (canvas.width - 15) - (echelle * (value - omegaL0Min));
+    let echelle = (canvas.height - 30) / Math.abs(omegaL0Max - omegaL0Min);
+    return (canvas.height - 15) - (echelle * (value - omegaL0Min));
 }
 
-// Fonction pour convertir les coordonnées de pixels en valeurs Omega
+/**
+ * Fonction permettant de convertir une coordonée x en pixel en omegam0
+ * @param x {number} valeur de la coordonée
+ * @return {number} Valeur de la coordonée convertie en Oméga
+ */
 function px_to_omegam0(x) {
     const pxMin = omegam0_to_px(omegaM0Min);
     const pxMax = omegam0_to_px(omegaM0Max);
@@ -54,6 +58,11 @@ function px_to_omegam0(x) {
     return omegaM0Min + ((x - pxMin) / (pxMax - pxMin)) * (omegaM0Max - omegaM0Min);
 }
 
+/**
+ * Fonction permettant de convertir une coordonée y en pixel en omegal0
+ * @param y {number} valeur de la coordonée
+ * @return {number} Valeur de la coordonée convertie en Oméga
+ */
 function px_to_omegal0(y) {
     const pxMin = omegal0_to_px(omegaL0Min);
     const pxMax = omegal0_to_px(omegaL0Max);
@@ -75,11 +84,11 @@ function update_graphe_interactif() {
 
     // Dessiner les axes
     context.beginPath();
-    context.moveTo(omegam0_to_px(0), omegal0_to_px(omegaL0Min));
-    context.lineTo(omegam0_to_px(0), omegal0_to_px(omegaL0Max));
+    context.moveTo(omegam0_to_px(omegaM0Min), omegal0_to_px(omegaL0Min));
+    context.lineTo(omegam0_to_px(omegaM0Min), omegal0_to_px(omegaL0Max));
     context.lineTo(omegam0_to_px(omegaM0Max), omegal0_to_px(omegaL0Max));
     context.lineTo(omegam0_to_px(omegaM0Max), omegal0_to_px(omegaL0Min));
-    context.lineTo(omegam0_to_px(0), omegal0_to_px(omegaL0Min));
+    context.lineTo(omegam0_to_px(omegaM0Min), omegal0_to_px(omegaL0Min));
 
     context.lineWidth = 1;
     context.strokeStyle = "#000000";
@@ -107,8 +116,8 @@ function update_graphe_interactif() {
 
     for (let marqueur = omegaL0Min; marqueur <= omegaL0Max; marqueur = marqueur + 1) {
         context.beginPath();
-        context.moveTo(omegam0_to_px(0) - 5, omegal0_to_px(marqueur));
-        context.lineTo(omegam0_to_px(0) + 5, omegal0_to_px(marqueur));
+        context.moveTo(omegam0_to_px(omegaM0Min) - 5, omegal0_to_px(marqueur));
+        context.lineTo(omegam0_to_px(omegaM0Min) + 5, omegal0_to_px(marqueur));
         context.lineWidth = 1;
         context.strokeStyle = "#000000";
         context.stroke();

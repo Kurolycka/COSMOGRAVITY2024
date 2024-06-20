@@ -472,7 +472,6 @@ function debut_fin_univers(equa_diff) {
         set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff)
         nombre_point = nombre_point + 1
     }
-    console.log(set_solution)
 
     // Si le dernier set de solution contient des valeurs non définies on utilise celui du pas précédent
     if ( (isNaN(set_solution[1]) && isNaN(set_solution[2])) ) {
@@ -697,7 +696,8 @@ function graphique_facteur_echelle(solution, t_debut, t_fin, t_0) {
     let facteur_fin = ordonnee[ordonnee.length - 1]
 
 
-    if (t_0 !== 0 && H0 > 0) {
+    // On corrige l'erreur numérique provoqué par la dérivée infinie en a
+    if (t_0 !== 0) {
         for (let index = 0; index < abscisse.length; index = index + 1) {
             abscisse[index] = abscisse[index] - temps_debut
         }
