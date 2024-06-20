@@ -180,6 +180,7 @@ function texte_navigation() {
 
 function texte_univers_LCDM() {
     let texte = o_recupereJson();
+    document.querySelectorAll(".unite_al").forEach(function(i){i.innerHTML=texte.calculette.unitéanneelumiere});
     document.getElementById("Entrées").innerHTML = texte.univers.Entrées;
     document.getElementById("constantesUniverselles").innerHTML = texte.univers.constantes
     document.getElementById("calculetteCosmologique").innerHTML = texte.univers.calculette
@@ -233,6 +234,7 @@ function texte_univers_LCDM() {
 
 function texte_univers_DE() {
     let texte = o_recupereJson();
+    document.querySelectorAll(".unite_al").forEach(function(i){i.innerHTML=texte.calculette.unitéanneelumiere});
     document.getElementById("Entrées").innerHTML = texte.univers.Entrées;
     document.getElementById("constantesUniverselles").innerHTML = texte.univers.constantes
     document.getElementById("calculetteCosmologique").innerHTML = texte.univers.calculette
@@ -345,6 +347,9 @@ function texte_univers_calculette() {
     document.getElementById("bouton_distance").title = texte.calculette.infobulle_dist;
     document.getElementById("bouton_omega").title = texte.calculette.infobulle_omega;
     document.getElementById("bouton_tempsdecalage").title = texte.calculette.infobulle_tempsdecalage;
+    document.getElementById("label_omega_totalz1").title = texte.calculette.infobulle_omegatotalz1;
+    document.getElementById("label_omega_totalz2").title = texte.calculette.infobulle_omegatotalz2;
+
 
     document.getElementById("diametre_apparent_titre").title = texte.calculette.infobulle_diametre_apparent;
     document.getElementById("label_d_m").title = texte.calculette.infobulle_D_m;

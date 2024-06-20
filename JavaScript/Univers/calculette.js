@@ -61,9 +61,19 @@ function affichage_des_z(fonction_EouF){
     
 
     
-    //? -----------Calcul des temps----------------
-    let t1=calcul_ages(fonction_EouF,H0_parSecondes(H0),1e-30,1/(1+z1)); //calcul des temps en seconde grâce a la formule de théorie
-    let t2=calcul_ages(fonction_EouF,H0_parSecondes(H0),1e-30,1/(1+z2));
+    //? -----------Calcul des temps----------------$
+    let t1;
+    let t2;
+    if (z1<0){
+        t1=calcul_ages(fonction_EouF,H0_parSecondes(H0),z2,0,true); //calcul des temps en seconde grâce a la formule de théorie
+    }else{
+        t1=calcul_ages(fonction_EouF,H0_parSecondes(H0),1e-30,1/(1+z1)); //calcul des temps en seconde grâce a la formule de théorie
+    }
+    if (z2<0){
+        t2=calcul_ages(fonction_EouF,H0_parSecondes(H0),z2,0,true); //calcul des temps en seconde grâce a la formule de théorie
+    }else{
+        t2=calcul_ages(fonction_EouF,H0_parSecondes(H0),1e-30,1/(1+z2)); //calcul des temps en seconde grâce a la formule de théorie
+    }
     let delta_t=calcul_ages(fonction_EouF,H0_parSecondes(H0),1/(1+z1),1/(1+z2));
     document.getElementById('output_t1').value=arrondie_affichage(t1);
     document.getElementById('output_t1_annee').value=arrondie_affichage(seconde_vers_annee(t1));
@@ -126,9 +136,11 @@ function affichage_des_z(fonction_EouF){
     document.getElementById("omegaK_z1").value = arrondie_affichage(Omega_kz1);
     if (fonction_EouF.name==="fonction_E"){
         document.getElementById("omegaL_z1").value = arrondie_affichage(Omega_lz1);
+        document.getElementById("omegaTotal_z1").value=arrondie_affichage(Omega_rz1+Omega_mz1+Omega_kz1+Omega_lz1);
     }else if (fonction_EouF.name==="fonction_F"){
         document.getElementById("omegaDE_z1").value = arrondie_affichage(Omega_DEz1);
         document.getElementById("omegaDEN_z1").value = arrondie_affichage(Omega_DENz1);
+        document.getElementById("omegaTotal_z1").value=arrondie_affichage(Omega_rz1+Omega_mz1+Omega_kz1+Omega_DENz1);
     };
     document.getElementById("output_dz1dt").value = arrondie_affichage(dz1);
 
@@ -139,9 +151,11 @@ function affichage_des_z(fonction_EouF){
     document.getElementById("omegaK_z2").value = arrondie_affichage(Omega_kz2);
     if (fonction_EouF.name==="fonction_E"){
         document.getElementById("omegaL_z2").value = arrondie_affichage(Omega_lz2);
+        document.getElementById("omegaTotal_z2").value=arrondie_affichage(Omega_rz2+Omega_mz2+Omega_kz2+Omega_lz2);
     }else if (fonction_EouF.name==="fonction_F"){
         document.getElementById("omegaDE_z2").value = arrondie_affichage(Omega_DEz2);
         document.getElementById("omegaDEN_z2").value = arrondie_affichage(Omega_DENz2);
+        document.getElementById("omegaTotal_z2").value=arrondie_affichage(Omega_rz2+Omega_mz2+Omega_kz2+Omega_DENz2);
     };
     document.getElementById("output_dz2dt").value = arrondie_affichage(dz2);
 
@@ -203,10 +217,12 @@ function generer_graphique_distance(fonction_EouF){
     if (fonction_EouF.name==="fonction_E"){
         let Omega_l0 = Number(document.getElementById("Omégal0").value);
         text_omegal0_graph ='   \Ω<sub>Λ0</sub>:  '+Omega_l0;
+        w0w1="";
         equa_diff_2=equa_diff_2_LCDM;
     }else if (fonction_EouF.name==="fonction_F"){
         let Omega_DE0 = Number(document.getElementById('OmégaDE0').value);
         text_omegal0_graph ='   \Ω<sub>DE0</sub>:  '+Omega_DE0;
+        w0w1="  w<sub>0</sub>: "+document.getElementById("w0").value+"  w<sub>1</sub>: "+document.getElementById("w1").value;
         equa_diff_2=equa_diff_2_DE;
     };
 
@@ -247,11 +263,11 @@ function generer_graphique_distance(fonction_EouF){
     //affichage des omega0 sous le titre
     let annots = [{xref: 'paper',
 		yref: 'paper',
-		x: 0.725,
+		x: 0.95,
 		xanchor: 'right',
 		y: 1,
 		yanchor: 'bottom',
-		text:'T<sub>0</sub>: '+T0.toExponential(3)+'   H<sub>0</sub>:'+H0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+Omega_m0.toExponential(3)+text_omegal0_graph+'   \Ω<sub>r0</sub>: ' +Omega_r0+'  \Ω<sub>k0</sub>:   '+Omega_k0.toExponential(3),
+		text:'T<sub>0</sub>: '+T0.toExponential(3)+'   H<sub>0</sub>:'+H0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+Omega_m0.toExponential(3)+text_omegal0_graph+'   \Ω<sub>r0</sub>: ' +Omega_r0+'  \Ω<sub>k0</sub>:   '+Omega_k0.toExponential(3)+w0w1,
 		showarrow: false}];
 
     
@@ -260,10 +276,12 @@ function generer_graphique_distance(fonction_EouF){
         xaxis_title=xaxis_temps;
         graphdivid="graphique_d_t"
         abscisse=abscisse.map((x) => calcul_ages(fonction_EouF,H0_parAnnees(H0),1e-15,1/(1+x)));
+        document.getElementById('check_distance_t').checked=true;
     }else{
         plot_title = "d<sub>i</sub>(z)";
         xaxis_title = "z";
         graphdivid="graphique_d_z"
+        document.getElementById('check_distance_z').checked=true;
     };
 
     if (log_abs){
@@ -301,7 +319,7 @@ function generer_graphique_distance(fonction_EouF){
         }
     ];
     //configuration de la fenetre plotly
-    let layout = {  width: 1000 , height:450 , 
+    let layout = {  width: 900 , height:450 , 
         title: plot_title,
         titlefont:{family:"Time New Roman, sans-serif",size:20,color:"#111111"},
         xaxis: {
@@ -354,7 +372,8 @@ function generer_graphique_Omega(fonction_EouF){
             return;
         };
         text_omegal0_graph ='   \Ω<sub>Λ0</sub>:  '+Omega_l(0); //texte et titre dans lequel omegalambda ou omegaDE apparait
-        titre_omegal='<b>&#x3A9;<sub>&#x39B;</sub><b>'
+        titre_omegal='<b>&#x3A9;<sub>&#x39B;</sub><b>';
+        w0w1="";
         // valeurs des ordonnées
         OrArr = [];    //Paramètre de densité de rayonement
         OmArr = [];    //Paramètre de densite de matière
@@ -380,7 +399,8 @@ function generer_graphique_Omega(fonction_EouF){
             return;
         };
         text_omegal0_graph ='   \Ω<sub>DE0</sub>:  '+Omega_DE(0); //texte et titre dans lequel omegalambda ou omegaDE apparait
-        titre_omegal='<b>&#x3A9;<sub>DE</sub><b>'
+        titre_omegal='<b>&#x3A9;<sub>DE</sub><b>';
+        w0w1="  w<sub>0</sub>: "+document.getElementById("w0").value+"  w<sub>1</sub>: "+document.getElementById("w1").value;
     
         // valeurs des ordonnées
         OrArr = [];    //Paramètre de densité de rayonement
@@ -409,11 +429,11 @@ function generer_graphique_Omega(fonction_EouF){
     //affichage des omega0 sous le titre
     let annots = [{xref: 'paper',
 		yref: 'paper',
-		x: 0.725,
+		x: 0.95,
 		xanchor: 'right',
 		y: 1,
 		yanchor: 'bottom',
-		text:'T<sub>0</sub>: '+T0.toExponential(3)+'   H<sub>0</sub>:'+H0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+Omega_m(0).toExponential(3)+text_omegal0_graph+'   \Ω<sub>r0</sub>: ' +Omega_r(0).toExponential(3)+'  \Ω<sub>k0</sub>:   '+Omega_k(0).toExponential(3),
+		text:'T<sub>0</sub>: '+T0.toExponential(3)+'   H<sub>0</sub>:'+H0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+Omega_m(0).toExponential(3)+text_omegal0_graph+'   \Ω<sub>r0</sub>: ' +Omega_r(0).toExponential(3)+'  \Ω<sub>k0</sub>:   '+Omega_k(0).toExponential(3)+w0w1,
 		showarrow: false}];
 
     
@@ -422,10 +442,12 @@ function generer_graphique_Omega(fonction_EouF){
         xaxis_title=xaxis_temps;
         graphdivid="graphique_omega_t"
         abscisse=abscisse.map((x) => calcul_ages(fonction_EouF,H0_parAnnees(H0),1e-15,1/(1+x)));
+        document.getElementById('check_omega_t').checked=true;
     }else{
         plot_title = "&#x3A9;<sub>i</sub>(z)";
         xaxis_title = "z";
         graphdivid="graphique_omega_z"
+        document.getElementById('check_omega_z').checked=true;
     };
 
     if (log_abs){
@@ -463,7 +485,7 @@ function generer_graphique_Omega(fonction_EouF){
         }
     ];
     //configuration de la fenetre plotly
-    let layout = {  width: 1000 , height:450 , 
+    let layout = {  width: 900 , height:450 , 
         title: plot_title,
         titlefont:{family:"Time New Roman, sans-serif",size:20,color:"#111111"},
         xaxis: {
@@ -502,8 +524,10 @@ function generer_graphique_TempsDecalage(fonction_EouF){
     if (fonction_EouF.name==="fonction_E"){
         text_omegal0_graph ='   \Ω<sub>Λ0</sub>:  '+Omega_l(0);
         equa_diff_2=equa_diff_2_LCDM;
+        w0w1="";
     }else if (fonction_EouF.name==="fonction_F"){
         text_omegal0_graph ='   \Ω<sub>DE0</sub>:  '+Omega_DE(0);
+        w0w1="  w<sub>0</sub>: "+document.getElementById("w0").value+"  w<sub>1</sub>: "+document.getElementById("w1").value;
         equa_diff_2=equa_diff_2_DE;
     };
 
@@ -525,7 +549,12 @@ function generer_graphique_TempsDecalage(fonction_EouF){
 
     //calculs des longueurs
     abscisse.forEach(i => {
-        let zdet = calcul_ages(fonction_EouF,H0_parAnnees(H0),1e-15,1/(1+i));
+        let zdet
+        if (i<0){
+            zdet = calcul_ages(fonction_EouF,H0_parAnnees(H0),i,0,true);
+        }else{
+            zdet = calcul_ages(fonction_EouF,H0_parAnnees(H0),1e-15,1/(1+i));
+        }
 
         zArr.push(zdet);
     });
@@ -533,11 +562,11 @@ function generer_graphique_TempsDecalage(fonction_EouF){
     //affichage des omega0 sous le titre
     let annots = [{xref: 'paper',
 		yref: 'paper',
-		x: 0.725,
+		x: .95,
 		xanchor: 'right',
 		y: 1,
 		yanchor: 'bottom',
-		text:'T<sub>0</sub>: '+T0.toExponential(3)+'   H<sub>0</sub>:'+H0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+Omega_m(0).toExponential(3)+text_omegal0_graph+'   \Ω<sub>r0</sub>: ' +Omega_r(0)+'  \Ω<sub>k0</sub>:   '+Omega_k(0).toExponential(3),
+		text:'T<sub>0</sub>: '+T0.toExponential(3)+'   H<sub>0</sub>:'+H0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+Omega_m(0).toExponential(3)+text_omegal0_graph+'   \Ω<sub>r0</sub>: ' +Omega_r(0)+'  \Ω<sub>k0</sub>:   '+Omega_k(0).toExponential(3)+w0w1,
 		showarrow: false}];
 
     
@@ -549,11 +578,14 @@ function generer_graphique_TempsDecalage(fonction_EouF){
         let abscisse_temp=zArr; //inverser les deux axes
         zArr=abscisse;
         abscisse=abscisse_temp;
+        document.getElementById('check_t_z').checked=true;
     }else{
         yaxis_TempsDecalage=yaxis_temps;
         plot_title = "t(z)";
         xaxis_title = "z";
         graphdivid="graphique_t_z"
+        
+        document.getElementById('check_z_t').checked=true;
     };
 
     if (log_abs){
@@ -576,7 +608,7 @@ function generer_graphique_TempsDecalage(fonction_EouF){
         }
     ];
     //configuration de la fenetre plotly
-    let layout = {  width: 1000 , height:450 , 
+    let layout = {  width: 900 , height:450 , 
         title: plot_title,
         titlefont:{family:"Time New Roman, sans-serif",size:20,color:"#111111"},
         xaxis: {
@@ -663,11 +695,17 @@ function calcul_horizons_annexe(fonction_EouF){
 	}else{
 		z_pour_horizon=calcul_t_inverse(t_pour_horizon,fonction_EouF,H0_parSecondes(H0));
 		let dm_horizon_particule_m=calcul_horizon_particule(fonction_EouF,z_pour_horizon);
-		let dm_horizon_particule_Ga=m_vers_AL(dm_horizon_particule_m)/1e9;
+		let dm_horizon_particule_pc=m_vers_pc(dm_horizon_particule_m);
+		let dm_horizon_particule_al=m_vers_AL(dm_horizon_particule_m);
 		let dm_horizon_evenement_m=calcul_horizon_evenements(fonction_EouF,z_pour_horizon);
-		let dm_horizon_evenement_Ga=m_vers_AL(dm_horizon_evenement_m)/1e9;
-		document.getElementById("resultat_dm_particule_t").value=arrondie_affichage(dm_horizon_particule_Ga);
-		document.getElementById("resultat_dm_evenement_t").value=arrondie_affichage(dm_horizon_evenement_Ga);
+		let dm_horizon_evenement_pc=m_vers_pc(dm_horizon_evenement_m);
+		let dm_horizon_evenement_al=m_vers_AL(dm_horizon_evenement_m);
+		document.getElementById("resultat_dm_particule_m").value=arrondie_affichage(dm_horizon_particule_m);
+		document.getElementById("resultat_dm_particule_pc").value=arrondie_affichage(dm_horizon_particule_pc);
+		document.getElementById("resultat_dm_particule_al").value=arrondie_affichage(dm_horizon_particule_al);
+		document.getElementById("resultat_dm_evenement_m").value=arrondie_affichage(dm_horizon_evenement_m);
+		document.getElementById("resultat_dm_evenement_pc").value=arrondie_affichage(dm_horizon_evenement_pc);
+		document.getElementById("resultat_dm_evenement_al").value=arrondie_affichage(dm_horizon_evenement_al);
         };
 };
 

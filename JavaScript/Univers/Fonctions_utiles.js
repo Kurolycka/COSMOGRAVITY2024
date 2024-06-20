@@ -575,13 +575,23 @@ function tauEnTemps(listeTaus, t_debut) {
  * @param a2 {number}
  * @return {number} âge de l'univers.
  */
-function calcul_ages(fonction, H0, a1, a2) {
-    function integrande(u) {
-        let terme_1 = Math.pow(u, -1)
-        let terme_2 = Math.sqrt(fonction(u))
-
-        return terme_1 * Math.pow(terme_2 , -1);
+function calcul_ages(fonction, H0, a1, a2,z_utilisé=false) {
+    if (z_utilisé){
+        function integrande(u) {
+            let terme_1 = Math.pow((1+u), -1)
+            let terme_2 = Math.pow(fonction(u,true),-0.5)
+    
+            return terme_1 * terme_2 ;
+        }
+    }else{
+        function integrande(u) {
+            let terme_1 = Math.pow(u, -1)
+            let terme_2 = Math.sqrt(fonction(u))
+    
+            return terme_1 * Math.pow(terme_2 , -1);
+        }
     }
+
     return (1 / H0) * simpson_composite(integrande, a1, a2, 100);
 }
 

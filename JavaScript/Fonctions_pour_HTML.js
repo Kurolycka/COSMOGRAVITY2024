@@ -310,15 +310,21 @@ function updateUnivers() {
         fonction_simplifiante = fonction_F
     }
 
-    let dm_horizon_particule = calcul_horizon_particule(fonction_simplifiante);
-    dm_horizon_particule = m_vers_AL(dm_horizon_particule)/1e9;
-    document.getElementById("resultat_DmHorizonEvenement").innerHTML = dm_horizon_particule.toExponential(4)
-    document.getElementById("hp_enregistrer").innerHTML = "d<sub>p<sub>0</sub></sub> = " + dm_horizon_particule.toExponential(4) + " GAL"
-    document.getElementById("")
+    let dm_horizon_particule_m = calcul_horizon_particule(fonction_simplifiante);
+    dm_horizon_particule_pc = m_vers_pc(dm_horizon_particule_m);
+    dm_horizon_particule_al = m_vers_AL(dm_horizon_particule_m);
+    document.getElementById("resultat_dm_particule_m").innerHTML = arrondie_affichage(dm_horizon_particule_m);
+    document.getElementById("resultat_dm_particule_pc").innerHTML = arrondie_affichage(dm_horizon_particule_pc);
+    document.getElementById("resultat_dm_particule_al").innerHTML = arrondie_affichage(dm_horizon_particule_al);
+    document.getElementById("hp_enregistrer").innerHTML = "d<sub>p<sub>0</sub></sub> = " + dm_horizon_particule_pc.toExponential(4) + " pc"
 
-    let dm_horizon_evenement = calcul_horizon_evenements(fonction_simplifiante);
-    dm_horizon_evenement = m_vers_AL(dm_horizon_evenement)/1e9;
-    document.getElementById("resultat_DmHorizonParticule").innerHTML = dm_horizon_evenement.toExponential(4);
+
+    let dm_horizon_evenement_m = calcul_horizon_evenements(fonction_simplifiante);
+    dm_horizon_evenement_pc = m_vers_pc(dm_horizon_evenement_m);
+    dm_horizon_evenement_al = m_vers_AL(dm_horizon_evenement_m);
+    document.getElementById("resultat_dm_evenement_m").innerHTML = arrondie_affichage(dm_horizon_evenement_m);
+    document.getElementById("resultat_dm_evenement_pc").innerHTML = arrondie_affichage(dm_horizon_evenement_pc);
+    document.getElementById("resultat_dm_evenement_al").innerHTML = arrondie_affichage(dm_horizon_evenement_al);
     document.getElementById("he_enregistrer").innerHTML = "d<sub>e<sub>0</sub></sub> = " + dm_horizon_evenement.toExponential(4) + " GAL"
 
     if (document.getElementById("Omégal0")) {
