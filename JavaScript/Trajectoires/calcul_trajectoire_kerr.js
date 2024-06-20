@@ -75,7 +75,6 @@ var point; //Variable utilisé pour le graphe du potentiel.
 var texte = o_recupereJson(); //Récupération du texte des json. 
 var onestarrete=0; //Variable pour préciser si le mobile est à l'arrêt ou non.
 var peuxonrelancer = true; //Variable pour préciser si on peut relancer la simulation ou non.
-
 //----------------------------------------------------{initialisation}----------------------------------------------------
 
 /**
@@ -329,6 +328,8 @@ function trajectoire() {
 			document.getElementById("dernier_g_res").style.display='none'; 
 			document.getElementById("puissance_consommee").style.display='none';
 			document.getElementById("puissance_consommee_label").style.display='none';
+			document.getElementById('distance_parcourue').style.display='none';
+			document.getElementById('distance_metrique').style.display='none';	
 		}
 
 		//Interdiction de changer les valeurs des modes observateur et spationaute une fois la simulation lancée : 
@@ -711,9 +712,6 @@ function animate() {
 
 				z_obs=(1+pvr/c)/((1-(vtot/c)**2)**(1/2))*(1-rs/r_part_obs)**(-1/2)-1;//calcul du decalage spectrale
 
-				distance_parcourue_totale+=vtot*dtau*delta(r_part_obs)/( (Math.pow(r_part_obs,2)+Math.pow(a,2)+rs*Math.pow(a,2)/r_part_obs)*E - rs*a*L/r_part_obs ); //calcul de la distance parcourue
-
-
 				//-----------------------------------------------------PARTIE AFFICHAGE-------------------------------------------------
 
 				//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> AVANT RS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -721,7 +719,6 @@ function animate() {
 				document.getElementById("vrk").innerHTML = vr_3_obs.toExponential(3);
 				document.getElementById("vpk").innerHTML = vp_3_obs.toExponential(3);
 				document.getElementById("v_tot").innerHTML = vtot.toExponential(3);
-				document.getElementById("distance_parcourue").innerHTML = distance_parcourue_totale.toExponential(3); 
 				document.getElementById("decal").innerHTML=z_obs.toExponential(3)
 			}
 
@@ -732,7 +729,6 @@ function animate() {
 				document.getElementById("v_tot").innerHTML = texte.page_trajectoire_massive_kerr.vitesse_pas_définie;
 				document.getElementById("vrk").innerHTML = texte.page_trajectoire_massive_kerr.vitesse_pas_définie;
 				document.getElementById("vpk").innerHTML = texte.page_trajectoire_massive_kerr.vitesse_pas_définie;
-				document.getElementById("distance_parcourue").innerHTML = texte.page_trajectoire_massive_kerr.vitesse_pas_définie; 
 				document.getElementById("decal").innerHTML=1/0;
 
 			}

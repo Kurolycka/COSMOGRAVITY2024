@@ -592,6 +592,25 @@ function creation_blocs_kerr(context){
 	} 
 	else { //Autrement j'affiche les différents cercles :
 
+		//dessin de la legende
+		//rs
+		context.font = "11pt normal";
+		context.fillStyle = COULEUR_RS;
+		context.fillText("rs      -----",605,140);
+		context.stroke();
+
+		//rh+
+		context.font = "11pt normal";
+		context.fillStyle = 'red';
+		context.fillText("Rh+  -----",605,160);
+		context.stroke();
+
+		//rh-
+		context.font = "11pt normal";
+		context.fillStyle = 'blue';
+		context.fillText("Rh -   -----",605,180);
+		context.stroke();
+
 		//Je dessine la zone jaune entre rs et Rh+ : 
 		context.beginPath();
 		context.setLineDash([]);
@@ -626,96 +645,6 @@ function creation_blocs_kerr(context){
 		context.setLineDash([5, 5]);
 		context.arc(posX3, posY3, (rs * scale_factor)/rmax, 0, 2 * Math.PI);
 		context.stroke();
-
-		//--------------------Infobulles des cercles--------------------
-
-		//Création de l'élément qui servira à afficher les info-bulles avec du texte formaté en LaTex : 
-		var infobulle = document.createElement('div');
-		infobulle.id = 'infobulle_graphe';
-		infobulle.className = 'infobulle_graphe';
-		document.body.appendChild(infobulle);
-
-		//Je récupère le canvas avec l'ID "myCanvas4" et son contexte :
-		var canvas4 = document.getElementById('myCanvas4');
-		var ctx = canvas4.getContext('2d');
-
-		//Définition des trois objets représentant les 3 cercles du canvas : 
-		var circle_RHM = { x: posX3, y: posY3, radius: (rhm * scale_factor)/rmax };
-		var circle_RHP = { x: posX3, y: posY3, radius: (rhp* scale_factor)/rmax };
-		var circle_RS = { x: posX3, y: posY3, radius: (rs* scale_factor)/rmax };
-
-		//Je dessine trois cercles sans remplissage ni contour, juste pour définir leur position sur le canvas :
-		ctx.fillStyle = 'rgba(0, 0, 0, 0)';  // Remplissage transparent
-		ctx.strokeStyle = 'rgba(0, 0, 0, 0)';  // Contour transparent
-		ctx.beginPath();
-		ctx.arc(circle_RHM.x, circle_RHM.y, circle_RHM.radius, 0, 2 * Math.PI);
-		ctx.arc(circle_RHP.x, circle_RHP.y, circle_RHP.radius, 0, 2 * Math.PI);
-		ctx.arc(circle_RS.x, circle_RS.y, circle_RS.radius, 0, 2 * Math.PI);
-		ctx.fill();
-		ctx.closePath();
-		
-		//A chaque fois que la souris bouge je calcule sa position par rapport aux cercles définis :
-		canvas4.addEventListener('mousemove', function(event) {
-
-			//Position de la souris sur le canvas :
-			var rect = canvas4.getBoundingClientRect();
-			var mouseX = event.clientX - rect.left;
-			var mouseY = event.clientY - rect.top;
-
-			// Calculer la distance entre la souris et le centre du cercle pour Rh- :
-			var dx_RHM= mouseX - circle_RHM.x;
-			var dy_RHM = mouseY - circle_RHM.y;
-			var distanceFromCenter_RHM = Math.sqrt(dx_RHM * dx_RHM + dy_RHM * dy_RHM);
-
-			// Calculer la distance entre la souris et le centre du cercle pour Rh+ :
-			var dx_RHP= mouseX - circle_RHP.x;
-			var dy_RHP = mouseY - circle_RHP.y;
-			var distanceFromCenter_RHP = Math.sqrt(dx_RHP * dx_RHP + dy_RHP * dy_RHP);
-
-			// Calculer la distance entre la souris et le centre du cercle pour rs :
-			var dx_RS= mouseX - circle_RS.x;
-			var dy_RS = mouseY - circle_RS.y;
-			var distanceFromCenter_RS = Math.sqrt(dx_RS * dx_RS + dy_RS * dy_RS);
-
-			//Je regarde si je suis proche du tracé des cercles : 
-			var onEdge_RHM = Math.abs(distanceFromCenter_RHM - circle_RHM.radius) <= 5;
-			var onEdge_RHP= Math.abs(distanceFromCenter_RHP - circle_RHP.radius) <= 5;
-			var onEdge_RS= Math.abs(distanceFromCenter_RS - circle_RS.radius) <= 5;
-
-			if (onEdge_RHM) { //Si je suis proche du cercle Rh- :
-
-				//J'affiche l'infobulle :
-				infobulle.style.visibility = 'visible';
-				infobulle.style.left = event.clientX + 'px';
-				infobulle.style.top = "800" + 'px';
-				var latex = 'Rh-';
-				infobulle.innerHTML = '\\(' + latex + '\\)';
-				MathJax.typeset();
-			} 
-			else if (onEdge_RHP) { //Si je suis proche du cercle Rh+ :
-
-				//J'affiche l'infobulle :
-				infobulle.style.visibility = 'visible';
-				infobulle.style.left = event.clientX + 'px';
-				infobulle.style.top = "750" + 'px';
-				var latex = 'Rh+';
-				infobulle.innerHTML = '\\(' + latex + '\\)';
-				MathJax.typeset();
-			} 
-			else if (onEdge_RS) { //Si je suis proche du cercle rs :
-
-				//J'affiche l'infobulle :
-				infobulle.style.visibility = 'visible';
-				infobulle.style.left = event.clientX + 'px';
-				infobulle.style.top = "700" + 'px';
-				var latex = 'rs';
-				infobulle.innerHTML = '\\(' + latex + '\\)';
-				MathJax.typeset();
-			} 
-			else { //Si je ne suis proche d'aucun cercle je n'affiche aucune infobulle :
-				infobulle.style.visibility = 'hidden';
-			}
-		});
 	}
 
 	context.fillStyle = 'white'; //Ajout d'un fond blanc pour l'exportation.
@@ -728,23 +657,25 @@ function creation_blocs_kerr(context){
 	//--------------------Dessin du texte de la barre d'échelle--------------------
 	context.font = "11pt normal";
 	context.fillStyle = COULEUR_RS;
-	context.fillText(ech.toExponential(1)+" m",605,90);
+	context.fillText(ech.toExponential(1)+" m",600,80);
 	context.stroke();
 
 	//--------------------Dessin de la barre d'échelle--------------------
 	context.strokeStyle = COULEUR_RS;
 	context.beginPath();
+	context.setLineDash([]);
 
-	context.moveTo(600,110);
-	context.lineTo(600+((r1bis*10**testnum(r2bis))*scale_factor)/r0,110);
+	context.moveTo(610,100);
+	context.lineTo(610+((r1bis*10**testnum(r2bis))*scale_factor)/r0,100);
 
-	context.moveTo(600,105);
-	context.lineTo(600,115);
+	context.moveTo(610,95);
+	context.lineTo(610,105);
 
-	context.moveTo(600+((r1bis*10**testnum(r2bis))*scale_factor)/r0,105);
-	context.lineTo(600+((r1bis*10**testnum(r2bis))*scale_factor)/r0,115);
+	context.moveTo(610+((r1bis*10**testnum(r2bis))*scale_factor)/r0,95);
+	context.lineTo(610+((r1bis*10**testnum(r2bis))*scale_factor)/r0,105);
 
 	context.stroke();
+
 }
 
 

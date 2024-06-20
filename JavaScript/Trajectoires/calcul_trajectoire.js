@@ -979,8 +979,13 @@ function trajectoire(compteur,mobile) {
 
 		rendreVisibleNbG() //Permet si on est en mode spationaute d'afficher les cases concernant le nombre de g ressenti. 
 
-		if(nbredefusees == 1 && element2.value == "mobile") { //Si on a une seule fusée et que on est en mode spationaute on affiche le pilotage. 
+		if(element2.value == "mobile") { //Si on a une seule fusée et que on est en mode spationaute on affiche le pilotage. 
 			document.getElementById("joyDiv").style.visibility='visible';
+		}
+		else //si on est dans mode observateur on enleve la distance parcourue
+		{
+			document.getElementById('distance_parcourue'+compteur).style.display='none';
+			document.getElementById('distance_metrique'+compteur).style.display='none';	
 		}
 
 		document.getElementById('trace_present').value="true"; //Permet de déclarer qu'il y a un tracé. 
@@ -1381,9 +1386,7 @@ function animate(compteur,mobile,mobilefactor)
 
 				z_obs= Math.pow(1-((vr_1_obs*vr_1_obs + vp_1_obs*vp_1_obs)/(c*c)),(-1/2))*Math.pow(1-rs/mobile.r_part_obs,-(1/2))-1 ;//calcul du decalage spectrale
 				if(isNaN(z_obs)){z_obs=1/0}
-				/*Tres proche de rs les vitesses calculées sont NAN, surtout quand on aceelere, c'est pour cela on fait gaffe de ne pas les prendre*/
-				if (mobile.r_part_obs > r_phy && !isNaN(vtotal))       {mobile.distance_parcourue_totale += vtotal*(mobile.dtau*(1-rs/mobile.r_part_obs)/(mobile.E));} //Calcul de la distance parcourue dans le referentiel du mobile 
-
+				
 				/* Calcul du gradient : */
 				gm = derivee_seconde_Schwarzschild_massif_obs(mobile.E,mobile.L,mobile.r_part_obs);
 				gmp = derivee_seconde_Schwarzschild_massif_obs(mobile.E,mobile.L,mobile.r_part_obs + 1);
@@ -1406,9 +1409,7 @@ function animate(compteur,mobile,mobilefactor)
 					vp_1_obs=0 ;
 					vtotal=vr_1_obs=c; 
 					z_obs=1/0;
-					mobile.condition_trace=false; //on met cette condition à false pour le mobile pour l'arreter le tracé,calculs,et affichage à rs 
-					mobile.distance_parcourue_totale += vtotal*(mobile.dtau*(1-rs/mobile.r_part_obs)/(mobile.E)); //Calcul de la derniere valeur de la distance parcourue 
-				
+					mobile.condition_trace=false; //on met cette condition à false pour le mobile pour l'arreter le tracé,calculs,et affichage à rs 				
 				}
 			}
 	
@@ -1422,7 +1423,6 @@ function animate(compteur,mobile,mobilefactor)
 			document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_1_obs.toExponential(3); //vitesse angulaire (v_phi)
 			document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(3);	// vitesse totale (module)
 			document.getElementById("decal"+compteur.toString()).innerHTML=z_obs.toExponential(3); //decalage spectral
-			document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3); //Distance parcourue
 
 			//-----------------------------------------------------PARTIE TRACÉ PARTICULE-------------------------------------------------
 

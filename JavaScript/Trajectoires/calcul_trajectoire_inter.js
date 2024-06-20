@@ -939,7 +939,12 @@ function trajectoire(compteur,mobile) {
 		if(nbredefusees == 1 && element2.value == "mobile") {  //Si on a une seule fusée et que on est en mode spationaute on affiche le pilotage. 
 			document.getElementById("joyDiv").style.visibility='visible';
 		}
-
+		else //si on est dans mode observateur on enleve la distance parcourue
+		{
+			document.getElementById('distance_parcourue'+compteur).style.display='none';
+			document.getElementById('distance_metrique'+compteur).style.display='none';	
+		}
+		
 		document.getElementById('trace_present').value="true"; //Permet de déclarer qu'il y a un tracé. 
 
 		mobile.debut = false; //Permet de dire que nous ne sommes plus au début de la simulation. 
@@ -1340,8 +1345,6 @@ function animate(compteur,mobile,mobilefactor) {
 
 			mobile.temps_observateur_distant+=mobile.dtau; //calcul du temps de l'observateur
 			mobile.temps_particule += mobile.dtau*(1-rs/mobile.r_part_obs)/mobile.E; //calcul du temps propre de la particule
-
-			mobile.distance_parcourue_totale+=vtotal*(mobile.dtau*(1-rs/mobile.r_part_obs)/mobile.E); //calcul de la distance parcourue
 			
 			z_obs=((1-(vtotal/c)**2)**(-1/2))*(1-rs/mobile.r_part_obs)**(-1/2)-1; //calcul du decalage spectrale
 			/*Calcul du gradient d'acceleration*/
@@ -1398,8 +1401,6 @@ function animate(compteur,mobile,mobilefactor) {
 			mobile.temps_observateur_distant+=mobile.dtau;//calcul du temps de l'observateur
 			mobile.temps_particule += mobile.dtau*Math.pow(beta(mobile.r_part_obs),2)/mobile.E;//calcul du temps propre de la particule
 
-			mobile.distance_parcourue_totale+=vtotal*(mobile.dtau*Math.pow(beta(mobile.r_part_obs),2)/mobile.E) //calcul de la distance parcourue
-
 			z_obs=((1-(vtotal/c)**2)**(-1/2))*1/beta(mobile.r_part_obs)-1; //calcul du decalage spectral
 			/*Calcul du gradient d'acceleration*/
 			gm = derivee_seconde_interne_massif_obs(mobile.r_part_obs,mobile.E,mobile.L); 
@@ -1432,7 +1433,6 @@ function animate(compteur,mobile,mobilefactor) {
 		document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_1_obs.toExponential(3);  //vitesse angulaire
 		document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(3);  //vitesse totale (module)
 		document.getElementById("decal"+compteur.toString()).innerHTML=z_obs.toExponential(3);	//decalage spectrale
-		document.getElementById("distance_parcourue"+compteur.toString()).innerHTML=mobile.distance_parcourue_totale.toExponential(3);//distance parcourue
 		//-----------------------------------------------------PARTIE TRACÉ PARTICULE-------------------------------------------------
 		//Dessin du tracé derriere la particule
 		context.beginPath();//on ouvre le context
