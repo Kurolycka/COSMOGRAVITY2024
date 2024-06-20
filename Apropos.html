@@ -4,11 +4,81 @@
     <meta charset="UTF-8">
 
     <link rel="stylesheet" href="./CSS/styleApropos.css">
+    <link rel="stylesheet" href="./CSS/styleNav.css">
 
     <title>A propos de cosmogravity</title>
-</head>
-<h2></h2>
-<body>
 
+    <script src="./node_modules/jquery/dist/jquery.js"></script>
+</head>
+
+<body>
+<div class="grillePrincipale">
+    <div id="positionNav" class="Nav"></div>
+
+    <h2 id="titreDesc"></h2>
+    <p id="desc"></p>
+    <ul>
+        <li id="desc1"></li>
+        <li id="desc2"></li>
+    </ul>
+
+
+    <h2 id="acteurs"></h2>
+    <p id="Directeurs"></p>
+    <ul>
+        <li id="Dir1"></li>
+        <li id="Dir2"></li>
+    </ul>
+
+    <p id="encadrant"></p>
+    <ul>
+        <li id="enc1"></li>
+        <li id="enc2"></li>
+        <li id="enc3"></li>
+    </ul>
+
+    <p id="participant"></p>
+    <ul>
+        <li id="parti1"></li>
+        <li id="parti2"></li>
+        <li id="parti3"></li>
+    </ul>
+
+    <p id="remerciement"></p>
+    <ul>
+        <li id="remer1"></li>
+        <li id="remer2"></li>
+        <li id="remer3"></li>
+        <li id="remer4"></li>
+    </ul>
+
+    <h2 id="versions"></h2>
+    <ul>
+        <li id="license"></li>
+        <li id="2024"></li>
+        <li id="2023"></li>
+        <li id="2022"></li>
+        <li id="2021"></li>
+        <li id="2020"></li>
+        <li id="2019"></li>
+        <li id="2018"></li>
+        <li id="2017"></li>
+        <li id="2016"></li>
+        <li id="2015"></li>
+        <li id="2014"></li>
+        <li id="2013"></li>
+        <li id="2009"></li>
+    </ul>
+</div>
+
+<script src="./JavaScript/Langues/gestion_langues.js"></script>
+
+<script>
+    texte_Apropos()
+
+    $(function() {
+        $("#positionNav").load("Navigation.html");
+    });
+</script>
 </body>
 </html>

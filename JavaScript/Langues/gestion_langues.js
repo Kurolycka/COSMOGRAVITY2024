@@ -405,6 +405,48 @@ function texte_constantes() {
 function texte_Apropos() {
     let texte = o_recupereJson()
 
+    document.getElementById("titreDesc").innerHTML = texte.Apropos.titreDesc
+    document.getElementById("desc").innerHTML = texte.Apropos.desc
+    document.getElementById("desc1").innerHTML = texte.Apropos.desc1
+    document.getElementById("desc2").innerHTML = texte.Apropos.desc2
+
+    document.getElementById("acteurs").innerHTML = texte.Apropos.acteurs
+    document.getElementById("Directeurs").innerHTML = texte.Apropos.Directeurs
+    document.getElementById("Dir1").innerHTML = texte.Apropos.Directeur1
+    document.getElementById("Dir2").innerHTML = texte.Apropos.Directeur2
+
+    document.getElementById("encadrant").innerHTML = texte.Apropos.Encadrant
+    document.getElementById("enc1").innerHTML = texte.Apropos.Encadrant1
+    document.getElementById("enc2").innerHTML = texte.Apropos.Encadrant2
+    document.getElementById("enc3").innerHTML = texte.Apropos.Encadrant3
+
+    document.getElementById("participant").innerHTML = texte.Apropos.Participant
+    document.getElementById("parti1").innerHTML = texte.Apropos.Participant1
+    document.getElementById("parti2").innerHTML = texte.Apropos.Participant2
+    document.getElementById("parti3").innerHTML = texte.Apropos.Participant3
+
+    document.getElementById("remerciement").innerHTML = texte.Apropos.Remerciement
+    document.getElementById("remer1").innerHTML = texte.Apropos.Remerciement1
+    document.getElementById("remer2").innerHTML = texte.Apropos.Remerciement2
+    document.getElementById("remer3").innerHTML = texte.Apropos.Remerciement3
+    document.getElementById("remer4").innerHTML = texte.Apropos.Remerciement4
+
+    document.getElementById("versions").innerHTML = texte.Apropos.versions
+    document.getElementById("license").innerHTML = texte.Apropos.License
+    document.getElementById("2024").innerHTML = texte.Apropos.v2024
+    document.getElementById("2023").innerHTML = texte.Apropos.v2023
+    document.getElementById("2022").innerHTML = texte.Apropos.v2022
+    document.getElementById("2021").innerHTML = texte.Apropos.v2021
+    document.getElementById("2020").innerHTML = texte.Apropos.v2020
+    document.getElementById("2019").innerHTML = texte.Apropos.v2019
+    document.getElementById("2018").innerHTML = texte.Apropos.v2018
+    document.getElementById("2017").innerHTML = texte.Apropos.v2017
+    document.getElementById("2016").innerHTML = texte.Apropos.v2016
+    document.getElementById("2015").innerHTML = texte.Apropos.v2015
+    document.getElementById("2014").innerHTML = texte.Apropos.v2014
+    document.getElementById("2013").innerHTML = texte.Apropos.v2013
+    document.getElementById("2009").innerHTML = texte.Apropos.v2009
+
 }
 
 
