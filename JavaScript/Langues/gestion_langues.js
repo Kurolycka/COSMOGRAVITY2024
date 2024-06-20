@@ -397,6 +397,11 @@ function texte_constantes() {
     document.getElementById("retour").innerHTML = texte.constante.retour
 }
 
+function texte_Apropos() {
+    let texte = o_recupereJson()
+
+}
+
 
 
 
