@@ -610,7 +610,7 @@ function initialisation(compteur){
 	document.getElementById("L"+compteur.toString()).innerHTML = L.toExponential(3);
 	document.getElementById("E"+compteur.toString()).innerHTML = E.toExponential(3);
 	document.getElementById("m").innerHTML = rs.toExponential(3);
-	document.getElementById("rayon_orbite_circ_res"+compteur.toString()).innerHTML = rayon_orbite.toExponential(3);
+	document.getElementById("rayon_orbite_circ_res"+compteur.toString()).innerHTML = rayon_orbite.toExponential(5);
 
 	//Je récupère mon facteur d'échelle : 
 	scale_factor = Number(document.getElementById("scalefactor").value);
@@ -1524,7 +1524,7 @@ function pausee()
 		document.getElementById("pause/resume").innerHTML =texte.pages_trajectoire.bouton_resume; //on change le texte du boutton pause en haut
 		document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_enpause; //on change le texte qui s'affiche "Calculs en pause"
 		document.getElementById("pau").title = texte.pages_trajectoire.bouton_lecture; //infobulle du boutton pause en bas
-		document.getElementById("pau").src = "../../Images/Anciennes_images/lecture.png"; //on change l'icone du boutton pause en bas
+		document.getElementById("pau").src = "../../Images/lecture.png"; //on change l'icone du boutton pause en bas
 		
 	} 
 	//si le Timer est en pause
@@ -1534,7 +1534,7 @@ function pausee()
 			document.getElementById("pause/resume").innerHTML = texte.pages_trajectoire.bouton_pause; //on change l'icone du boutton pause en bas
 			document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_encours;//on change le texte qui s'affiche "Calculs en cours"
 			document.getElementById("pau").title = texte.pages_trajectoire.bouton_pause;//infobulle du boutton pause en bas
-			document.getElementById("pau").src = "../../Images/Anciennes_images/pause.png"; //on change l'icone du boutton pause en bas
+			document.getElementById("pau").src = "../../Images/pause.png"; //on change l'icone du boutton pause en bas
 	}
 }
 
@@ -1590,7 +1590,7 @@ function enregistrer_trajectoires() {
 
 			//Dessin du logo :
 			var logo = new Image() 
-			logo.src='../../Images/Anciennes_images/CosmoGravity_logo.png'; //Je récupère le chemin de l'image du logo.
+			logo.src='../../Images/CosmoGravity_logo.png'; //Je récupère le chemin de l'image du logo.
 			logo.onload = function() {
 				var largeurLogo = 100; //largeur de l'image du logo
 				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //hauteur de l'image du logo

@@ -699,7 +699,7 @@ function initialisation(compteur){
 	//--------------------------------Affichage--------------------------------
 
 	//J'affiche dans le tableau les valeurs calculée de L, E, rs, la vitesse pour une orbite circulaire :
-	document.getElementById("Vcirc_res"+compteur.toString()).innerHTML = v_rotation.toExponential(3);
+	document.getElementById("Vcirc_res"+compteur.toString()).innerHTML = v_rotation.toExponential(5);
 	document.getElementById("L"+compteur.toString()).innerHTML = L.toExponential(3);
 	document.getElementById("E"+compteur.toString()).innerHTML = E.toExponential(3);	
 	document.getElementById("m").innerHTML = rs.toExponential(3);
@@ -1620,17 +1620,17 @@ function animate(compteur,mobile,mobilefactor) {
 		*/
 		if (Number(fm) <= 1) 
 		{
-			document.getElementById('DivClignotante'+compteur.toString()).innerHTML = " <img src='../../Images/Anciennes_images/diodever.gif' height='14px' />";
+			document.getElementById('DivClignotante'+compteur.toString()).innerHTML = " <img src='../../Images/diodever.gif' height='14px' />";
 			document.getElementById('DivClignotante'+compteur.toString()).style.color = "green";
 		} 
 		else if (1 < Number(fm) && Number(fm) < 7) 
 		{
-			document.getElementById('DivClignotante'+compteur.toString()).innerHTML = " <img src='../../Images/Anciennes_images/diodejaune.gif' height='14px' />";
+			document.getElementById('DivClignotante'+compteur.toString()).innerHTML = " <img src='../../Images/diodejaune.gif' height='14px' />";
 			document.getElementById('DivClignotante'+compteur.toString()).style.color = "yellow";
 		} 
 		else if (Number(fm) >= 7) 
 		{
-			document.getElementById('DivClignotante'+compteur.toString()).innerHTML = " <img src='../../Images/Anciennes_images/dioderouge.gif' height='14px' />";
+			document.getElementById('DivClignotante'+compteur.toString()).innerHTML = " <img src='../../Images/dioderouge.gif' height='14px' />";
 			document.getElementById('DivClignotante'+compteur.toString()).style.color = "red";
 		} 
 		
@@ -1640,16 +1640,16 @@ function animate(compteur,mobile,mobilefactor) {
 			decalage > 0.5 -------  rouge
 		*/
 		if (Number(deltam_sur_m) <= 0.3) {
-			document.getElementById('DivClignotantePilot'+compteur.toString()).innerHTML = " <img src='../../Images/Anciennes_images/diodever.gif' height='14px' />";
+			document.getElementById('DivClignotantePilot'+compteur.toString()).innerHTML = " <img src='../../Images/diodever.gif' height='14px' />";
 			document.getElementById('DivClignotantePilot'+compteur.toString()).style.color = "green";
 		} 
 		else if (0.3 < Number(deltam_sur_m) && Number(deltam_sur_m) < 0.5) {
-			document.getElementById('DivClignotantePilot'+compteur.toString()).innerHTML = " <img src='../../Images/Anciennes_images/diodejaune.gif' height='14px' />";
+			document.getElementById('DivClignotantePilot'+compteur.toString()).innerHTML = " <img src='../../Images/diodejaune.gif' height='14px' />";
 			document.getElementById('DivClignotantePilot'+compteur.toString()).style.color = "yellow";
 		} 
 		else if (Number(deltam_sur_m) >= 0.5) 
 		{
-			document.getElementById('DivClignotantePilot'+compteur.toString()).innerHTML = " <img src='../../Images/Anciennes_images/dioderouge.gif' height='14px' />";
+			document.getElementById('DivClignotantePilot'+compteur.toString()).innerHTML = " <img src='../../Images/dioderouge.gif' height='14px' />";
 			document.getElementById('DivClignotantePilot'+compteur.toString()).style.color = "red";
 		} 
 
@@ -1660,15 +1660,15 @@ function animate(compteur,mobile,mobilefactor) {
 		*/ 
 		if (nombre_de_g_calcul_memo <= 4) 
 		{
-			document.getElementById('DivClignotanteNbG'+compteur.toString()).innerHTML = " <img src='../../Images/Anciennes_images/diodever.gif' height='14px' />";
+			document.getElementById('DivClignotanteNbG'+compteur.toString()).innerHTML = " <img src='../../Images/diodever.gif' height='14px' />";
 			document.getElementById('DivClignotanteNbG'+compteur.toString()).style.color = "green";
 		} 
 		else if (4 < nombre_de_g_calcul_memo && nombre_de_g_calcul_memo <= 9) {
-			document.getElementById('DivClignotanteNbG'+compteur.toString()).innerHTML = " <img src='../../Images/Anciennes_images/diodejaune.gif' height='14px' />";
+			document.getElementById('DivClignotanteNbG'+compteur.toString()).innerHTML = " <img src='../../Images/diodejaune.gif' height='14px' />";
 			document.getElementById('DivClignotanteNbG'+compteur.toString()).style.color = "yellow";
 		} 
 		else if (nombre_de_g_calcul_memo > 9) {
-			document.getElementById('DivClignotanteNbG'+compteur.toString()).innerHTML = " <img src='../../Images/Anciennes_images/dioderouge.gif' height='14px' />";
+			document.getElementById('DivClignotanteNbG'+compteur.toString()).innerHTML = " <img src='../../Images/dioderouge.gif' height='14px' />";
 			document.getElementById('DivClignotanteNbG'+compteur.toString()).style.color = "red";
 		} 
 
@@ -1753,7 +1753,7 @@ function Vr_obs(r,E,L) {
  * @returns {Number} : le résultat de alpha(r). 
  */
 function alpha(r){
-	return 1-(Math.pow(r, 2)*rs) / Math.pow(r_phy, 3);
+	return 1/(1-(Math.pow(r, 2)*rs) / Math.pow(r_phy, 3));
 }
 
 // -------------------------------------{beta}--------------------------------------------
@@ -1789,6 +1789,7 @@ function derivee_seconde_externe_massif(L,r){
  * @returns le résultat de la dérivée seconde. 
  */
 function derivee_seconde_externe_massif_obs(E, L,r) {
+
 	return -(1/2)*(Math.pow(c,2)/Math.pow(E,2))*(-2*(rs/Math.pow(r,2))*(1-rs/r)*(Math.pow(E,2)-(1-rs/r)*(1+Math.pow(L/r,2))) - 
 	Math.pow(1-rs/r,2)*(-(rs/Math.pow(r,2))*(1+Math.pow(L/r,2)) - (1-rs/r)*(-2*(Math.pow(L,2)/Math.pow(r,3)))));
 }
@@ -1803,8 +1804,11 @@ function derivee_seconde_externe_massif_obs(E, L,r) {
  * @returns le résultat de la dérivée seconde. 
  */
 function derivee_seconde_interne_massif(E,L,r) {  
-	return -((Math.pow(c,2)*r*rs)/(Math.pow(r_phy,3)))*(Math.pow(E/beta(r),2) - Math.pow(L/r,2) - 1) 
-	+ ((Math.pow(c,2)*alpha(r))/(2))*((-Math.pow(E,2)*r*rs)/(Math.pow(beta(r),3)*Math.sqrt(alpha(r))*Math.pow(r_phy,3)) + 2*(Math.pow(L,2)/Math.pow(r,3)));
+	
+	terme1=Math.pow(E/beta(r),2) - Math.pow(L/r,2) - 1 ;
+	terme2=-Math.pow(E,2)*r*rs/( Math.pow(beta(r)*r_phy,3)*Math.sqrt(alpha(r)) ) + 2*Math.pow(L,2)/Math.pow(r,3)
+
+	return -( Math.pow(c,2)*r*rs/( Math.pow(r_phy,3) ) )*terme1  + (Math.pow(c,2)*alpha(r)/2)*terme2;
 }
 
 //----------------------------------------------------{derivee_seconde_interne_massif}----------------------------------------------------
@@ -1923,7 +1927,7 @@ function pausee()
 		document.getElementById("pause/resume").innerHTML =texte.pages_trajectoire.bouton_resume; //on change le texte du boutton pause en haut
 		document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_enpause; //on change le texte qui s'affiche "Calculs en pause"
 		document.getElementById("pau").title = texte.pages_trajectoire.bouton_lecture; //infobulle du boutton pause en bas
-		document.getElementById("pau").src = "../../Images/Anciennes_images/lecture.png"; //on change l'icone du boutton pause en bas
+		document.getElementById("pau").src = "../../Images/lecture.png"; //on change l'icone du boutton pause en bas
 		
 	} 
 	//si le Timer est en pause
@@ -1933,7 +1937,7 @@ function pausee()
 			document.getElementById("pause/resume").innerHTML = texte.pages_trajectoire.bouton_pause; //on change l'icone du boutton pause en bas
 			document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_encours;//on change le texte qui s'affiche "Calculs en cours"
 			document.getElementById("pau").title = texte.pages_trajectoire.bouton_pause;//infobulle du boutton pause en bas
-			document.getElementById("pau").src = "../../Images/Anciennes_images/pause.png"; //on change l'icone du boutton pause en bas
+			document.getElementById("pau").src = "../../Images/pause.png"; //on change l'icone du boutton pause en bas
 	}
 }
 
@@ -1986,7 +1990,7 @@ function enregistrer_trajectoires() {
 
 			//Dessin du logo :
 			var logo = new Image() 
-			logo.src='../../Images/Anciennes_images/CosmoGravity_logo.png'; //Je récupère le chemin de l'image du logo.
+			logo.src='../../Images/CosmoGravity_logo.png'; //Je récupère le chemin de l'image du logo.
 			logo.onload = function() {
 				var largeurLogo = 100; //largeur de l'image du logo
 				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //hauteur de l'image du logo
@@ -2113,6 +2117,9 @@ function test_inte() {
 	} 
 	else if(r_phy < 1.15*rs ){
 		return texte.pages_trajectoire.rphysetrs;
+	}
+	else if(r0 < rs ){
+		return texte.pages_trajectoire.alerte_r0_inferieure_rs;
 	}
 	//sinon on revoit un true pour lancer la simulation
 	else

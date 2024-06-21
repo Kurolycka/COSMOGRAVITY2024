@@ -133,13 +133,6 @@ function initialisation(){
 		calcul_rmax(); 
 		if(rmax<r0) {rmax=r0 ;}
 	} 
-
-
-	if (r0 <= rs){//Dans le cas où le r0 choisit est inférieure à rs j'affiche une alerte.
-		alert(texte.pages_trajectoire.alerte_r0_inferieure_rs);
-		return;
-	} 
-
 	//--------------------------------Calcul des vitesses pour les orbites circulaires--------------------------------
 
 
@@ -201,7 +194,7 @@ function initialisation(){
 		CirculaireProgradeBarCell.style.display='none';
 		CirculaireProgradeBarLabelCell.style.display='none';
 	}else{ //Sinon je les affiches avec la valeur de la vitesse nécessaire.
-		document.getElementById("circulaire_prograde_res_bar").innerHTML=vitesse_orbite_circulaire_prograde_bar.toExponential(3); 
+		document.getElementById("circulaire_prograde_res_bar").innerHTML=vitesse_orbite_circulaire_prograde_bar.toExponential(5); 
 		CirculaireProgradeBarCell.style.display='';
 		CirculaireProgradeBarLabelCell.style.display='';
 	}
@@ -211,7 +204,7 @@ function initialisation(){
 		CirculaireRetrogradeBarCell.style.display='none';
 		CirculaireRetrogradeBarLabelCell.style.display='none';
 	}else{ //Sinon je les affiches avec la valeur de la vitesse nécessaire.
-		document.getElementById("circulaire_retrograde_res_bar").innerHTML=vitesse_orbite_circulaire_retrograde_bar.toExponential(3); 
+		document.getElementById("circulaire_retrograde_res_bar").innerHTML=vitesse_orbite_circulaire_retrograde_bar.toExponential(5); 
 		CirculaireRetrogradeBarCell.style.display='';
 		CirculaireRetrogradeBarLabelCell.style.display='';
 	}
@@ -283,6 +276,11 @@ function verifnbr() {
 		alert (texte.pages_trajectoire.alerte_verifier_teta);
 		document.getElementById("teta").value=90;
 	}
+	if (r0 <= rs){//Dans le cas où le r0 choisit est inférieure à rs j'affiche une alerte.
+		alert(texte.pages_trajectoire.alerte_r0_inferieure_rs);
+		document.getElementById("r0").value=5e12.toExponential(0);
+	} 
+
 }
 
 //----------------------------------------------------{trajectoire}----------------------------------------------------
@@ -439,15 +437,15 @@ function trajectoire() {
 			setInterval(function(){ //J'effectue les actions suivantes toutes les 50 ms. 
 
 				if (Number(deltam_sur_m) <= 0.03) { //Si je consomme moins de ΔE/E=0.03 la led près du décalage spectrale est verte.
-					document.getElementById('DivClignotantePilot').innerHTML = " <img src='../../Images/Anciennes_images/diodever.gif' height='14px' />";
+					document.getElementById('DivClignotantePilot').innerHTML = " <img src='../../Images/diodever.gif' height='14px' />";
 					document.getElementById('DivClignotantePilot').style.color = "green";
 				}
 				else if (0.3 < Number(deltam_sur_m) && Number(deltam_sur_m) < 0.05) { //Si je consomme entre ΔE/E=0.03 et ΔE/E=0.05 la led près du décalage spectrale est orange.
-					document.getElementById('DivClignotantePilot').innerHTML = " <img src='../../Images/Anciennes_images/diodejaune.gif' height='14px' />";
+					document.getElementById('DivClignotantePilot').innerHTML = " <img src='../../Images/diodejaune.gif' height='14px' />";
 					document.getElementById('DivClignotantePilot').style.color = "yellow";
 				} 
 				else if (Number(deltam_sur_m) >= 0.05) { //Si je consomme plus de ΔE/E=0.05 la led près du décalage spectrale est rouge. 
-					document.getElementById('DivClignotantePilot').innerHTML = " <img src='../../Images/Anciennes_images/dioderouge.gif' height='14px' />";
+					document.getElementById('DivClignotantePilot').innerHTML = " <img src='../../Images/dioderouge.gif' height='14px' />";
 					document.getElementById('DivClignotantePilot').style.color = "red";
 				}
 
@@ -925,17 +923,17 @@ function animate() {
 		*/
 		if (Number(fm) <= 1) 
 		{
-			document.getElementById('DivClignotante').innerHTML = " <img src='../../Images/Anciennes_images/diodever.gif' height='14px' />";
+			document.getElementById('DivClignotante').innerHTML = " <img src='../../Images/diodever.gif' height='14px' />";
 			document.getElementById('DivClignotante').style.color = "green";
 		} 
 		else if (1 < Number(fm) && Number(fm) < 7) 
 		{
-			document.getElementById('DivClignotante').innerHTML = " <img src='../../Images/Anciennes_images/diodejaune.gif' height='14px' />";
+			document.getElementById('DivClignotante').innerHTML = " <img src='../../Images/diodejaune.gif' height='14px' />";
 			document.getElementById('DivClignotante').style.color = "yellow";
 		} 
 		else if (Number(fm) >= 7) 
 		{
-			document.getElementById('DivClignotante').innerHTML = " <img src='../../Images/Anciennes_images/dioderouge.gif' height='14px' />";
+			document.getElementById('DivClignotante').innerHTML = " <img src='../../Images/dioderouge.gif' height='14px' />";
 			document.getElementById('DivClignotante').style.color = "red";
 		} 
 		else 
@@ -952,17 +950,17 @@ function animate() {
 
 		if (nombre_de_g_calcul_memo <= 4) 
 		{
-			document.getElementById('DivClignotanteNbG').innerHTML = " <img src='../../Images/Anciennes_images/diodever.gif' height='14px' />";
+			document.getElementById('DivClignotanteNbG').innerHTML = " <img src='../../Images/diodever.gif' height='14px' />";
 			document.getElementById('DivClignotanteNbG').style.color = "green";
 		} 
 		else if (4 < nombre_de_g_calcul_memo && nombre_de_g_calcul_memo <= 9) 
 		{
-			document.getElementById('DivClignotanteNbG').innerHTML = " <img src='../../Images/Anciennes_images/diodejaune.gif' height='14px' />";
+			document.getElementById('DivClignotanteNbG').innerHTML = " <img src='../../Images/diodejaune.gif' height='14px' />";
 			document.getElementById('DivClignotanteNbG').style.color = "yellow";
 		} 
 		else if (nombre_de_g_calcul_memo > 9) 
 		{
-			document.getElementById('DivClignotanteNbG').innerHTML = " <img src='../../Images/Anciennes_images/dioderouge.gif' height='14px' />";
+			document.getElementById('DivClignotanteNbG').innerHTML = " <img src='../../Images/dioderouge.gif' height='14px' />";
 			document.getElementById('DivClignotanteNbG').style.color = "red";
 		} 
 		
@@ -1159,7 +1157,7 @@ function pausee()
 		document.getElementById("pause/resume").innerHTML =texte.pages_trajectoire.bouton_resume;//on change le texte du boutton pause en haut
 		document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_enpause;//on change le texte qui s'affiche "Calculs en pause"
 		document.getElementById("pau").title = texte.pages_trajectoire.bouton_lecture;//on change l'icone du boutton pause en bas
-		document.getElementById("pau").src = "../../Images/Anciennes_images/lecture.png";//infobulle du boutton pause en bas
+		document.getElementById("pau").src = "../../Images/lecture.png";//infobulle du boutton pause en bas
 		clearInterval(myInterval); // on arrete l'appel de animte
 	} 
 	//si la simultion est en pause
@@ -1172,7 +1170,7 @@ function pausee()
 			document.getElementById("pause/resume").innerHTML = texte.pages_trajectoire.bouton_pause;//on change le texte du boutton pause en haut
 			document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_encours;//on change le texte qui s'affiche "Calculs en pause"
 			document.getElementById("pau").title = texte.pages_trajectoire.bouton_pause;//infobulle du boutton pause en bas
-			document.getElementById("pau").src = "../../Images/Anciennes_images/pause.png";//on change l'icone du boutton pause en bas
+			document.getElementById("pau").src = "../../Images/pause.png";//on change l'icone du boutton pause en bas
 			myInterval = setInterval(animate, 10 / 6); //on appelle animate à chaque 10/6 ms avec setInterval et on stocke dans myInterval
 		}
 

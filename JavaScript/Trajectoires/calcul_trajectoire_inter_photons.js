@@ -619,7 +619,7 @@ function initialisation(compteur){
 	if (r_phy > limite_basse && r_phy < limite_haute){ //Dans ce cas on peut avoir une orbite circulaire. 
 		//Je calcule cette distance à l'astre pour avoir l'orbite circulaire et je l'affiche dans une case visible : 
 		r_circ_int = (1/3)*r_phy*((Math.sqrt(r_phy*(8*r_phy - 9*rs)))/(Math.sqrt(rs*(r_phy-rs))));
-		document.getElementById("r_circ_int_res"+compteur.toString()).innerHTML = r_circ_int.toExponential(3);
+		document.getElementById("r_circ_int_res"+compteur.toString()).innerHTML = r_circ_int.toExponential(5);
 		document.getElementById("r_circ_int_res"+compteur.toString()).title = texte.pages_trajectoire.orbite_circulaire_stable;
 		rCircIntLabelCell.style.display='';
 		rCircIntResCell.style.display='';
@@ -639,7 +639,7 @@ function initialisation(compteur){
 	r_circ_ext = (3/2)*rs; //Je calcule cette distance r.
 
 	if (r_circ_ext >= r_phy){ //Si je suis bien à l'extérieure de l'astre j'affiche cette distance r. 
-		document.getElementById("r_circ_ext_res"+compteur.toString()).innerHTML = r_circ_ext.toExponential(3);
+		document.getElementById("r_circ_ext_res"+compteur.toString()).innerHTML = r_circ_ext.toExponential(5);
 		document.getElementById("r_circ_ext_res"+compteur.toString()).title = texte.pages_trajectoire.orbite_circulaire_instable;
 		rCircExtLabelCell.style.display='';
 		rCircExtResCell.style.display='';
@@ -1499,7 +1499,7 @@ function Vr_obs(r,E,L) {
  * @returns {Number} : le résultat de alpha(r). 
  */
 function alpha(r){
-	return 1-(Math.pow(r, 2)*rs) / Math.pow(r_phy, 3);
+	return 1/(1-(Math.pow(r, 2)*rs) / Math.pow(r_phy, 3));
 }
 
 // -------------------------------------{beta}--------------------------------------------
@@ -1667,7 +1667,7 @@ function pausee()
 		document.getElementById("pause/resume").innerHTML =texte.pages_trajectoire.bouton_resume; //on change le texte du boutton pause en haut
 		document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_enpause; //on change le texte qui s'affiche "Calculs en pause"
 		document.getElementById("pau").title = texte.pages_trajectoire.bouton_lecture; //infobulle du boutton pause en bas
-		document.getElementById("pau").src = "../../Images/Anciennes_images/lecture.png"; //on change l'icone du boutton pause en bas
+		document.getElementById("pau").src = "../../Images/lecture.png"; //on change l'icone du boutton pause en bas
 		
 	} 
 	//si le Timer est en pause
@@ -1677,7 +1677,7 @@ function pausee()
 			document.getElementById("pause/resume").innerHTML = texte.pages_trajectoire.bouton_pause; //on change l'icone du boutton pause en bas
 			document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_encours;//on change le texte qui s'affiche "Calculs en cours"
 			document.getElementById("pau").title = texte.pages_trajectoire.bouton_pause;//infobulle du boutton pause en bas
-			document.getElementById("pau").src = "../../Images/Anciennes_images/pause.png"; //on change l'icone du boutton pause en bas
+			document.getElementById("pau").src = "../../Images/pause.png"; //on change l'icone du boutton pause en bas
 	}
 }
 
@@ -1730,7 +1730,7 @@ function enregistrer_trajectoires() {
 
 			//Dessin du logo :
 			var logo = new Image();
-			logo.src='../../Images/Anciennes_images/CosmoGravity_logo.png'; //Je récupère le chemin de l'image du logo.
+			logo.src='../../Images/CosmoGravity_logo.png'; //Je récupère le chemin de l'image du logo.
 			logo.onload = function() {
 				var largeurLogo = 100; //largeur de l'image du logo
 				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //hauteur de l'image du logo

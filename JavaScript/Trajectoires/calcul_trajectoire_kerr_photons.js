@@ -88,8 +88,10 @@ function initialisation(){
 
 	dr_sur_dlambda=c*Math.cos(tetarad)*Math.sqrt(delta(r0)/(r0*(r0-rs))); //Je calcule dr/dλ. 
 	dphi_sur_dlambda=c*Math.sin(tetarad)/Math.sqrt(delta(r0)); //Je calcule dphi/dλ.
-	E=1; //Je fixe la constante d'intégration sans dimension E. 
-	L = (delta(r0)*dphi_sur_dlambda*r0 - rs*a*c)/(c*(r0-rs)); //Je calcule L la constante d'intégration.
+
+    E=Math.sqrt(Math.abs((Math.pow(dr_sur_dlambda,2) * (r0 - rs) * Math.pow(r0, 3) + Math.pow(delta(r0), 2)*Math.pow(dphi_sur_dlambda,2)) / (delta(r0)*Math.pow(c*r0, 2)))); //Je fixe la constante d'intégration sans dimension E. 
+    //Je ne mets pas directement E=1 pour bien avoir NaN si je commence sous rs. 
+    L = (delta(r0) * dphi_sur_dlambda / c - rs * a * E) / (r0 - rs); //Je calcule L la constante d'intégration.
 
 	//Je calcule Rh+ (rhp), Rh- (rhm) et rh (qui sert au calcul de rmax) :
 	rhp = 0.5 * ( rs + Math.sqrt(Math.pow(rs, 2) - 4 * Math.pow(a, 2))); 
@@ -103,8 +105,8 @@ function initialisation(){
 	rayon_orbite_pro=rs*(1+Math.cos((2/3)*Math.acos(-(2*a)/rs))); //Orbite circulaire prograde.
 	rayon_orbite_retro=rs*(1+Math.cos((2/3)*Math.acos((2*a)/rs))); //Orbite circulaire retrograde.
 	//Puis affichage de ces distances radiales : 
-	document.getElementById("circulaire_prograde_res").innerHTML=rayon_orbite_pro.toExponential(3);
-	document.getElementById("circulaire_retrograde_res").innerHTML=rayon_orbite_retro.toExponential(3); 
+	document.getElementById("circulaire_prograde_res").innerHTML=rayon_orbite_pro.toExponential(5);
+	document.getElementById("circulaire_retrograde_res").innerHTML=rayon_orbite_retro.toExponential(5); 
 
 	//--------------------------------Affichage--------------------------------
 			   
@@ -852,7 +854,7 @@ function pausee()
 		document.getElementById("pause/resume").innerHTML =texte.pages_trajectoire.bouton_resume;//on change le texte du boutton pause en haut
 		document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_enpause;//on change le texte qui s'affiche "Calculs en pause"
 		document.getElementById("pau").title = texte.pages_trajectoire.bouton_lecture;//on change l'icone du boutton pause en bas
-		document.getElementById("pau").src = "../../Images/Anciennes_images/lecture.png";//infobulle du boutton pause en bas
+		document.getElementById("pau").src = "../../Images/lecture.png";//infobulle du boutton pause en bas
 		clearInterval(myInterval); // on arrete l'appel de animte
 	} 
 	//si la simultion est en pause
@@ -865,7 +867,7 @@ function pausee()
 			document.getElementById("pause/resume").innerHTML = texte.pages_trajectoire.bouton_pause;//on change le texte du boutton pause en haut
 			document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_encours;//on change le texte qui s'affiche "Calculs en pause"
 			document.getElementById("pau").title = texte.pages_trajectoire.bouton_pause;//infobulle du boutton pause en bas
-			document.getElementById("pau").src = "../../Images/Anciennes_images/pause.png";//on change l'icone du boutton pause en bas
+			document.getElementById("pau").src = "../../Images/pause.png";//on change l'icone du boutton pause en bas
 			myInterval = setInterval(animate, 10 / 6); //on appelle animate à chaque 10/6 ms avec setInterval et on stocke dans myInterval
 		}
 
@@ -932,7 +934,7 @@ function enregistrer_trajectoires(){
 
 			//Dessin du logo :
 			var logo = new Image()
-			logo.src='../../Images/Anciennes_images/CosmoGravity_logo.png'; //Je récupère le chemin de l'image du logo.
+			logo.src='../../Images/CosmoGravity_logo.png'; //Je récupère le chemin de l'image du logo.
 			logo.onload = function() {
 				var largeurLogo = 100; //largeur de l'image du logo
 				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //hauteur de l'image du logo
