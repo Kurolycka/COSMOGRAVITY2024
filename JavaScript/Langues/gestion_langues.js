@@ -426,6 +426,7 @@ function texte_Apropos() {
     document.getElementById("parti1").innerHTML = texte.Apropos.Participant1
     document.getElementById("parti2").innerHTML = texte.Apropos.Participant2
     document.getElementById("parti3").innerHTML = texte.Apropos.Participant3
+    document.getElementById("parti4").innerHTML = texte.Apropos.Participant4
 
     document.getElementById("remerciement").innerHTML = texte.Apropos.Remerciement
     document.getElementById("remer1").innerHTML = texte.Apropos.Remerciement1
