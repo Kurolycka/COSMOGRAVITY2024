@@ -228,7 +228,7 @@ function texte_univers_LCDM() {
     document.getElementById("infoNomFichier").title = texte.univers.infoNomFichier
     document.getElementById("labelNom_fichier").insertAdjacentHTML("beforeend", texte.univers.labelNom)
     document.getElementById("nom_fichier").value = texte.univers.nomDéfautLCDM
-    document.getElementById("bouttonEnregistrer").value = texte.univers.bouttonEnregistrer
+    document.getElementById("bouttonEnregistrer").innerHTML = texte.univers.bouttonEnregistrer
 
 
 }
