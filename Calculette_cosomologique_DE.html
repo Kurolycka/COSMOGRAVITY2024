@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Calcullete Cosmologique DE</title>
+
+    <script src="JavaScript/Fonctions_pour_HTML.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.0.0/math.min.js"></script>
+
+
+    <link rel="stylesheet" href="./CSS/styleUnivers.css">
+    <link rel="stylesheet" href="./CSS/styleAnimation.css">
+    <link rel="stylesheet" href="./CSS/styleNav.css">
+    <link rel="stylesheet" href="./CSS/styleCalculette.css">
+
+</head>
+<body>
+<!-- Setup des constantes universelles, n'est pas affiché -->
+<input style="display: none" id="c" type="number" value="299792458">
+<input style="display: none" id="G" type="number" value="6.67385e-11">
+<input style="display: none" id="k" type="number" value="1.38064852e-23">
+<input style="display: none" id="h" type="number" value="6.62607004e-34">
+<input style="display: none" id="typeAnnee" type="number" value="">
+
+<div class="grillePrincipale">
+    <div id="positionNav" class="Nav"></div>
+    <!--Fenêtre entrée-->
+    <div id="panneauEntree" class="fenetre_calculette" >
+        <div class="boiteEntree">
+            <div id="Entrées"></div>
+
+            <div class="paramètre" style="grid-template-columns: 1fr 1fr">
+                <button style="height: 110%" id="constantesUniverselles" class="grosBoutton" onclick=fenetreConstantes()></button>
+                <button style="height: 110%" id="facteurEchelle" class="grosBoutton" onclick=fenetreFacteur()></button>
+            </div>
+
+            <div class="paramètre">
+                <label for="T0">
+                    <img id="infoT0" src="./Images/icone_info.png" alt="" width="20" height="20" title="">
+                    T<sub>0</sub> =
+                </label>
+                <input id="T0" type="number" min="0" value="2.7255" step="0.01">
+                <span>K</span>
+            </div>
+
+            <div class="paramètre">
+                <label for="H0">
+                    <img id="infoH0" src="./Images/icone_info.png" alt="" width="20" height="20">
+                    H<sub>0</sub> =
+                </label>
+                <input id="H0" type="number" value="67.74" step="0.01">
+                <span>Km.s<sup>-1</sup>.Mpc<sup>-1</sup></span>
+            </div>
+
+            <div class="paramètre">
+                <span>
+                    <img id="infoTypeUnivers" src="./Images/icone_info.png" alt="" width="20" height="20", style="float: right">
+                </span>
+                <select name="Monofluide" id="optionsMonofluide" onchange="universMonofluides()">
+                    <option id="Monofluide_optionNull" value="optionNull"></option>
+                    <option id="Monofluide_optionM" value="optionM"></option>
+                    <option id="Monofluide_optionR" value="optionR"></option>
+                    <option id="Monofluide_optionLDE" value="optionLDE"></option>
+                    <option id="Monofluide_optionK" value="optionK"></option>
+                </select>
+            </div>
+
+            <div class="paramètre">
+                <label for="Omégam0">
+                    <img id="infoOmégam0" src="./Images/icone_info.png" alt="" width="20" height="20">
+                    &Omega;<sub>m<sub>0</sub></sub> = </label>
+                <input id="Omégam0" type="number" value="0.30890" step="0.01">
+                <span></span>
+            </div>
+
+            <div class="paramètre">
+                <label for="OmégaDE0">
+                    <img id="infoOmégaLDE0" src="./Images/icone_info.png" alt="" width="20" height="20">
+                    &Omega;<sub>DE<sub>0</sub></sub> =
+                </label>
+                <input id="OmégaDE0" type="number" value="0.69110" step="0.01">
+                <span></span>
+            </div>
+
+            <div class="paramètre w">
+                <div>
+                    <label for="w0">
+                        <img id="infoW" src="./Images/icone_info.png" alt="" width="20" height="20">
+                        w<sub>0</sub> =
+                    </label>
+                    <input id="w0" type="number" value="-1" step="0.1">
+                </div>
+
+                <div>
+                    <label for="w1" style="horiz-align: left">
+                        w<sub>1</sub> =
+                    </label>
+                    <input id="w1" type="number" value="0" step="0.1">
+                </div>
+            </div>
+
+            <div class="paramètre">
+                <label for="Omégar0">
+                    <img id="infoOmégar0Sortie" src="./Images/icone_info.png" alt="" width="20" height="20">
+                    &Omega;<sub>r<sub>0</sub></sub> =
+                </label>
+                <input style="cursor: not-allowed" readonly id="Omégar0" type="number" step="0.01">
+                <span></span>
+            </div>
+
+            <div class="paramètre">
+                <label for="Omégak0">
+                    <img id="infoOmégak0Sortie" src="./Images/icone_info.png" alt="" width="20" height="20">
+                    &Omega;<sub>k<sub>0</sub></sub> =
+                </label>
+                <input style="cursor: not-allowed" readonly id="Omégak0" type="number" step="0.01">
+                <span></span>
+            </div>
+
+            <div class="paramètre">
+                <label id="label_optionsOmégar0" for="optionsOmégar0">
+                    <img id="infoOmégaR0" src="./Images/icone_info.png" alt="" width="20" height="20">
+                </label>
+                <select name="Détail Omégar0" id="optionsOmégar0">
+                    <option id="Omégar0_optionRFC_et_Neutrinos" value="optionRFC_et_Neutrinos"></option>
+                    <option id="Omégar0_optionRFC" value="optionRFC"></option>
+                    <option id="Omégar0_optionRien" value="optionRien"></option>
+                </select>
+            </div>
+
+            <div class="paramètre">
+                <label id="label_optionsOmégak0" for="OptionsOmégak0">
+                    <img id="infoOmégaK0" src="./Images/icone_info.png" alt="" width="20" height="20">
+                </label>
+                <input id="OptionsOmégak0" type="checkbox">
+            </div>
+
+            <div id="conteneurCanvas">
+                <canvas id="canvas"></canvas>
+            </div>
+            <button class="grosBoutton">Actualiser</button>
+        </div>
+
+        <div class="boiteGenerateurGraphique" style="flex: 1";>
+            <h3 id="generateur_graphique"></h3>
+            <div class="parametreGraphique">
+                <div style="display: flex;gap: 10px;">
+                    <fieldset>
+                        <div class="paramètre">
+                            <label id="label_zmin" for="graphique_z_min" class="infobullable">
+                                z<sub>min</sub> =
+                            </label>
+                            <input id="graphique_z_min" type="number" value="0" step="0.1" min="-.99999999999" max="1000">
+                        </div>
+            
+                        <div class="paramètre">
+                            <label id="label_zmax" class="infobullable" for="graphique_z_max">
+                                z<sub>max</sub> =
+                            </label>
+                            <input id="graphique_z_max" type="number" value="5" step="0.1" min="-.99999999998" max="1000">
+                        </div>
+
+                        <div class="paramètre">
+                            <label id="label_pas" class="infobullable" for="graphique_pas">
+                                pas =
+                            </label>
+                            <input id="graphique_pas" type="number" value="300" step="1" min="1" max="10000" oninput="validity.valid||(value='');">
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <div>
+                            <input type="radio" id="radio_fonction_z" name="dependance" checked>
+                            <label id="label_radio_fonction_z" class="infobullable" for="radio_fonction_z"></label>
+                        </div>
+                        <div>
+                            <input type="radio" id="radio_fonction_t" name="dependance">
+                            <label id="label_radio_fonction_t" class="infobullable" for="radio_fonction_t"></label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="check_log_abs">
+                            <label id="label_check_log_abs" class="infobullable" for="check_log_abs"></label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="check_log_ord">
+                            <label id="label_check_log_ord" class="infobullable" for="check_log_ord"></label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="omegaDE_normalise" checked>
+                            <label id="label_omegaDE_normalise" class="infobullable" for="omegaDE_normalise"></label>
+                        </div>
+                    </fieldset>
+                </div>
+                <br>
+                <div style="display: flex; flex-direction: row;gap: 10px;">
+                    <button id="bouton_distance" class="petitBoutton" onclick="generer_graphique_distance(fonction_F)">Distance</button><br>
+                    <button id="bouton_omega" class="petitBoutton" onclick="generer_graphique_Omega(fonction_F)">Omega</button><br>
+                    <button id="bouton_tempsdecalage" class="petitBoutton" onclick="generer_graphique_TempsDecalage(fonction_F)">Temps/Decalage</button>
+                </div>
+                <div>
+                    <span id="temps_calcul_graph" style="color:blue"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Fenêtre graphe-->
+    <div id="PanneauCentral">
+        <div class="boiteCalculAnnexe">
+            <div class="CalculAnnexe" id="Calcul_Diametre" style="align-items: center;">
+                <h4 id="diametre_apparent_titre" class="infobullable" style="margin-bottom: 2px;margin-top: 3px;"></h4>
+                <div>
+                    <input id="select_z1_diametre" type="radio" name="choix_z1_z2" checked>
+                    <label for="select_z1_diametre">z1</label>
+                    <input id="select_z2_diametre" type="radio" name="choix_z1_z2">
+                    <label for="select_z2_diametre">z2</label>
+                </div>
+                <div style="align-items: left;">
+                    <div class="paramètre">
+                        <label id="label_d_m" class="infobullable" for="Diametre_m">D = </label>
+                        <input id="Diametre_m" type="number" value="0" step="1e20" min="0" onchange="afficher_seconde_valeur('Diametre_m')">
+                        <span>m</span>
+                    </div>
+                    <div class="paramètre">
+                        <label id="label_d_kpc" class="infobullable" for="Diametre_kpc">D = </label>
+                        <input id="Diametre_kpc" type="number" value="0" step="1" min="0" onchange="afficher_seconde_valeur('Diametre_kpc')">
+                        <span>kpc</span>
+                    </div>
+                </div>
+                <div style="display: flex;flex-direction: row; gap: 2px;">
+                    <button class="petitBoutton" onclick="calcul_theta_vers_diametre()">&uparrow;</button>
+                    <button class="petitBoutton" onclick="calcul_diamtre_vers_theta()">&DownArrow;</button>
+                </div>
+                <div class="paramètre">
+                    <label id="label_theta" class="infobullable" for="theta">&Theta; = </label>
+                    <input id="theta" type="number" value="0" step="0.1" min="0" max="1000">
+                    <span style="font-size: 16px;">ArcSecond</span>
+                </div>
+            </div>
+
+            <div class="CalculAnnexe" id="Calcul_inverse">
+                <h4 id="calcul_inverse_titre" style="margin-bottom: 2px;margin-top: 3px;"></h4>
+                <div class="paramètre">
+                    <label id="label_dminverse" class="infobullable" for="dm_inverse">dm = </label>
+                    <input id="dm_inverse" type="number" value="0" step="0.1" min="0">
+                    <span>(m)</span>
+                    <label>z<sub>dm</sub> = </label>
+                    <output id="output_z_dm"></output>
+                    
+                </div>
+                <div class="paramètre">
+                    <label id="label_teminverse" class="infobullable" for="tem_inverse">t<sub>em</sub> = </label>
+                    <input id="tem_inverse" type="number" value="0" step="0.1" min="0">
+                    <span>(</span><span class="unite_annee"></span><span>)</span>
+                    <label>z<sub>tem</sub> = </label>
+                    <output id="output_z_tem"></output>
+                </div>
+                <div class="paramètre">
+                    <label id="label_trecinverse" class="infobullable" for="trec_inverse">t<sub>rec</sub> = </label>
+                    <input id="trec_inverse" type="number" value="0" step="0.1" min="0">
+                    <span>(</span><span class="unite_annee"></span><span>)</span>
+                    <label>z<sub>trec</sub> = </label>
+                    <output id="output_z_trec"></output>
+                </div>
+                <div style="display: flex; gap: 8%;">
+                    <button id="bouton_calculer_inverse" class="petitBoutton" onclick="affichage_t_inverse(fonction_F);calcul_dm_inverse(fonction_F)"></button>
+                    <div>
+                        <label id="label_zneg" class="infobullable" for="z_negatif_dm_inverse">z&lt;0</label>
+                        <input type="checkbox" id="z_negatif_dm_inverse">
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="CalculAnnexe" id="Calcul_Horizon">
+                <h4 id="horizons_titre" style="margin-bottom: 2px;margin-top: 3px;"></h4>
+                <div class="paramètre">
+                    <label id="label_t_hori" class="infobullable" for="t_pour_calcul_horizon">t = </label>
+                    <input id="t_pour_calcul_horizon" type="number" value="0" step="0.1" min="0" max="1000">
+                    <span>(s)</span>
+                </div>
+                <div>
+                    <label id="label_deven" class="infobullable" for="resultat_dm_evenement_t">d<sub>e</sub> = </label>
+                    <output id="resultat_dm_evenement_t"></output>
+                    <span>G</span><span class="unite_al"></span>
+                </div>
+                <div>
+                    <label id="label_dpart" class="infobullable" for="resultat_dm_particule_t">d<sub>p</sub> = </label>
+                    <output id="resultat_dm_particule_t"></output>
+                    <span>G</span><span class="unite_al"></span>
+                </div>
+                <button id="bouton_calculer_horizon" class="petitBoutton" onclick="calcul_horizons_annexe(fonction_F)">Calculer</button>
+            </div>
+        </div>
+        <div id="panneauGraphe" class="Graphe" style="position: relative;background-color: rgb(255,238,255);">
+            <div id="graphique_d_z"></div>
+            <div id="graphique_d_t"></div>
+            <div id="graphique_omega_z"></div>
+            <div id="graphique_omega_t"></div>
+            <div id="graphique_t_z"></div>
+            <div id="graphique_z_t"></div>
+        </div>
+    </div>
+
+    <!--Fenêtre sortie-->
+    <div id="panneauSortie" class="fenetre_calculette">
+        <div id="Entree_z1_z2" class="boiteEntree">
+            <div id="titre_z1_z2">
+                <h3 id="calcul_z_titre" style="margin-bottom: 2px";></h3>
+            </div>
+            <button id="bouton_calculer_z" class="grosBoutton" onclick="affichage_des_z(fonction_F)">Calculer</button>
+            <div>
+                <div class="paramètre">
+                    <label id="label_z1" class="infobullable" for="z1">z1 = </label>
+                    <input id="z1" type="number" value="0" step="0.1" min="0" max="1000">
+                </div>
+                <div class="paramètre">
+                    <label id="label_z2" class="infobullable" for="z2">z2 = </label>
+                    <input id="z2" type="number" value="0" step="0.1" min="0" max="1000">
+                </div>
+                <div class="paramètre">
+                    <label id="label_ie" class="infobullable" for="ie">Ie = </label>
+                    <input id="ie" type="number" value="0" step="0.1" min="0" max="1000">
+                </div>
+            </div>
+            <span style="color:blue;" id="resul_tps"></span>
+        </div>
+        <div id="parametre_z1_z2" class="boiteSortie">
+            <h4 id="parametre_z_titre"></h4>
+            <div style="display: flex;justify-content: space-between; gap: 10px;">
+                <div id="parametres_z1">
+                    <div>
+                        <label for="T_z1">T<sub>(z1)</sub> = </label>
+                        <output id="T_z1"></output>
+                    </div>
+                    <div>
+                        <label for="H_z1">H<sub>(z1)</sub> = </label>
+                        <output id="H_z1"></output>
+                    </div>
+                    <div>
+                        <label for="omegaR_z1">&Omega;<sub>R(z1)</sub> = </label>
+                        <output id="omegaR_z1"></output>
+                    </div>
+                    <div>
+                        <label for="omegaM_z1">&Omega;<sub>M(z1)</sub> = </label>
+                        <output id="omegaM_z1"></output>
+                    </div>
+                    <div>
+                        <label for="omegaK_z1">&Omega;<sub>K(z1)</sub> = </label>
+                        <output id="omegaK_z1"></output>
+                    </div>
+                    <div>
+                        <label for="omegaDE_z1">&Omega;<sub>DE(z1)</sub> = </label>
+                        <output id="omegaDE_z1"></output>
+                    </div>
+                    <div>
+                        <label for="omegaDEN_z1">&Omega;<sub>DEN(z1)</sub> = </label>
+                        <output id="omegaDEN_z1"></output>
+                    </div>
+                </div>
+                <div id="parametres_z2">
+                    <div>
+                        <label for="T_z2">T<sub>(z2)</sub> = </label>
+                        <output id="T_z2"></output>
+                    </div>
+                    <div>
+                        <label for="H_z2">H<sub>(z2)</sub> = </label>
+                        <output id="H_z2"></output>
+                    </div>
+                    <div>
+                        <label for="omegaR_z2">&Omega;<sub>R(z2)</sub> = </label>
+                        <output id="omegaR_z2"></output>
+                    </div>
+                    <div>
+                        <label for="omegaM_z2">&Omega;<sub>M(z2)</sub> = </label>
+                        <output id="omegaM_z2"></output>
+                    </div>
+                    <div>
+                        <label for="omegaK_z2">&Omega;<sub>K(z2)</sub> = </label>
+                        <output id="omegaK_z2"></output>
+                    </div>
+                    <div>
+                        <label for="omegaDE_z2">&Omega;<sub>DE(z2)</sub> = </label>
+                        <output id="omegaDE_z2"></output>
+                    </div>
+                    <div>
+                        <label for="omegaDEN_z2">&Omega;<sub>DEN(z2)</sub> = </label>
+                        <output id="omegaDEN_z2"></output>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="geometrie_z1_z2" class="boiteSortie">
+            <h4 id="geometrie_titre"></h4>
+            <div>
+                <div>
+                    <label for="output_dm1">dm<sub>1</sub> = </label>
+                    <output id="output_dm1">0</output>
+                    <span>m</span> = 
+                    <output id="output_dm1_pc">0</output>
+                    <span>pc</span> = 
+                    <output id="output_dm1_al">0</output>
+                    <span class="unite_al"></span>
+                    <!-- pas oublier de changer la langue pour les unités -->
+                </div>
+                <div>
+                    <label for="output_dm2">dm<sub>2</sub> = </label>
+                    <output id="output_dm2">0</output>
+                    <span>m</span> = 
+                    <output id="output_dm2_pc">0</output>
+                    <span>pc</span> = 
+                    <output id="output_dm2_al">0</output>
+                    <span class="unite_al"></span>
+                </div>
+                <div>
+                    <label for="output_delta_dm">&Delta;dm = </label>
+                    <output id="output_delta_dm">0</output>
+                    <span>m</span> = 
+                    <output id="output_delta_dm_pc">0</output>
+                    <span>pc</span> = 
+                    <output id="output_delta_dm_al">0</output>
+                    <span class="unite_al"></span>
+                </div>
+                <br>
+                <div>
+                    <label for="output_t1">t<sub>1</sub> = </label>
+                    <output id="output_t1">0</output>
+                    <span>s</span> =
+                    <output id="output_t1_annee">0</output>
+                    <span class="unite_annee"></span>
+                </div>
+                <div>
+                    <label for="output_t2">t<sub>2</sub> = </label>
+                    <output id="output_t2">0</output>
+                    <span>s</span> =
+                    <output id="output_t2_annee">0</output>
+                    <span class="unite_annee"></span>
+                </div>
+                <div>
+                    <label for="output_delta_t">&Delta;t = </label>
+                    <output id="output_delta_t">0</output>
+                    <span>s</span> =
+                    <output id="output_delta_t_annee">0</output>
+                    <span class="unite_annee"></span>
+                </div>
+                <br>
+                <div>
+                    <label id="label_dz1" class="infobullable" for="output_dz1dt">d<sub>z<sub>1</sub></sub>/dt<sub>0</sub> = </label>
+                    <output id="output_dz1dt">0</output>
+                    <span class="unite_annee"><sup>-1</sup></span>
+                </div>
+                <div>
+                    <label id="label_dz2" class="infobullable" for="output_dz2dt">d<sub>z<sub>2</sub></sub>/dt<sub>0</sub> = </label>
+                    <output id="output_dz2dt">0</output>
+                    <span class="unite_annee"><sup>-1</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="photometrie_z1_z2" class="boiteSortie" style="flex: 1;">
+            <h4 id="photometrie_titre"></h4>
+            <div>
+                <div>
+                    <label id="label_le" class="infobullable" for="output_Le">L<sub>e</sub> = </label>
+                    <output id="output_Le">0</output>
+                    <span>W.m<sup>-2</sup>.sr<sup>-1</sup></span>
+                    <!-- pas oublier de changer la langue pour les unités -->
+                </div>
+                <div>
+                    <label id="label_dl1" class="infobullable" for="output_dL1">d<sub>L1</sub> = </label>
+                    <output id="output_dL1">0</output>
+                    <span>m</span> = 
+                    <output id="output_dL1_pc">0</output>
+                    <span>pc</span> = 
+                    <output id="output_dL1_al">0</output>
+                    <span class="unite_al"></span>
+                </div>
+                <div>
+                    <label id="label_dl2" class="infobullable" for="output_dL2">d<sub>L2</sub> = </label>
+                    <output id="output_dL2">0</output>
+                    <span>m</span> = 
+                    <output id="output_dL2_pc">0</output>
+                    <span>pc</span> = 
+                    <output id="output_dL2_al">0</output>
+                    <span class="unite_al"></span>
+                </div>
+                <div>
+                    <label id="label_da1" class="infobullable" for="output_da1">d<sub>a1</sub> = </label>
+                    <output id="output_da1">0</output>
+                    <span>m</span> = 
+                    <output id="output_da1_pc">0</output>
+                    <span>pc</span> = 
+                    <output id="output_da1_al">0</output>
+                    <span class="unite_al"></span>
+                </div>
+                <div>
+                    <label id="label_da2" class="infobullable" for="output_da2">d<sub>a2</sub> = </label>
+                    <output id="output_da2">0</output>
+                    <span>m</span> = 
+                    <output id="output_da2_pc">0</output>
+                    <span>pc</span> = 
+                    <output id="output_da2_al">0</output>
+                    <span class="unite_al"></span>
+                </div>
+                <div>
+                    <label id="label_E1" class="infobullable" for="output_E1">E<sub>1</sub> = </label>
+                    <output id="output_E1">0</output>
+                </div>
+                <div>
+                    <label id="label_E2" class="infobullable" for="output_E2">E<sub>2</sub> = </label>
+                    <output id="output_E2">0</output>
+                </div>
+                <div>
+                    <label id="label_mu1" class="infobullable" for="output_mu1">&mu;<sub>1</sub> = </label>
+                    <output id="output_mu1">0</output>
+                </div>
+                <div>
+                    <label id="label_mu2" class="infobullable" for="output_mu2">&mu;<sub>2</sub> = </label>
+                    <output id="output_mu2">0</output>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="./JavaScript/Langues/gestion_langues.js"></script>
+    <script src="./JavaScript/fonction_utilitaire.js"></script>
+    <script src="./JavaScript/Univers/Fonctions_utiles.js"></script>
+    <script src="./JavaScript/Univers/calcul_facteur_echelle_LCDM.js"></script>
+    <script src="./JavaScript/MéthodesNumériques.js"></script>
+    <script src="JavaScript/Univers/calculette.js"></script>
+
+
+<script>
+    texte_univers_calculette();
+
+    $(function() {
+        $("#positionNav").load("Navigation.html");
+    });
+    
+    window.onload = loadvalues(true);
+    updateCalculette()
+</script> 
+</body>
+</html>
