@@ -754,6 +754,14 @@ function texteTrajectoirePhotonNonBar(nbrderockets) {
     document.getElementById("massetxt").title = texte.pages_trajectoire.massetxt;
     document.getElementById("txt_rphysique").title = texte.pages_trajectoire.txt_rphysique;
     document.getElementById("labelnumberfusees").innerHTML = texte.pages_trajectoire.labelnumberfusees;
+
+    document.getElementById("Entree_astre_label").innerHTML = texte.pages_trajectoire.entree_astre;
+    document.getElementById("Entree_mobile_label").innerHTML = texte.pages_trajectoire.entree_mobile;
+
+    document.getElementById("Sortie_astre_label").innerHTML = texte.pages_trajectoire.sortie_astre;
+    document.getElementById("Sortie_mobile_label").innerHTML = texte.pages_trajectoire.sortie_mobile;
+
+
     var canvaswidthheightt = '750';
     if(canvaswidthheightt=="750"){
         document.getElementById("labelgp").innerHTML = texte.pages_trajectoire.labelgp;}
@@ -794,6 +802,12 @@ function texteTrajectoireMassiveKerr() {
     document.getElementById("decal_spect").innerHTML = texte.pages_trajectoire.decal_spect+"&nbsp;<span id='DivClignotantePilot'></span>";
     document.getElementById("decal_spect").title = texte.pages_trajectoire.decalageSpec_EnergyReserve;
     document.getElementById("v_tot").innerHTML = texte.pages_trajectoire.vtotal;
+
+    document.getElementById("Entree_astre_label").innerHTML = texte.pages_trajectoire.entree_astre;
+    document.getElementById("Entree_mobile_label").innerHTML = texte.pages_trajectoire.entree_mobile;
+
+    document.getElementById("Sortie_astre_label").innerHTML = texte.pages_trajectoire.sortie_astre;
+    document.getElementById("Sortie_mobile_label").innerHTML = texte.pages_trajectoire.sortie_mobile;
 
     //document.getElementById("ouvreengrand").innerHTML = texte.pages_trajectoire.ouvreengrand;
 
@@ -836,7 +850,11 @@ function texteTrajectoirePhotonKerr() {
     document.getElementById("circulaire_prograde_res").title = texte.pages_trajectoire.orbite_circulaire_instable; //ManonCirculaire
     document.getElementById("circulaire_retrograde_res").title = texte.pages_trajectoire.orbite_circulaire_instable; //ManonCirculaire
 
+    document.getElementById("Entree_astre_label").innerHTML = texte.pages_trajectoire.entree_astre;
+    document.getElementById("Entree_mobile_label").innerHTML = texte.pages_trajectoire.entree_mobile;
 
+    document.getElementById("Sortie_astre_label").innerHTML = texte.pages_trajectoire.sortie_astre;
+    document.getElementById("Sortie_mobile_label").innerHTML = texte.pages_trajectoire.sortie_mobile;
 
 
 }

@@ -694,3 +694,51 @@ font-size: 20px;
 position: relative;
 margin-right: 20px;    
 }
+
+
+
+.wrapper_kerr {
+    position: relative;
+ width:750px;
+ height:750px;
+}
+
+
+
+.wrapper_kerr canvas {
+
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#myCanvas{
+  min-height:0;
+  min-width:0;
+  flex-shrink: 0;
+  overflow:hidden;
+  align-self: center;
+}
+#myCanvas22{
+  min-height:0;
+  min-width:0;
+  flex-shrink: 0;
+  overflow:hidden;
+  align-self: center;
+}
+#myCanvas3{
+  min-height:0;
+  min-width:0;
+  flex-shrink: 0;
+  overflow:hidden;
+  align-self: center;
+}
+
+.wrapper2_kerr{
+    display: flex; /* Utilisation du modèle flexbox */
+    justify-content: center; /* Centrage horizontal des éléments enfants */
+    align-items: center; /* Centrage vertical des éléments enfants */
+    box-sizing: border-box; /* Assure que le padding et la bordure sont inclus dans les dimensions */
+    flex: 1; /* Pour que le wrapper2 prenne toute la hauteur disponible */
+    margin-right: 60px; /* Décalage vers la gauche */
+  }

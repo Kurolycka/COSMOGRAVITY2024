@@ -1044,23 +1044,6 @@ function test_r0(){
 	}
 }
 
-//----------------------------------------------------{tests_lancement}----------------------------------------------------
-
-/**
- * Fonction qui lance la simulation si les paramètres J et r0 conviennent, que le photon n'est pas au repos, et que E et L ne sont pas NaN.
- */
-function tests_lancement(){
-
-	/*Je regarde si J et r0 conviennent. Si le photon est au repos ou non. Si E et L sont des NaN ou pas :*/
-	var val_test=test_Jmax()&&test_r0(true);
-
-	if(val_test==true){ //Si toutes les conditions citées au dessus sont vérifiées :
-
-		save_generalise(false); //Je sauvegarde les données de la simulation.
-		trajectoire(); //Et je la lance.
-  }
-}
-	
 //----------------------------------------------------{choixTrajectoire}----------------------------------------------------
 	
 /**

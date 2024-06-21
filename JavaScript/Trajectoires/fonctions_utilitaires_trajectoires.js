@@ -708,7 +708,10 @@ function test_Jmax() { //teste si la valeur de J est supérieure à sa valeur ma
 */
 function tests_lancement(){
 	var val_test=test_Jmax()&&test_r0();
-	if(val_test==true){
+	if(val_test==true)
+	{
+	//on affiche le tableau du milieu si la simultion commence
+	document.getElementById("table_principale").style.display='inline';
 	save_generalise(false);
 	trajectoire();
 
