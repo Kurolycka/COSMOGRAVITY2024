@@ -277,11 +277,13 @@ function generer_graphique_distance(fonction_EouF){
         graphdivid="graphique_d_t"
         abscisse=abscisse.map((x) => calcul_ages(fonction_EouF,H0_parAnnees(H0),1e-15,1/(1+x)));
         document.getElementById('check_distance_t').checked=true;
+        document.getElementById('graphique_d_t').classList.remove('cache');
     }else{
         plot_title = "d<sub>i</sub>(z)";
         xaxis_title = "z";
         graphdivid="graphique_d_z"
         document.getElementById('check_distance_z').checked=true;
+        document.getElementById('graphique_d_z').classList.remove('cache');
     };
 
     if (log_abs){
@@ -443,11 +445,13 @@ function generer_graphique_Omega(fonction_EouF){
         graphdivid="graphique_omega_t"
         abscisse=abscisse.map((x) => calcul_ages(fonction_EouF,H0_parAnnees(H0),1e-15,1/(1+x)));
         document.getElementById('check_omega_t').checked=true;
+        document.getElementById('graphique_omega_t').classList.remove('cache');
     }else{
         plot_title = "&#x3A9;<sub>i</sub>(z)";
         xaxis_title = "z";
         graphdivid="graphique_omega_z"
         document.getElementById('check_omega_z').checked=true;
+        document.getElementById('graphique_omega_z').classList.remove('cache');
     };
 
     if (log_abs){
@@ -579,12 +583,14 @@ function generer_graphique_TempsDecalage(fonction_EouF){
         zArr=abscisse;
         abscisse=abscisse_temp;
         document.getElementById('check_z_t').checked=true;
+        document.getElementById('graphique_z_t').classList.remove('cache');
     }else{
         yaxis_TempsDecalage=yaxis_temps;
         plot_title = "t(z)";
         xaxis_title = "z";
         graphdivid="graphique_t_z"
         document.getElementById('check_t_z').checked=true;
+        document.getElementById('graphique_t_z').classList.remove('cache');
     };
 
     if (log_abs){
