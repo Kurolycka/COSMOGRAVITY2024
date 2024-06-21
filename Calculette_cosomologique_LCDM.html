@@ -26,11 +26,11 @@
 <input style="display: none" id="h" type="number" value="6.62607004e-34">
 <input style="display: none" id="typeAnnee" type="number" value="">
 
-<div class="grillePrincipale">
+<div class="grillePrincipale" style="align-items: start;gap: 2px;">
     <div id="positionNav" class="Nav"></div>
     <!--Fenêtre entrée-->
     <div id="panneauEntree" class="fenetre_calculette" >
-        <div class="boiteEntree">
+        <div class="boiteEntree" style="border: 1px solid black;">
             <div id="Entrées"></div>
 
             <div class="paramètre" style="grid-template-columns: 1fr 1fr">
@@ -73,7 +73,7 @@
                 <label for="Omégam0">
                     <img id="infoOmégam0" src="./Images/icone_info.png" alt="" width="20" height="20">
                     &Omega;<sub>m<sub>0</sub></sub> = </label>
-                <input id="Omégam0" type="number" value="0.30890" step="0.01">
+                <input id="Omégam0" type="number" value="0.30890" step="0.01"onchange="updateCalculette()">
                 <span></span>
             </div>
 
@@ -82,7 +82,7 @@
                     <img id="infoOmégaLDE0" src="./Images/icone_info.png" alt="" width="20" height="20">
                     &Omega;<sub>&Lambda;<sub>0</sub></sub> =
                 </label>
-                <input id="Omégal0" type="number" value="0.69110" step="0.01">
+                <input id="Omégal0" type="number" value="0.69110" step="0.01" onchange="updateCalculette()">
                 <span></span>
             </div>
 
@@ -125,13 +125,11 @@
             <div id="conteneurCanvas">
                 <canvas id="canvas"></canvas>
             </div>
-
-            <button class="grosBoutton">Actualiser</button>
         </div>
 
 
-        <div class="boiteCalculAnnexe" style="flex: 1;">
-            <div class="CalculAnnexe" id="Calcul_Diametre" >
+        <div>
+            <div class="boite_calculette" id="Calcul_Diametre" style="align-items: center;">
                 <h4 id="diametre_apparent_titre" class="infobullable" style="margin-bottom:10px; margin-top: 10px;margin-inline: auto;"></h4>
                 <div>
                     <input id="select_z1_diametre" type="radio" name="choix_z1_z2" checked>
@@ -162,7 +160,7 @@
                 </div>
             </div>
 
-            <div class="CalculAnnexe" id="Calcul_inverse">
+            <div class="boite_calculette" id="Calcul_inverse">
                 <h4 id="calcul_inverse_titre" style="margin-bottom:10px; margin-top: 10px;margin-inline: auto;"></h4>
                 <div class="paramètre">
                     <label id="label_dminverse" class="infobullable" for="dm_inverse">dm = </label>
@@ -186,7 +184,7 @@
                     <label>z<sub>trec</sub> = </label>
                     <output id="output_z_trec"></output>
                 </div>
-                <div style="display: flex; gap: 8%;">
+                <div class="centre" style="display: flex; gap: 8%;">
                     <button id="bouton_calculer_inverse" class="petitBoutton" onclick="affichage_t_inverse(fonction_E);calcul_dm_inverse(fonction_E)"></button>
                     <div style="display: flex; flex-direction: row;">
                         <label id="label_zneg" class="infobullable" for="z_negatif_dm_inverse">z&lt;0</label>
@@ -196,7 +194,7 @@
                 
             </div>
 
-            <div class="CalculAnnexe" id="Calcul_Horizon" style="flex: 1;">
+            <div class="boite_calculette" id="Calcul_Horizon">
                 <h4 id="horizons_titre" style="margin-bottom:10px; margin-top: 10px;margin-inline: auto;"></h4>
                 <div class="paramètre">
                     <label id="label_t_hori" class="infobullable" for="t_pour_calcul_horizon">t = </label>
@@ -221,7 +219,7 @@
                     <output id="resultat_dm_particule_al"></output>
                     <span class="unite_al"></span>
                 </div>
-                <button id="bouton_calculer_horizon" class="petitBoutton" onclick="calcul_horizons_annexe(fonction_E)">Calculer</button>
+                <button id="bouton_calculer_horizon" class="petitBoutton centre" onclick="calcul_horizons_annexe(fonction_E)">Calculer</button>
             </div>
         </div>
 
@@ -230,7 +228,7 @@
 
     <!--Fenêtre graphe-->
     <div id="PanneauCentral" class="fenetre_calculette" >
-        <div class="boiteGenerateurGraphique">
+        <div class="boite_calculette">
             <h3 id="generateur_graphique"></h3>
             <div class="parametreGraphique">
                 <div style="display: flex;gap: 10px;">
@@ -296,12 +294,12 @@
                             <label for="check_omega_t">omega(t)</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="check_z_t" class="check_graph" onchange="document.getElementById('graphique_z_t').classList.toggle('cache')">
-                            <label for="check_z_t">z(t)</label>
-                        </div>
-                        <div>
                             <input type="checkbox" id="check_t_z" class="check_graph" onchange="document.getElementById('graphique_t_z').classList.toggle('cache')">
                             <label for="check_t_z">t(z)</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="check_z_t" class="check_graph" onchange="document.getElementById('graphique_z_t').classList.toggle('cache')">
+                            <label for="check_z_t">z(t)</label>
                         </div>
                     </fieldset>
                 </div>
@@ -316,7 +314,7 @@
                 </div>
             </div>
         </div>
-        <div id="panneauGraphe" class="Graphe" style="position: relative;background-color: rgb(255,255,255);border-radius: 3px;flex-grow: 1;display: flex;flex-direction: column;">
+        <div id="panneauGraphe" class="boite_calculette" style="position: relative;background-color: rgb(255,255,255);border-radius: 3px;flex-grow: 1;display: flex;flex-direction: column;">
             <div id="graphique_d_z"></div>
             <div id="graphique_d_t"></div>
             <div id="graphique_omega_z"></div>
@@ -328,10 +326,8 @@
 
     <!--Fenêtre sortie-->
     <div id="panneauSortie" class="fenetre_calculette">
-        <div id="Entree_z1_z2" class="boiteEntree">
-            <div id="titre_z1_z2">
-                <h3 id="calcul_z_titre" style="margin-bottom: 2px";></h3>
-            </div>
+        <div id="Entree_z1_z2" class="boite_calculette" style="align-items: center;">
+            <h4 id="calcul_z_titre"></h4>
             <button id="bouton_calculer_z" class="grosBoutton" onclick="affichage_des_z(fonction_E)">Calculer</button>
             <div>
                 <div class="paramètre">
@@ -349,32 +345,32 @@
             </div>
             <span style="color:blue;" id="resul_tps"></span>
         </div>
-        <div id="parametre_z1_z2" class="boiteSortie">
+        <div id="parametre_z1_z2" class="boite_calculette">
             <h4 id="parametre_z_titre"></h4>
             <div style="display: flex;justify-content: space-between; gap: 10px;">
                 <div id="parametres_z1">
                     <div>
-                        <label for="T_z1">T<sub>(z1)</sub> = </label>
+                        <label for="T_z1">T<sub>z1</sub> = </label>
                         <output id="T_z1"></output>
                     </div>
                     <div>
-                        <label for="H_z1">H<sub>(z1)</sub> = </label>
+                        <label for="H_z1">H<sub>z1</sub> = </label>
                         <output id="H_z1"></output>
                     </div>
                     <div>
-                        <label for="omegaR_z1">&Omega;<sub>R(z1)</sub> = </label>
+                        <label for="omegaR_z1">&Omega;<sub>Rz1</sub> = </label>
                         <output id="omegaR_z1"></output>
                     </div>
                     <div>
-                        <label for="omegaM_z1">&Omega;<sub>M(z1)</sub> = </label>
+                        <label for="omegaM_z1">&Omega;<sub>Mz1</sub> = </label>
                         <output id="omegaM_z1"></output>
                     </div>
                     <div>
-                        <label for="omegaK_z1">&Omega;<sub>K(z1)</sub> = </label>
+                        <label for="omegaK_z1">&Omega;<sub>Kz1</sub> = </label>
                         <output id="omegaK_z1"></output>
                     </div>
                     <div>
-                        <label for="omegaL_z1">&Omega;<sub>&Lambda;(z1)</sub> = </label>
+                        <label for="omegaL_z1">&Omega;<sub>&Lambda;z1</sub> = </label>
                         <output id="omegaL_z1"></output>
                     </div>
                     <div>
@@ -384,27 +380,27 @@
                 </div>
                 <div id="parametres_z2">
                     <div>
-                        <label for="T_z2">T<sub>(z2)</sub> = </label>
+                        <label for="T_z2">T<sub>z2</sub> = </label>
                         <output id="T_z2"></output>
                     </div>
                     <div>
-                        <label for="H_z2">H<sub>(z2)</sub> = </label>
+                        <label for="H_z2">H<sub>z2</sub> = </label>
                         <output id="H_z2"></output>
                     </div>
                     <div>
-                        <label for="omegaR_z2">&Omega;<sub>R(z2)</sub> = </label>
+                        <label for="omegaR_z2">&Omega;<sub>Rz2</sub> = </label>
                         <output id="omegaR_z2"></output>
                     </div>
                     <div>
-                        <label for="omegaM_z2">&Omega;<sub>M(z2)</sub> = </label>
+                        <label for="omegaM_z2">&Omega;<sub>Mz2</sub> = </label>
                         <output id="omegaM_z2"></output>
                     </div>
                     <div>
-                        <label for="omegaK_z2">&Omega;<sub>K(z2)</sub> = </label>
+                        <label for="omegaK_z2">&Omega;<sub>Kz2</sub> = </label>
                         <output id="omegaK_z2"></output>
                     </div>
                     <div>
-                        <label for="omegaL_z2">&Omega;<sub>&Lambda;(z2)</sub> = </label>
+                        <label for="omegaL_z2">&Omega;<sub>&Lambda;z2</sub> = </label>
                         <output id="omegaL_z2"></output>
                     </div>
                     <div>
@@ -415,7 +411,7 @@
             </div>
         </div>
 
-        <div id="geometrie_z1_z2" class="boiteSortie">
+        <div id="geometrie_z1_z2" class="boite_calculette">
             <h4 id="geometrie_titre"></h4>
             <div>
                 <div>
@@ -482,7 +478,7 @@
             </div>
         </div>
 
-        <div id="photometrie_z1_z2" class="boiteSortie" style="flex: 1;">
+        <div id="photometrie_z1_z2" class="boite_calculette">
             <h4 id="photometrie_titre"></h4>
             <div>
                 <div>

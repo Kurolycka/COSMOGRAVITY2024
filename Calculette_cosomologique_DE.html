@@ -26,11 +26,11 @@
 <input style="display: none" id="h" type="number" value="6.62607004e-34">
 <input style="display: none" id="typeAnnee" type="number" value="">
 
-<div class="grillePrincipale">
+<div class="grillePrincipale" style="align-items: start;gap: 2px;">
     <div id="positionNav" class="Nav"></div>
     <!--Fenêtre entrée-->
     <div id="panneauEntree" class="fenetre_calculette" >
-        <div class="boiteEntree">
+        <div class="boiteEntree" style="border: 1px solid black;">
             <div id="Entrées"></div>
 
             <div class="paramètre" style="grid-template-columns: 1fr 1fr">
@@ -73,7 +73,7 @@
                 <label for="Omégam0">
                     <img id="infoOmégam0" src="./Images/icone_info.png" alt="" width="20" height="20">
                     &Omega;<sub>m<sub>0</sub></sub> = </label>
-                <input id="Omégam0" type="number" value="0.30890" step="0.01">
+                <input id="Omégam0" type="number" value="0.30890" step="0.01"onchange="updateCalculette()">
                 <span></span>
             </div>
 
@@ -82,7 +82,7 @@
                     <img id="infoOmégaLDE0" src="./Images/icone_info.png" alt="" width="20" height="20">
                     &Omega;<sub>DE<sub>0</sub></sub> =
                 </label>
-                <input id="OmégaDE0" type="number" value="0.69110" step="0.01">
+                <input id="OmégaDE0" type="number" value="0.69110" step="0.01"onchange="updateCalculette()">
                 <span></span>
             </div>
 
@@ -139,13 +139,9 @@
                 <input id="OptionsOmégak0" type="checkbox">
             </div>
 
-            <div id="conteneurCanvas">
-                <canvas id="canvas"></canvas>
-            </div>
-            <button class="grosBoutton">Actualiser</button>
         </div>
-        <div class="boiteCalculAnnexe" style="flex: 1;">
-            <div class="CalculAnnexe" id="Calcul_Diametre">
+        <div>
+            <div class="boite_calculette" id="Calcul_Diametre" style="align-items: center;">
                 <h4 id="diametre_apparent_titre" class="infobullable" style="margin-bottom:10px; margin-top: 10px;margin-inline: auto;"></h4>
                 <div>
                     <input id="select_z1_diametre" type="radio" name="choix_z1_z2" checked>
@@ -176,7 +172,7 @@
                 </div>
             </div>
 
-            <div class="CalculAnnexe" id="Calcul_inverse">
+            <div class="boite_calculette" id="Calcul_inverse">
                 <h4 id="calcul_inverse_titre" style="margin-bottom:10px; margin-top: 10px;margin-inline: auto;"></h4>
                 <div class="paramètre">
                     <label id="label_dminverse" class="infobullable" for="dm_inverse">dm = </label>
@@ -200,9 +196,9 @@
                     <label>z<sub>trec</sub> = </label>
                     <output id="output_z_trec"></output>
                 </div>
-                <div style="display: flex; gap: 8%;">
+                <div class="centre" style="display: flex; gap: 8%;">
                     <button id="bouton_calculer_inverse" class="petitBoutton" onclick="affichage_t_inverse(fonction_F);calcul_dm_inverse(fonction_F)"></button>
-                    <div>
+                    <div style="display: flex; flex-direction: row;">
                         <label id="label_zneg" class="infobullable" for="z_negatif_dm_inverse">z&lt;0</label>
                         <input type="checkbox" id="z_negatif_dm_inverse">
                     </div>
@@ -210,7 +206,7 @@
                 
             </div>
 
-            <div class="CalculAnnexe" id="Calcul_Horizon" style="flex: 1;">
+            <div class="boite_calculette" id="Calcul_Horizon">
                 <h4 id="horizons_titre" style="margin-bottom:10px; margin-top: 10px;margin-inline: auto;"></h4>
                 <div class="paramètre">
                     <label id="label_t_hori" class="infobullable" for="t_pour_calcul_horizon">t = </label>
@@ -235,7 +231,7 @@
                     <output id="resultat_dm_particule_al"></output>
                     <span class="unite_al"></span>
                 </div>
-                <button id="bouton_calculer_horizon" class="petitBoutton" onclick="calcul_horizons_annexe(fonction_F)">Calculer</button>
+                <button id="bouton_calculer_horizon" class="petitBoutton centre"  onclick="calcul_horizons_annexe(fonction_F)">Calculer</button>
             </div>
         </div>
         
@@ -244,109 +240,109 @@
     
     <!--Fenêtre graphe-->
     <div id="PanneauCentral" class="fenetre_calculette" >
-        <div class="boiteGenerateurGraphique">
-        <h3 id="generateur_graphique"></h3>
-        <div class="parametreGraphique">
-            <div style="display: flex;gap: 10px;">
-                <fieldset>
-                    <div class="paramètre">
-                        <label id="label_zmin" for="graphique_z_min" class="infobullable">
-                            z<sub>min</sub> =
-                        </label>
-                        <input id="graphique_z_min" type="number" value="0" step="0.1" min="-.99999999999" max="1000">
-                    </div>
-        
-                    <div class="paramètre">
-                        <label id="label_zmax" class="infobullable" for="graphique_z_max">
-                            z<sub>max</sub> =
-                        </label>
-                        <input id="graphique_z_max" type="number" value="5" step="0.1" min="-.99999999998" max="1000">
-                    </div>
+        <div class="boite_calculette">
+            <h3 id="generateur_graphique"></h3>
+            <div class="parametreGraphique">
+                <div style="display: flex;gap: 10px;">
+                    <fieldset>
+                        <div class="paramètre">
+                            <label id="label_zmin" for="graphique_z_min" class="infobullable">
+                                z<sub>min</sub> =
+                            </label>
+                            <input id="graphique_z_min" type="number" value="0" step="0.1" min="-.99999999999" max="1000">
+                        </div>
+            
+                        <div class="paramètre">
+                            <label id="label_zmax" class="infobullable" for="graphique_z_max">
+                                z<sub>max</sub> =
+                            </label>
+                            <input id="graphique_z_max" type="number" value="5" step="0.1" min="-.99999999998" max="1000">
+                        </div>
 
-                    <div class="paramètre">
-                        <label id="label_pas" class="infobullable" for="graphique_pas">
-                            pas =
-                        </label>
-                        <input id="graphique_pas" type="number" value="300" step="1" min="1" max="10000" oninput="validity.valid||(value='');">
-                    </div>
-                </fieldset>
+                        <div class="paramètre">
+                            <label id="label_pas" class="infobullable" for="graphique_pas">
+                                pas =
+                            </label>
+                            <input id="graphique_pas" type="number" value="300" step="1" min="1" max="10000" oninput="validity.valid||(value='');">
+                        </div>
+                    </fieldset>
 
-                <fieldset>
-                    <div>
-                        <input type="radio" id="radio_fonction_z" name="dependance" checked>
-                        <label id="label_radio_fonction_z" class="infobullable" for="radio_fonction_z"></label>
-                    </div>
-                    <div>
-                        <input type="radio" id="radio_fonction_t" name="dependance">
-                        <label id="label_radio_fonction_t" class="infobullable" for="radio_fonction_t"></label>
-                    </div>
-                    <div>
-                        <input type="checkbox" id="check_log_abs">
-                        <label id="label_check_log_abs" class="infobullable" for="check_log_abs"></label>
-                    </div>
-                    <div>
-                        <input type="checkbox" id="check_log_ord">
-                        <label id="label_check_log_ord" class="infobullable" for="check_log_ord"></label>
-                    </div>
-                    <div>
-                        <input type="checkbox" id="omegaDE_normalise" checked>
-                        <label id="label_omegaDE_normalise" class="infobullable" for="omegaDE_normalise"></label>
-                    </div>
-                </fieldset>                    
-                <fieldset>
-                    <div>
-                        Affichage
-                    </div>        
-                    <div>
-                        <input type="checkbox" id="check_distance_z" class="check_graph" onchange="document.getElementById('graphique_d_z').classList.toggle('cache')">
-                        <label for="check_distance_z">distance(z)</label>
-                    </div>                
-                    <div>
-                        <input type="checkbox" id="check_distance_t" class="check_graph" onchange="document.getElementById('graphique_d_t').classList.toggle('cache')">
-                        <label for="check_distance_t">distance(t)</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" id="check_omega_z" class="check_graph" onchange="document.getElementById('graphique_omega_z').classList.toggle('cache')">
-                        <label for="check_omega_z">omega(z)</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" id="check_omega_t" class="check_graph" onchange="document.getElementById('graphique_omega_t').classList.toggle('cache')">
-                        <label for="check_omega_t">omega(t)</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" id="check_z_t" class="check_graph" onchange="document.getElementById('graphique_z_t').classList.toggle('cache')">
-                        <label for="check_z_t">z(t)</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" id="check_t_z" class="check_graph" onchange="document.getElementById('graphique_t_z').classList.toggle('cache')">
-                        <label for="check_t_z">t(z)</label>
-                    </div>
-                </fieldset>
-            </div>
-            <br>
-            <div style="display: flex; flex-direction: row;gap: 10px;">
-                <button id="bouton_distance" class="petitBoutton" onclick="generer_graphique_distance(fonction_F)">Distance</button><br>
-                <button id="bouton_omega" class="petitBoutton" onclick="generer_graphique_Omega(fonction_F)">Omega</button><br>
-                <button id="bouton_tempsdecalage" class="petitBoutton" onclick="generer_graphique_TempsDecalage(fonction_F)">Temps/Decalage</button>
-            </div>
-            <div>
-                <span id="temps_calcul_graph" style="color:blue"></span>
+                    <fieldset>
+                        <div>
+                            <input type="radio" id="radio_fonction_z" name="dependance" checked>
+                            <label id="label_radio_fonction_z" class="infobullable" for="radio_fonction_z"></label>
+                        </div>
+                        <div>
+                            <input type="radio" id="radio_fonction_t" name="dependance">
+                            <label id="label_radio_fonction_t" class="infobullable" for="radio_fonction_t"></label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="check_log_abs">
+                            <label id="label_check_log_abs" class="infobullable" for="check_log_abs"></label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="check_log_ord">
+                            <label id="label_check_log_ord" class="infobullable" for="check_log_ord"></label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="omegaDE_normalise" checked>
+                            <label id="label_omegaDE_normalise" class="infobullable" for="omegaDE_normalise"></label>
+                        </div>
+                    </fieldset>                    
+                    <fieldset>
+                        <div>
+                            Affichage
+                        </div>        
+                        <div>
+                            <input type="checkbox" id="check_distance_z" class="check_graph" onchange="document.getElementById('graphique_d_z').classList.toggle('cache')">
+                            <label for="check_distance_z">distance(z)</label>
+                        </div>                
+                        <div>
+                            <input type="checkbox" id="check_distance_t" class="check_graph" onchange="document.getElementById('graphique_d_t').classList.toggle('cache')">
+                            <label for="check_distance_t">distance(t)</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="check_omega_z" class="check_graph" onchange="document.getElementById('graphique_omega_z').classList.toggle('cache')">
+                            <label for="check_omega_z">omega(z)</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="check_omega_t" class="check_graph" onchange="document.getElementById('graphique_omega_t').classList.toggle('cache')">
+                            <label for="check_omega_t">omega(t)</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="check_t_z" class="check_graph" onchange="document.getElementById('graphique_t_z').classList.toggle('cache')">
+                            <label for="check_t_z">t(z)</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="check_z_t" class="check_graph" onchange="document.getElementById('graphique_z_t').classList.toggle('cache')">
+                            <label for="check_z_t">z(t)</label>
+                        </div>
+                    </fieldset>
+                </div>
+                <br>
+                <div style="display: flex; flex-direction: row;gap: 10px;">
+                    <button id="bouton_distance" class="petitBoutton" onclick="generer_graphique_distance(fonction_F)">Distance</button><br>
+                    <button id="bouton_omega" class="petitBoutton" onclick="generer_graphique_Omega(fonction_F)">Omega</button><br>
+                    <button id="bouton_tempsdecalage" class="petitBoutton" onclick="generer_graphique_TempsDecalage(fonction_F)">Temps/Decalage</button>
+                </div>
+                <div>
+                    <span id="temps_calcul_graph" style="color:blue"></span>
+                </div>
             </div>
         </div>
-        </div>
-        <div id="panneauGraphe" class="Graphe" style="position: relative;background-color: rgb(255,255,255);border-radius: 3px;flex-grow: 1;display: flex;flex-direction: column;">
+        <div id="panneauGraphe" class="boite_calculette">
             <div id="graphique_d_z"></div>
             <div id="graphique_d_t"></div>
             <div id="graphique_omega_z"></div>
             <div id="graphique_omega_t"></div>
             <div id="graphique_t_z"></div>
-            <div id="graphique_z_t" style="flex-grow: 1;"></div>
+            <div id="graphique_z_t"></div>
         </div>
     </div>
 
     <!--Fenêtre sortie-->
     <div id="panneauSortie" class="fenetre_calculette">
-        <div id="Entree_z1_z2" class="boiteEntree">
+        <div id="Entree_z1_z2" class="boite_calculette" style="align-items: center;">
             <div id="titre_z1_z2">
                 <h3 id="calcul_z_titre" style="margin-bottom: 2px";></h3>
             </div>
@@ -367,36 +363,36 @@
             </div>
             <span style="color:blue;" id="resul_tps"></span>
         </div>
-        <div id="parametre_z1_z2" class="boiteSortie">
+        <div id="parametre_z1_z2" class="boite_calculette">
             <h4 id="parametre_z_titre"></h4>
             <div style="display: flex;justify-content: space-between; gap: 10px;">
                 <div id="parametres_z1">
                     <div>
-                        <label for="T_z1">T<sub>(z1)</sub> = </label>
+                        <label for="T_z1">T<sub>z1</sub> = </label>
                         <output id="T_z1"></output>
                     </div>
                     <div>
-                        <label for="H_z1">H<sub>(z1)</sub> = </label>
+                        <label for="H_z1">H<sub>z1</sub> = </label>
                         <output id="H_z1"></output>
                     </div>
                     <div>
-                        <label for="omegaR_z1">&Omega;<sub>R(z1)</sub> = </label>
+                        <label for="omegaR_z1">&Omega;<sub>Rz1</sub> = </label>
                         <output id="omegaR_z1"></output>
                     </div>
                     <div>
-                        <label for="omegaM_z1">&Omega;<sub>M(z1)</sub> = </label>
+                        <label for="omegaM_z1">&Omega;<sub>Mz1</sub> = </label>
                         <output id="omegaM_z1"></output>
                     </div>
                     <div>
-                        <label for="omegaK_z1">&Omega;<sub>K(z1)</sub> = </label>
+                        <label for="omegaK_z1">&Omega;<sub>Kz1</sub> = </label>
                         <output id="omegaK_z1"></output>
                     </div>
                     <div>
-                        <label for="omegaDE_z1">&Omega;<sub>DE(z1)</sub> = </label>
+                        <label for="omegaDE_z1">&Omega;<sub>DEz1</sub> = </label>
                         <output id="omegaDE_z1"></output>
                     </div>
                     <div>
-                        <label for="omegaDEN_z1">&Omega;<sub>DEN(z1)</sub> = </label>
+                        <label for="omegaDEN_z1">&Omega;<sub>DENz1</sub> = </label>
                         <output id="omegaDEN_z1"></output>
                     </div>
                     <div>
@@ -406,31 +402,31 @@
                 </div>
                 <div id="parametres_z2">
                     <div>
-                        <label for="T_z2">T<sub>(z2)</sub> = </label>
+                        <label for="T_z2">T<sub>z2</sub> = </label>
                         <output id="T_z2"></output>
                     </div>
                     <div>
-                        <label for="H_z2">H<sub>(z2)</sub> = </label>
+                        <label for="H_z2">H<sub>z2</sub> = </label>
                         <output id="H_z2"></output>
                     </div>
                     <div>
-                        <label for="omegaR_z2">&Omega;<sub>R(z2)</sub> = </label>
+                        <label for="omegaR_z2">&Omega;<sub>Rz2</sub> = </label>
                         <output id="omegaR_z2"></output>
                     </div>
                     <div>
-                        <label for="omegaM_z2">&Omega;<sub>M(z2)</sub> = </label>
+                        <label for="omegaM_z2">&Omega;<sub>Mz2</sub> = </label>
                         <output id="omegaM_z2"></output>
                     </div>
                     <div>
-                        <label for="omegaK_z2">&Omega;<sub>K(z2)</sub> = </label>
+                        <label for="omegaK_z2">&Omega;<sub>Kz2</sub> = </label>
                         <output id="omegaK_z2"></output>
                     </div>
                     <div>
-                        <label for="omegaDE_z2">&Omega;<sub>DE(z2)</sub> = </label>
+                        <label for="omegaDE_z2">&Omega;<sub>DEz2</sub> = </label>
                         <output id="omegaDE_z2"></output>
                     </div>
                     <div>
-                        <label for="omegaDEN_z2">&Omega;<sub>DEN(z2)</sub> = </label>
+                        <label for="omegaDEN_z2">&Omega;<sub>DENz2</sub> = </label>
                         <output id="omegaDEN_z2"></output>
                     </div>
                     <div>
@@ -441,7 +437,7 @@
             </div>
         </div>
 
-        <div id="geometrie_z1_z2" class="boiteSortie">
+        <div id="geometrie_z1_z2" class="boite_calculette">
             <h4 id="geometrie_titre"></h4>
             <div>
                 <div>
@@ -508,7 +504,7 @@
             </div>
         </div>
 
-        <div id="photometrie_z1_z2" class="boiteSortie" style="flex: 1;">
+        <div id="photometrie_z1_z2" class="boite_calculette">
             <h4 id="photometrie_titre"></h4>
             <div>
                 <div>

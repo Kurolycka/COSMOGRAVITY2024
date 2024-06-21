@@ -14,30 +14,15 @@
     position: absolute;
 }
 
-.boiteGenerateurGraphique {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: rgb(245, 245, 245);
-    gap: 10px;
-    padding: 5px;
-    border-radius: 3px;
-}
-
 .parametreGraphique{
     align-items: center;
     display: flex;
     flex-direction: column;
 }
 
-.CalculAnnexe{
-    border: 2px;
-}
-
 .fenetre_calculette{
     display: flex;
     flex-direction: column;
-    background-color: black;
     padding: 1px;
     border-radius: 3px;
     gap: 1px;
@@ -48,25 +33,6 @@
     color: blue;
 }
 
-.boiteCalculAnnexe{
-    display: flex;
-    flex-direction: column;
-    background-color: black;
-    gap: 1px;
-    padding: 1px;
-    border-radius: 3px;
-}
-
-
-.CalculAnnexe{
-    display: flex;
-    flex-direction: column;
-    background-color: rgb(245, 245, 245);
-    border-radius: 3px;
-    padding: 1px;
-    gap: 1px;
-}
-
 .infobullable{
     cursor: help;
 }
@@ -74,3 +40,28 @@
 .cache{
     display:none;
 }
+
+.boite_calculette{
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(255,255,255);
+    gap: 2px;
+    padding: 5px;
+    border:1px solid black;
+    border-radius: 5px;
+}
+
+.boite_calculette h4 {
+    margin-inline: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.centre {
+    margin-inline: auto;
+}
+
+.boite_calculette output {
+    color: rgb(64, 47, 221);
+}
+
