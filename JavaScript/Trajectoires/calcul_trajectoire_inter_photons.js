@@ -1,19 +1,15 @@
-// variables globales
-var z=0;
-var z_obs=0;
-var title = "V(r)/c² - 1";
-var clicks = 0;
-const DIAMETRE_PART = 1;
-var c = 299792458;
-var nzoom=0;
-var nz_avant_lancement=0;
-var facteurDeMalheur;
-var fact_defaut;
-var G = 6.6743* Math.pow(10, -11);
-var compteurVitesse = 0;
-var compteurVitesseAvantLancement =0; 
 
-// liste de couleurs en hexa
+
+//----------------------------------------------------{DEFINITION DES VARIABLES GLOBALES}----------------------------------------------------
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Constantes physiques ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+var c = 299792458; //Vitesse de la lumière.
+var G = 6.67385 * Math.pow(10, -11); //Constante gravitationnelle. 
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Constantes pour les couleurs ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+//Définition de couleurs en hexadécimal :
 const COULEUR_NOIR = '#2F2D2B';
 const COULEUR_BLEU = '#4080A4';
 const COULEUR_CYAN = '#008B8B';
@@ -23,78 +19,126 @@ const COULEUR_ROUGE_COSMO= '#b54b3a';
 const COULEUR_GRIS = '#CCCCCC';
 const COULEUR_MARRON = '#673B15';
 
-// couleurs rayons et particule
+
+//Association des couleurs à des éléments de la simulation : 
 const COULEUR_PART = COULEUR_ROUGE_COSMO;
 const COULEUR_RS = COULEUR_BLEU;
 const COULEUR_RPHY = COULEUR_GRIS;
 
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Variables pour le zoom ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-ifUneFois=true // booleen qui permet plus bas d'utiliser la condition if une seule fois durant la simulation
+var nzoom=0; //Comptabilisation du zoom de manière générale.
+var nz_avant_lancement=0; //Comptabilisation du zoom d'avant lancement. 
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Variables pour l'accélération/décélération ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+var compteurVitesse = 0; //Comptabilisation de simu de manière générale.
+var compteurVitesseAvantLancement =0; //Comptabilisation de simu avant lancement. 
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Boolean ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+//Variables pour passer une seule fois dans des boucles : 
+ifUneFois=true 
 ifUneFois2=true
 ifUneFois3=true
 
-var factGlobalAvecClef = 280 //pour l'échelle avant lancement
-//variable globale, key value
-var rmaxjson = {};
-var mobilefactor = {};
-var r0o2 ={};
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Initialisation de listes ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-var maximum;
+var rmaxjson = {}; //Liste contenant les coordonnées radiales maximales atteintes pour chaque mobile.
+var mobilefactor = {}; //Liste contenant les facteurs d'échelle pour chaque mobile.
+var r0o2 ={}; //Liste contenant les distances initiales au centre de l'astre pour chaque mobile. 
+var listejsonfusees={}; //Liste regroupant l'initialisation de tous les compteurs. 
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Autres variables ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+var title = "V(r)/c² - 1"; //Stockage du titre du graphe de potentiel.
+const DIAMETRE_PART = 1; //Pour fixer la taille du mobile.
 var cle;
-var fuseecompteur;
-var listejsonfusees={};
+var fact_defaut; //Stockage du facteur d'échelle par défaut. 
+var texte=o_recupereJson(); //Récupération du texte des json. 
+var factGlobalAvecClef = 280; //Facteur d'échelle du graphe qui peut être modifié avec le zoom.
+var maximum; //Stockage de la distance initiale maximale parmi les mobiles.
+var fuseecompteur; //Stockage du nombre de fusées générées.
+var z=0; //Stockage du décalage spectrale dans le référentiel du mobile.
+var z_obs=0; //Stockage du décalage spectrale dans le référentiel de l'observateur.
 
 
-//-----------------------------------------------------------KHALED--------------------------------------------------
-//ceci est une fonction que j'ai trouvé sur StackOverflow de ce brave monsieur Nisse Engström
-//je l'ai adapté avec l'aide de chatGPT pour avoir une class de Timer
-//puis j'ai fait de sorte que ça remplace setinterval et ça marche 1000x mieux
-
-class Timer {
-    constructor(funct,compteur,delayMs, times) {
-        if (times === undefined) times = -1;
-        if (delayMs === undefined) delayMs = 10;
-
-        this.funct = funct;
-        this.times = times;
-        this.timesCount = 0;
-        this.ticks = (delayMs / 10) | 0;
-        this.count = 0;
-		this.compteur=compteur
-        Timer.instances[this.compteur]=this;
+//-----------------------------------------------------------{TIMER}--------------------------------------------------
+//Cette idée vient de StackOverflow par Nisse Engström
+/*Ceci a ete fait pour remplacer setInterval car elle ne gere pas plusieurs mobiles, car 
+elle n'appelle pas animate de maniére synchrone, car on appelle animate pour chaque mobile tout seul.
+Par contre Timer est associé à chaque mobile et on peut appeler animate pour chaque mobile, sauf que 
+cette fois on appelle setInterval pour faire fonctionner les Timer ensembles, et cela permet de 
+synchroniser les calculs. (pas utilisée dans Kerr car 1 seul mobile à present) */
+/**
+ * Une classe pour creer des objets qui permettent de programmer l'appel de focntion.
+ * @param funct : fonction pour laquelle on veut programmer l'appel.
+ * @param compteur: indice pour savoir l'associer au mobile concerné par le Timer.
+ * @param delayMs: le temps d'interval entre chaque appel en milisecondes.
+ * @param times : combien de fois on veut l'appeler, on met -1 pour l'appeler indefiniment.
+ */
+class Timer 
+{
+	//on met le constructeur avec tout les atributs
+    constructor(funct,compteur,delayMs, times) 
+	{
+        if (times === undefined) times = -1; // Définit le nombre de répétitions à -1 si non fourni (appel indéfini)
+        if (delayMs === undefined) delayMs = 10; // Définit le délai à 10 ms si non fourni
+		
+        this.funct = funct; //la focntion
+        this.times = times; //le nombre d'appels
+        this.timesCount = 0; // Compteur d'appels effectués
+        this.ticks = (delayMs / 10) | 0;  // Nombre de ticks avant chaque appel
+        this.count = 0; // Compteur de ticks écoulés
+		this.compteur=compteur // Identifiant pour l'instance de Timer (pour le relié à un mobile)
+        Timer.instances[this.compteur]=this; // Enregistre l'instance dans le tableau des instances
     }
-
-    tick() {
-        if (this.count >= this.ticks) {
-            this.funct();
-            this.count = 0;
-            if (this.times > -1) {
-                this.timesCount++;
-                if (this.timesCount >= this.times) {
-                    this.stop();
+ 	// Méthode appelée à chaque tick
+    tick()
+	{
+        if (this.count >= this.ticks) // Vérifie si le nombre de ticks requis est atteint
+		{
+            this.funct();// Appelle la fonction
+            this.count = 0;// Réinitialise le compteur de ticks
+			
+			/*Ceci concerne le cas où le Timer doit s'arreter à un temps donné */
+            if (this.times > -1) // Si le nombre de répétitions est défini (non infini)
+			{
+                this.timesCount++;// Incrémente le compteur d'appels
+                if (this.timesCount >= this.times) // Si le nombre d'appels atteint le maximum défini
+				{
+                    this.stop();// Arrête le timer
                 }
             }
         }
-        this.count++;
+        this.count++; // Incrémente le compteur de ticks
     }
 
-    stop() {
-        delete Timer.instances[this.compteur];}}
-
+    // Méthode pour arrêter le Timer
+	stop() 
+	{
+        delete Timer.instances[this.compteur]; // Supprime l'instance du tableau des instances
+	}
+}
+// Tableau associatif pour stocker les instances de Timer
 Timer.instances = {};
+// Indicateur pour savoir si tous les timers sont en pause
 Timer.paused = false;
 
-
-Timer.ontick = function () {
-    if (!Timer.paused) {
-        for (const instance of Object.values(Timer.instances)) {
-            instance.tick();
+// Fonction appelée à chaque tick global
+Timer.ontick = function () 
+{
+    if (!Timer.paused) // Vérifie si les timers ne sont pas en pause
+	{
+        for (const instance of Object.values(Timer.instances))  // On parcourt toutes instances de Timer
+		{
+            instance.tick();// Appelle la méthode tick
         }
     }
 };
 
+// Déclenche la fonction ontick toutes les millisecondes
 window.setInterval(Timer.ontick, 1);
-//-----------------------------------------------------------KHALED--------------------------------------------------
 
 //----------------------------------------------------{initialisationGenerale}----------------------------------------------------
 
@@ -110,23 +154,39 @@ function initialisationGenerale(fuseecompteur){
 
 //----------------------------------------------------{lancerDeFusees}----------------------------------------------------
 
-function lancerDeFusees(fuseecompteur){
-    G = 6.67385 * Math.pow(10, -11);
-    M = Number(document.getElementById("M").value);
-    r_phy = Number(document.getElementById("r_phy").value);
+/**
+ * Fonction qui permet de lancer la simulation pour tout les mobiles.
+ * @param {*} fuseecompteur : nombre de fusées générées.
+ */
+function lancerDeFusees(fuseecompteur)
+{
+    M = Number(document.getElementById("M").value);//on recupere la masse
+    r_phy = Number(document.getElementById("r_phy").value);//on recupere le rayon physique
+    //on calcul le rayon de Schwarzschild 
     m = G * M / Math.pow(c, 2); 
     rs=2*m;
-	for (compteur = 1; compteur <= fuseecompteur; compteur += 1) {
-        trajectoire(compteur,listejsonfusees[compteur]);
+	//on fait une boucle sur tout les mobiles
+	for (compteur = 1; compteur <= fuseecompteur; compteur += 1)
+	{
+        trajectoire(compteur,listejsonfusees[compteur]);//on appelle trajectoire avec le mobile comme argument
 	}
-	document.getElementById("pause/resume").addEventListener("click", function() {
-        pausee()}); //ajouté Là par Khaled car le fonctionnement du button à ete changé
-	//Associe au bouton pause la fonction pausee permettant de mettre la simulation en pause : 
+
+	/*C'est mieux de les mettre là que dans trejectoire ou autre car on veut que 
+	ça soit global et pas relié à un mobile comme ça on pause quand on veut et pareil pour les touches du clavier */
+	
+	//si le bouton pause est cliqué on appelle la fonction pause
+	document.getElementById("pause/resume").addEventListener("click", function() 
+	{
+        pausee()
+	}); 
+
+	//si le bouton pause en bas est cliqué en appelle la fonction pause 
 	document.getElementById('bouton_pause').addEventListener('click', function() {
 		pausee();
 	});
 	
-	clavierEvenement(true);	//Permet une fois démarrée de gérer la simulation avec les touches du clavier.
+	//Permet une fois démarrée de gérer la simulation avec les touches du clavier.
+	clavierEvenement(true);	
 
 }
 
@@ -141,22 +201,18 @@ function supprHtml()
 	//on recupere le nombre de fusées rentré par l'utilisateur
 	var nbrfuseesuppr = sessionStorage.getItem("nombredefusees");
     //on eleve les tableaux créés
-	document.getElementById('tableauconstanteslers').innerHTML = ''; 
-    document.getElementById('tableauresultatsimu').innerHTML = ''; 
+	document.getElementById('tableau-sortie').innerHTML = ''; 
+	document.getElementById('tableau-sortie-2').innerHTML = ''; 
+	document.getElementById('tableauresultatsimu').innerHTML = ''; 
 
 	for (count = 1; count <= nbrfuseesuppr; count += 1) 
 	{
-		//on supprime les entrées crées pour le r0 (rayon)
-		var elementrayonasuppr = document.getElementById("rayon"+count.toString()+"");
+		//on supprime le label du mobile
+		var elementlabelasuppr = document.getElementById("label"+count.toString()+"");
+		elementlabelasuppr.parentNode.removeChild(elementlabelasuppr);
+		//on supprime le div qui contient les entrées
+		var elementrayonasuppr = document.getElementById("divmobile"+count.toString()+"");
 		elementrayonasuppr.parentNode.removeChild(elementrayonasuppr);
-
-		//on supprime les entrées crées pour le phi0 (angle)
-		var elementvpasuppr = document.getElementById("idphi"+count.toString()+"");
-		elementvpasuppr.parentNode.removeChild(elementvpasuppr);
-
-		//on supprime les entrées crées pour le teta0 (angle)
-		var elementvrasuppr = document.getElementById("idteta"+count.toString()+"");
-		elementvrasuppr.parentNode.removeChild(elementvrasuppr);
 		
 		//on supprime les fraphe potentiel créés
 		var elementgrapheasuppr = document.getElementById("grsvg_"+count.toString()+"");
@@ -188,7 +244,8 @@ function supprHtml()
 function genereHtml()
 {
   
-  texte=o_recupereJson();
+ 	texte=o_recupereJson();
+	var divchamp_a_remplir= document.getElementById('champs_a_remplir');
 
 	var nbrefusees_NaN = document.getElementById("nombredefusees").value; 
 
@@ -210,23 +267,35 @@ function genereHtml()
 	/*On fait une boucle pour le avoir des entrées pour tout les mobile */
 	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) 
 	{
+		
+		/*LABEL MOBILE*/
+		var newlabel = document.createElement("Label");
+		newlabel.setAttribute("id","label"+countt.toString()+"");
+		newlabel.innerHTML = "Mobile "+countt.toString();
+		divchamp_a_remplir.appendChild(newlabel);
+
+		var	divchampsr = document.createElement("div");
+		divchampsr.setAttribute("id","divmobile"+countt.toString()+"");
+		divchampsr.setAttribute("class",'form-container');
+		divchamp_a_remplir.appendChild(divchampsr);
+
+		
 		var span = document.createElement("span");//on crée un span 
 		span.setAttribute("id","rayon"+countt.toString()+"");//on lui met un id
-		var divchampsr = document.getElementById('champs_a_remplir');//on recupere le div defini dans le HTML
+		span.setAttribute("class",'input-group');//on met le style css
 		divchampsr.appendChild(span);//on ajoute le span
 
 		/* LABEL */
-		if(countt==1)//on met le label qu'une seule fois
-		{
-			var newlabel = document.createElement("Label"); //on crée le label
-			newlabel.setAttribute("id","ctreastre"); //on lui met un id
-			newlabel.setAttribute("title","");//on lui met un titre
-			/*on dit que c'est relié à l'input qu'on definir apres
-			(pour que si on clique sur le label ça focalise sur l'input)*/											 
-			newlabel.setAttribute("for","r01"); 
-			newlabel.innerHTML = " r<sub>0</sub> (m) =";//on met le texte du label
-			span.appendChild(newlabel);//on ajoute le label créé au span
-		}
+		
+		var newlabel = document.createElement("Label"); //on crée le label
+		newlabel.setAttribute("id","ctreastre"); //on lui met un id
+		newlabel.setAttribute("title","");//on lui met un titre
+		/*on dit que c'est relié à l'input qu'on definir apres
+		(pour que si on clique sur le label ça focalise sur l'input)*/											 
+		newlabel.setAttribute("for","r01"); 
+		newlabel.innerHTML = " r<sub>0</sub> (m) =";//on met le texte du label
+		span.appendChild(newlabel);//on ajoute le label créé au span
+		
 
 		/* INPUT */
 		var newinput = document.createElement("Input");//on crée le input
@@ -235,39 +304,37 @@ function genereHtml()
 		newinput.setAttribute("align","left");// on met la position du texte dans l'input
 		newinput.setAttribute("maxlength","20");//on peut mettre que 18 caracteres 
 		newinput.setAttribute("type","text");//on met que c'est du text
-		newinput.setAttribute("size","10");//on met la taille de la case
+		newinput.setAttribute("size","7");//on met la taille de la case
 
 		/*On lui associe la fonction *verifnbr* et *initialisationGenerale*,
 		 si jamais y a un changement on appelle les deux fonctions*/
 		newinput.setAttribute("onchange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
 		span.appendChild(newinput);//on ajoute l'input créé au span
-	}
+	
 
-	/*----------------Entrée pour le phi_0-------------------- */
-	/*Pour savoir qu'est ce qu'on fait à chaque etape, allez plus haut
-	tout est expliqué pour le r0, c'est exactement les memes etapes
-	avec de differents noms, id et valeurs*/
+		/*----------------Entrée pour le phi_0-------------------- */
+		/*Pour savoir qu'est ce qu'on fait à chaque etape, allez plus haut
+		tout est expliqué pour le r0, c'est exactement les memes etapes
+		avec de differents noms, id et valeurs*/
 
-	/*On fait une boucle pour le avoir des entrées pour tout les mobile */
+		/*On fait une boucle pour le avoir des entrées pour tout les mobile */
 
-	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) 
-	{
+	
 		/* SPAN */
 		var span = document.createElement("span");
 		span.setAttribute("id","idphi"+countt.toString()+"");
-		var divchampsr = document.getElementById('champs_a_remplir');
+		span.setAttribute("class",'input-group');
 		divchampsr.appendChild(span);
 
 		/* LABEL */
-		if(countt==1)
-		{
-			var newlabel = document.createElement("Label");
-			newlabel.setAttribute("id","philabel");
-			newlabel.setAttribute("title","");
-			newlabel.setAttribute("for","phi01");
-			newlabel.innerHTML = " "+htmlDecode(" &phi;")+"<sub>0</sub>° =";
-			span.appendChild(newlabel);
-		}
+		
+		var newlabel = document.createElement("Label");
+		newlabel.setAttribute("id","philabel");
+		newlabel.setAttribute("title","");
+		newlabel.setAttribute("for","phi01");
+		newlabel.innerHTML = " "+htmlDecode(" &phi;")+"<sub>0</sub>° =";
+		span.appendChild(newlabel);
+		
 
 		/* INPUT */
 		var newinput = document.createElement("Input");
@@ -275,35 +342,33 @@ function genereHtml()
 		newinput.setAttribute("value","0");
 		newinput.setAttribute("maxlength","10");
 		newinput.setAttribute("type","text");
-		newinput.setAttribute("size","10");
+		newinput.setAttribute("size","8");
 		newinput.setAttribute("onchange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
 		span.appendChild(newinput);
-	}
+	
 
-	/*----------------Entrée pour le teta_0-------------------- */
-	/*Pour savoir qu'est ce qu'on fait à chaque etape, allez plus haut
-	tout est expliqué pour le r0, c'est exactement les memes etapes
-	avec de differents noms, id et valeurs*/
+		/*----------------Entrée pour le teta_0-------------------- */
+		/*Pour savoir qu'est ce qu'on fait à chaque etape, allez plus haut
+		tout est expliqué pour le r0, c'est exactement les memes etapes
+		avec de differents noms, id et valeurs*/
 
-	/*On fait une boucle pour le avoir des entrées pour tout les mobile */
-	for (countt = 1; countt <= nbredefuseesgenere; countt += 1)
-	{
+		/*On fait une boucle pour le avoir des entrées pour tout les mobile */
+	
 		/* SPAN */
 		var span = document.createElement("span");
 		span.setAttribute("id","idteta"+countt.toString()+"");
-		var divchampsr = document.getElementById('champs_a_remplir');
+		span.setAttribute("class",'input-group');
 		divchampsr.appendChild(span);
 
 		/* LABEL */
-		if(countt==1)
-		{
-			var newlabel = document.createElement("Label"); 
-			newlabel.setAttribute("id","thetalabel");
-			newlabel.setAttribute("title","");
-			newlabel.setAttribute("for","teta");
-			newlabel.innerHTML = " "+htmlDecode("&#632;")+"<sub>0</sub>° =";      //  &#632; c'est phi majuscule
-			span.appendChild(newlabel);
-		}
+		
+		var newlabel = document.createElement("Label"); 
+		newlabel.setAttribute("id","thetalabel");
+		newlabel.setAttribute("title","");
+		newlabel.setAttribute("for","teta");
+		newlabel.innerHTML = " "+htmlDecode("&#632;")+"<sub>0</sub>° =";      //  &#632; c'est phi majuscule
+		span.appendChild(newlabel);
+		
 
 		/* INPUT */
 		var newinput = document.createElement("Input");
@@ -311,7 +376,7 @@ function genereHtml()
 		newinput.setAttribute("value","120");
 		newinput.setAttribute("maxlength","10");
 		newinput.setAttribute("type","text");
-		newinput.setAttribute("size","10");
+		newinput.setAttribute("size","7");
 		newinput.setAttribute("onchange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
 		span.appendChild(newinput);
 	}
@@ -319,90 +384,83 @@ function genereHtml()
 	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Partie 1er Tableau ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 	//-----------------------------CASES DU HAUT------------------------------------
-	
-	/*On recupere l'element defini dans le HTML qui est le tableau
-	, puis on insere une nouvelle ligne qu'on appelle newRow*/
-	var newRow=document.getElementById('tableauconstanteslers').insertRow();
-
-	var jstring = '<tr id="tgggg1" >'//debut ligne
-
-	/* CASE POUR L */
-	for (countt = 1; countt <= nbredefuseesgenere; countt += 1)
-	{
-		jstring += '<th class="tg-aicv">$L'+countt.toString()+'(m)$</th>';
-	}
-	/* CASE POUR E */
-	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) 
-	{
-		jstring += '<th class="tg-aicv">$E'+countt.toString()+'$</th>';
-	}
-	/* CASE POUR LA VITESSE DES ORBITES CIRCULAIRES A L'EXTERIEUR*/
-	for (countt=1; countt <= nbredefuseesgenere; countt +=1) 
-	{
-		jstring += '<th class="tg-aicv" style="display: none;" id="rayon_orb_circ_ext_photon_nonBar'+countt.toString()+'" title="">$rcirc ext'+countt.toString()+'$</th>'; //Manon
-	}
-	/* CASE POUR LA VITESSE DES ORBITES CIRCULAIRES A L'INTERIEUR*/
-	for (countt=1; countt <= nbredefuseesgenere; countt +=1) 
-	{
-		jstring += '<th class="tg-aicv" style="display: none;" id="rayon_orb_circ_int_photon_nonBar'+countt.toString()+'" title="">$rcirc int'+countt.toString()+'$</th>'; //Manon
-	}
-
-    /* CASE POUR RAYON DE SCHWARZSCHILD */
-	jstring +='<th class="tg-6l4m" id="rayonschwars"  title="" >$rs=\\frac{2GM}{c^{2}}(m)$</th>';
+	var newRow_sortie=document.getElementById('tableau-sortie').insertRow();
+	var jstring_sortie = '<tr id="tgggg1" >' //debut ligne
+	/* CASE POUR RAYON DE SCHWARZSCHILD */
+	jstring_sortie +='<th class="tg-6l4m" id="rayonschwars"  title="" >$rs=\\frac{2GM}{c^{2}}(m)$</th>';
 	/* CASE POUR GRAVITE DE SURFACE */
-	jstring +='<th class="tg-6l4m" style="display: none;"  id="gravtxt" title="">$grav=\\frac{GM}{R^{2}}\\frac{1}{9.81}(g)$</th>';
+	jstring_sortie +='<th class="tg-6l4m" style="display: none;"  id="gravtxt" title="">$grav=\\frac{GM}{R^{2}}\\frac{1}{9.81}(g)$</th>';
 	/* CASE POUR VITESSE DE LIBERATION */
-	jstring +='<th class="tg-6l4m" style="display: none;" id="vitesseLibéra" title="">$Vlib=c(\\frac{rs}{R})^{1/2}(m.s^{-1}) $</th>';
+	jstring_sortie +='<th class="tg-6l4m" style="display: none;" id="vitesseLibéra" title="">$Vlib=c(\\frac{rs}{R})^{1/2}(m.s^{-1}) $</th>';
 	
-	jstring +='</tr>';//fin ligne
+	jstring_sortie +='</tr>';//fin ligne
 
 	/*On met le jstring dans le tableau */
-	newRow.innerHTML = jstring;
+	newRow_sortie.innerHTML = jstring_sortie;
 
 	//-----------------------------CASES DU BAS------------------------------------
+	var newRow_sortie2=document.getElementById('tableau-sortie').insertRow();
 
-	//C'est cette partie qui concerne les valeurs en chiffres
-
-	/*On recupere l'element defini dans le HTML qui est le tableau
-	, puis on insere une nouvelle ligne qu'on appelle newRow*/
-	var newRow2=document.getElementById('tableauconstanteslers').insertRow();
-
-	/* Dans le jstring on va mettre les cases du bas en bouclant sur les mobiles */
-	var jstring = '<tr id="tgggg2" >' //debut ligne
-	/* CASE POUR L */
-	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) 
-	{
-		jstring += '<td class="tg-3ozo" id="L'+countt.toString()+'">0</td>';
-	}
-	/* CASE POUR E */
-	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) 
-	{
-		jstring += '<td class="tg-3ozo" id="E'+countt.toString()+'">0</td>';
-	}
-	/* CASE POUR LA VITESSE DES ORBITES CIRCULAIRES A L'EXTERIEUR*/
-	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) 
-	{
-		jstring += '<td class="tg-3ozo" style="display: none;" id="r_circ_ext_res'+countt.toString()+'">0</td>';
-	}
-	/* CASE POUR LA VITESSE DES ORBITES CIRCULAIRES A L'INTERIEUR*/
-	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) 
-	{
-		jstring += '<td class="tg-3ozo" style="display: none;" id="r_circ_int_res'+countt.toString()+'">0</td>';
-	}
-
-    /* CASE POUR RAYON DE SCHWARZSCHILD */
-	jstring +='<td class="tg-3ozo" id="m">0</td>';
+	var jstring_sortie2 = '<tr id="tgggg2" >'//debut ligne
+	/* CASE POUR RAYON DE SCHWARZSCHILD */
+	jstring_sortie2 +='<td class="tg-3ozo" id="m">0</td>';
 	/* CASE POUR GRAVITE DE SURFACE */
-	jstring +='<td class="tg-3ozo" style="display: none;" id="g">0</td>';	
+	jstring_sortie2 +='<td class="tg-3ozo" style="display: none;" id="g">0</td>';	
 	/* CASE POUR VITESSE DE LIBERATION */
-	jstring +='<td class="tg-3ozo" style="display: none;" id="Vlib">0</td>';	
+	jstring_sortie2 +='<td class="tg-3ozo" style="display: none;" id="Vlib">0</td>';	
 										
-	jstring +='</tr>';//fin ligne
+	jstring_sortie2 +='</tr>';//fin ligne
 
 	/*On met le jstring dans le tableau */
-	newRow2.innerHTML = jstring;
+	newRow_sortie2.innerHTML = jstring_sortie2;
 
 	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Partie 2eme Tableau ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+	var jstring = '<tr id="tgggg1" >' //debut ligne
+	for (countt = 1; countt <= nbredefuseesgenere; countt += 1)
+	{
+		var newRow=document.getElementById('tableau-sortie-2').insertRow(); //pour mettre quel mobile
+		var newRow2=document.getElementById('tableau-sortie-2').insertRow();//1ere ligne 
+		var newRow3=document.getElementById('tableau-sortie-2').insertRow(); //2eme ligne
+		
+		//-----------------------------CASES DU HAUT------------------------------------
+		var jstring = '<tr class="label-row">'
+		jstring += '<th colspan="4" > Mobile'+countt.toString()+ '</th></tr>'; //on met quel mobile
+		newRow.innerHTML = jstring;
+
+		var jstring = '<tr id="tgggg2" >'
+		/* CASE POUR L */
+		jstring += '<th class="tg-aicv">$L'+countt.toString()+'(m)$</th>';
+	
+		/* CASE POUR E */
+		jstring += '<th class="tg-aicv">$E'+countt.toString()+'$</th>';
+		/* CASE POUR LA VITESSE DES ORBITES CIRCULAIRES A L'EXTERIEUR*/
+	
+		jstring += '<th class="tg-aicv" style="display: none;" id="rayon_orb_circ_ext_photon_nonBar'+countt.toString()+'" title="">$rcirc ext'+countt.toString()+'$</th>'; //Manon
+		/* CASE POUR LA VITESSE DES ORBITES CIRCULAIRES A L'INTERIEUR*/
+	
+		jstring += '<th class="tg-aicv" style="display: none;" id="rayon_orb_circ_int_photon_nonBar'+countt.toString()+'" title="">$rcirc int'+countt.toString()+'$</th>'; //Manon
+		
+		newRow2.innerHTML = jstring;
+		//-----------------------------CASES DU BAS------------------------------------
+
+		//C'est cette partie qui concerne les valeurs en chiffres
+		var jstring = '<tr id="tgggg3" >';
+		/* CASE POUR L */
+		jstring += '<td class="tg-3ozo" id="L'+countt.toString()+'">0</td>';
+		/* CASE POUR E */
+		jstring += '<td class="tg-3ozo" id="E'+countt.toString()+'">0</td>';
+		/* CASE POUR LA VITESSE DES ORBITES CIRCULAIRES A L'EXTERIEUR*/
+		jstring += '<td class="tg-3ozo" style="display: none;" id="r_circ_ext_res'+countt.toString()+'">0</td>';
+		/* CASE POUR LA VITESSE DES ORBITES CIRCULAIRES A L'INTERIEUR*/
+		jstring += '<td class="tg-3ozo" style="display: none;" id="r_circ_int_res'+countt.toString()+'">0</td>';
+
+		newRow3.innerHTML = jstring;
+
+	}
+
+	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Partie 3eme Tableau ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 	/*On fait une boucle pour avoir un tableau pour chaque mobile*/
 	for (countt = 1; countt <= nbredefuseesgenere; countt += 1) 
@@ -561,7 +619,7 @@ function initialisation(compteur){
 	if (r_phy > limite_basse && r_phy < limite_haute){ //Dans ce cas on peut avoir une orbite circulaire. 
 		//Je calcule cette distance à l'astre pour avoir l'orbite circulaire et je l'affiche dans une case visible : 
 		r_circ_int = (1/3)*r_phy*((Math.sqrt(r_phy*(8*r_phy - 9*rs)))/(Math.sqrt(rs*(r_phy-rs))));
-		document.getElementById("r_circ_int_res"+compteur.toString()).innerHTML = r_circ_int.toExponential(10);
+		document.getElementById("r_circ_int_res"+compteur.toString()).innerHTML = r_circ_int.toExponential(5);
 		document.getElementById("r_circ_int_res"+compteur.toString()).title = texte.pages_trajectoire.orbite_circulaire_stable;
 		rCircIntLabelCell.style.display='';
 		rCircIntResCell.style.display='';
@@ -581,7 +639,7 @@ function initialisation(compteur){
 	r_circ_ext = (3/2)*rs; //Je calcule cette distance r.
 
 	if (r_circ_ext >= r_phy){ //Si je suis bien à l'extérieure de l'astre j'affiche cette distance r. 
-		document.getElementById("r_circ_ext_res"+compteur.toString()).innerHTML = r_circ_ext.toExponential(10);
+		document.getElementById("r_circ_ext_res"+compteur.toString()).innerHTML = r_circ_ext.toExponential(5);
 		document.getElementById("r_circ_ext_res"+compteur.toString()).title = texte.pages_trajectoire.orbite_circulaire_instable;
 		rCircExtLabelCell.style.display='';
 		rCircExtResCell.style.display='';
@@ -605,7 +663,7 @@ function initialisation(compteur){
 		rmax=r0;
 		if(rmax<r0) {rmax=2*r0;}
 	}else {
-		calcul_rmax(L,E,vr,r0,1) ;  
+		calcul_rmax(L,r0) ;  
 		if(rmax<r0) {rmax=r0 ;} 
 	} 
 	if(r0 < r_phy) {rmax=1.5*r_phy;}
@@ -988,7 +1046,7 @@ function trajectoire(compteur,mobile) {
         	mobilefactor=retour[1]; //Récupère le nouveau facteur d'échelle. 
 			factGlobalAvecClef /= Math.pow(1.2,1/nbredefusees ); //Je dézoome de 20%. 
         	majFondFixe22(mobile); //Je mets à jour tout ce qui est relié au dessin du mobile. 
-        	rafraichir2(context,mobilefactor,rmaxjson,maximum,compteur); //Redessine le rayon de SCH et si besoin l'astre sur un fond blanc avec les entrées à gauche. 
+        	rafraichir2(context,mobilefactor,rmaxjson,maximum); //Redessine le rayon de SCH et si besoin l'astre sur un fond blanc avec les entrées à gauche. 
 			nzoom-=1/nbredefusees;
 			document.getElementById('nzoomtxt').innerHTML= "zoom="+ Math.round(nzoom).toString(); //Mets à jour l'affichage du zoom sur le site. 
     	}, false);
@@ -1000,7 +1058,7 @@ function trajectoire(compteur,mobile) {
         	mobilefactor=retour[1]; //Récupère le nouveau facteur d'échelle. 
 			factGlobalAvecClef *= Math.pow(1.2,1/nbredefusees ); //Je zoome de 20%.
 			majFondFixe22(mobile); //Je mets à jour tout ce qui est relié au dessin du mobile.
-        	rafraichir2(context,mobilefactor,rmaxjson,maximum,compteur); //Redessine le rayon de SCH et si besoin l'astre sur un fond blanc avec les entrées à gauche. 
+        	rafraichir2(context,mobilefactor,rmaxjson,maximum); //Redessine le rayon de SCH et si besoin l'astre sur un fond blanc avec les entrées à gauche. 
 			nzoom+=1/nbredefusees;
 			document.getElementById('nzoomtxt').innerHTML= "zoom="+ Math.round(nzoom).toString(); //Mets à jour l'affichage du zoom sur le site. 
 		}, false);
@@ -1012,7 +1070,7 @@ function trajectoire(compteur,mobile) {
       		mobilefactor=retour[1]; //Récupère le nouveau facteur d'échelle. 
 			factGlobalAvecClef = fact_defaut; //Le zoom redevient celui initial de la simulation. 
 			majFondFixe22(mobile); //Je mets à jour tout ce qui est relié au dessin du mobile.
-        	rafraichir2(context,mobilefactor,rmaxjson,maximum,compteur); //Redessine le rayon de SCH et si besoin l'astre sur un fond blanc avec les entrées à gauche. 
+        	rafraichir2(context,mobilefactor,rmaxjson,maximum); //Redessine le rayon de SCH et si besoin l'astre sur un fond blanc avec les entrées à gauche. 
 			nzoom=0;
 			document.getElementById('nzoomtxt').innerHTML= "zoom="+ Math.round(nzoom).toString(); //Mets à jour l'affichage du zoom sur le site. 
     	}, false);
@@ -1054,7 +1112,7 @@ function trajectoire(compteur,mobile) {
 			}
 		}
 			   
-    	creation_blocs(context,mobilefactor,rmaxjson,maximum,compteur); //Je trace le rayon et SCH et si besoin l'astre. 
+    	creation_blocs(context,mobilefactor,rmaxjson,maximum); //Je trace le rayon et SCH et si besoin l'astre. 
 																		  
 		//-----------------------------------------------------TRACÉ POTENTIEL -------------------------------------------------
 		
@@ -1119,7 +1177,7 @@ function animate(compteur,mobile,mobilefactor) {
 	mobilefactor[compteur] = factGlobalAvecClef //facteur pour l'echelle
 	
 	SurTelephone(); //on verifie si on est sur telephone ou ordinateur
-	choixTrajectoire(compteur,context,mobilefactor,rmaxjson,maximum);// on vérifie le type de trajectoire sélectionné
+	choixTrajectoire(context,mobilefactor,rmaxjson,maximum);// on vérifie le type de trajectoire sélectionné
 
 	/*----------------------------------------------------------{{{{  CAS_OBSERVATEUR  }}}-----------------------------------------------------------*/
 	if(element2.value != "mobile")
@@ -1333,7 +1391,7 @@ function animate(compteur,mobile,mobilefactor) {
 		document.getElementById("tp"+compteur.toString()).innerHTML = mobile.temps_particule.toExponential(3); //temps particule
 		document.getElementById("r_par"+compteur.toString()).innerHTML = mobile.r_part.toExponential(3);  //rayon
 		document.getElementById("vr_sc_mas"+compteur.toString()).innerHTML = vr_1.toExponential(3);	//vitesse radiale
-		document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_1.toExponential(8);	//vitesse angulaire
+		document.getElementById("vp_sc_mas"+compteur.toString()).innerHTML = vp_1.toExponential(3);	//vitesse angulaire
 		document.getElementById("v_tot"+compteur.toString()).innerHTML = vtotal.toExponential(8); 	//vitesse total (module)
 
 		//-----------------------------------------------------PARTIE TRACÉ PARTICULE-------------------------------------------------
@@ -1365,7 +1423,7 @@ function animate(compteur,mobile,mobilefactor) {
 	}
 
 
-}  //fin fonction animate
+} 
 
 
 // -------------------------------------{potentiel_externe_photon}--------------------------------------------
@@ -1400,21 +1458,38 @@ function potentiel_interne_photon(r,E,L) {
 
 // -------------------------------------{Vr_mob}--------------------------------------------
 
-
+/**
+ * Fonction qui donne le potentiel divisé par c² en fonction de si on est à l'intérieur ou à l'extérieur de l'astre pour un photon en métrique de Schwarzschild, dans le référentiel du mobile.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @param {Number} E : constante d'integration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @returns le résultat du potentiel divisé par c². 
+ */
 function Vr_mob(r,E,L) {
-	if(r > r_phy) { return potentiel_externe_photon(r,L);}
-	else{ return potentiel_interne_photon(r,E,L);}
+	if(r > r_phy) { //Métrique extérieure :
+		return potentiel_externe_photon(r,L);
+	}else{ //Métrique intérieure :
+		return potentiel_interne_photon(r,E,L);
+	}
 }
 
 // -------------------------------------{Vr_obs}--------------------------------------------
 
-
+/**
+ * Fonction qui donne le potentiel divisé par c² en fonction de si on est à l'intérieur ou à l'extérieur de l'astre pour un photon en métrique de Schwarzschild, 
+ * dans le référentiel de l'observateur distant.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @param {Number} E : constante d'integration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @returns le résultat du potentiel divisé par c². 
+ */
 function Vr_obs(r,E,L) {
-	if(r > r_phy) { return Math.pow(E,2)-( 1-potentiel_externe_photon(r,L)/Math.pow(E,2) )*Math.pow(1-rs/r,2) ;}
-	else{ return Math.pow(E,2)- Math.pow(beta(r),4)*( 1-potentiel_interne_photon(r,E,L)/Math.pow(E,2) ); } 
+	if(r > r_phy) { //Métrique extérieure :
+		return Math.pow(E,2)-(1 - potentiel_externe_photon(r,L)/Math.pow(E,2))*Math.pow(1-rs/r,2) ;
+	}else{ //Métrique intérieure : 
+		return Math.pow(E,2)- Math.pow(beta(r),4)*(1 - potentiel_interne_photon(r,E,L)/Math.pow(E,2)); 
+	} 
 }
-
-
 
 // -------------------------------------{alpha}--------------------------------------------
 
@@ -1424,7 +1499,7 @@ function Vr_obs(r,E,L) {
  * @returns {Number} : le résultat de alpha(r). 
  */
 function alpha(r){
-	return 1-(Math.pow(r, 2)*rs) / Math.pow(r_phy, 3);
+	return (1-(Math.pow(r, 2)*rs) / Math.pow(r_phy, 3));
 }
 
 // -------------------------------------{beta}--------------------------------------------
@@ -1481,67 +1556,104 @@ function derivee_seconde_interne_photon(E,L,r) {
 
 // -------------------------------------{derivee_seconde_interne_photon}--------------------------------------------
 
+/**
+ * Expression de la dérivée seconde de r par rapport à t pour un photon dans la métrique de Schwarzschild intérieure. 
+ * @param {Number} E : constante d'intégration, sans dimension.
+ * @param {Number} L : constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} r : coordonnée radiale, en m. 
+ * @returns le résultat de la dérivée seconde. 
+ */
 function derivee_seconde_interne_photon_obs(E,L,r) {
-	return - Math.pow(c, 2)*r*rs/Math.pow(E,2)/ Math.pow(r_phy, 3) * (Math.pow(E*beta(r),2)- Math.pow(L/r, 2)*Math.pow(beta(r),4) )
-	+  0.5*Math.pow(c, 2)* alpha(r)/Math.pow(E,2) * ( 2* Math.pow(L, 2)*Math.pow(beta(r),4)/Math.pow(r, 3)- Math.pow(E,2)*r*rs*beta(r)/(Math.sqrt(alpha(r))*Math.pow(r_phy, 3)))
-	+Math.pow(c, 2)*Math.sqrt(alpha(r))/Math.pow(E,2)/ Math.pow(r_phy, 3)*(Math.pow(E,2)*beta(r)- Math.pow(L/r, 2)*Math.pow(beta(r),3) )*r*rs;
+
+	terme1 = Math.pow(E/beta(r),2) - Math.pow(L/r,2);
+	derivee_alpha = (-2*r*rs)/Math.pow(r_phy,3);
+	derivee_beta = ((r*rs)/(2*Math.pow(r_phy,3)))*(1/Math.sqrt(alpha(r)));
+
+	return ((c*c)/(2*Math.pow(E,2)))*(derivee_alpha*Math.pow(beta(r),4)*terme1 + 4*alpha(r)*derivee_beta*Math.pow(beta(r),3)*terme1 
+	+ 2*alpha(r)*Math.pow(beta(r),4)*((-Math.pow(E,2)*derivee_beta)/(Math.pow(beta(r),3)) + Math.pow(L,2)/Math.pow(r,3)));
 }
-
-
 
 // -------------------------------------{calcul_rmax}--------------------------------------------
 
-function calcul_rmax(L,E,vr,r0,rmax1ou2){
-  // Vr different de 0
-  //JPC mis en commentaire ici rmax = eq3d(L, m, E);
-  // Vr=0
-  //JPC et ici if (vr == 0) {
-    r1 = (L * (L - Math.sqrt(Math.pow(L, 2) - 12 * Math.pow(m, 2))) / (2 * m));
-    r2 = (L * (L + Math.sqrt(Math.pow(L, 2) - 16 * Math.pow(m, 2))) / (4 * m));
+/**
+ * Fonction servant à calculer la distance radiale maximale que peu atteindre le mobile avant de retourner vers le trou noir.
+ * @param {Number} L : Constante d'intégration, avec la dimension d'une longueur.
+ * @param {Number} E : Constante d'intégration, sans dimensions.
+ * @param {Number} r0 : distance initiale au centre de l'astre.
+ * @returns {Number} rmax : la distance radiale maximale.
+ */
+function calcul_rmax(L,r0){
+
+	//J'obtiens r1 et r2 qui sont des conditions pour avoir des orbites stables autour d'un trou noir.
+    r1 = (L * (L - Math.sqrt(Math.pow(L, 2) - 12 * Math.pow(m, 2))) / (2 * m)); //Distance radiale critique où des transitions d'orbites peuvent se produire. 
+    r2 = (L * (L + Math.sqrt(Math.pow(L, 2) - 16 * Math.pow(m, 2))) / (4 * m)); //Distance radiale critique où des transitions d'orbites peuvent se produire pour des L plus élevés.
+
+	/*calculs pour r3, r3 qui est la distance maximale à laquelle une particule peut s'éloigner avant de retourner vers le trou noir :*/
     ra = 2 * m * Math.pow(L, 2);
     rb = ((2 * m / r0) - 1) * Math.pow(L, 2);
     X0 = 1 / r0;
     rc = 2 * m - Math.pow(L, 2) * X0 + 2 * m * Math.pow(L * X0, 2);
     DELTA = Math.pow(rb, 2) - 4 * ra * rc;
-    r3 = (-rb - Math.sqrt(DELTA)) / (2*ra);
-	//console.log("r3",r3);
-	//console.log("r0",r0);
-    // la particule tombe au centre
+    r3 = (-rb - Math.sqrt(DELTA)) / (2*ra); //Point tournant extérieur maximal. 
+
     if (L < 2 * Math.sqrt(3) * m) {
+		/*Cas où je n'ai pas de maximum ou de minimum réel à mon potentiel. 
+		Dans ce cas il n'y a pas de changement de direction du mouvement et
+		la particule tombe directement dans le trou noir.*/
     	rmax = r0;
     }
+
 	else if ( (L <= 4*m) && (L > 2*Math.sqrt(3)*m) ) {
-		// dans ce cas, r varie entre 2 valeurs r0 et r3
-			if ( (Vr(r0) <= Vr(r1)) && (r0 > r1) ) {
-				if (r3 > r0) {
-					rmax = r3;
-				}
-				else if (r3 < r0) {
-					rmax = r0;
-				}
-			}
-		// comprend les cas r0<=r1 et V(r0)>V(r1) où la particule tombe au centre
-		else {
-			rmax = r0;
-		}
-	}
-    // dans ce cas r varie entre les 2 valeurs r0 et r3
-    else if (L > 4 * m) {
-		if (r0 > r2) {
+		/*Je suis dans la zone où L > 2*Math.sqrt(3)*m donc je peux éviter de tomber
+		directement dans le trou noir mais aussi où je ne peux pas trop m'en éloigner.
+		La particule peut donc osciller entre deux points spécifiques.*/
+
+		if ( (Vr(r0) <= Vr(r1)) && (r0 > r1) ) {
+		/*Si l'énergie potentielle effective en r0 est inférieure
+		ou égale à r1 alors r0 se trouve en dehors du potentiel local
+		minimum et donc la particule oscille entre r0 et r3.
+		De plus r0>r1 donc je commence mon mouvement à une 
+		position radiale plus éloignée que le premier point tournant r1.*/
+
 			if (r3 > r0) {
-			rmax = r3;
+				/*La particule peut atteindre r3 avant de revenir.*/
+				rmax = r3;
 			}
 			else if (r3 < r0) {
-			rmax = r0;
+				/*r0 est encore au-delà des oscillations donc c'est la valeur max.*/
+				rmax = r0;
 			}
 		}
 		else {
+			/*La particule est en-dessous du point tournant intérieur et tombe donc vers le centre.*/
 			rmax = r0;
 		}
 	}
-	
+    else if (L > 4 * m) {
+		/* La particule peut maintenir des orbites plus étendues et potentiellement plus stables autour du trou noir, 
+		en évitant les orbites instables plus proches de celui-ci.*/
+
+		if (r0 > r2) {
+			/*La particule a assez d'énergie pour atteindre une position radiale r3 avant
+			de subir les effets gravitationnels significatis et revenir vers l'intérieur*/
+
+			if (r3 > r0) {
+				/*r3 est la distance maximale à laquelle la particule peut s'éloigner avant
+				de revenir vers l'intérieur.*/
+				rmax = r3;
+			}
+			else if (r3 < r0) {
+				/*r0 est déjà la distance maximale atteinte par la particule.*/
+				rmax = r0;
+			}
+		}
+		else { /*La particule n'a pas assez d'énergie et est obligée de revenir vers l'intérieur.*/
+			rmax = r0;
+		}
+	}
 }
 
+// -------------------------------------{pausee}--------------------------------------------
 
 /**
  * Cette fonction est associé aux bouttons pause, avec les quels on peut pauser et reprendre la simulaiton.
@@ -1555,7 +1667,7 @@ function pausee()
 		document.getElementById("pause/resume").innerHTML =texte.pages_trajectoire.bouton_resume; //on change le texte du boutton pause en haut
 		document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_enpause; //on change le texte qui s'affiche "Calculs en pause"
 		document.getElementById("pau").title = texte.pages_trajectoire.bouton_lecture; //infobulle du boutton pause en bas
-		document.getElementById("pau").src = "../../Images/Anciennes_images/lecture.png"; //on change l'icone du boutton pause en bas
+		document.getElementById("pau").src = "../../Images/lecture.png"; //on change l'icone du boutton pause en bas
 		
 	} 
 	//si le Timer est en pause
@@ -1565,19 +1677,30 @@ function pausee()
 			document.getElementById("pause/resume").innerHTML = texte.pages_trajectoire.bouton_pause; //on change l'icone du boutton pause en bas
 			document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_encours;//on change le texte qui s'affiche "Calculs en cours"
 			document.getElementById("pau").title = texte.pages_trajectoire.bouton_pause;//infobulle du boutton pause en bas
-			document.getElementById("pau").src = "../../Images/Anciennes_images/pause.png"; //on change l'icone du boutton pause en bas
+			document.getElementById("pau").src = "../../Images/pause.png"; //on change l'icone du boutton pause en bas
 	}
 }
 
-
-function rafraichir2(context,mobilefactor,rmaxjson,r0ou2,compteur) {
-majFondFixe();
-creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur);
+//----------------------------------------------------{rafraichir2}----------------------------------------------------
+/**
+ * Fonction qui permet d'effacer le fond du canva pour mettre le texte et dessiner l'astre.
+ */
+function rafraichir2(context,mobilefactor,rmaxjson,r0ou2) 
+{
+	majFondFixe();//efface le fond et met le text
+	creation_blocs(context,mobilefactor,rmaxjson,r0ou2);//dessine l'astre et l'echelle
 }
+//----------------------------------------------------{rafraichir}----------------------------------------------------
 
-function rafraichir() {
+/**
+ * Fonction qui permet de rafraichir la page quand on clique sur reset.
+ */
+function rafraichir() 
+{
+	//on rafraichit la page et on met fait de sorte qu'on choisit observateur
 	window.location.reload();
-	element2.value="observateur";}
+	element2.value="observateur";
+}
 
 
 
@@ -1586,7 +1709,7 @@ function rafraichir() {
 /**
  * Fonction qui sert à enregistrer une image de la simulation. 
  */
-function enregistrer() {
+function enregistrer_trajectoires() {
 
 	var texte = o_recupereJson(); //Pour avoir accès au contenu des fichiers json.
 
@@ -1607,7 +1730,7 @@ function enregistrer() {
 
 			//Dessin du logo :
 			var logo = new Image();
-			logo.src='../../Images/Anciennes_images/CosmoGravity_logo.png'; //Je récupère le chemin de l'image du logo.
+			logo.src='../../Images/CosmoGravity_logo.png'; //Je récupère le chemin de l'image du logo.
 			logo.onload = function() {
 				var largeurLogo = 100; //largeur de l'image du logo
 				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //hauteur de l'image du logo
@@ -1639,32 +1762,45 @@ function enregistrer() {
  * Fonction qui efface le text qu'on met sur le canva
  */
 function majFondFixe(){
-	context.clearRect(0, 0, canvas.width, canvas.height);
-	// Ajout d'un fond blanc pour l'exportation
+	context.clearRect(0, 0, canvas.width, canvas.height);//on efface ce qui ya sur le canva
+	// Ajout d'un fond blanc 
 	context.fillStyle = 'white';
 	context.fillRect(0, 0, canvas.width, canvas.height);
-
 	context.font = "15pt bold";
+	//on met le text (titre et entrées)
+	/*TITRE*/
 	context.fillStyle = "black";
 	context.fillText(texte.page_trajectoire_photon.non_baryonique_photon,5,40);
 	context.font = "13pt bold";
+	/*ENTREES*/
 	context.fillText(texte.pages_trajectoire.entrees,5,70);
 	context.font = "11pt normal";
+	/*MASSE*/
 	context.fillText("M = "+M.toExponential(3)+" kg",5,90);
+	/*RAYON PHYSIQUE*/
 	context.fillText("r\u209A\u2095\u1D67 = "+r_phy.toExponential(3)+" m",5,110);
-	if(document.getElementById('traject_type2').value=="observateur"){
+	/*POUR LE MODE */
+	if(document.getElementById('traject_type2').value=="observateur")
+	{
 		context.fillText(texte.pages_trajectoire.observateur,5,130);
 	}
-	else { context.fillText(texte.pages_trajectoire.photon,5,130); }
+	else 
+	{ 
+		context.fillText(texte.pages_trajectoire.photon,5,130); 
 
-	context.fillText("mobile1:",5,150);
-	context.fillText("r\u2080 = "+(r0o2[1]).toExponential(3)+" m",5,170);
-	context.fillText("V\u2080 = "+vphiblab.toExponential(3)+" m.s\u207B\u00B9",5,190);
-	context.fillText("\u03C6\u2080 = "+vrblab.toExponential(3)+" °",5,210);														
+	}
+	/*ENTREES MOBILE*/
+	context.fillText("mobile1:",5,150);//mobile1
+	context.fillText("r\u2080 = "+(r0o2[1]).toExponential(3)+" m",5,170);//r0
+	context.fillText("V\u2080 = "+vphiblab.toExponential(3)+" m.s\u207B\u00B9",5,190);//v0
+	context.fillText("\u03C6\u2080 = "+vrblab.toExponential(3)+" °",5,210);	//phi0	
+
+	//on met au max 2 mobiles avec les memes etaps
 	nombeuhreudefusees = Number(document.getElementById("nombredefusees").value);
 
-	if (nombeuhreudefusees>=2) {
-		context.fillText("mobile2:",5,230);
+	if (nombeuhreudefusees>=2) 
+	{
+		context.fillText("mobile2:",5,230);//mobile2
 		context.fillText("r\u2080 = "+r0o2[2].toExponential(3)+" m",5,250);
 		context.fillText("V\u2080 = "+vphi2i.toExponential(3)+" m.s\u207B\u00B9",5,270);
 		context.fillText("\u03C6\u2080= "+vr2i.toExponential(3)+" °",5,290);
@@ -1734,15 +1870,24 @@ function test_inte() {
 	}
 }
 
-// crée les différentes couches visuelles
-function creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur){
-	r2bis=(80*r0ou2)/(factGlobalAvecClef);
-	r1bis=Math.round((80*r0ou2)/(factGlobalAvecClef*10**testnum(r2bis)));
-	ech=r1bis*10**testnum(r2bis);
+//----------------------------------------------------{creation_blocs}----------------------------------------------------
 
-	context.lineWidth = "1";
-	context.fillStyle = COULEUR_NOIR;
-if ((mobilefactor[cle] * m / rmaxjson[cle]) < 3) {
+/**
+ * Fonction qui dessine le cercle du rayon de SCH (cercle ou cible), si besoin l'astre, le texte du titre et des entrées
+ * ainsi que l'échelle sur le canvas de la simulation. 
+ * @param {Object} context : contexte du canvas de la simulation. 
+ * @param {Array} mobilefactor : Liste qui contient les facteurs d'échelle des mobiles.
+ * @param {Array} rmaxjson : Liste qui contient les coordonnées radiales maximales des mobiles.
+ * @param {Array} r0ou2 : Liste qui contient les distances initiales des mobiles.
+ */
+function creation_blocs(context,mobilefactor,rmaxjson,r0ou2){
+
+	context.lineWidth = "1"; //Définit l'épaisseur de la ligne utilisée pour les tracés à 1 pixel.
+
+
+	if ((mobilefactor[cle] * m / rmaxjson[cle]) < 3) { //Si le cercle du rayon de SCH est trop petit vis à vis de l'échelle du graphe :
+
+		//Alors j'affiche l'astre comme une cible bleu : 
 		context.beginPath();
 		context.strokeStyle = COULEUR_BLEU;
 		context.moveTo(posX3 - 10, posY3);
@@ -1760,143 +1905,65 @@ if ((mobilefactor[cle] * m / rmaxjson[cle]) < 3) {
 		context.moveTo(posX3, posY3 + 3);
 		context.lineTo(posX3, posY3 + 10);
 		context.stroke();
-	} else {
+	} 
+	else { //Autrement j'affiche le cercle du rayon de SCH :
+
 		context.beginPath();
 		context.strokeStyle = COULEUR_BLEU;
 		context.setLineDash([5, 5]);
 		context.arc(posX3, posY3, ((mobilefactor[cle] * 2 * m / rmaxjson[cle])), 0, Math.PI * 2);
 		context.stroke();
+
 	}
-//	if (rs < r_phy) {
-		context.beginPath();
-		context.fillStyle = COULEUR_RPHY;
-		context.setLineDash([]);
-		context.arc(posX3, posY3, (factGlobalAvecClef * r_phy / rmaxjson[cle]), 0, Math.PI * 2);
-		context.fill();
-		context.beginPath();
-		context.strokeStyle = COULEUR_GRIS;
-		//context.setLineDash([5, 5]);
-		//context.arc(posX3, posY3, ((mobilefactor[cle] * 2 * m / rmaxjson[cle])), 0, Math.PI * 2); 
-		context.stroke();
-//	}
-	context.fillStyle = 'white';
 
+	//Je dessine le disque pour le rayon physique : 
+	context.beginPath();
+	context.fillStyle = COULEUR_RPHY;
+	context.setLineDash([]);
+	context.arc(posX3, posY3, (factGlobalAvecClef * r_phy / rmaxjson[cle]), 0, Math.PI * 2);
+	context.fill();
+	context.beginPath();
+	context.strokeStyle = COULEUR_GRIS;
+	context.stroke();
 
-	// Ajout d'un fond blanc pour l'exportation
+	context.fillStyle = 'white'; //Ajout d'un fond blanc pour l'exportation.
+
+	//--------------------Dessin du texte du titre et des entrées--------------------
 	context.font = "15pt bold";
 	context.fillStyle = "black"; 
 	context.fillText(texte.page_trajectoire_photon.non_baryonique_photon,5,40);
 	context.font = "13pt bold";
 	context.fillText(texte.pages_trajectoire.entrees,5,70);
+
+	//--------------------calculs pour la barre d'échelle--------------------
+	r2bis=(80*r0ou2)/(factGlobalAvecClef);
+	r1bis=Math.round((80*r0ou2)/(factGlobalAvecClef*10**testnum(r2bis)));
+	ech=r1bis*10**testnum(r2bis);
+
+	//--------------------Dessin du texte de la barre d'échelle--------------------
 	context.font = "11pt normal";
 	context.fillStyle = COULEUR_RS;
 	context.fillText(ech.toExponential(1)+" m",605,90);
 	context.stroke();
-	context.beginPath();      // Début du chemin
+
+	//--------------------Dessin de la barre d'échelle--------------------
 	context.strokeStyle = COULEUR_RS;
+	context.beginPath();    
 	context.setLineDash([]);
+
 	context.moveTo(600,110);
 	context.lineTo(600+ech*factGlobalAvecClef/r0ou2,110);
+
 	context.moveTo(600,105);
 	context.lineTo(600,115);
+
 	context.moveTo(600+ech*factGlobalAvecClef/r0ou2,105);
 	context.lineTo(600+ech*factGlobalAvecClef/r0ou2,115);
-	// Fermeture du chemin (facultative)
+
 	context.stroke();
-	
-	
 }
 
-function canvasAvantLancement(){
-	nbrFusee = document.getElementById("nombredefusees").value
-	//for (countt = 1; countt <= nbrFusee; countt += 1) {
-	//	console.log(r0o2[countt])
-	//}
-	cle = -1
-
-	if(ifUneFois3){
-	if(nbrFusee ==1){
-		maximum=r0o2[1]
-		cle = 1;
-	}
-	else{
-		cle=0;
-		for (key = 1; key <= nbrFusee; key += 1) {
-			if(r0o2[key]>=maximum){
-				maximum=r0o2[key];
-				cle=key;
-			}
-		}
-	}
-
-	facteurDeMalheur = [] // Je suis désespéré
-	
-	for (key = 1; key <= nbrFusee; key += 1) {
-		facteurDeMalheur[key] = Number(document.getElementById("scalefactor").value);  	
-	
-	}
-	for (key = 1; key <= nbrFusee; key += 1) {
-		if(key!=cle){
-			facteurDeMalheur[key] = Number(document.getElementById("scalefactor").value)/(r0o2[cle]/r0o2[key]);
-		}
-	}
-
-	factGlobalAvecClef = facteurDeMalheur[cle];
-	fact_defaut= facteurDeMalheur[cle];
-
-	ifUneFois3 = false
-    }
-
-
-
-	canvas = document.getElementById("myCanvas");
-    if (!canvas) {
-		alert(texte.pages_trajectoire.impossible_canvas);
-		return;
-    }
-
-	canvas.style = "margin: auto;";
-	
-
-    context = canvas.getContext("2d");
-    if (!context) {
-		alert(texte.pages_trajectoire.impossible_context);
-		return;
-    } 
-	context.clearRect(0, 0, canvas.width, canvas.height);
-
-	context.lineWidth = "1";
-
-
-	//Texte 
-	context.font = "11pt normal"; 
-	r2bis=(80*maximum)/(factGlobalAvecClef);
-	r1bis=Math.round((80*maximum)/(factGlobalAvecClef*10**testnum(r2bis)));
-	ech=r1bis*10**testnum(r2bis);
-	context.beginPath();
-	context.fillStyle = COULEUR_RS;
-	context.fillText(ech.toExponential(1)+" m",605,90);
-	context.stroke();
-
-	//Barre
-	context.strokeStyle = COULEUR_RS;
-	context.beginPath(); // Début du chemin
-	context.setLineDash([]);
-
-	context.moveTo(600,105);
-	context.lineTo(600,115);
-
-	context.moveTo(600,110);
-	context.lineTo(600+((r1bis*10**testnum(r2bis))*factGlobalAvecClef)/maximum,110);
-
-	context.moveTo(600+((r1bis*10**testnum(r2bis))*factGlobalAvecClef)/maximum,105);
-	context.lineTo(600+((r1bis*10**testnum(r2bis))*factGlobalAvecClef)/maximum,115);
-
-	context.stroke();
-
-
-}
-
+//----------------------------------------------------{choixTrajectoire}----------------------------------------------------
 
 /**
  * Fonction qui permet de préparer le canvas de la simulation en fonction de si on choisit une trajectoire complète ou simple. 
@@ -1906,10 +1973,10 @@ function canvasAvantLancement(){
  * @param {Number} rmaxjson : valeur maximale de la coordonnée radiale, en m.   
  * @param {Number} r0ou2 : distance initiale au centre de l'astre qui est la plus grande parmi les différentes mobiles, en m.  
  */
-function choixTrajectoire(compteur,context,mobilefactor,rmaxjson,r0ou2) {
+function choixTrajectoire(context,mobilefactor,rmaxjson,r0ou2) {
     if (element.value == 'simple') {
 		majFondFixe();
-        creation_blocs(context,mobilefactor,rmaxjson,r0ou2,compteur);
+        creation_blocs(context,mobilefactor,rmaxjson,r0ou2);
 		diametre_particule = DIAMETRE_PART*2;
 	}else if (element.value=='complete'){
         diametre_particule = DIAMETRE_PART;

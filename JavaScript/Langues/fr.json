@@ -12,7 +12,7 @@
 		"K": "Métrique de Kerr",
 		"BBSCH": "Masse baryonique - Mobile baryonique",
 		"BPSCH": "Masse baryonique - Mobile photonique",
-		"nBnBSCH": "Masse non-baryonique - Mobile non-baryonique",
+		"nBnBSCH": "Masse et/ou Mobile non-baryonique",
 		"nBPSCH": "Masse non-baryonique - Mobile photonique",
 		"BK": "Mobile baryonique",
 		"PK": "Mobile photonique",
@@ -359,7 +359,11 @@
 		"alerte_verifier_teta" : "Attention, veuillez bien saisir la valeur de ɸ₀.",
 		"alerte_verifier_rphy" : "Attention, veuillez bien saisir la valeur du rayon physique.",
 		"alerte_verifier_J" : "Attention, veuillez bien saisir la valeur du moment angulaire J.",
-		"alerte_verifier_nbrefusees" : "Attention, veuillez bien saisir la valeur du nombre de fusées."
+		"alerte_verifier_nbrefusees" : "Attention, veuillez bien saisir la valeur du nombre de fusées.",
+		"entree_astre":"Entrées Astre",
+		"entree_mobile":"Entrées Mobile",
+		"sortie_astre":"Sorties Astre",
+		"sortie_mobile":"Sorties Mobile"
 	},
 
 	"page_trajectoire_massive":{

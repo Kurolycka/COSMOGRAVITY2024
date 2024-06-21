@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@700&display=swap'); /* Import de la police */
+
 body {
     height: 100%;
     margin: 0;
@@ -19,15 +21,91 @@ body {
 
 .content {
     position: absolute;
-    top: 50%; /* Positionne le contenu à 50% de la hauteur de son conteneur parent */
+    top: 40%; /* Positionne le contenu à 50% de la hauteur de son conteneur parent */
     left: 50%; /* Positionne le contenu à 50% de la largeur de son conteneur parent */
     transform: translate(-50%, -50%); /* Utilise la transformation pour centrer le contenu */
-    background-color: rgba(255, 255, 255, 0.25); /* Ajoutez une couleur de fond pour mieux voir le contenu centré */
     padding: 20px; /* Ajoutez de l'espace autour du contenu si nécessaire */
-    border-radius: 15px;
+    border-radius: 30px;
+    width: 750px;
+   
 }
 
 .image {
     max-height: 75%;
     max-width: 75%;
+    margin-left: 60px;
 }
+
+.content2 {
+    position: absolute;
+    bottom: 40px; /* Positionne le contenu en bas de son conteneur parent */
+    left: 49%; /* Centre le contenu horizontalement */
+    transform: translateX(-50%); /* Utilise la transformation pour centrer horizontalement */
+    background-color: rgba(255, 255, 255, 0.788); /* Couleur de fond légère */
+    padding: 20px; /* Ajoutez de l'espace autour du contenu si nécessaire */
+    border-radius: 30px; /* Arrondir les coins */
+    width: 700px; /* Largeur du contenu */
+}
+
+
+.image2 {
+    max-height: 75%;
+    max-width: 75%;
+    margin-left: 90px;
+}
+
+/* Appliquez ce style à votre titre de site, par exemple <h1 class="site-title">Mon Site</h1> */
+
+.site-title {
+    font-family: 'Crimson Text', serif; /* Utilisez une police élégante */
+    font-size: 4em; /* Ajustez la taille du texte selon vos besoins */
+    color: #34495e; /* Couleur du texte */
+    text-align: center; /* Centre le titre horizontalement */
+    text-transform: uppercase; /* Met le texte en majuscules */
+    margin-left: 20px;
+    letter-spacing: 30px; /* Espace les lettres */
+    margin-top: 80px; /* Marge supérieure pour déplacer le titre vers le bas */
+    margin-bottom: 20px; /* Marge inférieure */
+    position: relative; /* Pour permettre l'utilisation des pseudo-éléments */
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3); /* Ombre portée */
+    /*background: linear-gradient(to bottom, rgba(220, 93, 79, 0.85), rgba(210, 144, 137, 0.85));*/
+    background: linear-gradient(400deg,  rgba(255, 255, 255, 0.85),  rgba(220, 93, 79, 0.85)); /* Dégradé de fond */
+    -webkit-background-clip: text; /* Pour le texte en dégradé */
+    -webkit-text-fill-color: transparent; /* Pour le texte en dégradé */
+    animation: fadeIn 2s ease-in-out; /* Animation d'apparition */
+}
+
+
+
+.site-title::before {
+    top: -20px; /* Place la ligne au-dessus du titre */
+}
+
+.site-title::after {
+    bottom: -20px; /* Place la ligne en-dessous du titre */
+}
+
+@media (max-width: 768px) {
+    .site-title {
+        font-size: 2.5em; /* Ajustez la taille pour les écrans plus petits */
+    }
+    .site-title::before,
+    .site-title::after {
+        width: 40px; /* Ajustez la largeur des lignes pour les écrans plus petits */
+    }
+}
+
+/* Animation d'apparition */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+

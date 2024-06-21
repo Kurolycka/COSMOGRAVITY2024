@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
 
 <!-- Css de la page -->
-<link rel="stylesheet" href="./CSS/Ancien/Css/Simu_grav.css">
-<link rel="stylesheet" href="./CSS/Ancien/Css/Simu_avertissement.css">
+<link rel="stylesheet" href="./CSS/styleTrajectoire.css">
+<link rel="stylesheet" href="./CSS/styleAnimation.css">
 <link rel="stylesheet" href="./CSS/styleNav.css">
 
 <script src="./JavaScript/Trajectoires/avertissement.js"></script>
@@ -67,10 +67,6 @@ document.addEventListener("DOMContentLoaded", function() {
 <!-- MENUS
 Source: http://www.cssscript.com/multi-level-toggle-responsive-navigation-menu-using-pure-css/
                                           -->
-<link rel="stylesheet" href="./CSS/Ancien/Css/Resp-Menu/normalize.min.css">
-<link rel="stylesheet" href="./CSS/Ancien/Css/Resp-Menu/defaults.min.css">
-<link rel="stylesheet" href="./CSS/Ancien/Css/Resp-Menu/nav-core.min.css">
-<link rel="stylesheet" href="./CSS/Ancien/Css/Resp-Menu/nav-layout.min.css">
 <script src="./JavaScript/Trajectoires/rem.min.js"></script>
 
 
@@ -97,171 +93,214 @@ ga('create', 'UA-98631213-3', 'auto');
 ga('send', 'pageview');
 </script>
 
-<!-- Menus -->
-
-<header>
-<h1>Cosmogravity</h1>
-</header>
-
 <div id="positionNav" class="Nav"></div>
-<span id="bouton_info">
-<img onclick="commandes();" src="./Images/Anciennes_images/info.png" class="bouton_info">
-</span>
-<p id="txt_titre"></p>
 
-<!-- Paramètres -->
+<!-- Menus -->
+<div class="grillePrincipale">
+	<button onclick="toggleEntreeSortie('panneauEntree')" class="petitBoutton"
+		style=" display:block; top: 60px; left:10px; position: absolute">
+	<img id="flecheGauche" class="flècheMenu"
+		src="./Images/fleche_menu.png"
+		alt="">
+	</button>
 
-<input type="hidden" id="traject_type" name="traject_type" value="complete"></input>
+	<input type="hidden" id="traject_type" name="traject_type" value="complete"></input>
 
-<input type="hidden" id="traject_type2" name="traject_type2" value="observateur"></input> 
+    <input type="hidden" id="traject_type2" name="traject_type2" value="observateur"></input> 
 
-<input type="hidden" id="scalefactor" name="scalefactor" value=280></input> 
+    <input type="hidden" id="scalefactor" name="scalefactor" value=280></input> 
 
-<input type="hidden" id="canvaswidthheight"  value="750"></input> 
+    <input type="hidden" id="boutton_ammorti" name="boutton_ammorti" value="0"></input>
+    <!-- Permet de déterminer si il y a un tracé -->
+    <input type="hidden" id="trace_present" name="trace_present" value="false"></input>
 
-<input type="hidden" id="boutton_ammorti" name="boutton_ammorti" value="0"></input>
-<!-- Permet de déterminer si il y a un tracé -->
-<input type="hidden" id="trace_present" name="trace_present" value="false"></input>
-<div id="corps">
+	<div id="panneauEntree" class="Entree">
+        <div class="boiteEntree"  >
 
+			<div id="Entrées"></div>
+            <label id="Entree_astre_label" style="font-size: 20px;margin-bottom: 20px;margin-top: 20px;">Entrées Astre</label> 
+           
+            <div id="champs_a_remplir_haut" class="pls-inputs-container">
 
-	<div id="Bloc_Textee">	  
-		<div id="trajectoire">
-			<img onclick="avertissement_trajectoire();" src="./Images/Anciennes_images/warning.png" class="bouton_avertissement">
-			<span id="txt_trajectoire"></span>
-			<br/>
-			<span id="txt_avertissement_trajectoire"></span>
+                <div id="masse_div" class="input-wrapper">
+                    <label id="massetxt" title= ""  for="M">M (kg) =</label>
+                    <input id="M" value="2e39" align="left" maxlength="10" type="text" size="10" onchange="verifnbr();initialisationGenerale(lenbdefusees)" oninput="initialisationGenerale(lenbdefusees)" autocomplete="off">
+                </div>
+        
+                <div id="rayon_phy_div" class="input-wrapper">
+                    <label title="" for="r_phy" id="txt_rphysique"></label>
+			        <input id="r_phy" value="0" align="left" maxlength="10" type="text" size="10" onchange="verifnbr();initialisationGenerale(lenbdefusees)" autocomplete="off">
+                </div>
+        
+            </div>
+
 		</div>
+
+		<div class="boiteEntree">
+			<label id="Entree_mobile_label" style="font-size: 20px;margin-bottom: 20px;margin-top: 20px;">Entrées Mobiles</label> 
+            <div id="nombre_de_fusees_div" class="input-wrapper" style="display: inline;">
+
+                <label id="labelnumberfusees" for="nombredefusees" ></label> 
+                <input id="nombredefusees" value="1" type="text" size="5" onchange="supprHtml();genereHtml();save_nbfusees();updatenbredefusees();" autocomplete="off">
+    
+            </div>
+
+			<div id="pourcentage_vphi_pilotage_div" class="input-wrapper">
+                <label id="label_pourcentage_vphi_pilotage" for="pourcentage_vphi_pilotage" style="display: none;"></label> 
+                <input id="pourcentage_vphi_pilotage" value="0.003" type="text" size="5" style="display: none;" autocomplete="off">
+            </div>
+
+            <span id="case">
+
+                <label id="labelgp" for="vr">See Potenial</label>
+                <input id="toggle" type="checkbox"  checked autocomplete="off">
+
+            </span>
+
+            <div id="champs_a_remplir" ></div>
+
+		</div>
+
 	</div>
 
+    <div id="panneauGraphe" class="Graphe" style="position: relative;">
+		
+		<button style="position: absolute; top: 20px; right: 20px; cursor: pointer;" class="avertissement_style" onclick=avertissement_trajectoire();>
+            <img id="panneauAvertissement"
+                 style="width: 25px; height: 25px"
+                 src="./Images/panneau_avertissement.png"
+                 alt="avertissement">
+                 <span id="txt_trajectoire" style=" top: 30px; right: 50px; cursor: pointer; color: black;"></span>
+                <br/>
+                <span id="txt_avertissement_trajectoire"></span>
+        </button>
+        <div class="boiteGraphe">
+            <button id="bouton_info" onclick="commandes();"  class="info-icon"></button>
+			<p id="txt_titre" class="titre_style"></p>
+            
+			<div id="radio_button">
+				<button id="r1" type="button" name="traj" class="bouttonChoix" value="complete" onclick="document.getElementById('traject_type').value = this.value;pressionBouttonTrajectoireComplete()"></button>
+				<button id="r2" type="button" name="traj2" class="bouttonChoix-inverse" value="simple" onclick="document.getElementById('traject_type').value = this.value;pressionBouttonTrajectoireSimple()"></button>
+				<button id="r3" type="button" name="observateur" class="bouttonChoix" title="" value="observateur" onclick="document.getElementById('traject_type2').value = this.value;pressionBouttonObservateur(false);notationvitesseree2()"></button>
+				<button id="r4" type="button" name="mobile" class="bouttonChoix-inverse" value="mobile" onclick="document.getElementById('traject_type2').value = this.value;pressionBouttonMobile(false);notationvitesseree2()"></button>  
+				
+				<span id="sp_reb"></span>
+				<button id="rebondd" type="button" name="reb" class="bouttonChoix-inverse" style="display: none;" onclick="ammort();changerBouttonRebond()"></button>
+			</div>
+			<div id="barre_reb" style="display: none;">
+                <span id="amortissement">Coefficient </span>
+                <input type="range" id="reb" max="100" min="0" value="0" name="rebond" oninput="ammortUpdate(value)" autocomplete="off" />&nbsp;
+                <span for="reb" id="ammorti"></span>
+            </div> 
+			<div id="boutons_actions">
+                <span id="buts">
+                    <button type="button" class="grosBoutton" id="start" onclick="lancement()">Start</button>
+                    <button type="button" class="grosBoutton"  id="pause/resume" style="display: none;" >Pause</button>
+                </span>
+        
+                <span id="bouton">
+                    <button type="button" id="clear" class="grosBoutton" onclick="save_schwarshild_massif(lenbdefusees);rafraichir();">Reset</button>
+                </span>
 
-	<div id="formulaire">
-		<form name="params" id="parametres" action="" method="post" autocomplete="off">
-		<div id="champs_a_remplir">
-
-		<span id="masse">
-			<label id="massetxt" title= ""  for="M">M (kg) =</label>
-			<input id="M" value="2e39" align="left" maxlength="10" type="text" size="10" onchange="verifnbr();initialisationGenerale(lenbdefusees)">
-		</span>
-
-		<span id="rayon_phy">
-			<label title="" for="r_phy" id="txt_rphysique"></label>
-			<input id="r_phy" value="0" align="left" maxlength="10" type="text" size="10" onchange="verifnbr();initialisationGenerale(lenbdefusees)">
-		</span>
-
+                <span id="enregistrer">
+                    <button id="boutton_enregis" type="button" class="grosBoutton" onclick="enregistrer_trajectoires();">Save</button>
+                </span>
+                
+                <span id="recup">
+                    <button id="boutton_recup" type="button" class="grosBoutton" onclick="recuperation();">Last Values</button>
+                </span> 
+            </div>
 		</div>
 
-		<div>
-			<label id="labelnumberfusees" for="nombredefusees"></label> 
-			<input id="nombredefusees" value="1" type="text" size="5" onchange="supprHtml();genereHtml();save_nbfusees();updatenbredefusees();">
-			<span id="case">
-			<label id="labelgp" for="vr"></label>
-			<input id="toggle" type="checkbox"  checked>
-			</span>
-			<label id="label_pourcentage_vphi_pilotage" for="pourcentage_vphi_pilotage" style="display: none;"></label> <!--ManonV3-->
-			<input id="pourcentage_vphi_pilotage" value="0.003" type="text" size="5" style="display: none;"> <!--ManonV3-->
+
+        <div class="boiteGraphe">
+
+			<div id="table_principale" class="table-container" hidden >
+				<table  id="tg2"   >
+					<thead id="tableauresultatsimu"></thead>
+				</table>
+			</div>
+
+			<span id="indic_calculs"></span> 
+    
+            <div id="bloc_resultats">
+                <div id="wrapper"></div>
+                <div id="wrapper2"></div>
+            </div>
+
+            <!-- Panneau mobile zoom -->
+			<div id="panneau_mobile" class="div_boutton_simu" >
+
+                <span id="moinsvite">
+                        <img id="moinsvi" src="./Images/lent.png" class="bouton_mobile" title="Décélérer">
+                </span>
+
+                <span id="bouton_pause">
+                    <img id="pau" src="./Images/pause.png" class="bouton_mobile" title="Pause">
+                </span>
+
+                <span id="plusvite">
+                    <img id="plusvi" src="./Images/rapide.png" class="bouton_mobile" title="Accélérer (attention, réduit la précision)">
+                </span>
+                
+                <label id="nsimtxt" for="nzoom" style="border: 1px solid rgb(175, 175, 175);  padding: 5px; border-radius: 25% ;">ns=0</label>
+
+            </div>
+
+            <!-- Panneau mobile zoom -->
+            <div id="panneau_mobile2" class="div_boutton_zoom" >
+
+                <label id="nzoomtxt" for="nzoom" style="border: 1px solid rgb(175, 175, 175); padding: 5px; border-radius: 25% ; ">nz=0</label>
+                <span id="moinszoom">
+                    <img id="moinsvi1" src="./Images/moins.png" class="bouton_mobile" title="Zoom (-)">
+                </span>
+
+                <span id="initialiser">
+                    <img id="pau1" src="./Images/reset.png"  class="bouton_mobile" title="Echelle par défault">
+                </span>
+
+                <span id="pluszoom">
+                    <img id="plusvi1" src="./Images/plus.png" class="bouton_mobile" title="Zoom (+)">
+                </span>
+            </div>
+           
+			
 		</div>
 
-
-		<div id="radio_button">
-			<button id="r1" type="button" name="traj" class="myButton" value="complete" onclick="document.getElementById('traject_type').value = this.value;pressionBouttonTrajectoireComplete()"></button>
-			<button id="r2" type="button" name="traj2" class="myButton2" value="simple" onclick="document.getElementById('traject_type').value = this.value;pressionBouttonTrajectoireSimple()"></button>
-			<button id="r3" type="button" name="observateur" class="myButton" title="" value="observateur" onclick="document.getElementById('traject_type2').value = this.value;pressionBouttonObservateur();notationvitesseree2()"></button>
-			<button id="r4" type="button" name="mobile" class="myButton2" value="mobile" onclick="document.getElementById('traject_type2').value = this.value;pressionBouttonMobile();notationvitesseree2()"></button>  
-
-			<span id="sp_reb">
-			</span>
-			<button id="rebondd" type="button" hidden name="reb" class="myButton2" onclick="ammort();changerBouttonRebond()"></button>
-		</div>
-
-		<div class="wraper" id="barre_reb">
-		<span id="amortissement"></span>
-
-		<input type="range" id="reb" max="100" min="0" value="0" name="rebond" oninput="ammortUpdate(value)" />&nbsp;
-		<span for="reb" id="ammorti"></span>
-		<!--	  <label> Le rebond est limité à une vitesse d'impact de </label> -->
-
-		</div>
-
-		<div id="boutons_actions">
-		<span id="buts">
-		<button type="button" class="myButton" id="start" onclick="lancement()"></button>
-		<button type="button" class="myButton3" id="pause/resume" style="display: none;" >Pause</button>
-		</span>
-
-		<span id="bouton">
-		<button type="button" id="clear" class="myButton" onclick="save_schwarshild_massif(lenbdefusees);rafraichir();"></button>
-		</span>
-		<span id="enregistrer">
-		<button id="boutton_enregis" type="button" class="myButton" onclick="enregistrer();"></button>
-		</span>
-		<span id="recup">
-		<button id="boutton_recup" type="button" class="myButton" onclick="recuperation();"></button>
-		</span>        
-		</div>
-
-		</form>
-</div>
-
-<!-- Table Resultats -->
-<div id="tab_resultats">
-	<div id="ct_tg">
-		<table class="tg" id="tg">
-			<tbody id="tableauconstanteslers"></tbody>
-		</table>
+	
 	</div>
-	<div id="ct_tg2">
-		<table class="tg2" id="tg2">
-			<tbody id="tableauresultatsimu"></tbody>
-		</table>
-	</div>
-</div>
-<span id="indic_calculs"></span>
 
-<!-- Tracés -->
-<div id="bloc_resultats">
-	<div id="wrapper"></div>
-	<div id="wrapper2"></div>
-</div>
+	<button onclick="toggleEntreeSortie('panneauSortie')" class="petitBoutton"
+	style=" display:block; top: 60px; right:10px; position: absolute">
+	<img id="flecheDroite" class="flècheMenu tournee"
+		src="./Images/fleche_menu.png"
+		alt="">
+	</button>
+	<div id="panneauSortie" class="Sortie">
+        <div class="boiteSortie">
+			<label id="Sortie_astre_label" style="font-size: 20px;margin-top: 20px;">Sorties Astre</label> 
+			<div id="ct_tg" class="table-container">
+				<table class="td" id="tg">
+					<thead id="tableau-sortie"></thead>
+				</table>
+			</div>
 
+		</div>
 
-</div>
+		<div class="boiteSortie">
+			<label id="Sortie_mobile_label" style="font-size: 20px;margin-top: 20px;">Sorties Mobiles</label> 
+            <div id="ct_tg2" class="table-container">
+                <table class="td" id="tg2">
+                    <thead id="tableau-sortie-2"></thead>
+                </table>
+            </div>
 
-
-<!-- Panneau mobile zoom -->
-<div id="panneau_mobile2" >
-	<label id="nzoomtxt" for="nzoom" style="border: 1px solid rgb(175, 175, 175); padding: 5px; border-radius: 25% ; ">zoom=0</label>
-	<span id="moinszoom">
-		<img id="moinsvi1" src="./Images/Anciennes_images/moins.png" class="bouton_mobile" title="Zoom (-)">
-	</span>
-	<span id="initialiser">
-		<img id="pau1" src="./Images/Anciennes_images/reset.png"  class="bouton_mobile" title="Echelle par défault">
-	</span>
-	<span id="pluszoom">
-		<img id="plusvi1" src="./Images/Anciennes_images/plus.png" class="bouton_mobile" title="Zoom (+)">
-	</span>
-</div>
-
-<!-- Panneau mobile qui apparait lorsque tracé -->
-
-<div id="panneau_mobile" >
-
-<span id="moinsvite">
-        <img id="moinsvi" src="./Images/Anciennes_images/lent.png" class="bouton_mobile" title="Décélérer">
-</span>
-<span id="bouton_pause">
-    <!--<button id="bouton_pause" style="background-color:white;border:none;">-->
-    <img id="pau" src="./Images/Anciennes_images/pause.png" class="bouton_mobile" title="Pause">
-    <!--</button>-->
-</span>
-<span id="plusvite">
-    <img id="plusvi" src="./Images/Anciennes_images/rapide.png" class="bouton_mobile" title="Accélérer (attention, réduit la précision)">
-</span>
-<label id="nsimtxt" for="nsim" style="border: 1px solid rgb(175, 175, 175);  padding: 5px; border-radius: 25% ;">simu=0</label>
-
-
+        </div>
+    </div>
 
 </div>
+
+
 
 <div id="cccccccc">
 <div id="joyDiv" style="width:130px;height:130px" ></div></div>
@@ -284,6 +323,7 @@ ga('send', 'pageview');
 		//on lance si ya true en return
 		if(typeof test_inte() === 'boolean')
 		{
+			document.getElementById("table_principale").style.display='inline';
 			save_schwarshild_massif(lenbdefusees);
 			lancerDeFusees(lenbdefusees);
 		}
@@ -302,6 +342,7 @@ ga('send', 'pageview');
 
 	function updatenbredefusees(){
 		var nbredefuseesupdatenbr = Number(document.getElementById("nombredefusees").value);	
+		console.log(lenbdefusees)
 		lenbdefusees = nbredefuseesupdatenbr;
 		initialisationGenerale(nbredefuseesupdatenbr);
 	}
@@ -309,8 +350,8 @@ ga('send', 'pageview');
 	//AJOUTE PAR KHALED : pour ne pas laisser le choix à un utilisateur le nb de fusees s'il passe en mode spationaute
 	var btnObervateur = document.getElementById("r3");
   	var btnSpationaute = document.getElementById("r4");
- 	 var inputNbfusees = document.getElementById("nombredefusees");
-	var labelNbfusees = document.getElementById("labelnumberfusees");
+ 	 var inputNbfusees_div = document.getElementById("nombre_de_fusees_div");
+	 var inputNbfusees=document.getElementById("nombredefusees");
 	var btnrebond = document.getElementById("rebondd");
 	var inputRphysique = document.getElementById("r_phy");
 	var labelPourcentageVphiPilotage = document.getElementById("label_pourcentage_vphi_pilotage");
@@ -319,8 +360,7 @@ ga('send', 'pageview');
 
     // Ajouter des écouteurs d'événements pour les boutons
     btnObervateur.addEventListener("click", function() {
-		inputNbfusees.style.display = "inline"; // Afficher le input et le label de nbfusees si button observateur est cliqué 
-		labelNbfusees.style.display = "inline";
+		inputNbfusees_div.style.display="inline";
 		labelPourcentageVphiPilotage.style.display = "none";
 		inputPourcentageVphiPilotage.style.display = "none";
     });
@@ -340,25 +380,26 @@ ga('send', 'pageview');
 		document.getElementById("v01").value=v01;
 		document.getElementById("phi01").value=phi01;
 		document.getElementById("teta1").value=teta1;
+		
+		initialisationGenerale(1);//on actualise les valeurs de simulation
 
-		inputNbfusees.style.display="none";
-		labelNbfusees.style.display = "none";
+
+		inputNbfusees_div.style.display ="none";
 		labelPourcentageVphiPilotage.style.display = "inline";
 		inputPourcentageVphiPilotage.style.display = "inline";
     });
 
 	inputRphysique.addEventListener("input", function() {
-		if(inputRphysique.value==="0" || inputRphysique.value===""){btnrebond.style.display="none";}
+		if(inputRphysique.value==="0" || inputRphysique.value==="")
+		{
+			btnrebond.style.display="none"; 
+			document.getElementById("barre_reb").style.display="none";
+		}
 		else{btnrebond.style.display="inline";}
 
     });
 	
-
-
 	var lenbdefusees;
-	$(function() {
-	$("#nav-ici").load("Menu.html");
-	});
 	traceEstAbsent();
 	textesimutraj();
 

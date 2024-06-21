@@ -652,6 +652,13 @@ function texteTrajectoireMassive(nbrderockets) {
     document.getElementById("label_pourcentage_vphi_pilotage").innerHTML = texte.pages_trajectoire.pourcentage_vphi_pilotage_label;
     document.getElementById("label_pourcentage_vphi_pilotage").title = texte.pages_trajectoire.pourcentage_vphi_infobulle;
 
+    document.getElementById("Entree_astre_label").innerHTML = texte.pages_trajectoire.entree_astre;
+    document.getElementById("Entree_mobile_label").innerHTML = texte.pages_trajectoire.entree_mobile;
+
+    document.getElementById("Sortie_astre_label").innerHTML = texte.pages_trajectoire.sortie_astre;
+    document.getElementById("Sortie_mobile_label").innerHTML = texte.pages_trajectoire.sortie_mobile;
+
+
 
     for (count = 1; count <= nbrderockets; count += 1) {
         document.getElementById("temps_ecoule"+count.toString()+"").innerHTML = texte.pages_trajectoire.temps_ecoule;
@@ -670,6 +677,8 @@ function texteTrajectoireMassive(nbrderockets) {
         document.getElementById("puissance_consommee_label"+count.toString()).title=texte.pages_trajectoire.puissance_consommee_infobulle; //ManonV5
 
         document.getElementById("vitesse_orb_circ"+count.toString()+"").title = texte.pages_trajectoire.vitesse_orbite_circulaire;//Manon
+
+
 
 
     }
@@ -697,6 +706,12 @@ function texteTrajectoirePhoton(nbrderockets) {
     //document.getElementById("boutton_prézoom").innerHTML = texte.pages_trajectoire.boutton_prézoom;
     document.getElementById("rebondd").innerHTML = texte.page_trajectoire_massive.rebond;
     document.getElementById("boutton_recup").innerHTML = texte.pages_trajectoire.boutton_recup;
+
+    document.getElementById("Entree_astre_label").innerHTML = texte.pages_trajectoire.entree_astre;
+    document.getElementById("Entree_mobile_label").innerHTML = texte.pages_trajectoire.entree_mobile;
+
+    document.getElementById("Sortie_astre_label").innerHTML = texte.pages_trajectoire.sortie_astre;
+    document.getElementById("Sortie_mobile_label").innerHTML = texte.pages_trajectoire.sortie_mobile;
 
     for (count = 1; count <= nbrderockets; count += 1) {
         document.getElementById("temps_ecoule"+count.toString()+"").innerHTML = texte.pages_trajectoire.temps_ecoule;
@@ -729,6 +744,12 @@ function texteTrajectoireMassiveNonBar(nbrderockets) {
     document.getElementById("label_pourcentage_vphi_pilotage").title = texte.pages_trajectoire.pourcentage_vphi_infobulle;
     //document.getElementById("boutton_prézoom").innerHTML = texte.pages_trajectoire.boutton_prézoom;
     document.getElementById("boutton_recup").innerHTML = texte.pages_trajectoire.boutton_recup;
+
+    document.getElementById("Entree_astre_label").innerHTML = texte.pages_trajectoire.entree_astre;
+    document.getElementById("Entree_mobile_label").innerHTML = texte.pages_trajectoire.entree_mobile;
+
+    document.getElementById("Sortie_astre_label").innerHTML = texte.pages_trajectoire.sortie_astre;
+    document.getElementById("Sortie_mobile_label").innerHTML = texte.pages_trajectoire.sortie_mobile;
 
 
 
@@ -774,6 +795,13 @@ function texteTrajectoirePhotonNonBar(nbrderockets) {
     document.getElementById("massetxt").title = texte.pages_trajectoire.massetxt;
     document.getElementById("txt_rphysique").title = texte.pages_trajectoire.txt_rphysique;
     document.getElementById("labelnumberfusees").innerHTML = texte.pages_trajectoire.labelnumberfusees;
+
+    document.getElementById("Entree_astre_label").innerHTML = texte.pages_trajectoire.entree_astre;
+    document.getElementById("Entree_mobile_label").innerHTML = texte.pages_trajectoire.entree_mobile;
+
+    document.getElementById("Sortie_astre_label").innerHTML = texte.pages_trajectoire.sortie_astre;
+    document.getElementById("Sortie_mobile_label").innerHTML = texte.pages_trajectoire.sortie_mobile;
+
     var canvaswidthheightt = '750';
     if(canvaswidthheightt=="750"){
         document.getElementById("labelgp").innerHTML = texte.pages_trajectoire.labelgp;}
@@ -825,6 +853,12 @@ function texteTrajectoireMassiveKerr() {
     document.getElementById("dernier_g").title= htmlDecode(texte.pages_trajectoire.dernier_g_infobulle); //ManonV2
     document.getElementById("distance_metrique").title = texte.pages_trajectoire.distance_metrique_parcourue_infobulle;
 
+    document.getElementById("Entree_astre_label").innerHTML = texte.pages_trajectoire.entree_astre;
+    document.getElementById("Entree_mobile_label").innerHTML = texte.pages_trajectoire.entree_mobile;
+
+    document.getElementById("Sortie_astre_label").innerHTML = texte.pages_trajectoire.sortie_astre;
+    document.getElementById("Sortie_mobile_label").innerHTML = texte.pages_trajectoire.sortie_mobile;
+
 }
 
 
@@ -855,6 +889,12 @@ function texteTrajectoirePhotonKerr() {
     document.getElementById("circulaire_retrograde").title = texte.pages_trajectoire.rayon_orbite_circulaire_photon_kerr_retrograde; //ManonCirculaire
     document.getElementById("circulaire_prograde_res").title = texte.pages_trajectoire.orbite_circulaire_instable; //ManonCirculaire
     document.getElementById("circulaire_retrograde_res").title = texte.pages_trajectoire.orbite_circulaire_instable; //ManonCirculaire
+
+    document.getElementById("Entree_astre_label").innerHTML = texte.pages_trajectoire.entree_astre;
+    document.getElementById("Entree_mobile_label").innerHTML = texte.pages_trajectoire.entree_mobile;
+
+    document.getElementById("Sortie_astre_label").innerHTML = texte.pages_trajectoire.sortie_astre;
+    document.getElementById("Sortie_mobile_label").innerHTML = texte.pages_trajectoire.sortie_mobile;
 
 
 

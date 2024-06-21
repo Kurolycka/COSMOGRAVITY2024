@@ -139,6 +139,7 @@ var calculs = calculs || (function() {
                 vr=Math.sqrt(Math.abs(dr/(alpha_*beta_**2)));
             }
             else{
+				alpha_ = 1/alpha_;
                 dr=((c/E)**2)*alpha_*(beta_**4)*((E/beta_)**2-(L/r)**2-1);
                 vr=Math.sqrt(Math.abs(dr/(alpha_*beta_**2)));
             }
@@ -239,10 +240,6 @@ function rendreVisibleNbG() {
 	var puissance_consommee_label_Cells = document.querySelectorAll('[id^="puissance_consommee_label"]'); 
 
 	var puissance_consommee_Cells = document.querySelectorAll('[id^="puissance_consommee"]'); 
-
-    var distance_metrique_cell = document.querySelectorAll('[id^="distance_metrique"]'); 
-
-    var distance_metrique_res_cell = document.querySelectorAll('[id^="distance_parcourue"]'); 
     
     // Si element2.value est "mobile" et que y a que 1 mobile, rend les cellules visibles, sinon les cache
     if (element2.value == "mobile" && blyo==1) {
@@ -473,4 +470,256 @@ function rungekutta_general(h,A,r,E,L,deriveeSeconde) {
     r = r + h * A + (1 / 6) * h * h * (k[0] + k[1] + k[2]);
     A = A + (h / 6) * (k[0] + 2 * (k[1] + k[2]) + k[3]);
     return [r, A];
+}
+
+//----------------------------------------------------{canvasAvantLancement}----------------------------------------------------
+
+/**
+ * Fonction qui permet d'afficher sur le graphe l'échelle avant le début de la simulation.
+ * Permet aussi de définir par défaut l'échelle du graphe avant tout changement de zoom. 
+ * @returns 
+ */
+function canvasAvantLancement(){
+
+	nbrFusee = document.getElementById("nombredefusees").value //Je récupère le nombre de mobiles voulu par l'utilisateur. 
+
+	if(ifUneFois3){ //Je fais en sorte que le bloc qui suit ne s'exécute qu'une fois.
+
+		if(nbrFusee ==1){//Si je n'ai qu'un seul mobile :
+			maximum=r0o2[1] //Je stocke dans la variable maximum la distance initiale de mon unique mobile.
+		}
+		else{ //Si j'ai plusieurs mobiles :
+			for (key = 1; key <= nbrFusee; key += 1) { //Je parcours tous les mobiles :
+			
+				//Je récupère dans maximum la distance initiale la plus grande parmi ces mobiles, 
+				//et dans cle l'indice du mobile associé :
+				if(r0o2[key]>=maximum){
+					maximum=r0o2[key];
+				}
+			}
+		}
+
+		//Je stocke dans des variables le facteur d'échelle par défaut : 
+		factGlobalAvecClef = Number(document.getElementById("scalefactor").value); 
+		fact_defaut= Number(document.getElementById("scalefactor").value); 
+
+		ifUneFois3 = false //Je fais en sorte de ne passer dans la boucle qu'une fois.
+    }
+
+	canvas = document.getElementById("myCanvas"); //Je récupère le canvas d'ID "myCanvas" dans la variable canvas. 
+
+    if (!canvas) { //Si le canvas avec cet ID n'existe pas j'affiche un message d'alerte :
+		alert(texte.pages_trajectoire.impossible_canvas);
+		return;
+    }
+	
+    context = canvas.getContext("2d"); //Je récupère le contexte de mon canvas.
+
+    if (!context) { //Si je n'ai pas de contexte alors j'affiche un message d'alerte :
+		alert(texte.pages_trajectoire.impossible_context);
+		return;
+    } 
+
+	//J'efface tout ce qu'il y a actuellement sur le canvas : 
+	context.clearRect(0, 0, canvas.width, canvas.height);
+
+	context.lineWidth = "1"; //Epaisseur de la ligne pour les tracés fixée à 1 pixel. 
+
+    //--------------------calculs pour la barre d'échelle--------------------
+    r2bis=(80*maximum)/(factGlobalAvecClef);
+	r1bis=Math.round((80*maximum)/(factGlobalAvecClef*10**testnum(r2bis)));
+	ech=r1bis*10**testnum(r2bis);
+
+	//--------------------Dessin du texte de la barre d'échelle--------------------
+	context.font = "11pt normal";
+	context.beginPath();
+	context.fillStyle = COULEUR_RS;
+	context.fillText(ech.toExponential(1)+" m",605,90);
+	context.stroke();
+
+	//--------------------Dessin de la barre d'échelle--------------------
+	context.strokeStyle = COULEUR_RS;
+	context.beginPath(); // Début du chemin
+	context.setLineDash([]);
+
+	context.moveTo(600,105);
+	context.lineTo(600,115);
+
+	context.moveTo(600,110);
+	context.lineTo(600+((r1bis*10**testnum(r2bis))*factGlobalAvecClef)/maximum,110);
+
+	context.moveTo(600+((r1bis*10**testnum(r2bis))*factGlobalAvecClef)/maximum,105);
+	context.lineTo(600+((r1bis*10**testnum(r2bis))*factGlobalAvecClef)/maximum,115);
+
+	context.stroke();
+}
+
+//----------------------------------------------------{creation_blocs_kerr}----------------------------------------------------
+
+/**
+ * Fonction qui dessine les différents cercles qui apparaissent sur le canvas, la cible si on est trop éloignée, 
+ * l'échelle ainsi que le texte du titre et des entrées.
+ * @param {Object} context : contexte du canvas de la simulation. 
+ */
+function creation_blocs_kerr(context){
+
+	context.lineWidth = "1"; //Définit l'épaisseur de la ligne utilisée pour les tracés à 1 pixel.
+
+	//Position du centre du canvas : 
+	var posX3 = (canvas.width / 2.0);
+	var posY3 = (canvas.height / 2.0);
+
+	if (((scale_factor * rs / rmax)) < 6) { //Si le cercle du rayon de SCH est trop petit vis à vis de l'échelle du graphe :
+
+		//Alors j'affiche l'astre comme une cible bleu :
+		context.beginPath();
+		context.strokeStyle = COULEUR_RS;
+		context.moveTo(posX3 - 10, posY3);
+		context.lineTo(posX3 - 3, posY3);
+		context.stroke();
+		context.beginPath();
+		context.moveTo(posX3 + 3, posY3);
+		context.lineTo(posX3 + 10, posY3);
+		context.stroke();
+		context.beginPath();
+		context.moveTo(posX3, posY3 - 10);
+		context.lineTo(posX3, posY3 - 3);
+		context.stroke();
+		context.beginPath();
+		context.moveTo(posX3, posY3 + 3);
+		context.lineTo(posX3, posY3 + 10);
+		context.stroke();
+
+	} 
+	else { //Autrement j'affiche les différents cercles :
+
+		//dessin de la legende
+		//rs
+		context.font = "11pt normal";
+		context.fillStyle = COULEUR_RS;
+		context.fillText("rs      -----",605,140);
+		context.stroke();
+
+		//rh+
+		context.font = "11pt normal";
+		context.fillStyle = 'red';
+		context.fillText("Rh+  -----",605,160);
+		context.stroke();
+
+		//rh-
+		context.font = "11pt normal";
+		context.fillStyle = 'blue';
+		context.fillText("Rh -   -----",605,180);
+		context.stroke();
+
+		//Je dessine la zone jaune entre rs et Rh+ : 
+		context.beginPath();
+		context.setLineDash([]);
+		context.fillStyle = COULEUR_ERGOS;
+		context.arc((canvas.width / 2.0), (canvas.height / 2.0), ((scale_factor * rs / rmax)), 0, Math.PI * 2);
+		context.fill();
+
+		//Je dessine la zone blanche entre le centre et Rh+ :
+		context.beginPath();
+		context.setLineDash([5, 5]);
+		context.arc((canvas.width / 2.0), (canvas.height / 2.0), ((scale_factor * rhp / rmax)), 0, Math.PI * 2);
+		context.fillStyle = 'white';
+		context.fill();
+
+		//Je dessine le cercle en pointillé bleu pour Rh- :
+		context.strokeStyle = 'blue';
+		context.beginPath()
+		context.setLineDash([5, 5]);
+		context.arc(posX3, posY3, (rhm * scale_factor)/rmax, 0, 2 * Math.PI);
+		context.stroke();
+
+		//Je dessine le cercle en pointillé rouge pour Rh+ :
+		context.strokeStyle = 'red';
+		context.beginPath();
+		context.setLineDash([5, 5]);
+		context.arc(posX3, posY3, (rhp * scale_factor)/rmax, 0, 2 * Math.PI);
+		context.stroke();
+
+		//Je dessine le cercle en pointillé bleu pour rs :
+		context.strokeStyle = COULEUR_RS;
+		context.beginPath();
+		context.setLineDash([5, 5]);
+		context.arc(posX3, posY3, (rs * scale_factor)/rmax, 0, 2 * Math.PI);
+		context.stroke();
+	}
+
+	context.fillStyle = 'white'; //Ajout d'un fond blanc pour l'exportation.
+
+	//--------------------calculs pour la barre d'échelle--------------------
+	r2bis=(80*r0)/(scale_factor);
+	r1bis=Math.round((80*r0)/(scale_factor*10**testnum(r2bis)));
+	ech=r1bis*10**testnum(r2bis);
+
+	//--------------------Dessin du texte de la barre d'échelle--------------------
+	context.font = "11pt normal";
+	context.fillStyle = COULEUR_RS;
+	context.fillText(ech.toExponential(1)+" m",600,80);
+	context.stroke();
+
+	//--------------------Dessin de la barre d'échelle--------------------
+	context.strokeStyle = COULEUR_RS;
+	context.beginPath();
+	context.setLineDash([]);
+
+	context.moveTo(610,100);
+	context.lineTo(610+((r1bis*10**testnum(r2bis))*scale_factor)/r0,100);
+
+	context.moveTo(610,95);
+	context.lineTo(610,105);
+
+	context.moveTo(610+((r1bis*10**testnum(r2bis))*scale_factor)/r0,95);
+	context.lineTo(610+((r1bis*10**testnum(r2bis))*scale_factor)/r0,105);
+
+	context.stroke();
+
+}
+
+
+//----------------------------------------------------{test_Jmax}----------------------------------------------------
+
+/**
+ * Fonction qui indique avec un pop up si le J choisi par l'utilisateur est au-dessus de la valeur maximale. 
+ * @returns {boolean} : true si le J choisit est correct et false si il est plus grand que la valeur maximale.
+ */
+function test_Jmax() { //teste si la valeur de J est supérieure à sa valeur maximale
+
+	var texte = o_recupereJson(); //Je fais en sorte de pouvoir accéder aux json.
+	var J = Number(document.getElementById("J").value); //Moment angulaire du trou noir.
+	J_max=G*Math.pow(M, 2)/c; //Je calcule le J maximal qu'on peut avoir pour ce M.
+  
+	if (Math.abs(J) > J_max) { //Si le J rempli par l'utilisateur est plus grand que le J maximal :
+	  //J'affiche un message d'alerte et la fonction renvoie false :
+	  alert(texte.page_trajectoire_massive_kerr.moment_angulaire +"("  + J_max.toExponential(4) + "\u0020kg.m\u00b2s\u207B\u00B9)");
+	  return false;
+	}else{ //Sinon la fonction renvoie true :
+	  return true;
+	}
+}
+
+
+//----------------------------------------------------{tests_lancement}----------------------------------------------------
+
+/**
+* Fonction qui s'assure que les données remplies par l'utilisateur permettent le lancement.
+*/
+function tests_lancement(){
+	var val_test=test_Jmax()&&test_r0();
+	if(val_test==true)
+	{
+	//on affiche le tableau du milieu si la simultion commence
+	document.getElementById("table_principale").style.display='inline';
+	save_generalise(false);
+	trajectoire();
+
+    //  Le cas où les valeurs de E et L ne sont pas calculables(Test)
+	if (isNaN(E) || isNaN(L)){
+		document.getElementById("L").innerHTML = "Non calculable" ;
+		document.getElementById("E").innerHTML = "Non calculable";
+	}
+  }
 }
