@@ -455,7 +455,7 @@ function debut_fin_univers(equa_diff) {
     // Déclaration des variables et des valeurs retournée
     let set_solution = [0, 1 ,1]
     let save_set_solution;
-    let pas = 1e-4 * H0 / Math.abs(H0)
+    let pas = 1e-3 * H0 / Math.abs(H0)
     let limite = Math.abs(1000000 / pas)
     let nombre_point = 0
     let option = document.getElementById("optionsMonofluide").value
