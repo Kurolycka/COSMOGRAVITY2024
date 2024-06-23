@@ -363,7 +363,11 @@
 		"entree_astre":"Entrées Astre",
 		"entree_mobile":"Entrées Mobile",
 		"sortie_astre":"Sorties Astre",
-		"sortie_mobile":"Sorties Mobile"
+		"sortie_mobile":"Sorties Mobile",
+		"potentiel_option":"Potentiel",
+		"label_choix_potentiel":"Choisissez une option :",
+		"label_choix_potentiel_infobulle":"Permet de choisir en temps réel le graphe de potentiel à afficher"
+
 	},
 
 	"page_trajectoire_massive":{

@@ -565,7 +565,7 @@ function genereHtml()
 
 		if(nbredefuseesgenere>1)
 			{
-				document.getElementById("div-choix-potentiel").style.visibility='visible';
+				document.getElementById("div-choix-potentiel").style.display="inline";
 				if(count!=1)
 				{
 					document.getElementById("grsvg_"+count.toString()+"").style.display="none";
@@ -573,13 +573,13 @@ function genereHtml()
 			}
 			else 
 			{	
-				document.getElementById("div-choix-potentiel").style.visibility='hidden';
+				document.getElementById("div-choix-potentiel").style.display="none";
 			}
 	
 			/*Pour la boite à choix des potentiels*/
 			var option=document.createElement("option");
 			option.setAttribute("id", "Potentiel "+count.toString());
-			option.innerHTML="Potentiel "+count.toString();
+			option.innerHTML=texte.pages_trajectoire.potentiel_option+" "+count.toString();
 			document.getElementById("potentiel-choix").appendChild(option); 
 	
 			optionsPotentiel["Potentiel "+count.toString()]="grsvg_"+count.toString()+"";
@@ -1090,6 +1090,7 @@ function trajectoire(compteur,mobile) {
 
 		if (document.getElementById("toggle").checked==false) { //Lorsque la case pour afficher les graphes de potentiel est décochée j'appelle la fonction définie précédemment. 
 			DisparitionGraphesPotentiels();
+			document.getElementById("div-choix-potentiel").style.display="none";
 		}
 
 

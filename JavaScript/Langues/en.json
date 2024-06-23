@@ -370,7 +370,12 @@
 		"entree_astre": "Celestial Body Inputs",
 		"entree_mobile": "Mobile Inputs",
 		"sortie_astre": "Celestial Body Outputs",
-		"sortie_mobile": "Mobile Outputs"
+		"sortie_mobile": "Mobile Outputs",
+		"potentiel_option":"Potential",
+		"label_choix_potentiel":"Choose an option:",
+		"label_choix_potentiel_infobulle":"Allows real-time selection of the potential graph to display"
+
+
 	},
 
 	"page_trajectoire_massive": {
