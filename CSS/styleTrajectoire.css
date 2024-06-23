@@ -326,6 +326,7 @@ body {
     align-items: center;
     width: 100%;
     margin-bottom: 10px;
+    margin-left: 70px;
 }
 
 .input-wrapper label {
@@ -340,13 +341,14 @@ body {
 }
 
 .input-wrapper input {
-    width: 100px; 
+    width: 90px; 
     height: 30px;
     padding: 12px 20px;
     box-sizing: border-box;
     border: 2px solid #ccc;
     border-radius: 8px;
     background-color: #fff;
+    text-align: center;
     font-size: 15;
     color: #333;
     transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
@@ -797,4 +799,3 @@ background-color: #4FA7AD; /* Couleur bleue au survol */
 option[disabled]:first-child {
     color: #aaaaaa;
 }
-

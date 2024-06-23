@@ -13,8 +13,6 @@ function graphique_creation_pot(Onresize=0,data1,data2,compteur,mobile)
   //on verifie que les données existent 
   if(data2 !== undefined && data1 !== undefined && data2[0]!==undefined)
   {
-    var texte = o_recupereJson(); // on recupere le texte du json
-
     /*POUR KERR (un seul mobile)*/
      
     titre = texte.pages_trajectoire.titre_graphe;//représente le titre du graphe
