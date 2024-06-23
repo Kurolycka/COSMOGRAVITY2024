@@ -666,16 +666,16 @@ function calcul_horizon_evenements(fonction,z_reception=0){
  * @param {*} fonction fonction a rechercher
  * @returns valeur de z
  */
-function calcul_t_inverse(temps,fonction,H0){
+function calcul_t_inverse(temps,fonction,H0,precision=1e-30,iterationsmax=100){
 	function a_dichotomer(x){
 		return calcul_ages(fonction,H0,1e-20,x);
 	}
 	age_univers=a_dichotomer(1);
     
 	if (age_univers>=temps){
-		a_t=Dichotomie(a_dichotomer,temps,1e-15,1,1e-30);
+		a_t=Dichotomie(a_dichotomer,temps,1e-15,1,1e-30,iterationsmax);
 	}else{
-		a_t=Dichotomie(a_dichotomer,temps,1,1e10,1e-30);
+		a_t=Dichotomie(a_dichotomer,temps,1,1e10,1e-30,iterationsmax);
 	};
 	return (1-a_t)/a_t;
 }

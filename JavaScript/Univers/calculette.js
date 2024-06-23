@@ -202,8 +202,22 @@ function affichage_des_z(fonction_EouF){
 };
 
 
+function abscisse_t(fonction_EouF,zmin,zmax,pas){
+    liste_z=[];
+    let tmax=calcul_ages(fonction_EouF,H0_parAnnees(H0),1e-30,1/(1+zmin))
+    let tmin=calcul_ages(fonction_EouF,H0_parAnnees(H0),1e-30,1/(1+zmax))
+    liste_point_t=linear_scale(tmin,tmax,pas);
+    liste_point_t.forEach(i => {
+        z=calcul_t_inverse(i,fonction_EouF,H0_parAnnees(H0),1e-30,30);
+        liste_z.push(z);
+    })
+    return [liste_z,liste_point_t]
+};
+
+
+
 function generer_graphique_distance(fonction_EouF){
-    start_temps=Date.now();
+    let start_temps=Date.now();
     ordonnee_t=document.getElementById('radio_fonction_t').checked;
     log_abs=document.getElementById('check_log_abs').checked;
     log_ord=document.getElementById('check_log_ord').checked;
@@ -236,7 +250,31 @@ function generer_graphique_distance(fonction_EouF){
 	let pas = Number(document.getElementById("graphique_pas").value);
     
     // valeur des abscisses
-    let abscisse = linear_scale(zmin,zmax,pas)
+    let abscisse
+
+    if (ordonnee_t){
+        plot_title = "d<sub>i</sub>(t)";
+        xaxis_title=xaxis_temps;
+        graphdivid="graphique_d_t"
+        
+        starttest=Date.now()
+        let sortieabscisse=abscisse_t(fonction_EouF,zmin,zmax,pas);
+        abscisse_calcul=sortieabscisse[0];
+        abscisse_display=sortieabscisse[1];
+        console.log(Date.now()-starttest);
+        document.getElementById('check_distance_t').checked=true;
+        document.getElementById('graphique_d_t').classList.remove('cache');
+    }else{
+        plot_title = "d<sub>i</sub>(z)";
+        xaxis_title = "z";
+        graphdivid="graphique_d_z"
+        abscisse_calcul = linear_scale(zmin,zmax,pas);
+        abscisse_display=abscisse_calcul;
+        document.getElementById('check_distance_z').checked=true;
+        document.getElementById('graphique_d_z').classList.remove('cache');
+    };
+
+
     // valeurs des ordonnées
     let dmArr = [];    //distance metrique
     let daArr = [];   //distance diamètre apparent
@@ -244,7 +282,7 @@ function generer_graphique_distance(fonction_EouF){
     let dltArr = [];   //distance temps lumière
 
     //calculs des longueurs
-    abscisse.forEach(i => {
+    abscisse_calcul.forEach(i => {
         if (i<0){
             dm=DistanceMetrique(fonction_EouF,i,0,true,1e2);
         }else{
@@ -270,22 +308,6 @@ function generer_graphique_distance(fonction_EouF){
 		text:'T<sub>0</sub>: '+T0.toExponential(3)+'   H<sub>0</sub>:'+H0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+Omega_m0.toExponential(3)+text_omegal0_graph+'   \Ω<sub>r0</sub>: ' +Omega_r0+'  \Ω<sub>k0</sub>:   '+Omega_k0.toExponential(3)+w0w1,
 		showarrow: false}];
 
-    
-    if (ordonnee_t){
-        plot_title = "d<sub>i</sub>(t)";
-        xaxis_title=xaxis_temps;
-        graphdivid="graphique_d_t"
-        abscisse=abscisse.map((x) => calcul_ages(fonction_EouF,H0_parAnnees(H0),1e-15,1/(1+x)));
-        document.getElementById('check_distance_t').checked=true;
-        document.getElementById('graphique_d_t').classList.remove('cache');
-    }else{
-        plot_title = "d<sub>i</sub>(z)";
-        xaxis_title = "z";
-        graphdivid="graphique_d_z"
-        document.getElementById('check_distance_z').checked=true;
-        document.getElementById('graphique_d_z').classList.remove('cache');
-    };
-
     if (log_abs){
         plot_type_abs="log"
     }else{
@@ -300,22 +322,22 @@ function generer_graphique_distance(fonction_EouF){
     //tracer des 4 courbes 
     let data = [
         {
-            x : abscisse,
+            x : abscisse_display,
             y : dmArr,
             name :'<b>d<sub>m</sub><b>',type:'scatter'
         },
         {
-            x : abscisse,
+            x : abscisse_display,
             y : daArr,
             name :'<b>d<sub>a</sub><b>',type:'scatter'
         },
         {
-            x : abscisse,
+            x : abscisse_display,
             y : dlArr,
             name :'<b>d<sub>L</sub><b>',type:'scatter'
         },
         {
-            x : abscisse,
+            x : abscisse_display,
             y : dltArr,
             name :'<b>d<sub>LT</sub><b>',type:'scatter'
         }
@@ -352,7 +374,7 @@ function generer_graphique_distance(fonction_EouF){
 };
 
 function generer_graphique_Omega(fonction_EouF){
-    start_temps=Date.now();
+    let start_temps=Date.now();
     ordonnee_t=document.getElementById('radio_fonction_t').checked;
     log_abs=document.getElementById('check_log_abs').checked;
     log_ord=document.getElementById('check_log_ord').checked;
@@ -363,9 +385,26 @@ function generer_graphique_Omega(fonction_EouF){
 	let pas = Number(document.getElementById("graphique_pas").value);
     
     // valeur des abscisses
-    let abscisse = linear_scale(zmin,zmax,pas)
+    let abscisse;
 
-
+    if (ordonnee_t){
+        plot_title = "&#x3A9;<sub>i</sub>(t)";
+        xaxis_title=xaxis_temps;
+        graphdivid="graphique_omega_t"
+        let sortieabscisse=abscisse_t(fonction_EouF,zmin,zmax,pas);
+        abscisse_calcul=sortieabscisse[0];
+        abscisse_display=sortieabscisse[1];
+        document.getElementById('check_omega_t').checked=true;
+        document.getElementById('graphique_omega_t').classList.remove('cache');
+    }else{
+        plot_title = "&#x3A9;<sub>i</sub>(z)";
+        xaxis_title = "z";
+        graphdivid="graphique_omega_z"
+        abscisse_calcul = linear_scale(zmin,zmax,pas);
+        abscisse_display=abscisse_calcul;
+        document.getElementById('check_omega_z').checked=true;
+        document.getElementById('graphique_omega_z').classList.remove('cache');
+    };
 
     if (fonction_EouF.name==="fonction_E"){
         //Si il n'y a pas de big bang impossible a calculer
@@ -383,7 +422,7 @@ function generer_graphique_Omega(fonction_EouF){
         OlArr = [];    //Paramètre de densite lambda ou DE
 
         //calculs des omegas
-        abscisse.forEach(i => {
+        abscisse_calcul.forEach(i => {
             Or = Omega_r(i);
             Om = Omega_m(i);
             Ok = Omega_k(i);
@@ -403,7 +442,7 @@ function generer_graphique_Omega(fonction_EouF){
         text_omegal0_graph ='   \Ω<sub>DE0</sub>:  '+Omega_DE(0); //texte et titre dans lequel omegalambda ou omegaDE apparait
         titre_omegal='<b>&#x3A9;<sub>DE</sub><b>';
         w0w1="  w<sub>0</sub>: "+document.getElementById("w0").value+"  w<sub>1</sub>: "+document.getElementById("w1").value;
-    
+
         // valeurs des ordonnées
         OrArr = [];    //Paramètre de densité de rayonement
         OmArr = [];    //Paramètre de densite de matière
@@ -411,7 +450,7 @@ function generer_graphique_Omega(fonction_EouF){
         OlArr = [];    //Paramètre de densite lambda ou DE
 
         //calculs des omegas
-        abscisse.forEach(i => {
+        abscisse_calcul.forEach(i => {
             Or = Omega_r(i);
             Om = Omega_m(i);
             Ok = Omega_k(i);
@@ -438,21 +477,7 @@ function generer_graphique_Omega(fonction_EouF){
 		text:'T<sub>0</sub>: '+T0.toExponential(3)+'   H<sub>0</sub>:'+H0.toExponential(3)+ '   \Ω<sub>m0</sub>: '+Omega_m(0).toExponential(3)+text_omegal0_graph+'   \Ω<sub>r0</sub>: ' +Omega_r(0).toExponential(3)+'  \Ω<sub>k0</sub>:   '+Omega_k(0).toExponential(3)+w0w1,
 		showarrow: false}];
 
-    
-    if (ordonnee_t){
-        plot_title = "&#x3A9;<sub>i</sub>(t)";
-        xaxis_title=xaxis_temps;
-        graphdivid="graphique_omega_t"
-        abscisse=abscisse.map((x) => calcul_ages(fonction_EouF,H0_parAnnees(H0),1e-15,1/(1+x)));
-        document.getElementById('check_omega_t').checked=true;
-        document.getElementById('graphique_omega_t').classList.remove('cache');
-    }else{
-        plot_title = "&#x3A9;<sub>i</sub>(z)";
-        xaxis_title = "z";
-        graphdivid="graphique_omega_z"
-        document.getElementById('check_omega_z').checked=true;
-        document.getElementById('graphique_omega_z').classList.remove('cache');
-    };
+
 
     if (log_abs){
         plot_type_abs="log"
@@ -468,22 +493,22 @@ function generer_graphique_Omega(fonction_EouF){
     //tracer des 4 courbes 
     let data = [
         {
-            x : abscisse,
+            x : abscisse_display,
             y : OrArr,
             name :'<b>&#x3A9;<sub>R</sub><b>',type:'scatter'
         },
         {
-            x : abscisse,
+            x : abscisse_display,
             y : OmArr,
             name :'<b>&#x3A9;<sub>M</sub><b>',type:'scatter'
         },
         {
-            x : abscisse,
+            x : abscisse_display,
             y : OkArr,
             name :'<b>&#x3A9;<sub>K</sub><b>',type:'scatter'
         },
         {
-            x : abscisse,
+            x : abscisse_display,
             y : OlArr,
             name :titre_omegal,type:'scatter'
         }
@@ -520,7 +545,7 @@ function generer_graphique_Omega(fonction_EouF){
 };
 
 function generer_graphique_TempsDecalage(fonction_EouF){
-    start_temps=Date.now();
+    let start_temps=Date.now();
     ordonnee_t=document.getElementById('radio_fonction_t').checked;
     log_abs=document.getElementById('check_log_abs').checked;
     log_ord=document.getElementById('check_log_ord').checked;
@@ -698,7 +723,7 @@ function calcul_horizons_annexe(fonction_EouF){
 		document.getElementById("resultat_dm_particule_t").value=NaN;
 		document.getElementById("resultat_dm_evenement_t").value=NaN;
 	}else{
-		z_pour_horizon=calcul_t_inverse(t_pour_horizon,fonction_EouF,H0_parSecondes(H0));
+		z_pour_horizon=calcul_t_inverse(t_pour_horizon,fonction_EouF,H0_parAnnees(H0));
 		let dm_horizon_particule_m=calcul_horizon_particule(fonction_EouF,z_pour_horizon);
 		let dm_horizon_particule_pc=m_vers_pc(dm_horizon_particule_m);
 		let dm_horizon_particule_al=m_vers_AL(dm_horizon_particule_m);
