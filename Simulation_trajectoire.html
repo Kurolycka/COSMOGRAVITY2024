@@ -225,7 +225,11 @@ ga('send', 'pageview');
     
             <div id="bloc_resultats">
                 <div id="wrapper"></div>
-                <div id="wrapper2"></div>
+				<div id="div-choix-potentiel" class="container-choix">
+					<label for="choix" class="label-choix" >Choisissez une option :</label>
+					<select id="potentiel-choix" name="choix"></select>
+				</div>
+				<div id="wrapper2"></div>
             </div>
 
             <!-- Panneau mobile zoom -->
@@ -356,8 +360,8 @@ ga('send', 'pageview');
 	var inputRphysique = document.getElementById("r_phy");
 	var labelPourcentageVphiPilotage = document.getElementById("label_pourcentage_vphi_pilotage");
 	var inputPourcentageVphiPilotage = document.getElementById("pourcentage_vphi_pilotage");
-
-
+	var selectElement = document.getElementById('potentiel-choix');
+	var valeur_option_precedente
     // Ajouter des écouteurs d'événements pour les boutons
     btnObervateur.addEventListener("click", function() {
 		inputNbfusees_div.style.display="inline";
@@ -398,6 +402,17 @@ ga('send', 'pageview');
 		else{btnrebond.style.display="inline";}
 
     });
+
+	selectElement.addEventListener('click', function() 
+	{
+		const optionChoisie = selectElement.value;
+		if(valeur_option_precedente)
+		{document.getElementById(optionsPotentiel[valeur_option_precedente]).style.display="none"};
+		document.getElementById(optionsPotentiel[selectElement.value]).style.display="inline";
+		valeur_option_precedente=selectElement.value;
+
+	});
+
 	
 	var lenbdefusees;
 	traceEstAbsent();

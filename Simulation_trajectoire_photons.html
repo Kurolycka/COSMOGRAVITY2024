@@ -205,6 +205,10 @@
       
         <div id="bloc_resultats">
             <div id="wrapper"></div>
+            <div id="div-choix-potentiel" class="container-choix">
+              <label for="choix" class="label-choix" >Choisissez une option :</label>
+              <select id="potentiel-choix" name="choix"></select>
+            </div>
             <div id="wrapper2"></div>
         </div>
 
@@ -323,7 +327,8 @@
 
     var btnrebond = document.getElementById("rebondd");
 	  var inputRphysique = document.getElementById("r_phy");
-
+    var selectElement = document.getElementById('potentiel-choix');
+	  var valeur_option_precedente
         // Ajouter des écouteurs d'événements pour les boutons
         btnObervateur.addEventListener("click", function() {
 			inputNbfusees.style.display = "inline"; // Afficher le input et le label de nbfusees si button observateur est cliqué 
@@ -354,7 +359,16 @@
         if(inputRphysique.value=="0" || inputRphysique.value==""){btnrebond.style.display="none";} 
         else{btnrebond.style.display="inline";}
         });
-	
+        
+        selectElement.addEventListener('click', function() 
+        {
+          const optionChoisie = selectElement.value;
+          if(valeur_option_precedente)
+          {document.getElementById(optionsPotentiel[valeur_option_precedente]).style.display="none"};
+          document.getElementById(optionsPotentiel[selectElement.value]).style.display="inline";
+          valeur_option_precedente=selectElement.value;
+
+        });
 
     var lenbdefusees;
  

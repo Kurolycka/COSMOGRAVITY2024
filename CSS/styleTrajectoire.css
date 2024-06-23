@@ -9,13 +9,12 @@ body {
     color: white;
     font-size: 15px;
     font-style: bold;
-    border: none;
     border-radius: 15px;
     cursor: pointer;
     margin-top: 10px;
     margin-right: 10px;
     margin-bottom: 10px;
-    width: 130px;
+    min-width: 130px; /* Utilisez min-width au lieu de width */
     height: 40px;
 }
 
@@ -23,6 +22,7 @@ body {
         background-color: rgba(39, 121, 124, 0.85);
         transform: translateY(2px);
     }
+
     
 
        
@@ -558,11 +558,7 @@ position: relative;
     left: 0;
 }
 
-#wrapperengrand canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-}
+
 .canvaslaclasse{
   min-height:0;
   min-width:0;
@@ -573,12 +569,14 @@ position: relative;
 
 
 #wrapper2 {
+    height: 400px;
+    width: 600px;
     display: flex; /* Utilisation du modèle flexbox */
     justify-content: center; /* Centrage horizontal des éléments enfants */
     align-items: center; /* Centrage vertical des éléments enfants */
     box-sizing: border-box; /* Assure que le padding et la bordure sont inclus dans les dimensions */
     flex: 1; /* Pour que le wrapper2 prenne toute la hauteur disponible */
-    margin-right: 60px; /* Décalage vers la gauche */
+    margin-left: 40px;
   }
   
   #grsvg_2 {
@@ -742,3 +740,60 @@ margin-right: 20px;
     flex: 1; /* Pour que le wrapper2 prenne toute la hauteur disponible */
     margin-right: 60px; /* Décalage vers la gauche */
   }
+
+
+
+  /*Pour le choix du potentiel*/
+
+  /* Conteneur pour le formulaire */
+  .container-choix {
+    background-color: rgba(179, 221, 223, 0.85);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 200px;
+    height: 50px;
+}
+
+/* Styles pour le label */
+.label-choix {
+    font-size: 15px;
+    display: block;
+    color: #333333;
+    letter-spacing: 1px;
+}
+
+/* Styles pour la liste déroulante */
+select{
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #cccccc;
+    border-radius: 6px;
+    width: 60%; /* Largeur de la liste déroulante */
+    background-color: #f9f9f9;
+    text-align: center;
+    transition: border-color 0.3s ease;
+}
+
+
+select:focus {
+    outline: none;
+    border-color:  rgba(39, 121, 124, 0.85);
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
+}
+
+option {
+    font-size: 16px;
+}
+
+/* Style au survol d'une option */
+option:hover {
+background-color: #4FA7AD; /* Couleur bleue au survol */
+}
+
+/* Placeholder style */
+option[disabled]:first-child {
+    color: #aaaaaa;
+}
+

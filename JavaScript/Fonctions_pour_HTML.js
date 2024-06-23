@@ -16,17 +16,17 @@ function toggleEntreeSortie (IDpanel) {
             '"Nav"' +
             '"Graphe"';
     } else if (entreeCachee) {
-        grillePrincipale.style.gridTemplateColumns = '3fr 1fr';
+        grillePrincipale.style.gridTemplateColumns = '4fr 1fr';
         grillePrincipale.style.gridTemplateAreas = '' +
             '"Nav Nav"' +
             '"Graphe Sortie"';
     } else if (sortieCachee) {
-        grillePrincipale.style.gridTemplateColumns = '1fr 3fr';
+        grillePrincipale.style.gridTemplateColumns = '1fr 4fr';
         grillePrincipale.style.gridTemplateAreas = '' +
             '"Nav Nav"' +
             '"Entree Graphe"';
     } else {
-        grillePrincipale.style.gridTemplateColumns = '1fr 2fr 1fr';
+        grillePrincipale.style.gridTemplateColumns = '1fr 3fr 1fr';
         grillePrincipale.style.gridTemplateAreas = '' +
             '"Nav Nav Nav"' +
             '"Entree Graphe Sortie"';
@@ -290,6 +290,8 @@ function updateUnivers() {
     if (document.getElementById("OmégaDE0")) {
         document.getElementById("OmégaDE0").value = Omega_DE(0).toExponential(4)
         document.getElementById("ODE_enregistrer").innerHTML = "&Omega;<sub>DE<sub>0</sub></sub> = " + Omega_DE(0).toExponential(4)
+        document.getElementById("w0_enregistrer").innerHTML = "w<sub>0</sub> = " + document.getElementById("w0").value
+        document.getElementById("w1_enregistrer").innerHTML = "w<sub>0</sub> = " + document.getElementById("w1").value
     }
 
     document.getElementById("Omégar0").value = Omega_r(0).toExponential(4)
@@ -308,19 +310,26 @@ function updateUnivers() {
         fonction_simplifiante = fonction_F
     }
 
-    let dm_horizon_particule = calcul_horizon_particule(fonction_simplifiante);
-    dm_horizon_particule = m_vers_AL(dm_horizon_particule)/1e9;
-    document.getElementById("resultat_DmHorizonEvenement").innerHTML = dm_horizon_particule.toExponential(4)
-    document.getElementById("hp_enregistrer").innerHTML = "d<sub>p<sub>0</sub></sub> = " + dm_horizon_particule.toExponential(4) + " GAL"
-    document.getElementById("")
+    let dm_horizon_particule_m = calcul_horizon_particule(fonction_simplifiante);
+    let dm_horizon_particule_pc = m_vers_pc(dm_horizon_particule_m);
+    let dm_horizon_particule_al = m_vers_AL(dm_horizon_particule_m);
+    document.getElementById("resultat_dm_particule_m").innerHTML = arrondie_affichage(dm_horizon_particule_m);
+    document.getElementById("resultat_dm_particule_pc").innerHTML = arrondie_affichage(dm_horizon_particule_pc);
+    document.getElementById("resultat_dm_particule_al").innerHTML = arrondie_affichage(dm_horizon_particule_al);
+    document.getElementById("hp_enregistrer").innerHTML = "d<sub>p<sub>0</sub></sub> = " + dm_horizon_particule_pc.toExponential(4) + " pc"
 
-    let dm_horizon_evenement = calcul_horizon_evenements(fonction_simplifiante);
-    dm_horizon_evenement = m_vers_AL(dm_horizon_evenement)/1e9;
-    document.getElementById("resultat_DmHorizonParticule").innerHTML = dm_horizon_evenement.toExponential(4);
-    document.getElementById("he_enregistrer").innerHTML = "d<sub>e<sub>0</sub></sub> = " + dm_horizon_evenement.toExponential(4) + " GAL"
+
+    let dm_horizon_evenement_m = calcul_horizon_evenements(fonction_simplifiante);
+    let dm_horizon_evenement_pc = m_vers_pc(dm_horizon_evenement_m);
+    let dm_horizon_evenement_al = m_vers_AL(dm_horizon_evenement_m);
+    document.getElementById("resultat_dm_evenement_m").innerHTML = arrondie_affichage(dm_horizon_evenement_m);
+    document.getElementById("resultat_dm_evenement_pc").innerHTML = arrondie_affichage(dm_horizon_evenement_pc);
+    document.getElementById("resultat_dm_evenement_al").innerHTML = arrondie_affichage(dm_horizon_evenement_al);
+    document.getElementById("he_enregistrer").innerHTML = "d<sub>e<sub>0</sub></sub> = " + dm_horizon_evenement_pc.toExponential(4) + " pc"
 
     if (document.getElementById("Omégal0")) {
         update_graphe_interactif()
+        update_point()
     }
 }
 /**
@@ -340,6 +349,12 @@ function updateCalculette() {
     document.getElementById("Omégar0").value = Omega_r(0).toExponential(4)
 
     document.getElementById("Omégam0").value = Omega_m(0).toExponential(4)
+
+    if (document.getElementById("Omégal0")) {
+        resizeCanvas()
+        update_graphe_interactif()
+        update_point()
+    }
 }
 
 /**

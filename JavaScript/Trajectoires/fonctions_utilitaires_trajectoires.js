@@ -139,6 +139,7 @@ var calculs = calculs || (function() {
                 vr=Math.sqrt(Math.abs(dr/(alpha_*beta_**2)));
             }
             else{
+				alpha_ = 1/alpha_;
                 dr=((c/E)**2)*alpha_*(beta_**4)*((E/beta_)**2-(L/r)**2-1);
                 vr=Math.sqrt(Math.abs(dr/(alpha_*beta_**2)));
             }

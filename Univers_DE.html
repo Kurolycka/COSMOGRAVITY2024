@@ -7,7 +7,7 @@
 
     <script src="JavaScript/Fonctions_pour_HTML.js"></script>
     <script src="./node_modules/jquery/dist/jquery.js"></script>
-    <script src="./node_modules/plotly.js/dist/plotly.js"></script>
+    <script src="./node_modules/plotly.js-basic-dist/plotly-basic.js"></script>
     <script src="./node_modules/html2canvas/dist/html2canvas.js"></script>
 
 
@@ -106,8 +106,8 @@
                 </div>
             </div>
 
-            <div class="paramètre">
-                <label id="label_optionsOmégar0" for="optionsOmégar0">
+            <div class="paramètre" style="grid-template-columns: 1fr 1fr">
+                <label id="label_optionsOmégar0" for="optionsOmégar0" >
                     <img id="infoOmégaR0" src="./Images/icone_info.png" alt="" width="20" height="20">
                 </label>
                 <select name="Détail Omégar0" id="optionsOmégar0">
@@ -117,7 +117,7 @@
                 </select>
             </div>
 
-            <div class="paramètre">
+            <div class="paramètre" style="grid-template-columns: 1fr 1fr">
                 <label id="label_optionsOmégak0" for="OptionsOmégak0">
                     <img id="infoOmégaK0" src="./Images/icone_info.png" alt="" width="20" height="20">
                 </label>
@@ -155,6 +155,7 @@
                 <span></span>
             </div>
         </div>
+
     </div>
 
     <!--Fenêtre graphe-->
@@ -180,6 +181,8 @@
                     <div id="ODE_enregistrer"></div>
                     <div id="Or_enregistrer"></div>
                     <div id="Ok_enregistrer"></div>
+                    <div id="w0_enregistrer"></div>
+                    <div id="w1_enregistrer"></div>
                 </div>
                 <div style="justify-self: right">
                     <h3 id="sortieEnregistrer" style="text-align: center"></h3>
@@ -194,12 +197,6 @@
     </div>
 
     <!--Fenêtre sortie-->
-    <button onclick="toggleEntreeSortie('panneauSortie')" class="petitBoutton"
-            style="background-color: #BCA7DCFF; display:block; top: 60px; right:10px; position: absolute">
-        <img id="flecheDroite" class="flècheMenu tournee"
-             src="./Images/fleche_menu.png"
-             alt="">
-    </button>
     <div id="panneauSortie" class="Sortie">
         <div class="boiteSortie">
             <div><h2 id="Sorties"></h2></div>
@@ -228,26 +225,33 @@
 
             <div id="Temps"></div>
 
-            <div id="début" class="résultats" style="display: flex"></div>
+            <div id="début" class="résultats" style="display: flex; text-align: center"></div>
 
-            <div id="fin" class="résultats" style="display: flex"></div>
+            <div id="fin" class="résultats" style="display: flex; text-align: center"></div>
 
             <br />
 
-            <div id="horizons"></div>
+            <div id="horizonEvenement" style="text-align: center">
+                <h3 id="evenement" style="text-align: center"></h3>
+                <span id="DmHorizonEvenement_label">d<sub>e0</sub>= </span>
+                <output id="resultat_dm_evenement_m"></output>
+                <span>m = </span>
+                <output id="resultat_dm_evenement_pc"></output>
+                <span>pc = </span>
+                <output id="resultat_dm_evenement_al"></output>
+                <span class="unite_al"></span>
 
-            <div id="horizonEvenement" class="résultats" style="display: flex">
-                <span id="DmHorizonEvenement_label">d<sub>e0</sub> =</span>
-                <span id="resultat_DmHorizonEvenement"></span> GAL
-                <span id="ZHorizonEvenement_label">z<sub>e0</sub> =</span>
-                <span id="resultat_ZHorizonEvenement">-1</span>
             </div>
 
-            <div id="horizonParticule" class="résultats" style="display: flex">
-                <span id="DmHorizonParticule_label">d<sub>p0</sub> =</span>
-                <span id="resultat_DmHorizonParticule"></span> GAL
-                <span id="ZHorizonParticule_label">z<sub>p0</sub> =</span>
-                <span id="resultat_ZHorizonParticule">+∞</span>
+            <div id="horizonParticule" style="text-align: center">
+                <h3 id="particule" style="text-align: center"></h3>
+                <span id="DmHorizonParticule_label">d<sub>p0</sub>= </span>
+                <output id="resultat_dm_particule_m"></output>
+                <span>m = </span>
+                <output id="resultat_dm_particule_pc"></output>
+                <span>pc = </span>
+                <output id="resultat_dm_particule_al"></output>
+                <span class="unite_al"></span>
             </div>
         </div>
 
@@ -276,7 +280,7 @@
 
             <div class="résultats">
                 <span></span>
-                <button onclick="enregistrer()" id="bouttonEnregistrer" class="grosBoutton">Enregistrer</button>
+                <button onclick="enregistrer()" id="bouttonEnregistrer" class="grosBoutton"></button>
                 <span></span>
             </div>
 

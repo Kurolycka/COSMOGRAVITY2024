@@ -3,6 +3,8 @@
 /*Ce fichier est appelé pour s'occuper du changement des bouttons (observateur,spationaute,
 trajectoire_simple, trajectoire_complete,rebond) quand on clique dessus*/
 
+//-----------------------------------------------------------{init_rebond}--------------------------------------------------
+
 /**
  * Fonction appelé pour eviter le bug d'actualisation du bouton rebond entre 2 rafraichissements.
  */
@@ -11,6 +13,8 @@ function init_rebond()
   document.getElementById("rebondd").className = "bouttonChoix-inverse";
   document.getElementById("boutton_ammorti").value = "0";
 }
+
+//-----------------------------------------------------------{pressionBouttonTrajectoireComplete}--------------------------------------------------
 
 /**
  * Fonction qui est appellé quand on appuie sur trajectoire Complete, elle change le style 
@@ -27,6 +31,8 @@ function pressionBouttonTrajectoireComplete()
   }
 }
 
+//-----------------------------------------------------------{pressionBouttonTrajectoireSimple}--------------------------------------------------
+
 /**
  * Fonction qui est appellé quand on appuie sur trajectoire simple, elle change le style 
  * du bouton Trajectoire simple et le bouton Trajectoire complete.
@@ -41,6 +47,8 @@ function pressionBouttonTrajectoireSimple()
     document.getElementById("r1").className = "bouttonChoix-inverse";//trajectoire complete
   }
 }
+
+//-----------------------------------------------------------{changerBouttonRebond}--------------------------------------------------
 
 /**
  * Fonction qui est appellé quand on appuie sur rebond, pour changer son style. 
@@ -57,6 +65,8 @@ function changerBouttonRebond()
     document.getElementById("rebondd").className = "bouttonChoix-inverse";
   }
 }
+
+//-----------------------------------------------------------{pressionBouttonObservateur}--------------------------------------------------
 
 /**
  * Fonction qui est appellé quand on appuie sur observateur, elle change le style 
@@ -75,7 +85,7 @@ function pressionBouttonObservateur(Kerr) {
   }
 }
 
-
+//-----------------------------------------------------------{pressionBouttonMobileKerr}--------------------------------------------------
 
 /**
  * Fonction qui est appellé quand on appuie sur spationaute, elle change le style 
@@ -94,7 +104,7 @@ function pressionBouttonMobile(Kerr) {
   }
 }
 
-
+//-----------------------------------------------------------{ammort}--------------------------------------------------
 
 /**
  * Fonction associée à rebond qui fait afficher la barre du coefficient d'amortissement.
@@ -117,6 +127,8 @@ function ammort()
   }
 }
 
+//-----------------------------------------------------------{ammort_photon}--------------------------------------------------
+
 /**
  * Fonction associée à rebond qui active le robond pour photon.
  */
@@ -132,6 +144,7 @@ function ammort_photon() {
   }
 }
 
+//-----------------------------------------------------------{ammortUpdate}--------------------------------------------------
 
 /**
  * Fonction qui s'occupe de l'actualisation de la valeur sélectionnée du 

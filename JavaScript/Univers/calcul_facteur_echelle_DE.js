@@ -8,7 +8,6 @@ le facteur d'échelle dans le cas du modèle DE.
  * @param equa_diff_1 {function} Fonction qui décrit la première dérivée du facteur d'échelle en fonction de tau
  * @param equa_diff_2 {function} Fonction qui décrit la deuxième dérivée du facteur d'échelle en fonction de tau
  * @param fonction_simplifiant_1 Fonction utilisé dans l'expression de F et des équations différentielles
- * @param fonction_simplifiant_2 Fonction utilisée dans le calcul des âges.
  * @return Liste des abscisses ou la fonction a été calculée et liste des valeurs de la fonction.
  */
 function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifiant_1) {
@@ -54,15 +53,23 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
         }
 
         // On calcule le pas qui sera utilisé
+        let universInconnu = true
         if ( (isNaN(tau_min) || isNaN(tau_max)) && !isNaN(t_0) ) {
-            pas = t_0 * 1e-5
+            pas = Math.abs(t_0) * 1e-3
+            universInconnu = false
         } else {
-            pas = 1e-4
+            pas = 1e-3
         }
 
         let option = document.getElementById("optionsMonofluide").value
         if (!isNaN(tau_min) && !isNaN(tau_max) && option !== "optionLDE") {
-            pas = Math.abs(tau_max - tau_min) * 1e-5
+            pas = Math.abs(tau_max - tau_min) * 1e-3
+            universInconnu = false
+        }
+
+        if (universInconnu) {
+            if (a_min > 1) {a_min = 1}
+            if (a_max < 1) {a_max = 1}
         }
 
 
@@ -128,10 +135,11 @@ function affichage_site_DE() {
     let sorties = calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_1)
     let donnee = sorties[0]
 
+    let age_univers = sorties[1]
     let debutEtFin = sorties[2]
 
     document.getElementById("début").innerHTML = debutEtFin[0]
     document.getElementById("fin").innerHTML = debutEtFin[1]
 
-    graphique_facteur_echelle(donnee, debutEtFin[2], debutEtFin[3])
+    graphique_facteur_echelle(donnee, debutEtFin[2], debutEtFin[3], age_univers)
 }

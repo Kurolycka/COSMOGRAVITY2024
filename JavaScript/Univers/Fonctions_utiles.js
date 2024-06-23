@@ -455,7 +455,7 @@ function debut_fin_univers(equa_diff) {
     // Déclaration des variables et des valeurs retournée
     let set_solution = [0, 1 ,1]
     let save_set_solution;
-    let pas = 1e-4 * H0 / Math.abs(H0)
+    let pas = 1e-3 * H0 / Math.abs(H0)
     let limite = Math.abs(1000000 / pas)
     let nombre_point = 0
     let option = document.getElementById("optionsMonofluide").value
@@ -479,20 +479,23 @@ function debut_fin_univers(equa_diff) {
     }
 
     // On récupère le maximum entre la valeur du facteur d'échelle et la dérivée du facteur d'échelle
-    let max = Math.max(Math.abs(set_solution[1]), Math.abs(set_solution[2]))
+    let max = Math.max(Math.abs(set_solution[1]))
 
     if ( option === "optionLDE" || ( max <= limite && set_solution[1] > 1 ) ) {
         naissance_univers = texte.univers.pasDebut
+        age_debut = 0
     }
     else {
         age_debut = set_solution[0] / H0_parGAnnees(H0)
 
         if (set_solution[1] <= 1) {
-            naissance_univers = texte.univers.Debut + "BigBang " + Math.abs(age_debut).toExponential(4) + " Ga"
+            naissance_univers = texte.univers.Debut + "BigBang " + Math.abs(age_debut).toExponential(4) + " Ga = "
+                + gigaannee_vers_seconde(Math.abs(age_debut)).toExponential(4) + " s"
         }
 
         if ( max >= limite ) {
-            naissance_univers = texte.univers.Debut + "BigFall " + Math.abs(age_debut).toExponential(4) + " Ga"
+            naissance_univers = texte.univers.Debut + "BigFall " + Math.abs(age_debut).toExponential(4) + " Ga = "
+                + gigaannee_vers_seconde(Math.abs(age_debut)).toExponential(4) + " s"
         }
     }
 
@@ -517,8 +520,8 @@ function debut_fin_univers(equa_diff) {
         set_solution = save_set_solution
     }
 
-    // On récupère le maximum entre la valeur du facteur d'échelle et la dérivée du facteur d'échelle
-    max = Math.max(Math.abs(set_solution[1]), Math.abs(set_solution[2]))
+    // On récupère le maximum entre la valeur du facteur d'échelle
+    max = Math.max(Math.abs(set_solution[1]))
 
     if ( option === "optionLDE" || ( max <= limite && set_solution[1] > 1 ) ) {
         mort_univers = texte.univers.pasMort
@@ -527,11 +530,13 @@ function debut_fin_univers(equa_diff) {
         age_fin = set_solution[0] / H0_parGAnnees(H0)
 
         if (set_solution[1] <= 1) {
-            mort_univers = texte.univers.Mort + "BigCrunch " + Math.abs(age_fin).toExponential(4) + " Ga"
+            mort_univers = texte.univers.Mort + "BigCrunch " + Math.abs(age_fin).toExponential(4) + " Ga = "
+                + gigaannee_vers_seconde(Math.abs(age_fin)).toExponential(4) + " s"
         }
 
         if ( max >= limite ) {
-            mort_univers = texte.univers.Mort + "BigRip " + Math.abs(age_fin).toExponential(4) + " Ga"
+            mort_univers = texte.univers.Mort + "BigRip " + Math.abs(age_fin).toExponential(4) + " Ga = "
+                + gigaannee_vers_seconde(Math.abs(age_fin)).toExponential(4) + " s"
         }
     }
 
@@ -547,6 +552,8 @@ function debut_fin_univers(equa_diff) {
 function tauEnTemps(listeTaus, t_debut) {
     let H0 = Number(document.getElementById("H0").value);
     let H0parGAnnee = H0_parGAnnees(H0);
+
+    console.log(t_debut)
 
     for (let index = 0; index < listeTaus.length; index = index + 1) {
         listeTaus[index] = listeTaus[index] / H0parGAnnee
@@ -568,20 +575,30 @@ function tauEnTemps(listeTaus, t_debut) {
  * @param a2 {number}
  * @return {number} âge de l'univers.
  */
-function calcul_ages(fonction, H0, a1, a2) {
-    function integrande(u) {
-        let terme_1 = Math.pow(u, -1)
-        let terme_2 = Math.sqrt(fonction(u))
-
-        return terme_1 * Math.pow(terme_2 , -1);
+function calcul_ages(fonction, H0, a1, a2,z_utilisé=false) {
+    if (z_utilisé){
+        function integrande(u) {
+            let terme_1 = Math.pow((1+u), -1)
+            let terme_2 = Math.pow(fonction(u,true),-0.5)
+    
+            return terme_1 * terme_2 ;
+        }
+    }else{
+        function integrande(u) {
+            let terme_1 = Math.pow(u, -1)
+            let terme_2 = Math.sqrt(fonction(u))
+    
+            return terme_1 * Math.pow(terme_2 , -1);
+        }
     }
+
     return (1 / H0) * simpson_composite(integrande, a1, a2, 100);
 }
 
 //Partie Remy
 /** renvoie la fonction Sk pour calculer les distances cosmologiques en fontion de la courbure de l'espace
- * (Univers,simple,DarkEnergy et monofluide)
- * @param {*} x Paramètre d'entré
+ * (Univers, simple, DarkEnergy et monofluide)
+ * @param {*} x Paramètre d'entrée
  * @param {*} OmegaK paramètre de densité de courbure
  * @returns
  */
@@ -666,10 +683,11 @@ function calcul_t_inverse(temps,fonction,H0){
 /**
  * Fonction permettant de tracer le facteur d'échelle en fonction du temps.
  * @param solution {[number[], number[]]} Liste contenant la liste des temps et les valeurs du facteur d'échelle
- * @param t_debut
- * @param t_fin
+ * @param t_debut {number} temps écoulé depuis le début de l'univers
+ * @param t_fin {number} temps restant avant la fin de l'univers
+ * @param t_0 {number} age actuel de l'univers
  */
-function graphique_facteur_echelle(solution, t_debut, t_fin) {
+function graphique_facteur_echelle(solution, t_debut, t_fin, t_0) {
     let texte = o_recupereJson()
     let a_min = Number(document.getElementById("a_min").value)
     let a_max = Number(document.getElementById("a_max").value)
@@ -686,6 +704,14 @@ function graphique_facteur_echelle(solution, t_debut, t_fin) {
     let facteur_debut = ordonnee[0]
     let temps_fin = abscisse[abscisse.length - 1]
     let facteur_fin = ordonnee[ordonnee.length - 1]
+
+
+    // On corrige l'erreur numérique provoqué par la dérivée infinie en a
+    if (t_0 !== 0) {
+        for (let index = 0; index < abscisse.length; index = index + 1) {
+            abscisse[index] = abscisse[index] - temps_debut
+        }
+    }
 
 
     if ( t_debut && facteur_debut < Math.abs(a_max - a_min) * 1e-1 ) {

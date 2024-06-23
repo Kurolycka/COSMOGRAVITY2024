@@ -75,6 +75,7 @@ var rmaxjson = {}; //Liste contenant les coordonnées radiales maximales atteint
 var mobilefactor = {}; //Liste contenant les facteurs d'échelle pour chaque mobile.
 var r0o2 ={}; //Liste contenant les distances initiales au centre de l'astre pour chaque mobile. 
 var listejsonfusees={}; //Liste regroupant l'initialisation de tous les compteurs. 
+var optionsPotentiel = {}; //Liste pour stocker les id du menu choix du potentiel
 
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Autres variables ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -248,6 +249,9 @@ function supprHtml(){
 		//on supprime les graphes potentiel créés
 		var elementgrapheasuppr = document.getElementById("grsvg_"+count.toString()+"");
 		elementgrapheasuppr.parentNode.removeChild(elementgrapheasuppr);	
+		//on supprime les options pour le potentiel
+		var elementoptionasuppr = document.getElementById("Potentiel "+count.toString());
+		elementoptionasuppr.parentNode.removeChild(elementoptionasuppr);	
 
 		//On supprime les canva créés pour les mobiles
 		var elementcanvasbouleasuppr = document.getElementById("myCanvasBoule"+count.toString()+"");
@@ -637,13 +641,33 @@ function genereHtml()
 	}
 		
 
-	/*Pour creer des svg dans les quels on dessine le potentiel*/
-
 	for (count = 1; count <= nbredefuseesgenere; count += 1) 
 	{
+		/*Pour creer des svg dans les quels on dessine le potentiel*/
 		var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");//on crée un element svg
 		svg.setAttribute("id", "grsvg_"+count.toString()+""); //on lui met un id
 		document.getElementById("wrapper2").appendChild(svg); //on ajoute au Wrapper
+		if(nbredefuseesgenere>1)
+		{
+			document.getElementById("div-choix-potentiel").style.visibility='visible';
+			if(count!=1)
+			{
+				document.getElementById("grsvg_"+count.toString()+"").style.display="none";
+			}
+		}
+		else 
+		{	
+			document.getElementById("div-choix-potentiel").style.visibility='hidden';
+		}
+
+		/*Pour la boite à choix des potentiels*/
+		var option=document.createElement("option");
+		option.setAttribute("id", "Potentiel "+count.toString());
+		option.innerHTML="Potentiel "+count.toString();
+		document.getElementById("potentiel-choix").appendChild(option); 
+
+		optionsPotentiel["Potentiel "+count.toString()]="grsvg_"+count.toString()+"";
+
 	}
 
 

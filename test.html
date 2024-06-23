@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste de choix avec CSS moderne</title>
+    <style>
+        /* Styles généraux */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        /* Conteneur pour le formulaire */
+        .container-choix {
+            background-color: rgba(179, 221, 223, 0.85);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 250px;
+        }
+
+        /* Styles pour le label */
+        .label-choix {
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: block;
+            color: #333333;
+            letter-spacing: 1px;
+        }
+
+        /* Styles pour la liste déroulante */
+        select{
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #cccccc;
+            border-radius: 6px;
+            width: 60%; /* Largeur de la liste déroulante */
+            background-color: #f9f9f9;
+            transition: border-color 0.3s ease;
+        }
+
+        /* Styles pour les options */
+        option {
+            font-size: 16px;
+        }
+
+        /* Style au survol d'une option */
+        option:hover {
+        background-color: #4FA7AD; /* Couleur bleue au survol */
+        }
+        select:focus {
+            outline: none;
+            border-color:  rgba(39, 121, 124, 0.85);
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
+        }
+
+        /* Placeholder style */
+        option[disabled]:first-child {
+            color: #aaaaaa;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container-choix">
+        <label for="choix" class="label-choix" >Choisissez une option :</label>
+        <select id="choix" name="choix">
+            <option value="option1">Option 1</option>
+            <option value="option2">Option 2</option>
+            <option value="option3">Option 3</option>
+            <option value="option4">Option 4</option>
+        </select>
+    </div>
+</body>
+</html>

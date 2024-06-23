@@ -1,11 +1,17 @@
-.boiteGenerateurGraphique {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: rgb(255,238,255);
-    gap: 10px;
-    padding: 5px;
-    border-radius: 10px;
+.grillePrincipale {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-rows: 38px 1fr;
+    grid-template-areas:
+            "Nav Nav Nav"
+            "Entree Graphe Sortie";
+    gap: 5px;
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+    width: 100vw;
+    box-sizing: border-box;
+    position: absolute;
 }
 
 .parametreGraphique{
@@ -14,17 +20,12 @@
     flex-direction: column;
 }
 
-.CalculAnnexe{
-    border: 2px;
-}
-
 .fenetre_calculette{
     display: flex;
     flex-direction: column;
-    background-color: black;
-    padding: 3px;
-    border-radius: 10px;
-    gap: 3px;
+    padding: 1px;
+    border-radius: 3px;
+    gap: 1px;
     position: relative;
 }
 
@@ -32,24 +33,35 @@
     color: blue;
 }
 
-.boiteCalculAnnexe{
-    display: grid;
-    grid-template-columns:2fr 3fr 2fr;
-    background-color: black;
-    gap: 3px;
-    padding: 3px;
-    border-radius: 10px;
-}
-
-.CalculAnnexe{
-    display: flex;
-    flex-direction: column;
-    background-color: rgb(255,238,255);
-    border-radius: 10px;
-    padding: 5px;
-    gap: 3px;
-}
-
 .infobullable{
     cursor: help;
 }
+
+.cache{
+    display:none;
+}
+
+.boite_calculette{
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(255,255,255);
+    gap: 2px;
+    padding: 5px;
+    border:1px solid black;
+    border-radius: 5px;
+}
+
+.boite_calculette h4 {
+    margin-inline: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.centre {
+    margin-inline: auto;
+}
+
+.boite_calculette output {
+    color: rgb(64, 47, 221);
+}
+

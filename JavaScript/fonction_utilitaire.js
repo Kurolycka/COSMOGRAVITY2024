@@ -5,7 +5,7 @@ function arrondie_affichage(nombre){
         return nombre
     }
     else{
-        return nombre.toExponential(4);
+        return nombre.toExponential(3);
     }
 }
 

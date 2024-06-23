@@ -206,6 +206,10 @@
         <span id="indic_calculs"></span> 
         <div id="bloc_resultats">
             <div id="wrapper"></div>
+            <div id="div-choix-potentiel" class="container-choix">
+              <label for="choix" class="label-choix" >Choisissez une option :</label>
+              <select id="potentiel-choix" name="choix"></select>
+            </div>
             <div id="wrapper2"></div>
         </div>
   
@@ -323,31 +327,41 @@
     var btnSpationaute = document.getElementById("r4");
     var inputNbfusees = document.getElementById("nombredefusees");
 		var labelNbfusees = document.getElementById("labelnumberfusees")
+    var selectElement = document.getElementById('potentiel-choix');
+	  var valeur_option_precedente;
+    // Ajouter des écouteurs d'événements pour les boutons
+    btnObervateur.addEventListener("click", function() {
+    inputNbfusees.style.display = "inline"; // Afficher le input et le label de nbfusees si button observateur est cliqué 
+    labelNbfusees.style.display = "inline"; 
+    });
 
-        // Ajouter des écouteurs d'événements pour les boutons
-        btnObervateur.addEventListener("click", function() {
-			inputNbfusees.style.display = "inline"; // Afficher le input et le label de nbfusees si button observateur est cliqué 
-			labelNbfusees.style.display = "inline"; 
-        });
+    btnSpationaute.addEventListener("click", function() {
+    /*Juste pour avoir les valeurs rentrées avant de cliquer sur spationaute*/
+    const r01 = document.getElementById("r01").value;
+    const phi01 = document.getElementById("phi01").value;
+    const teta1 = document.getElementById("teta1").value;
 
-        btnSpationaute.addEventListener("click", function() {
-        /*Juste pour avoir les valeurs rentrées avant de cliquer sur spationaute*/
-        const r01 = document.getElementById("r01").value;
-        const phi01 = document.getElementById("phi01").value;
-        const teta1 = document.getElementById("teta1").value;
+    inputNbfusees.value='1'; // on met un seul mobile
+    const event = new Event('change');//on met à jour tout le changement en appelant la sa fonctionnalité de changement
+    inputNbfusees.dispatchEvent(event);
+    document.getElementById("r01").value=r01;
+    document.getElementById("phi01").value=phi01;
+    document.getElementById("teta1").value=teta1;
+    
+    initialisationGenerale(1);//on actualise les valeurs de simulation
+    
+    inputNbfusees.style.display = "none"; // Masquer le input et le label de nbfusees si button spationaute est cliqué 
+    labelNbfusees.style.display = "none";
+    });
 
-        inputNbfusees.value='1'; // on met un seul mobile
-        const event = new Event('change');//on met à jour tout le changement en appelant la sa fonctionnalité de changement
-        inputNbfusees.dispatchEvent(event);
-        document.getElementById("r01").value=r01;
-        document.getElementById("phi01").value=phi01;
-        document.getElementById("teta1").value=teta1;
-        
-		    initialisationGenerale(1);//on actualise les valeurs de simulation
-        
-        inputNbfusees.style.display = "none"; // Masquer le input et le label de nbfusees si button spationaute est cliqué 
-		  	labelNbfusees.style.display = "none";
-        });
+    selectElement.addEventListener('click', function() 
+    {
+      const optionChoisie = selectElement.value;
+      if(valeur_option_precedente)
+      {document.getElementById(optionsPotentiel[valeur_option_precedente]).style.display="none"};
+      document.getElementById(optionsPotentiel[selectElement.value]).style.display="inline";
+      valeur_option_precedente=selectElement.value;
+    });
 
     var lenbdefusees;
  

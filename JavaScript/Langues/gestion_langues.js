@@ -180,6 +180,7 @@ function texte_navigation() {
 
 function texte_univers_LCDM() {
     let texte = o_recupereJson();
+    document.querySelectorAll(".unite_al").forEach(function(i){i.innerHTML=texte.calculette.unitéanneelumiere});
     document.getElementById("Entrées").innerHTML = texte.univers.Entrées;
     document.getElementById("constantesUniverselles").innerHTML = texte.univers.constantes
     document.getElementById("calculetteCosmologique").innerHTML = texte.univers.calculette
@@ -200,6 +201,7 @@ function texte_univers_LCDM() {
     document.getElementById("Omégar0_optionRien").innerHTML = texte.univers.Omégar0_Rien
     document.getElementById("infoOmégaK0").title = texte.univers.infoOmégaK0
     document.getElementById("label_optionsOmégak0").insertAdjacentHTML("beforeend", texte.univers.label_Omégak0)
+    document.getElementById("selecParam").innerHTML = texte.univers.selecParam
 
     document.getElementById("Tracé").innerHTML = texte.univers.Tracé;
     document.getElementById("infoAmin").title = texte.univers.infoAmin;
@@ -218,20 +220,22 @@ function texte_univers_LCDM() {
     document.getElementById("infoOmégar0Sortie").title = texte.univers.infoOmégaR0Sortie
     document.getElementById("infoOmégak0Sortie").title = texte.univers.infoOmégaK0Sortie
     document.getElementById("Temps").innerHTML = texte.univers.Temps
-    document.getElementById("horizons").innerHTML = texte.univers.horizons
+    document.getElementById("evenement").innerHTML = texte.univers.evenement
+    document.getElementById("particule").innerHTML = texte.univers.particules
 
 
     document.getElementById("Enregistrer").innerHTML = texte.univers.Enregistrer
     document.getElementById("infoNomFichier").title = texte.univers.infoNomFichier
     document.getElementById("labelNom_fichier").insertAdjacentHTML("beforeend", texte.univers.labelNom)
     document.getElementById("nom_fichier").value = texte.univers.nomDéfautLCDM
-    document.getElementById("bouttonEnregistrer").value = texte.univers.bouttonEnregistrer
+    document.getElementById("bouttonEnregistrer").innerHTML = texte.univers.bouttonEnregistrer
 
 
 }
 
 function texte_univers_DE() {
     let texte = o_recupereJson();
+    document.querySelectorAll(".unite_al").forEach(function(i){i.innerHTML=texte.calculette.unitéanneelumiere});
     document.getElementById("Entrées").innerHTML = texte.univers.Entrées;
     document.getElementById("constantesUniverselles").innerHTML = texte.univers.constantes
     document.getElementById("calculetteCosmologique").innerHTML = texte.univers.calculette
@@ -270,7 +274,8 @@ function texte_univers_DE() {
     document.getElementById("infoOmégar0Sortie").title = texte.univers.infoOmégaR0Sortie
     document.getElementById("infoOmégak0Sortie").title = texte.univers.infoOmégaK0Sortie
     document.getElementById("Temps").innerHTML = texte.univers.Temps
-    document.getElementById("horizons").innerHTML = texte.univers.horizons
+    document.getElementById("evenement").innerHTML = texte.univers.evenement
+    document.getElementById("particule").innerHTML = texte.univers.particules
 
     document.getElementById("Enregistrer").innerHTML = texte.univers.Enregistrer
     document.getElementById("infoNomFichier").title = texte.univers.infoNomFichier
@@ -344,6 +349,9 @@ function texte_univers_calculette() {
     document.getElementById("bouton_distance").title = texte.calculette.infobulle_dist;
     document.getElementById("bouton_omega").title = texte.calculette.infobulle_omega;
     document.getElementById("bouton_tempsdecalage").title = texte.calculette.infobulle_tempsdecalage;
+    document.getElementById("label_omega_totalz1").title = texte.calculette.infobulle_omegatotalz1;
+    document.getElementById("label_omega_totalz2").title = texte.calculette.infobulle_omegatotalz2;
+
 
     document.getElementById("diametre_apparent_titre").title = texte.calculette.infobulle_diametre_apparent;
     document.getElementById("label_d_m").title = texte.calculette.infobulle_D_m;
@@ -396,6 +404,54 @@ function texte_constantes() {
     document.getElementById("retour").innerHTML = texte.constante.retour
 }
 
+function texte_Apropos() {
+    let texte = o_recupereJson()
+
+    document.getElementById("titreDesc").innerHTML = texte.Apropos.titreDesc
+    document.getElementById("desc").innerHTML = texte.Apropos.desc
+    document.getElementById("desc1").innerHTML = texte.Apropos.desc1
+    document.getElementById("desc2").innerHTML = texte.Apropos.desc2
+
+    document.getElementById("acteurs").innerHTML = texte.Apropos.acteurs
+    document.getElementById("Directeurs").innerHTML = texte.Apropos.Directeurs
+    document.getElementById("Dir1").innerHTML = texte.Apropos.Directeur1
+    document.getElementById("Dir2").innerHTML = texte.Apropos.Directeur2
+
+    document.getElementById("encadrant").innerHTML = texte.Apropos.Encadrant
+    document.getElementById("enc1").innerHTML = texte.Apropos.Encadrant1
+    document.getElementById("enc2").innerHTML = texte.Apropos.Encadrant2
+    document.getElementById("enc3").innerHTML = texte.Apropos.Encadrant3
+
+    document.getElementById("participant").innerHTML = texte.Apropos.Participant
+    document.getElementById("parti1").innerHTML = texte.Apropos.Participant1
+    document.getElementById("parti2").innerHTML = texte.Apropos.Participant2
+    document.getElementById("parti3").innerHTML = texte.Apropos.Participant3
+    document.getElementById("parti4").innerHTML = texte.Apropos.Participant4
+
+    document.getElementById("remerciement").innerHTML = texte.Apropos.Remerciement
+    document.getElementById("remer1").innerHTML = texte.Apropos.Remerciement1
+    document.getElementById("remer2").innerHTML = texte.Apropos.Remerciement2
+    document.getElementById("remer3").innerHTML = texte.Apropos.Remerciement3
+    document.getElementById("remer4").innerHTML = texte.Apropos.Remerciement4
+
+    document.getElementById("versions").innerHTML = texte.Apropos.versions
+    document.getElementById("license").innerHTML = texte.Apropos.License
+    document.getElementById("2024").innerHTML = texte.Apropos.v2024
+    document.getElementById("2023").innerHTML = texte.Apropos.v2023
+    document.getElementById("2022").innerHTML = texte.Apropos.v2022
+    document.getElementById("2021").innerHTML = texte.Apropos.v2021
+    document.getElementById("2020").innerHTML = texte.Apropos.v2020
+    document.getElementById("2019").innerHTML = texte.Apropos.v2019
+    document.getElementById("2018").innerHTML = texte.Apropos.v2018
+    document.getElementById("2017").innerHTML = texte.Apropos.v2017
+    document.getElementById("2016").innerHTML = texte.Apropos.v2016
+    document.getElementById("2015").innerHTML = texte.Apropos.v2015
+    document.getElementById("2014").innerHTML = texte.Apropos.v2014
+    document.getElementById("2013").innerHTML = texte.Apropos.v2013
+    document.getElementById("2009").innerHTML = texte.Apropos.v2009
+
+}
+
 
 
 
@@ -426,21 +482,10 @@ function textesimutraj(){
     //document.getElementById("acceleration1").title = texte.pages_trajectoire.diffderive;   génère une erreur dans la console pour Kerr car aussi utilisé pour Kerr --> à voir
 }
 
-function textesimuuniv(){
-    var texte = o_recupereJson();
-    document.getElementById("txt_avertissementuniv").innerHTML = texte.page_univers_general.simuavertissement;
-}
-
 function textesfinarret(){
     var texte = o_recupereJson();
     document.getElementById("vr_sc_mas").innerHTML = texte.pages_trajectoire.vrarret;
     document.getElementById("vp_sc_mas").innerHTML = texte.pages_trajectoire.vphiarret;
-}
-
-function textesfinarret_kerr(){
-    var texte = o_recupereJson();
-    //document.getElementById("vrk").innerHTML = texte.pages_trajectoire.vrarret;
-    document.getElementById("vpk").innerHTML = texte.pages_trajectoire.vphikerrarret;
 }
 
 function textesfinarret_kerrphoton(){
@@ -480,12 +525,6 @@ function notationvitesseree2(){
         }
     }
 
-}
-
-
-function zoom() {
-    var texte = o_recupereJson();
-    document.getElementById("zoomtxt").title = texte.page_univers_general.zoomtxt;
 }
 
 
@@ -619,9 +658,7 @@ function texteTrajectoireMassive(nbrderockets) {
     document.getElementById("Sortie_astre_label").innerHTML = texte.pages_trajectoire.sortie_astre;
     document.getElementById("Sortie_mobile_label").innerHTML = texte.pages_trajectoire.sortie_mobile;
 
-    
 
-    
 
     for (count = 1; count <= nbrderockets; count += 1) {
         document.getElementById("temps_ecoule"+count.toString()+"").innerHTML = texte.pages_trajectoire.temps_ecoule;
@@ -640,6 +677,9 @@ function texteTrajectoireMassive(nbrderockets) {
         document.getElementById("puissance_consommee_label"+count.toString()).title=texte.pages_trajectoire.puissance_consommee_infobulle; //ManonV5
 
         document.getElementById("vitesse_orb_circ"+count.toString()+"").title = texte.pages_trajectoire.vitesse_orbite_circulaire;//Manon
+
+
+
 
     }
     var canvaswidthheightt = '750';
@@ -712,6 +752,7 @@ function texteTrajectoireMassiveNonBar(nbrderockets) {
     document.getElementById("Sortie_mobile_label").innerHTML = texte.pages_trajectoire.sortie_mobile;
 
 
+
     for (count = 1; count <= nbrderockets; count += 1) {
         document.getElementById("temps_ecoule"+count.toString()+"").innerHTML = texte.pages_trajectoire.temps_ecoule;
         document.getElementById("acceleration"+count.toString()+"").innerHTML ="Gradient &nbsp;<span id='DivClignotante"+count.toString()+"'></span>";
@@ -761,7 +802,6 @@ function texteTrajectoirePhotonNonBar(nbrderockets) {
     document.getElementById("Sortie_astre_label").innerHTML = texte.pages_trajectoire.sortie_astre;
     document.getElementById("Sortie_mobile_label").innerHTML = texte.pages_trajectoire.sortie_mobile;
 
-
     var canvaswidthheightt = '750';
     if(canvaswidthheightt=="750"){
         document.getElementById("labelgp").innerHTML = texte.pages_trajectoire.labelgp;}
@@ -803,12 +843,6 @@ function texteTrajectoireMassiveKerr() {
     document.getElementById("decal_spect").title = texte.pages_trajectoire.decalageSpec_EnergyReserve;
     document.getElementById("v_tot").innerHTML = texte.pages_trajectoire.vtotal;
 
-    document.getElementById("Entree_astre_label").innerHTML = texte.pages_trajectoire.entree_astre;
-    document.getElementById("Entree_mobile_label").innerHTML = texte.pages_trajectoire.entree_mobile;
-
-    document.getElementById("Sortie_astre_label").innerHTML = texte.pages_trajectoire.sortie_astre;
-    document.getElementById("Sortie_mobile_label").innerHTML = texte.pages_trajectoire.sortie_mobile;
-
     //document.getElementById("ouvreengrand").innerHTML = texte.pages_trajectoire.ouvreengrand;
 
     document.getElementById("circulaire_prograde_bar").title=texte.pages_trajectoire.vitesse_orbite_circulaire_kerr_prograde;
@@ -818,6 +852,12 @@ function texteTrajectoireMassiveKerr() {
     document.getElementById("nb_g").title= htmlDecode(texte.pages_trajectoire.nombre_g_infobulle); //Manon
     document.getElementById("dernier_g").title= htmlDecode(texte.pages_trajectoire.dernier_g_infobulle); //ManonV2
     document.getElementById("distance_metrique").title = texte.pages_trajectoire.distance_metrique_parcourue_infobulle;
+
+    document.getElementById("Entree_astre_label").innerHTML = texte.pages_trajectoire.entree_astre;
+    document.getElementById("Entree_mobile_label").innerHTML = texte.pages_trajectoire.entree_mobile;
+
+    document.getElementById("Sortie_astre_label").innerHTML = texte.pages_trajectoire.sortie_astre;
+    document.getElementById("Sortie_mobile_label").innerHTML = texte.pages_trajectoire.sortie_mobile;
 
 }
 
@@ -855,6 +895,8 @@ function texteTrajectoirePhotonKerr() {
 
     document.getElementById("Sortie_astre_label").innerHTML = texte.pages_trajectoire.sortie_astre;
     document.getElementById("Sortie_mobile_label").innerHTML = texte.pages_trajectoire.sortie_mobile;
+
+
 
 
 }
