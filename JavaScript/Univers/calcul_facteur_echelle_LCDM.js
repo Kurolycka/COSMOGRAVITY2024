@@ -141,7 +141,6 @@ function affichage_site_LCDM() {
     document.getElementById("début").innerHTML = debutEtFin[0]
     document.getElementById("fin").innerHTML = debutEtFin[1]
 
-
     graphique_facteur_echelle(donnee, debutEtFin[2], debutEtFin[3], age_univers)
     update_point()
 }

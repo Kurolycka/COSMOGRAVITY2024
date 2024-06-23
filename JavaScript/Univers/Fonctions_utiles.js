@@ -553,8 +553,6 @@ function tauEnTemps(listeTaus, t_debut) {
     let H0 = Number(document.getElementById("H0").value);
     let H0parGAnnee = H0_parGAnnees(H0);
 
-    console.log(t_debut)
-
     for (let index = 0; index < listeTaus.length; index = index + 1) {
         listeTaus[index] = listeTaus[index] / H0parGAnnee
 
@@ -646,7 +644,7 @@ function DistanceMetrique(fonction,Zemission,Zreception, z_utilisé=false,precis
 function calcul_horizon_particule(fonction,z_emission=0){
     let a_emission=1/(z_emission+1);
     //formule 21 dans la théorie du 20/05/2024
-    return DistanceMetrique(fonction,1e-30,a_emission,false,1e5);
+    return DistanceMetrique(fonction,1e-30,a_emission,false,1e3);
 };
 
 /**
@@ -656,7 +654,7 @@ function calcul_horizon_particule(fonction,z_emission=0){
  */
 function calcul_horizon_evenements(fonction,z_reception=0){
     //formule 23 dans la théorie du 20/05/2024
-    return DistanceMetrique(fonction,-.99999999,z_reception,true,1e5);
+    return DistanceMetrique(fonction,-.99999999,z_reception,true,1e3);
 }
 
 
@@ -808,6 +806,7 @@ function graphique_facteur_echelle(solution, t_debut, t_fin, t_0) {
         Plotly.newPlot("graphique_DE", donnee, apparence, configuration);
     }
 
+    
     updateUnivers()
 }
 
