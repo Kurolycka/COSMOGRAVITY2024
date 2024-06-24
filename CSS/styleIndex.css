@@ -140,7 +140,7 @@ body {
 
 .centered-label {
     color: white; /* Couleur du texte */
-    font-size: 1em; /* Ajustez la taille du texte selon vos besoins */
+    font-size: 1.1em; /* Ajustez la taille du texte selon vos besoins */
     text-align: center; /* Centre le texte horizontalement */
 }
 
