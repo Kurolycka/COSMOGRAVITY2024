@@ -112,7 +112,7 @@ function initialisation(){
 	vr=v0*Math.cos(tetarad)*c*Math.sqrt(delta(r0))/(r0*Math.sqrt(c**2-v0**2)); //Je calcule dr/dtau
 
 	deltam_sur_m = 0; //J'initialise la valeur du rapport d'énergie consommée pendant le pilotage.
-	puissance_consommee_calcul=0; //J'initialise la valeur de la puissance consommée pendant le pilotage.
+	puissance_instant=0; //J'initialise la valeur de la puissance consommée pendant le pilotage.
 	nombre_de_g_calcul = 0; // Pareil pour le nombre de g ressenti. 
 	vitesse_precedente_nombre_g = 0; //Pareil pour la vitesse précédent le pilotage. 
 
@@ -139,18 +139,18 @@ function initialisation(){
 	Y_orbites = (rs/2)*Math.pow(r0,5); //Intermédiaire de calculs.
 
 	//Calcul des E pour les orbites progrades et rétrogrades : 
-	E_prograde = (Math.pow(r0,3)*(r0-rs)+a*Math.sqrt(Y_orbites))/(Math.pow(r0,2)*Math.sqrt(Math.pow(r0,3)*(r0-(3/2)*rs)+2*a*Math.sqrt(Y_orbites))); //ManonCirculaire
-	E_retrograde = (Math.pow(r0,3)*(r0-rs)-a*Math.sqrt(Y_orbites))/(Math.pow(r0,2)*Math.sqrt(Math.pow(r0,3)*(r0-(3/2)*rs)-2*a*Math.sqrt(Y_orbites))); //ManonCirculaire
+	E_prograde = (Math.pow(r0,3)*(r0-rs)+a*Math.sqrt(Y_orbites))/(Math.pow(r0,2)*Math.sqrt(Math.pow(r0,3)*(r0-(3/2)*rs)+2*a*Math.sqrt(Y_orbites))); 
+	E_retrograde = (Math.pow(r0,3)*(r0-rs)-a*Math.sqrt(Y_orbites))/(Math.pow(r0,2)*Math.sqrt(Math.pow(r0,3)*(r0-(3/2)*rs)-2*a*Math.sqrt(Y_orbites))); 
 
 	//Si je n'ai pas de E alors l'orbite correspondante n'existe pas sinon je calcule la vitesse correspondante :
 	//Cas de l'orbite prograde :
-	if (isNaN(E_prograde)){ //ManonCirculaire
+	if (isNaN(E_prograde)){ 
 		vitesse_orbite_circulaire_prograde_bar = NaN;
 	}else{
 		vitesse_orbite_circulaire_prograde_bar = (c*Math.sqrt(2*rs*Math.pow(r0,5)*delta(r0)))/(2*Math.pow(r0,4) - 2*Math.pow(r0,3)*rs + a*Math.sqrt(2*rs*Math.pow(r0,5)));
 	}
 	//Cas de l'orbite rétrograde :
-	if (isNaN(E_retrograde)){ //ManonCirculaire
+	if (isNaN(E_retrograde)){ 
 		vitesse_orbite_circulaire_retrograde_bar = NaN;
 	}else{
 		vitesse_orbite_circulaire_retrograde_bar = (c*Math.sqrt(2*rs*Math.pow(r0,5)*delta(r0)))/(2*Math.pow(r0,4) - 2*Math.pow(r0,3)*rs - a*Math.sqrt(2*rs*Math.pow(r0,5)));

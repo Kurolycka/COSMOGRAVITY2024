@@ -593,7 +593,6 @@ function calcul_ages(fonction, H0, a1, a2,z_utilisé=false) {
     return (1 / H0) * simpson_composite(integrande, a1, a2, 100);
 }
 
-//Partie Remy
 /** renvoie la fonction Sk pour calculer les distances cosmologiques en fontion de la courbure de l'espace
  * (Univers, simple, DarkEnergy et monofluide)
  * @param {*} x Paramètre d'entrée

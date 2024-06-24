@@ -511,7 +511,7 @@ function genereHtml()
 		/* CASE POUR E */
 		jstring += '<th class="tg-aicv">$E'+count.toString()+'$</th>';
 		/* CASE POUR LA VITESSE DES ORBITES CIRCULAIRES*/
-		jstring += '<th class="tg-aicv" id="vitesse_orb_circ'+count.toString()+'" title="">$Vcirc'+count.toString()+' (m/s)$</th>'; //ManonCirculaire
+		jstring += '<th class="tg-aicv" id="vitesse_orb_circ'+count.toString()+'" title="">$Vcirc'+count.toString()+' (m/s)$</th>'; 
 		
 		newRow2.innerHTML = jstring;
 		//-----------------------------CASES DU BAS------------------------------------
@@ -726,7 +726,7 @@ function initialisation(compteur){
 	L = (dphi_sur_dtau*(r0**2))/c; //Je calcule L la constante d'intégration. 
 	
 	deltam_sur_m = 0; //J'initialise la valeur du rapport d'énergie consommée pendant le pilotage.
-	puissance_consommee_calcul=0; //J'initialise la valeur de la puissance consommée pendant le pilotage.
+	puissance_instant=0; //J'initialise la valeur de la puissance consommée pendant le pilotage.
 	nombre_de_g_calcul = 0; // Pareil pour le nombre de g ressenti. 
 	vitesse_precedente_nombre_g = 0; //Pareil pour la vitesse précédent le pilotage. 
 

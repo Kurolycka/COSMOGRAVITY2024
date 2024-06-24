@@ -96,7 +96,7 @@ var calculs = calculs || (function() {
          * @returns [vtot,vr,vphi] une liste avec des variables qui sont respectivement la vitesse physique totale, la vitesse radiale et la vitesse tangentielle.
          */
 
-        /*dans ce qui suit si vous trouvez des math.abs , c'est Khaled qui les a mit pour eviter que 
+        /*dans ce qui suit si vous trouvez des math.abs , c'etait mit pour eviter que 
         les termes dans les racines soient negatifs mais c'est le cas photon-externe-sch qui posait pb au debut*/
 
         MSC_Ex_vitess : function (E,L,r,rs,photon) {
