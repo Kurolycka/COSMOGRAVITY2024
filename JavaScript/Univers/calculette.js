@@ -771,7 +771,6 @@ function calcul_dm_inverse(fonction_EouF){
         }else{//cas plus particulier ou l'univers est hyperspherique et le paramètre de courbe est assez important pour dépasser le sin(pi/2) dans l'equation de la distance metrique, il y a donc 2 solution maxmimum (pas pour tout les dm si l'interieur du sin est en dessous de pi)
             dmmax=c/(H0_parSecondes(H0)*Math.pow(Math.abs(Omega_k(0)),0.5));
             if (dm_input>dmmax){
-                console.log("valeur dm trop haute (>"+dmmax+")"); //a changer en erreur
                 return;
             };
 
