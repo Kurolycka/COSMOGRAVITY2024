@@ -1,7 +1,7 @@
-const omegaM0Min = -3;
+const omegaM0Min = 0;
 const omegaM0Max = 3;
 
-const omegaL0Min = -3;
+const omegaL0Min = -1.5;
 const omegaL0Max = 3;
 
 window.onload = function() {
@@ -147,27 +147,19 @@ function update_graphe_interactif() {
     context.beginPath();
     context.strokeStyle = "#fa2076";
 
-    for (let omegal = 1; omegal >= omegaL0Min; omegal -= 0.1) {
+    for (let omegal = omegaL0Min; omegal <= omegaL0Max; omegal += 0.01) {
+        console.log(omegal)
         let omegam = 1 - omegal; // Calcul de Ωm pour chaque ΩΛ
+        console.log(omegam)
         let y = omegal0_to_px(omegal); // Conversion en coordonnées x
         let x = omegam0_to_px(omegam); // Conversion en coordonnées y
 
-        if (omegal === 1) {
+        if (omegal === omegaL0Min) {
             context.moveTo(x, y); // Point de départ
         } else {
-            context.lineTo(x, y); // Relier les points
-        }
-    }
-
-    for (let omegal = 1; omegal <= omegaL0Max + 0.1; omegal += 0.1) {
-        let omegam = 1 - omegal; // Calcul de Ωm pour chaque ΩΛ
-        let y = omegal0_to_px(omegal); // Conversion en coordonnées x
-        let x = omegam0_to_px(omegam); // Conversion en coordonnées y
-
-        if (omegal === 1) {
-            context.moveTo(x, y); // Point de départ
-        } else {
-            context.lineTo(x, y); // Relier les points
+            if (omegaM0Max >= omegam && omegam >= omegaM0Min ) {
+                context.lineTo(x, y); // Relier les points
+            }
         }
     }
     context.stroke(); // Tracer la séparatrice
@@ -263,7 +255,7 @@ function update_graphe_interactif() {
     context.font = '14px Arial'
     context.translate(omegam0_to_px(0.7), omegal0_to_px(2.2));
     context.fillStyle = "#3472b8"
-    context.rotate(-Math.PI / 3.75);
+    context.rotate(-Math.PI / 4);
     context.fillText(texte.grapheSéparatrices.BB, 0, -15);
     context.fillText(texte.grapheSéparatrices.BB, 0, 15);
     context.fillText(texte.grapheSéparatrices.pBB, 0, -30);
