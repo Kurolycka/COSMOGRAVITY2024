@@ -62,12 +62,12 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
         }
 
         let option = document.getElementById("optionsMonofluide").value
-        if (!isNaN(tau_min) && !isNaN(tau_max) && option !== "optionLDE") {
+        if (!isNaN(tau_min) && !isNaN(tau_max) && option === "optionNull") {
             pas = Math.abs(tau_max - tau_min) * 1e-3
             universInconnu = false
         }
 
-        if (universInconnu) {
+        if (universInconnu && option === "optionNull") {
             if (a_min > 1) {a_min = 1}
             if (a_max < 1) {a_max = 1}
         }
@@ -85,7 +85,7 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     let nombre_point = 0;
 
     // Résolution dans le sens négatif
-    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 10/Math.abs(pas)) {
+    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 50/Math.abs(pas)) {
         set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
         if (set_solution[1] >= a_min && set_solution[1] <= a_max) {
             taus.push(set_solution[0])
@@ -93,6 +93,7 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
         }
         nombre_point = nombre_point + 1
     }
+    let nombre_point_neg = nombre_point
 
     // On inverse pour que les listes commencent avec le tau le plus petit puis on réinitialise les conditions initiales
     taus.reverse()
@@ -101,7 +102,7 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
     nombre_point = 0;
 
     // Résolution dans le sens positif
-    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 10   /Math.abs(pas)) {
+    while (set_solution[1] >= a_min && set_solution[1] <= a_max && nombre_point <= 50/Math.abs(pas)) {
         set_solution = RungeKuttaEDO2(pas, set_solution[0], set_solution[1], set_solution[2], equa_diff_2)
         if (set_solution[1] >= a_min && set_solution[1] <= a_max) {
             taus.push(set_solution[0])
@@ -109,6 +110,7 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
         }
         nombre_point = nombre_point + 1
     }
+    let nombre_point_pos = nombre_point
 
     // On calcule le temps associé à l'instant présent et si il n'est pas définis on le met à zéro
     let t_0 = calcul_ages(fonction_simplifiant, H0parGAnnee, 1e-8, 0.999999999);
@@ -123,6 +125,10 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
 
     taus = tauEnTemps(taus, debutEtFin[2])
 
+    if (nombre_point > 50/Math.abs(pas)) {
+        let nombre_point_tot = nombre_point_pos + nombre_point_neg
+        alert(texte.univers.avertTropPoints+nombre_point_tot)
+    }
 
     return [[taus, facteur_echelle], t_0, debutEtFin]
 }

@@ -28,6 +28,8 @@
 	},
 
 	"univers": {
+		"avertTropPoints": "Too many points have been plotted, the calculation was stopped before reaching the bounds amin amax. Number of points plotted : ",
+
 		"constantes": "Universal Constants",
 		"calculette": "Cosmological Calculator",
 		"Entrées": "Inputs",
@@ -39,7 +41,8 @@
 		"monofluide_null": "Classical Universe",
 		"monofluide_M": "Matter Monofluid",
 		"monofluide_R": "Radiation Monofluid",
-		"monofluide_LDE": "Cosmological Constant Monofluid",
+		"monofluide_L": "Cosmological Constant Monofluid",
+		"monofluide_DE": "Dark energy Monofluid",
 		"monofluide_K": "Curvature Monofluid",
 
 		"infoOmégam0": "Current matter density parameter",
@@ -47,7 +50,7 @@
 		"infoOmégaL0": "Current \"cosmological constant\" density parameter",
 		"infoOmégaDE0": "Current dark energy density parameter",
 
-		"infoOmégaR0": "Current radiation density parameter. It is calculated as an output but you can choose to set it to zero with \"Nothing\" and choose whether or not to account for \"Primordial Neutrinos\"",
+		"infoOmégaR0": "Current radiation density parameter. It is calculated as an output but you can choose to set it to zero with \"No CMB, No neutrinos\" and choose whether or not to account for \"Primordial Neutrinos\"",
 		"label_Omégar0": "Options &Omega;<sub>r<sub>0</sub></sub>:",
 		"Omégar0_RFC_et_Neutrinos": "CMB and neutrinos",
 		"Omégar0_RFC": "CMB, no neutrinos",
@@ -74,10 +77,10 @@
 		"infoOmégaK0Sortie": "Calculated curvature density parameter.",
 		"Temps": "<h3>Timeline</h3>",
 		"pasDebut": "No beginning of the universe",
-		"Debut": "Time since",
+		"Debut": "Time since ",
 		"Gannee": "Billion years",
 		"pasMort": "No end of the universe",
-		"Mort": "Time until",
+		"Mort": "Time until ",
 		"horizons": "<h3>Horizons</h3>",
 		"evenement": "Event Horizon",
 		"particules": "Particle Horizon",

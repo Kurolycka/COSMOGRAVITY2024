@@ -456,7 +456,7 @@ function debut_fin_univers(equa_diff) {
     let set_solution = [0, 1 ,1]
     let save_set_solution;
     let pas = 1e-3 * H0 / Math.abs(H0)
-    let limite = Math.abs(1000000 / pas)
+    let limite = Math.abs(100000 / pas)
     let nombre_point = 0
     let option = document.getElementById("optionsMonofluide").value
 
@@ -704,7 +704,8 @@ function graphique_facteur_echelle(solution, t_debut, t_fin, t_0) {
 
 
     // On corrige l'erreur numérique provoqué par la dérivée infinie en a
-    if (t_0 !== 0) {
+    if (t_0 > 0) {
+        console.log("correction")
         for (let index = 0; index < abscisse.length; index = index + 1) {
             abscisse[index] = abscisse[index] - temps_debut
         }
