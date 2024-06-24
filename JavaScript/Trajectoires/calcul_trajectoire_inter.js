@@ -469,7 +469,7 @@ function genereHtml()
 		/* CASE POUR E */
 		jstring += '<th class="tg-aicv">$E'+count.toString()+'$</th>';
 		/* CASE POUR LA VITESSE DES ORBITES CIRCULAIRES*/
-		jstring += '<th class="tg-aicv" id="vitesse_orb_circ_nonBar_massive'+count.toString()+'" title="">$Vcirc'+count.toString()+'(m/s)$</th>' //Manon
+		jstring += '<th class="tg-aicv" id="vitesse_orb_circ_nonBar_massive'+count.toString()+'" title="">$Vcirc'+count.toString()+'(m/s)$</th>'
 		
 		newRow2.innerHTML = jstring;
 		//-----------------------------CASES DU BAS------------------------------------
@@ -481,7 +481,7 @@ function genereHtml()
 		/* CASE POUR E */
 		jstring += '<td class="tg-3ozo" id="E'+count.toString()+'">0</td>';
 		/* CASE POUR LA VITESSE DES ORBITES CIRCULAIRES*/
-		jstring += '<td class="tg-3ozo" id="Vcirc_res'+count.toString()+'">0</td>'; //Manon
+		jstring += '<td class="tg-3ozo" id="Vcirc_res'+count.toString()+'">0</td>';
 
 		newRow3.innerHTML = jstring;
 

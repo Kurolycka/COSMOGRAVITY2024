@@ -444,10 +444,10 @@ function genereHtml()
 		jstring += '<th class="tg-aicv">$E'+countt.toString()+'$</th>';
 		/* CASE POUR LA VITESSE DES ORBITES CIRCULAIRES A L'EXTERIEUR*/
 	
-		jstring += '<th class="tg-aicv" style="display: none;" id="rayon_orb_circ_ext_photon_nonBar'+countt.toString()+'" title="">$rcirc ext'+countt.toString()+'$</th>'; //Manon
+		jstring += '<th class="tg-aicv" style="display: none;" id="rayon_orb_circ_ext_photon_nonBar'+countt.toString()+'" title="">$rcirc ext'+countt.toString()+'$</th>';
 		/* CASE POUR LA VITESSE DES ORBITES CIRCULAIRES A L'INTERIEUR*/
 	
-		jstring += '<th class="tg-aicv" style="display: none;" id="rayon_orb_circ_int_photon_nonBar'+countt.toString()+'" title="">$rcirc int'+countt.toString()+'$</th>'; //Manon
+		jstring += '<th class="tg-aicv" style="display: none;" id="rayon_orb_circ_int_photon_nonBar'+countt.toString()+'" title="">$rcirc int'+countt.toString()+'$</th>';
 		
 		newRow2.innerHTML = jstring;
 		//-----------------------------CASES DU BAS------------------------------------

@@ -148,9 +148,7 @@ function update_graphe_interactif() {
     context.strokeStyle = "#fa2076";
 
     for (let omegal = omegaL0Min; omegal <= omegaL0Max; omegal += 0.01) {
-        console.log(omegal)
         let omegam = 1 - omegal; // Calcul de Ωm pour chaque ΩΛ
-        console.log(omegam)
         let y = omegal0_to_px(omegal); // Conversion en coordonnées x
         let x = omegam0_to_px(omegam); // Conversion en coordonnées y
 

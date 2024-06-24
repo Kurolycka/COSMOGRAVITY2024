@@ -172,13 +172,13 @@ var calculs = calculs || (function() {
                 
             }
             else{
-                partie1= E**2 - 1 + rs/r + ((a**2)*(E**2 - 1)-l**2)/(r**2) + (rs*((l-a*E)**2))/(r**3); //Manon
-                partie2= (a**2 + r**2 - r*rs)**2; //Manon
-                partie3= ((r**2 + a**2 + (a**2)*(rs/r))*E - (rs*a*l)/r)**2; //Manon
+                partie1= E**2 - 1 + rs/r + ((a**2)*(E**2 - 1)-l**2)/(r**2) + (rs*((l-a*E)**2))/(r**3);
+                partie2= (a**2 + r**2 - r*rs)**2;
+                partie3= ((r**2 + a**2 + (a**2)*(rs/r))*E - (rs*a*l)/r)**2;
 
-                dr2= (c**2)*((partie1*partie2)/(partie3)); //Manon
+                dr2= (c**2)*((partie1*partie2)/(partie3));
 
-                vr_au_carre=(1-rs/r)*(((r**2)*dr2)/delta_)/((1-(rs/r)+rs*a*(dphi)/(c*r))**2);   //Manon
+                vr_au_carre=(1-rs/r)*(((r**2)*dr2)/delta_)/((1-(rs/r)+rs*a*(dphi)/(c*r))**2);
                 vr=Math.sqrt(Math.abs(vr_au_carre));
             }
             vtot=Math.sqrt(vr**2+vphie**2);

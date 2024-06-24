@@ -261,7 +261,6 @@ function generer_graphique_distance(fonction_EouF){
         let sortieabscisse=abscisse_t(fonction_EouF,zmin,zmax,pas);
         abscisse_calcul=sortieabscisse[0];
         abscisse_display=sortieabscisse[1];
-        console.log(Date.now()-starttest);
         document.getElementById('check_distance_t').checked=true;
         document.getElementById('graphique_d_t').classList.remove('cache');
     }else{

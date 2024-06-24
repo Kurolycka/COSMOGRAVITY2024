@@ -678,15 +678,15 @@ function texteTrajectoireMassive(nbrderockets) {
         document.getElementById("decal_spect"+count.toString()).title = texte.pages_trajectoire.decalageSpec_EnergyReserve;
         document.getElementById("v_tot"+count.toString()+"").innerHTML = texte.pages_trajectoire.vtotal;
         document.getElementById("nb_g"+count.toString()+"").innerHTML = texte.pages_trajectoire.nombre_de_g+"&nbsp;<span id='DivClignotanteNbG"+count.toString()+"'></span>"; //ManonV3
-        document.getElementById("dernier_g"+count.toString()+"").innerHTML = texte.pages_trajectoire.dernier_g;//ManonV2
-        document.getElementById("nb_g"+count.toString()).title = texte.pages_trajectoire.nombre_g_infobulle; //Manon
-        document.getElementById("dernier_g"+count.toString()).title = texte.pages_trajectoire.dernier_g_infobulle; //ManonV2
-        document.getElementById("distance_metrique"+count.toString()+"").innerHTML = texte.pages_trajectoire.distance_metrique_parcourue;//Manonbis
-        document.getElementById("distance_metrique"+count.toString()).title = texte.pages_trajectoire.distance_metrique_parcourue_infobulle; //Manonbis
-        document.getElementById("puissance_consommee_label"+count.toString()).innerHTML = texte.pages_trajectoire.puissance_consommee_label; //ManonV3
-        document.getElementById("puissance_consommee_label"+count.toString()).title=texte.pages_trajectoire.puissance_consommee_infobulle; //ManonV5
+        document.getElementById("dernier_g"+count.toString()+"").innerHTML = texte.pages_trajectoire.dernier_g;
+        document.getElementById("nb_g"+count.toString()).title = texte.pages_trajectoire.nombre_g_infobulle;
+        document.getElementById("dernier_g"+count.toString()).title = texte.pages_trajectoire.dernier_g_infobulle;
+        document.getElementById("distance_metrique"+count.toString()+"").innerHTML = texte.pages_trajectoire.distance_metrique_parcourue;
+        document.getElementById("distance_metrique"+count.toString()).title = texte.pages_trajectoire.distance_metrique_parcourue_infobulle;
+        document.getElementById("puissance_consommee_label"+count.toString()).innerHTML = texte.pages_trajectoire.puissance_consommee_label;
+        document.getElementById("puissance_consommee_label"+count.toString()).title=texte.pages_trajectoire.puissance_consommee_infobulle;
 
-        document.getElementById("vitesse_orb_circ"+count.toString()+"").title = texte.pages_trajectoire.vitesse_orbite_circulaire;//Manon
+        document.getElementById("vitesse_orb_circ"+count.toString()+"").title = texte.pages_trajectoire.vitesse_orbite_circulaire;
 
 
 
@@ -775,13 +775,13 @@ function texteTrajectoireMassiveNonBar(nbrderockets) {
         document.getElementById("decal_spect"+count.toString()+"").innerHTML = texte.pages_trajectoire.decal_spect+"&nbsp;<span id='DivClignotantePilot"+count.toString()+"'></span>";
         document.getElementById("decal_spect"+count.toString()).title = texte.pages_trajectoire.decalageSpec_EnergyReserve;
         document.getElementById("nb_g"+count.toString()+"").innerHTML = texte.pages_trajectoire.nombre_de_g+"&nbsp;<span id='DivClignotanteNbG"+count.toString()+"'></span>"; //ManonV3
-        document.getElementById("dernier_g"+count.toString()+"").innerHTML = texte.pages_trajectoire.dernier_g;//ManonV2
-        document.getElementById("nb_g"+count.toString()).title = texte.pages_trajectoire.nombre_g_infobulle; //Manon
-        document.getElementById("dernier_g"+count.toString()).title = texte.pages_trajectoire.dernier_g_infobulle; //Manon
-        document.getElementById("distance_metrique"+count.toString()+"").innerHTML = texte.pages_trajectoire.distance_metrique_parcourue;//ManonGeneralisation
-        document.getElementById("distance_metrique"+count.toString()).title = texte.pages_trajectoire.distance_metrique_parcourue_infobulle; //ManonGeneralisation
+        document.getElementById("dernier_g"+count.toString()+"").innerHTML = texte.pages_trajectoire.dernier_g;
+        document.getElementById("nb_g"+count.toString()).title = texte.pages_trajectoire.nombre_g_infobulle;
+        document.getElementById("dernier_g"+count.toString()).title = texte.pages_trajectoire.dernier_g_infobulle;
+        document.getElementById("distance_metrique"+count.toString()+"").innerHTML = texte.pages_trajectoire.distance_metrique_parcourue;
+        document.getElementById("distance_metrique"+count.toString()).title = texte.pages_trajectoire.distance_metrique_parcourue_infobulle;
         document.getElementById("vitesse_orb_circ_nonBar_massive"+count.toString()+"").title=texte.pages_trajectoire.vitesse_orbite_circulaire;
-        document.getElementById("puissance_consommee_label"+count.toString()).innerHTML = texte.pages_trajectoire.puissance_consommee_label; //ManonV3
+        document.getElementById("puissance_consommee_label"+count.toString()).innerHTML = texte.pages_trajectoire.puissance_consommee_label;
         document.getElementById("puissance_consommee_label"+count.toString()).title=texte.pages_trajectoire.puissance_consommee_infobulle;
     }
 }
@@ -864,10 +864,10 @@ function texteTrajectoireMassiveKerr() {
 
     document.getElementById("circulaire_prograde_bar").title=texte.pages_trajectoire.vitesse_orbite_circulaire_kerr_prograde;
     document.getElementById("circulaire_retrograde_bar").title=texte.pages_trajectoire.vitesse_orbite_circulaire_kerr_retrograde;
-    document.getElementById("puissance_consommee_label").innerHTML = texte.pages_trajectoire.puissance_consommee_label; //ManonV3
-    document.getElementById("puissance_consommee_label").title=texte.pages_trajectoire.puissance_consommee_infobulle; //ManonV5
-    document.getElementById("nb_g").title= htmlDecode(texte.pages_trajectoire.nombre_g_infobulle); //Manon
-    document.getElementById("dernier_g").title= htmlDecode(texte.pages_trajectoire.dernier_g_infobulle); //ManonV2
+    document.getElementById("puissance_consommee_label").innerHTML = texte.pages_trajectoire.puissance_consommee_label;
+    document.getElementById("puissance_consommee_label").title=texte.pages_trajectoire.puissance_consommee_infobulle;
+    document.getElementById("nb_g").title= htmlDecode(texte.pages_trajectoire.nombre_g_infobulle);
+    document.getElementById("dernier_g").title= htmlDecode(texte.pages_trajectoire.dernier_g_infobulle);
     document.getElementById("distance_metrique").title = texte.pages_trajectoire.distance_metrique_parcourue_infobulle;
 
     document.getElementById("Entree_astre_label").innerHTML = texte.pages_trajectoire.entree_astre;
@@ -902,10 +902,10 @@ function texteTrajectoirePhotonKerr() {
     document.getElementById("boutton_recup").innerHTML = texte.pages_trajectoire.boutton_recup;
     // document.getElementById("ouvreengrand").innerHTML = texte.pages_trajectoire.ouvreengrand;
     document.getElementById("v_tot").innerHTML = texte.pages_trajectoire.vtotal;
-    document.getElementById("circulaire_prograde").title = texte.pages_trajectoire.rayon_orbite_circulaire_photon_kerr_prograde; //ManonCirculaire
-    document.getElementById("circulaire_retrograde").title = texte.pages_trajectoire.rayon_orbite_circulaire_photon_kerr_retrograde; //ManonCirculaire
-    document.getElementById("circulaire_prograde_res").title = texte.pages_trajectoire.orbite_circulaire_instable; //ManonCirculaire
-    document.getElementById("circulaire_retrograde_res").title = texte.pages_trajectoire.orbite_circulaire_instable; //ManonCirculaire
+    document.getElementById("circulaire_prograde").title = texte.pages_trajectoire.rayon_orbite_circulaire_photon_kerr_prograde;
+    document.getElementById("circulaire_retrograde").title = texte.pages_trajectoire.rayon_orbite_circulaire_photon_kerr_retrograde;
+    document.getElementById("circulaire_prograde_res").title = texte.pages_trajectoire.orbite_circulaire_instable;
+    document.getElementById("circulaire_retrograde_res").title = texte.pages_trajectoire.orbite_circulaire_instable;
 
     document.getElementById("Entree_astre_label").innerHTML = texte.pages_trajectoire.entree_astre;
     document.getElementById("Entree_mobile_label").innerHTML = texte.pages_trajectoire.entree_mobile;
