@@ -1,8 +1,8 @@
-const omegaM0Min = 0;
+const omegaM0Min = -3;
 const omegaM0Max = 3;
 
-const omegaL0Min = -1.5;
-const omegaL0Max = 3.5;
+const omegaL0Min = -3;
+const omegaL0Max = 3;
 
 window.onload = function() {
     update_graphe_interactif();
@@ -122,7 +122,7 @@ function update_graphe_interactif() {
         context.strokeStyle = "#000000";
         context.stroke();
         context.textAlign = 'center';
-        if (marqueur !== 0) {
+        if (marqueur !== -3) {
             context.save();
             context.translate(omegam0_to_px(omegaM0Min) - 7, omegal0_to_px(marqueur));
             context.rotate(-Math.PI / 2);
@@ -147,7 +147,19 @@ function update_graphe_interactif() {
     context.beginPath();
     context.strokeStyle = "#fa2076";
 
-    for (let omegal = 1; omegal >= omegaL0Min - 0.1; omegal -= 0.1) {
+    for (let omegal = 1; omegal >= omegaL0Min; omegal -= 0.1) {
+        let omegam = 1 - omegal; // Calcul de Ωm pour chaque ΩΛ
+        let y = omegal0_to_px(omegal); // Conversion en coordonnées x
+        let x = omegam0_to_px(omegam); // Conversion en coordonnées y
+
+        if (omegal === 1) {
+            context.moveTo(x, y); // Point de départ
+        } else {
+            context.lineTo(x, y); // Relier les points
+        }
+    }
+
+    for (let omegal = 1; omegal <= omegaL0Max + 0.1; omegal += 0.1) {
         let omegam = 1 - omegal; // Calcul de Ωm pour chaque ΩΛ
         let y = omegal0_to_px(omegal); // Conversion en coordonnées x
         let x = omegam0_to_px(omegam); // Conversion en coordonnées y
@@ -161,19 +173,20 @@ function update_graphe_interactif() {
     context.stroke(); // Tracer la séparatrice
 
     context.save();
-    context.translate(omegam0_to_px(1.75), omegal0_to_px(-0.75));
+    context.font = '14px Arial'
+    context.translate(omegam0_to_px(0.5), omegal0_to_px(0.5));
     context.rotate(Math.PI / 4.5);
     context.fillStyle = "#fa2076"
     context.fillText(texte.grapheSéparatrices.plat, 0, 0);
-    context.fillText(texte.grapheSéparatrices.ouvert, -50, 20);
-    context.fillText(texte.grapheSéparatrices.ferme, 50, -20);
+    context.fillText(texte.grapheSéparatrices.ouvert,0 , 20);
+    context.fillText(texte.grapheSéparatrices.ferme, 0, -20);
     context.restore();
 
     // Tracé de la séparatrice univers avec / sans bigCrunch et affichage des textes
     context.beginPath();
     context.strokeStyle = "#06a106";
 
-    for (let omegam = 0.75; omegam <= omegaM0Max + 0.01; omegam = omegam + 0.01) {
+    for (let omegam = 1; omegam <= omegaM0Max + 0.01; omegam = omegam + 0.01) {
         let terme_1 = 4 * omegam
         let terme_2 = (1 / omegam) - 1
         let terme_3 = Math.cos(1/3 * Math.acos(terme_2) + 4 * Math.PI / 3 )
@@ -187,23 +200,25 @@ function update_graphe_interactif() {
             context.lineTo(x, y); // Relier les points
         }
     }
-    context.moveTo(omegam0_to_px(0.75), omegal0_to_px(0))
+    context.moveTo(omegam0_to_px(1), omegal0_to_px(0))
     context.lineTo(omegam0_to_px(0), omegal0_to_px(0));
     context.stroke(); // Tracer la séparatrice
 
     context.save();
+    context.font = '14px Arial'
     context.translate(omegam0_to_px(2.5), omegal0_to_px(0.16));
     context.fillStyle = "#06a106"
-    context.fillText(texte.grapheSéparatrices.BC, 0, 20);
-    context.fillText(texte.grapheSéparatrices.pBC, 0, -10);
+    context.fillText(texte.grapheSéparatrices.BC, -27, 20);
+    context.fillText(texte.grapheSéparatrices.pBC, -27, -10);
     context.restore();
 
     // Tracé de la séparatrice univers avec / sans Big Bang et affichage des textes
     context.beginPath();
-    context.strokeStyle = "#34b8b2";
+    context.strokeStyle = "#3472b8";
+    context.moveTo(omegam0_to_px(0), omegal0_to_px(0))
 
 // Première portion de la courbe (cosh)
-    for (let omegam = 0; omegam <= 0.5; omegam += 0.01) {
+    for (let omegam = omegaM0Min; omegam <= 0.5; omegam += 0.01) {
         let terme_1 = 4 * omegam;
         let terme_2 = (1 / omegam) - 1;
         let terme_3 = Math.sqrt((terme_2 * terme_2) - 1);
@@ -213,7 +228,6 @@ function update_graphe_interactif() {
         let x = omegam0_to_px(omegam); // Conversion en coordonnées y
 
         if (omegam === 0) {
-            context.moveTo(x, y); // Point de départ
         } else {
             context.lineTo(x, y); // Relier les points
         }
@@ -246,12 +260,31 @@ function update_graphe_interactif() {
     context.stroke(); // Tracer la séparatrice
 
     context.save();
+    context.font = '14px Arial'
     context.translate(omegam0_to_px(0.7), omegal0_to_px(2.2));
-    context.fillStyle = "#34b8b2"
-    context.rotate(-Math.PI / 4.9);
+    context.fillStyle = "#3472b8"
+    context.rotate(-Math.PI / 3.75);
     context.fillText(texte.grapheSéparatrices.BB, 0, -15);
     context.fillText(texte.grapheSéparatrices.BB, 0, 15);
     context.fillText(texte.grapheSéparatrices.pBB, 0, -30);
+    context.restore();
+
+    // Tracé de la zone avec univers oscillants
+    context.beginPath();
+    context.moveTo(omegam0_to_px(omegaM0Min), omegal0_to_px(0));
+    context.lineTo(omegam0_to_px(0), omegal0_to_px(0));
+    context.lineTo(omegam0_to_px(0), omegal0_to_px(omegaL0Min));
+
+    context.lineWidth = 1;
+    context.strokeStyle = "#b88121";
+    context.stroke();
+
+    context.save();
+    context.font = '14px Arial'
+    context.translate(omegam0_to_px(-1.5), omegal0_to_px(-1.5));
+    context.fillStyle = "#ac791f"
+    context.rotate(0);
+    context.fillText(texte.grapheSéparatrices.oscillant, 0, 0);
     context.restore();
 }
 

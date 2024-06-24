@@ -188,7 +188,8 @@
 		"BC": "BigCrunch",
 		"pBC": "Pas de BigCrunch",
 		"BB": "BigBang",
-		"pBB": "Pas de"
+		"pBB": "Pas de",
+		"oscillant": "Univers oscillants"
 	},
 
 	"Apropos": {

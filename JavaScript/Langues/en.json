@@ -183,7 +183,8 @@
 		"BC": "Big Crunch",
 		"pBC": "No Big Crunch",
 		"BB": "Big Bang",
-		"pBB": "No"
+		"pBB": "No",
+		"oscillant": "Oscillating universes"
 	},
 
 	"Apropos": {
