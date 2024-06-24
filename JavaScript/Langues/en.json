@@ -20,6 +20,12 @@
 		"propos": "About",
 		"LUPM": "Back to LUPM"
 	},
+	
+	"index":
+	{
+		"acceuil_text_uinvers":"Friedmann-Lemaître universes models and annex calculations",
+		"acceuil_text_trajectoire":"Trajectories of a free particule in the Schwarzschild & Kerr space-time"
+	},
 
 	"univers": {
 		"constantes": "Universal Constants",

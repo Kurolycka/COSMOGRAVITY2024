@@ -177,6 +177,15 @@ function texte_navigation() {
     document.getElementById("txt-LUPM").insertAdjacentHTML("beforeend", texte.nav.LUPM)
 }
 
+function text_page_index()
+{
+    let texte = o_recupereJson();
+    document.getElementById( "page_acceuil_titre_univers").innerHTML = texte.nav.univers;
+    document.getElementById( "page_acceuil_label_univers").innerHTML = texte.index.acceuil_text_uinvers;
+    document.getElementById( "page_acceuil_titre_trajectoire").innerHTML = texte.nav.trajectoire;
+    document.getElementById( "page_acceuil_label_trajectoire").innerHTML = texte.index.acceuil_text_trajectoire;
+  
+}
 
 function texte_univers_LCDM() {
     let texte = o_recupereJson();

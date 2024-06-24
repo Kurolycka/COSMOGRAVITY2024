@@ -573,7 +573,7 @@ function genereHtml()
 			/*Pour la boite à choix des potentiels*/
 			var option=document.createElement("option");
 			option.setAttribute("id", "Potentiel "+countt.toString());
-			option.innerHTML=texte.pages_trajectoire.potentiel_option+" "+count.toString();
+			option.innerHTML=texte.pages_trajectoire.potentiel_option+" "+countt.toString();
 			document.getElementById("potentiel-choix").appendChild(option); 
 	
 			optionsPotentiel["Potentiel "+countt.toString()]="grsvg_"+countt.toString()+"";
@@ -1526,7 +1526,7 @@ function Vr_obs(r,E,L) {
  * @returns {Number} : le résultat de alpha(r). 
  */
 function alpha(r){
-	return 1/(1-(Math.pow(r, 2)*rs) / Math.pow(r_phy, 3));
+	return 1-(Math.pow(r, 2)*rs) / Math.pow(r_phy, 3);
 }
 
 // -------------------------------------{beta}--------------------------------------------
