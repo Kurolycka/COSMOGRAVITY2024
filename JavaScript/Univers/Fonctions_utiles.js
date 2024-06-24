@@ -704,7 +704,6 @@ function graphique_facteur_echelle(solution, t_debut, t_fin, t_0) {
 
     // On corrige l'erreur numérique provoqué par la dérivée infinie en a
     if (t_0 > 0) {
-        console.log("correction")
         for (let index = 0; index < abscisse.length; index = index + 1) {
             abscisse[index] = abscisse[index] - temps_debut
         }
