@@ -89,9 +89,14 @@ function initialisation(){
 	dr_sur_dlambda=c*Math.cos(tetarad)*Math.sqrt(delta(r0)/(r0*(r0-rs))); //Je calcule dr/dλ. 
 	dphi_sur_dlambda=c*Math.sin(tetarad)/Math.sqrt(delta(r0)); //Je calcule dphi/dλ.
 
-    E=Math.sqrt(Math.abs((Math.pow(dr_sur_dlambda,2) * (r0 - rs) * Math.pow(r0, 3) + Math.pow(delta(r0), 2)*Math.pow(dphi_sur_dlambda,2)) / (delta(r0)*Math.pow(c*r0, 2)))); //Je fixe la constante d'intégration sans dimension E. 
+	/*Aciennes expression du E et du*/
+
+    //E=Math.sqrt(Math.abs((Math.pow(dr_sur_dlambda,2) * (r0 - rs) * Math.pow(r0, 3) + Math.pow(delta(r0), 2)*Math.pow(dphi_sur_dlambda,2)) / (delta(r0)*Math.pow(c*r0, 2)))); //Je fixe la constante d'intégration sans dimension E. 
     //Je ne mets pas directement E=1 pour bien avoir NaN si je commence sous rs. 
-    L = (delta(r0) * dphi_sur_dlambda / c - rs * a * E) / (r0 - rs); //Je calcule L la constante d'intégration.
+    //L = (delta(r0) * dphi_sur_dlambda / c - rs * a * E) / (r0 - rs); //Je calcule L la constante d'intégration.
+
+	E=1; //Je fixe la constante d'intégration sans dimension E. 
+	L = (delta(r0)*dphi_sur_dlambda*r0 - rs*a*c)/(c*(r0-rs)); //Je calcule L la constante d'intégration.
 
 	//Je calcule Rh+ (rhp), Rh- (rhm) et rh (qui sert au calcul de rmax) :
 	rhp = 0.5 * ( rs + Math.sqrt(Math.pow(rs, 2) - 4 * Math.pow(a, 2))); 
@@ -169,7 +174,11 @@ function verifnbr() {
 	if (isNaN(teta)){
 		alert (texte.pages_trajectoire.alerte_verifier_teta);
 		document.getElementById("teta").value=128;
-	}					   
+	}
+	if (r0 <= rs){//Dans le cas où le r0 choisit est inférieure à rs j'affiche une alerte.
+		alert(texte.pages_trajectoire.alerte_r0_inferieure_rs);
+		document.getElementById("r0").value=4455;
+	} 					   
 }
 
 //----------------------------------------------------{trajectoire}----------------------------------------------------
