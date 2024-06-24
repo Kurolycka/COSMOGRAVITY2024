@@ -218,8 +218,9 @@ function supprHtml()
 		//on supprime les fraphe potentiel créés
 		var elementgrapheasuppr = document.getElementById("grsvg_"+count.toString()+"");
 		elementgrapheasuppr.parentNode.removeChild(elementgrapheasuppr);
+		
 		//on supprime les options pour le potentiel
-		var elementoptionasuppr = document.getElementById("Potentiel "+count.toString());
+		var elementoptionasuppr = document.getElementById(texte.pages_trajectoire.potentiel_option+" "+count.toString());
 		elementoptionasuppr.parentNode.removeChild(elementoptionasuppr);	
 		//On supprime les canva créés pour les mobiles
 		var elementcanvasbouleasuppr = document.getElementById("myCanvasBoule"+count.toString()+"");
@@ -273,9 +274,9 @@ function genereHtml()
 		
 		/*LABEL MOBILE*/
 		var newlabel = document.createElement("Label");
-		newlabel.setAttribute("id","label"+countt.toString()+"");
+		newlabel.setAttribute("id","label"+countt.toString());
 		newlabel.style.alignItems='center';
-		newlabel.innerHTML = "Mobile "+countt.toString();
+		newlabel.innerHTML = "Photon "+countt.toString();
 		newlabel.style.position = 'relative';
 		newlabel.style.left = '40px'; 
 		divchamp_a_remplir.appendChild(newlabel);
@@ -572,11 +573,12 @@ function genereHtml()
 	
 			/*Pour la boite à choix des potentiels*/
 			var option=document.createElement("option");
-			option.setAttribute("id", "Potentiel "+countt.toString());
-			option.innerHTML=texte.pages_trajectoire.potentiel_option+" "+countt.toString();
+			var text_option=texte.pages_trajectoire.potentiel_option+" "+countt.toString();
+			option.setAttribute("id", text_option);
+			option.innerHTML=text_option;
 			document.getElementById("potentiel-choix").appendChild(option); 
-	
-			optionsPotentiel["Potentiel "+countt.toString()]="grsvg_"+countt.toString()+"";
+
+			optionsPotentiel[text_option]="grsvg_"+countt.toString()+"";
 	}
 
 

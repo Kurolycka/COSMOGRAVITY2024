@@ -250,7 +250,7 @@ function supprHtml(){
 		var elementgrapheasuppr = document.getElementById("grsvg_"+count.toString()+"");
 		elementgrapheasuppr.parentNode.removeChild(elementgrapheasuppr);	
 		//on supprime les options pour le potentiel
-		var elementoptionasuppr = document.getElementById("Potentiel "+count.toString());
+		var elementoptionasuppr = document.getElementById(texte.pages_trajectoire.potentiel_option+" "+count.toString());
 		elementoptionasuppr.parentNode.removeChild(elementoptionasuppr);	
 
 		//On supprime les canva créés pour les mobiles
@@ -575,8 +575,6 @@ function genereHtml()
 		
 		//-----------------------------CASES DU BAS------------------------------------
 
-		//C'est cette partie qui concerne les valeurs en chiffres
-
 		/*On recupere l'element defini dans le HTML qui est le tableau
 		, puis on insere une nouvelle ligne qu'on appelle newRow*/
 		var newRow2=document.getElementById('tableauresultatsimu').insertRow();
@@ -664,11 +662,12 @@ function genereHtml()
 
 		/*Pour la boite à choix des potentiels*/
 		var option=document.createElement("option");
-		option.setAttribute("id", "Potentiel "+count.toString());
-		option.innerHTML=texte.pages_trajectoire.potentiel_option+" "+count.toString();
+		var text_option=texte.pages_trajectoire.potentiel_option+" "+count.toString();
+		option.setAttribute("id", text_option);
+		option.innerHTML=text_option;
 		document.getElementById("potentiel-choix").appendChild(option); 
 
-		optionsPotentiel["Potentiel "+count.toString()]="grsvg_"+count.toString()+"";
+		optionsPotentiel[text_option]="grsvg_"+count.toString()+"";
 
 	}
 
