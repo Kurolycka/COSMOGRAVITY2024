@@ -157,6 +157,11 @@ ga('send', 'pageview');
 
             </span>
 
+			<div id="div-choix-potentiel" class="container-choix">
+				<label id="label-choix-potentiel" for="potentiel-choix" class="label-choix" >Choisissez une option :</label>
+				<select id="potentiel-choix" name="choix"></select>
+			</div>
+
             <div id="champs_a_remplir" ></div>
 
 		</div>
@@ -165,7 +170,7 @@ ga('send', 'pageview');
 
     <div id="panneauGraphe" class="Graphe" style="position: relative;">
 		
-		<button style="position: absolute; top: 20px; right: 20px; cursor: pointer;" class="avertissement_style" onclick=avertissement_trajectoire();>
+		<button style="position: absolute; top: 20px; right: 10px; cursor: pointer;" class="avertissement_style" onclick=avertissement_trajectoire();>
             <img id="panneauAvertissement"
                  style="width: 25px; height: 25px"
                  src="./Images/panneau_avertissement.png"
@@ -225,8 +230,8 @@ ga('send', 'pageview');
     
             <div id="bloc_resultats">
                 <div id="wrapper"></div>
-                <div id="wrapper2"></div>
             </div>
+				<div id="wrapper2"></div>
 
             <!-- Panneau mobile zoom -->
 			<div id="panneau_mobile" class="div_boutton_simu" >
@@ -243,14 +248,14 @@ ga('send', 'pageview');
                     <img id="plusvi" src="./Images/rapide.png" class="bouton_mobile" title="Accélérer (attention, réduit la précision)">
                 </span>
                 
-                <label id="nsimtxt" for="nzoom" style="border: 1px solid rgb(175, 175, 175);  padding: 5px; border-radius: 25% ;">ns=0</label>
+                <label id="nsimtxt" for="nzoom" style="border: 1px solid rgb(175, 175, 175);  padding: 5px; border-radius: 25% ;">zoom=0</label>
 
             </div>
 
             <!-- Panneau mobile zoom -->
             <div id="panneau_mobile2" class="div_boutton_zoom" >
 
-                <label id="nzoomtxt" for="nzoom" style="border: 1px solid rgb(175, 175, 175); padding: 5px; border-radius: 25% ; ">nz=0</label>
+                <label id="nzoomtxt" for="nzoom" style="border: 1px solid rgb(175, 175, 175); padding: 5px; border-radius: 25% ; ">simu=0</label>
                 <span id="moinszoom">
                     <img id="moinsvi1" src="./Images/moins.png" class="bouton_mobile" title="Zoom (-)">
                 </span>
@@ -356,8 +361,8 @@ ga('send', 'pageview');
 	var inputRphysique = document.getElementById("r_phy");
 	var labelPourcentageVphiPilotage = document.getElementById("label_pourcentage_vphi_pilotage");
 	var inputPourcentageVphiPilotage = document.getElementById("pourcentage_vphi_pilotage");
-
-
+	var selectElement = document.getElementById('potentiel-choix');
+	var valeur_option_precedente
     // Ajouter des écouteurs d'événements pour les boutons
     btnObervateur.addEventListener("click", function() {
 		inputNbfusees_div.style.display="inline";
@@ -398,6 +403,18 @@ ga('send', 'pageview');
 		else{btnrebond.style.display="inline";}
 
     });
+
+	
+	selectElement.addEventListener('click', function() 
+	{
+		const optionChoisie = selectElement.value;
+		if(valeur_option_precedente)
+		{document.getElementById(optionsPotentiel[valeur_option_precedente]).style.display="none"};
+		document.getElementById(optionsPotentiel[selectElement.value]).style.display="inline";
+		valeur_option_precedente=selectElement.value;
+
+	});
+
 	
 	var lenbdefusees;
 	traceEstAbsent();

@@ -48,6 +48,7 @@ var rmaxjson = {}; //Liste contenant les coordonnées radiales maximales atteint
 var mobilefactor = {}; //Liste contenant les facteurs d'échelle pour chaque mobile.
 var r0o2 ={}; //Liste contenant les distances initiales au centre de l'astre pour chaque mobile. 
 var listejsonfusees={}; //Liste regroupant l'initialisation de tous les compteurs. 
+var optionsPotentiel = {}; //Liste pour stocker les id du menu choix du potentiel
 
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Autres variables ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -217,7 +218,9 @@ function supprHtml()
 		//on supprime les fraphe potentiel créés
 		var elementgrapheasuppr = document.getElementById("grsvg_"+count.toString()+"");
 		elementgrapheasuppr.parentNode.removeChild(elementgrapheasuppr);
-		
+		//on supprime les options pour le potentiel
+		var elementoptionasuppr = document.getElementById("Potentiel "+count.toString());
+		elementoptionasuppr.parentNode.removeChild(elementoptionasuppr);	
 		//On supprime les canva créés pour les mobiles
 		var elementcanvasbouleasuppr = document.getElementById("myCanvasBoule"+count.toString()+"");
 		elementcanvasbouleasuppr.parentNode.removeChild(elementcanvasbouleasuppr);
@@ -271,7 +274,10 @@ function genereHtml()
 		/*LABEL MOBILE*/
 		var newlabel = document.createElement("Label");
 		newlabel.setAttribute("id","label"+countt.toString()+"");
+		newlabel.style.alignItems='center';
 		newlabel.innerHTML = "Mobile "+countt.toString();
+		newlabel.style.position = 'relative';
+		newlabel.style.left = '40px'; 
 		divchamp_a_remplir.appendChild(newlabel);
 
 		var	divchampsr = document.createElement("div");
@@ -551,6 +557,26 @@ function genereHtml()
 		var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");//on crée un element svg
 		svg.setAttribute("id", "grsvg_"+countt.toString()+"");//on lui met un id
 		document.getElementById("wrapper2").appendChild(svg); //on ajoute au Wrapper
+		if(nbredefuseesgenere>1)
+			{
+				document.getElementById("div-choix-potentiel").style.display="inline";
+				if(countt!=1)
+				{
+					document.getElementById("grsvg_"+countt.toString()+"").style.display="none";
+				}
+			}
+			else 
+			{	
+				document.getElementById("div-choix-potentiel").style.display="none";
+			}
+	
+			/*Pour la boite à choix des potentiels*/
+			var option=document.createElement("option");
+			option.setAttribute("id", "Potentiel "+countt.toString());
+			option.innerHTML=texte.pages_trajectoire.potentiel_option+" "+count.toString();
+			document.getElementById("potentiel-choix").appendChild(option); 
+	
+			optionsPotentiel["Potentiel "+countt.toString()]="grsvg_"+countt.toString()+"";
 	}
 
 
@@ -1093,6 +1119,7 @@ function trajectoire(compteur,mobile) {
 
 		if (document.getElementById("toggle").checked==false) { //Lorsque la case pour afficher les graphes de potentiel est décochée j'appelle la fonction définie précédemment. 
 			DisparitionGraphesPotentiels();
+			document.getElementById("div-choix-potentiel").style.display="none";
 		}	
 
 		//--------------------------------Gestion du canvas--------------------------------
@@ -1499,7 +1526,7 @@ function Vr_obs(r,E,L) {
  * @returns {Number} : le résultat de alpha(r). 
  */
 function alpha(r){
-	return (1-(Math.pow(r, 2)*rs) / Math.pow(r_phy, 3));
+	return 1/(1-(Math.pow(r, 2)*rs) / Math.pow(r_phy, 3));
 }
 
 // -------------------------------------{beta}--------------------------------------------

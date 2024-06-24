@@ -54,6 +54,7 @@ var rmaxjson = {}; //Liste contenant les coordonnées radiales maximales atteint
 var mobilefactor = {}; //Liste contenant les facteurs d'échelle pour chaque mobile.
 var r0o2 ={}; //Liste contenant les distances initiales au centre de l'astre pour chaque mobile. 
 var listejsonfusees={}; //Liste regroupant l'initialisation de tous les compteurs.
+var optionsPotentiel = {}; //Liste pour stocker les id du menu choix du potentiel
 
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Autres variables ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -220,7 +221,10 @@ function supprHtml(){
 		
 		//on supprime les graphes potentiel créés
 		var elementgrapheasuppr = document.getElementById("grsvg_"+count.toString()+"");
-		elementgrapheasuppr.parentNode.removeChild(elementgrapheasuppr);	
+		elementgrapheasuppr.parentNode.removeChild(elementgrapheasuppr);
+		//on supprime les options pour le potentiel
+		var elementoptionasuppr = document.getElementById("Potentiel "+count.toString());
+		elementoptionasuppr.parentNode.removeChild(elementoptionasuppr);	
 
 		//On supprime les canva créés pour les mobiles
 		var elementcanvasbouleasuppr = document.getElementById("myCanvasBoule"+count.toString()+"");
@@ -277,6 +281,8 @@ function genereHtml()
 		var newlabel = document.createElement("Label");
 		newlabel.setAttribute("id","label"+count.toString()+"");
 		newlabel.innerHTML = "Mobile "+count.toString();
+		newlabel.style.position = 'relative';
+		newlabel.style.left = '40px'; 
 		divchamp_a_remplir.appendChild(newlabel);
 
 		var	divchampsr = document.createElement("div");
@@ -309,7 +315,7 @@ function genereHtml()
 		newinput.setAttribute("align","left");// on met la position du texte dans l'input
 		newinput.setAttribute("maxlength","10");//on peut mettre que 18 caracteres 
 		newinput.setAttribute("type","text");//on met que c'est du text
-		newinput.setAttribute("size","10");//on met la taille de la case
+		newinput.setAttribute("size","5");//on met la taille de la case
 		/*On lui associe la fonction *verifnbr* et *initialisationGenerale*,
 		si jamais y a un changement on appelle les deux fonctions*/
 		newinput.setAttribute("onchange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
@@ -333,7 +339,7 @@ function genereHtml()
 		newlabel.setAttribute("id","vitesseurlabel");
 		newlabel.setAttribute("title","");
 		newlabel.setAttribute("for","v01");
-		newlabel.innerHTML = " v<sub>0"+"</sub>(m.s<sup>-1</sup>) =";
+		newlabel.innerHTML = "v<sub>0"+" </sub>(m/s)=";
 		span.appendChild(newlabel);
 			
 		/* INPUT */
@@ -342,7 +348,7 @@ function genereHtml()
 		newinput.setAttribute("value","2.5e4");
 		newinput.setAttribute("maxlength","10");
 		newinput.setAttribute("type","text");
-		newinput.setAttribute("size","10");
+		newinput.setAttribute("size","6");
 		newinput.setAttribute("onchange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
 		span.appendChild(newinput);
 
@@ -371,7 +377,7 @@ function genereHtml()
 		newinput.setAttribute("value","0");
 		newinput.setAttribute("maxlength","10");
 		newinput.setAttribute("type","text");
-		newinput.setAttribute("size","10");
+		newinput.setAttribute("size","5");
 		newinput.setAttribute("onchange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
 		span.appendChild(newinput);
 		
@@ -404,7 +410,7 @@ function genereHtml()
 		newinput.setAttribute("value","110");
 		newinput.setAttribute("maxlength","10");
 		newinput.setAttribute("type","text");
-		newinput.setAttribute("size","10");
+		newinput.setAttribute("size","5");
 		newinput.setAttribute("onchange","verifnbr();initialisationGenerale("+nbredefuseesgenere.toString()+")");
 		span.appendChild(newinput);
 	}
@@ -598,6 +604,26 @@ function genereHtml()
 		var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");//on crée un element svg
 		svg.setAttribute("id", "grsvg_"+count.toString()+""); //on lui met un id
 		document.getElementById("wrapper2").appendChild(svg);//on ajoute au Wrapper
+		if(nbredefuseesgenere>1)
+			{
+				document.getElementById("div-choix-potentiel").style.display="inline";
+				if(count!=1)
+				{
+					document.getElementById("grsvg_"+count.toString()+"").style.display="none";
+				}
+			}
+			else 
+			{	
+				document.getElementById("div-choix-potentiel").style.display="none";
+			}
+	
+			/*Pour la boite à choix des potentiels*/
+			var option=document.createElement("option");
+			option.setAttribute("id", "Potentiel "+count.toString());
+			option.innerHTML=texte.pages_trajectoire.potentiel_option+" "+count.toString();
+			document.getElementById("potentiel-choix").appendChild(option); 
+	
+			optionsPotentiel["Potentiel "+count.toString()]="grsvg_"+count.toString()+"";
 	}
 	
 
@@ -1206,6 +1232,7 @@ function trajectoire(compteur,mobile) {
 
 		if (document.getElementById("toggle").checked==false) { //Lorsque la case pour afficher les graphes de potentiel est décochée j'appelle la fonction définie précédemment. 
 			DisparitionGraphesPotentiel();
+			document.getElementById("div-choix-potentiel").style.display="none";
 		}
 
 		//--------------------------------Gestion du canvas--------------------------------

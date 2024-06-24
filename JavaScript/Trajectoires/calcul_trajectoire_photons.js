@@ -47,14 +47,16 @@ var z_obs=0; //Stockage du décalage spectrale dans le référentiel de l'observ
 
 // -------------------------------------{Variables globales, key values}--------------------------------------------
 
-var rmaxjson = {};
-var mobilefactor = {};
-var r0o2 ={};
+var rmaxjson = {}; //Liste contenant les coordonnées radiales maximales atteintes pour chaque mobile.
+var mobilefactor = {};//Liste contenant les facteurs d'échelle pour chaque mobile.
+var r0o2 ={};//Liste contenant les distances initiales au centre de l'astre pour chaque mobile. 
 
-var maximum;
-var cle;
-var fuseecompteur;
-var listejsonfusees={};													  
+var maximum; //Stockage de la distance initiale maximale parmi les mobiles.
+var cle; //Variable utilisée pour repéré un indice de liste spécifique.
+var fuseecompteur; //Stockage du nombre de fusées générées.
+var listejsonfusees={};	//Liste regroupant l'initialisation de tous les compteurs. 
+var optionsPotentiel = {}; //Liste pour stocker les id du menu choix du potentiel
+
 
 // -------------------------------------{Autres variables}--------------------------------------------
 
@@ -220,6 +222,9 @@ function supprHtml()
 		//on supprime les fraphe potentiel créés
 		var elementgrapheasuppr = document.getElementById("grsvg_"+count.toString()+"");
 		elementgrapheasuppr.parentNode.removeChild(elementgrapheasuppr);
+		//on supprime les options pour le potentiel
+		var elementoptionasuppr = document.getElementById("Potentiel "+count.toString());
+		elementoptionasuppr.parentNode.removeChild(elementoptionasuppr);
 
 		//On supprime les canva créés pour les mobiles
 		var elementcanvasbouleasuppr = document.getElementById("myCanvasBoule"+count.toString()+"");
@@ -275,6 +280,8 @@ function genereHtml()
 		var newlabel = document.createElement("Label");
 		newlabel.setAttribute("id","label"+count.toString()+"");
 		newlabel.innerHTML = "Photon "+count.toString();
+		newlabel.style.position = 'relative';
+		newlabel.style.left = '40px'; 
 		divchamp_a_remplir.appendChild(newlabel);
 
 		var	divchampsr = document.createElement("div");
@@ -557,6 +564,27 @@ function genereHtml()
 		var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");//on crée un element svg
 		svg.setAttribute("id", "grsvg_"+count.toString()+""); //on lui met un id
 		document.getElementById("wrapper2").appendChild(svg); //on ajoute au Wrapper
+
+		if(nbredefuseesgenere>1)
+			{
+				document.getElementById("div-choix-potentiel").style.display="inline";
+				if(count!=1)
+				{
+					document.getElementById("grsvg_"+count.toString()+"").style.display="none";
+				}
+			}
+			else 
+			{	
+				document.getElementById("div-choix-potentiel").style.display="none";
+			}
+	
+			/*Pour la boite à choix des potentiels*/
+			var option=document.createElement("option");
+			option.setAttribute("id", "Potentiel "+count.toString());
+			option.innerHTML=texte.pages_trajectoire.potentiel_option+" "+count.toString();
+			document.getElementById("potentiel-choix").appendChild(option); 
+	
+			optionsPotentiel["Potentiel "+count.toString()]="grsvg_"+count.toString()+"";
 	}
 	
 
@@ -1064,6 +1092,7 @@ function trajectoire(compteur,mobile) {
 
 		if (document.getElementById("toggle").checked==false) { //Lorsque la case pour afficher les graphes de potentiel est décochée j'appelle la fonction définie précédemment. 
 			DisparitionGraphesPotentiels();
+			document.getElementById("div-choix-potentiel").style.display="none";
 		}
 
 

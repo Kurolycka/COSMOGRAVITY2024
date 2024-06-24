@@ -144,6 +144,11 @@
 
         </span>
 
+        <div id="div-choix-potentiel" class="container-choix">
+          <label  id="label-choix-potentiel" for="potentiel-choix" class="label-choix" >Choisissez une option :</label>
+          <select id="potentiel-choix" name="choix"></select>
+        </div>
+        
         <div id="champs_a_remplir" ></div>
 
 
@@ -153,7 +158,7 @@
 
     <div id="panneauGraphe" class="Graphe" style="position: relative;">
 		
-      <button style="position: absolute; top: 20px; right: 20px; cursor: pointer;" class="avertissement_style" onclick=avertissement_trajectoire();>
+      <button style="position: absolute; top: 20px; right: 10px; cursor: pointer;" class="avertissement_style" onclick=avertissement_trajectoire();>
       <img id="panneauAvertissement"
       style="width: 25px; height: 25px"
       src="./Images/panneau_avertissement.png"
@@ -206,8 +211,8 @@
         <span id="indic_calculs"></span> 
         <div id="bloc_resultats">
             <div id="wrapper"></div>
-            <div id="wrapper2"></div>
         </div>
+            <div id="wrapper2"></div>
   
               <!-- Panneau mobile zoom -->
         <div id="panneau_mobile" class="div_boutton_simu" >
@@ -223,14 +228,14 @@
               <img id="plusvi" src="./Images/rapide.png" class="bouton_mobile" title="Accélérer (attention, réduit la précision)">
           </span>
                   
-          <label id="nsimtxt" for="nzoom" style="border: 1px solid rgb(175, 175, 175);  padding: 5px; border-radius: 25% ;">ns=0</label>
+          <label id="nsimtxt" for="nzoom" style="border: 1px solid rgb(175, 175, 175);  padding: 5px; border-radius: 25% ;">simu=0</label>
 
         </div>
   
         <!-- Panneau mobile zoom -->
         <div id="panneau_mobile2" class="div_boutton_zoom" >
 
-            <label id="nzoomtxt" for="nzoom" style="border: 1px solid rgb(175, 175, 175); padding: 5px; border-radius: 25% ; ">nz=0</label>
+            <label id="nzoomtxt" for="nzoom" style="border: 1px solid rgb(175, 175, 175); padding: 5px; border-radius: 25% ; ">zoom=0</label>
             <span id="moinszoom">
                 <img id="moinsvi1" src="./Images/moins.png" class="bouton_mobile" title="Zoom (-)">
             </span>
@@ -323,31 +328,41 @@
     var btnSpationaute = document.getElementById("r4");
     var inputNbfusees = document.getElementById("nombredefusees");
 		var labelNbfusees = document.getElementById("labelnumberfusees")
+    var selectElement = document.getElementById('potentiel-choix');
+	  var valeur_option_precedente;
+    // Ajouter des écouteurs d'événements pour les boutons
+    btnObervateur.addEventListener("click", function() {
+    inputNbfusees.style.display = "inline"; // Afficher le input et le label de nbfusees si button observateur est cliqué 
+    labelNbfusees.style.display = "inline"; 
+    });
 
-        // Ajouter des écouteurs d'événements pour les boutons
-        btnObervateur.addEventListener("click", function() {
-			inputNbfusees.style.display = "inline"; // Afficher le input et le label de nbfusees si button observateur est cliqué 
-			labelNbfusees.style.display = "inline"; 
-        });
+    btnSpationaute.addEventListener("click", function() {
+    /*Juste pour avoir les valeurs rentrées avant de cliquer sur spationaute*/
+    const r01 = document.getElementById("r01").value;
+    const phi01 = document.getElementById("phi01").value;
+    const teta1 = document.getElementById("teta1").value;
 
-        btnSpationaute.addEventListener("click", function() {
-        /*Juste pour avoir les valeurs rentrées avant de cliquer sur spationaute*/
-        const r01 = document.getElementById("r01").value;
-        const phi01 = document.getElementById("phi01").value;
-        const teta1 = document.getElementById("teta1").value;
+    inputNbfusees.value='1'; // on met un seul mobile
+    const event = new Event('change');//on met à jour tout le changement en appelant la sa fonctionnalité de changement
+    inputNbfusees.dispatchEvent(event);
+    document.getElementById("r01").value=r01;
+    document.getElementById("phi01").value=phi01;
+    document.getElementById("teta1").value=teta1;
+    
+    initialisationGenerale(1);//on actualise les valeurs de simulation
+    
+    inputNbfusees.style.display = "none"; // Masquer le input et le label de nbfusees si button spationaute est cliqué 
+    labelNbfusees.style.display = "none";
+    });
 
-        inputNbfusees.value='1'; // on met un seul mobile
-        const event = new Event('change');//on met à jour tout le changement en appelant la sa fonctionnalité de changement
-        inputNbfusees.dispatchEvent(event);
-        document.getElementById("r01").value=r01;
-        document.getElementById("phi01").value=phi01;
-        document.getElementById("teta1").value=teta1;
-        
-		    initialisationGenerale(1);//on actualise les valeurs de simulation
-        
-        inputNbfusees.style.display = "none"; // Masquer le input et le label de nbfusees si button spationaute est cliqué 
-		  	labelNbfusees.style.display = "none";
-        });
+    selectElement.addEventListener('click', function() 
+    {
+      const optionChoisie = selectElement.value;
+      if(valeur_option_precedente)
+      {document.getElementById(optionsPotentiel[valeur_option_precedente]).style.display="none"};
+      document.getElementById(optionsPotentiel[selectElement.value]).style.display="inline";
+      valeur_option_precedente=selectElement.value;
+    });
 
     var lenbdefusees;
  
