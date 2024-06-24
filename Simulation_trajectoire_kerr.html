@@ -145,20 +145,20 @@
 				</div>
 
 				
-				<div id="rayon" class="input-wrapper" >
+				<div id="rayon" class="input-wrapper" style="position: relative; right:120px">
 					<label id="ctreastre" title="" for="r0">r<sub>0</sub> (m) =</label>
 					<input id="r0" value="5e12" align="left" maxlength="10" type="text" size="10" onchange="verifnbr();initialisation()" oninput="initialisation()"  autocomplete="off">
 				</div>
 
-				<div id="vitesse0"class="input-wrapper">
+				<div id="vitesse0"class="input-wrapper" style="position: relative; right:120px" >
 					<label id="vitesselabel" title=""  for="V">V (m.s<sup>-1</sup>)=</label>
 					<input id="v0" value="5e7" maxlength="15" type="text" size="15" onchange="verifnbr();initialisation()"  autocomplete="off">
 				</div>
-				<div id="vitesse2"class="input-wrapper">
+				<div id="vitesse2"class="input-wrapper" style="position: relative; right:120px">
 					<label  id="philabel" title="" for="phi0">&phi;<sub>0</sub>°= </label>
 					<input id="phi0" value="0" maxlength="10" type="text" size="10" onchange="verifnbr();initialisation()"  autocomplete="off">
 				</div>
-				<div id="vitesse2"class="input-wrapper">
+				<div id="vitesse2"class="input-wrapper" style="position: relative; right:120px">
 					<label  id="theta_label" title="" for="teta"> &#632;<sub>0</sub>° = </label>
 					<input id="teta" value="90" maxlength="10" type="text" size="10" onchange="verifnbr();initialisation()"  autocomplete="off">
 				</div>
@@ -169,7 +169,7 @@
 
 	<div id="panneauGraphe" class="Graphe" style="position: relative;">
 		
-		<button style="position: absolute; top: 20px; right: 20px; cursor: pointer;" class="avertissement_style" onclick=avertissement_trajectoire();>
+		<button style="position: absolute; top: 20px; right: 10px; cursor: pointer;" class="avertissement_style" onclick=avertissement_trajectoire();>
             <img id="panneauAvertissement"
                  style="width: 25px; height: 25px"
                  src="./Images/panneau_avertissement.png"

@@ -13,6 +13,7 @@ function graphique_creation_pot(Onresize=0,data1,data2,compteur,mobile)
   //on verifie que les données existent 
   if(data2 !== undefined && data1 !== undefined && data2[0]!==undefined)
   {
+
     /*POUR KERR (un seul mobile)*/
      
     titre = texte.pages_trajectoire.titre_graphe;//représente le titre du graphe
@@ -125,17 +126,17 @@ function graphique_creation_pot(Onresize=0,data1,data2,compteur,mobile)
        .attr("x2", width)  // Coordonnée x de fin du trait (même que x1 pour un trait vertical)
        .attr("y2", height) // Coordonnée y de fin du trait
        .style("stroke", "#000000") // Couleur noire en hexadécimal
-       .style("stroke-width", "1px");
+       .style("stroke-width", "0.7px");
 
     // Ajouter un trait horizontal dans le graphique
     svg.append("line")
        .attr("class", "horizontal-line")
        .attr("x1", 0)           // Coordonnée x de départ du trait (à gauche du graphique)
-       .attr("y1", height*0.0001)      // Coordonnée y de départ du trait (au bas du graphique)
+       .attr("y1", height*0.001)      // Coordonnée y de départ du trait (au bas du graphique)
        .attr("x2", width)       // Coordonnée x de fin du trait (à droite du graphique)
        .attr("y2", height*0.0001)      // Coordonnée y de fin du trait (au même niveau que y1 pour un trait horizontal)
        .style("stroke", "#000000")    // Couleur noire en hexadécimal
-       .style("stroke-width", "1px"); // Epaisseur du trait
+       .style("stroke-width", "0.7px"); // Epaisseur du trait
 
     /*LA GILLE */
     //grille en x

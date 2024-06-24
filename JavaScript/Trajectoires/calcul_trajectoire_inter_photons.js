@@ -276,6 +276,8 @@ function genereHtml()
 		newlabel.setAttribute("id","label"+countt.toString()+"");
 		newlabel.style.alignItems='center';
 		newlabel.innerHTML = "Mobile "+countt.toString();
+		newlabel.style.position = 'relative';
+		newlabel.style.left = '40px'; 
 		divchamp_a_remplir.appendChild(newlabel);
 
 		var	divchampsr = document.createElement("div");
@@ -1524,7 +1526,7 @@ function Vr_obs(r,E,L) {
  * @returns {Number} : le résultat de alpha(r). 
  */
 function alpha(r){
-	return (1-(Math.pow(r, 2)*rs) / Math.pow(r_phy, 3));
+	return 1/(1-(Math.pow(r, 2)*rs) / Math.pow(r_phy, 3));
 }
 
 // -------------------------------------{beta}--------------------------------------------

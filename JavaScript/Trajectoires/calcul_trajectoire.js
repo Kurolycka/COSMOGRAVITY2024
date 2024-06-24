@@ -311,6 +311,8 @@ function genereHtml()
 		var newlabel = document.createElement("Label");
 		newlabel.setAttribute("id","label"+count.toString()+"");
 		newlabel.innerHTML = "Mobile "+count.toString();
+		newlabel.style.position = 'relative';
+		newlabel.style.left = '40px'; 
 		divchamp_a_remplir.appendChild(newlabel);
 
 		var	divchampsr = document.createElement("div");

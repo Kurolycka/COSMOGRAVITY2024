@@ -4,6 +4,7 @@ body {
     background-color: rgba(212, 215, 228, 0.85);
 }
 
+/*Pour les boutons verts (start,save...)*/
 .grosBoutton {
     background-color: rgba(39, 121, 124, 0.85);
     color: white;
@@ -23,9 +24,7 @@ body {
         transform: translateY(2px);
     }
 
-    
-
-       
+/*Pour les boutons de choix, si choisi (observateur,...)*/   
 .bouttonChoix {
 
     position: relative;
@@ -48,7 +47,7 @@ body {
 
 }
 
-    
+/*Pour les boutons de choix, si pas choisi (observateur,...)*/     
 .bouttonChoix-inverse {
     position: relative;
     display: inline-block;
@@ -99,6 +98,7 @@ body {
     width: 100%;
 }
 
+/*Pour les boutons ranger les fenetres*/
 .petitBoutton {
     background-color: rgba(179, 221, 223, 0.85);
     color: white;
@@ -126,7 +126,7 @@ body {
         padding-bottom: 200px;
     }
     
-
+/*Pour la grille principale*/
 .grillePrincipale {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
@@ -150,6 +150,7 @@ body {
     column-span: all;
 }
 
+/*Pour les fleches sur les cotes*/
 .flècheMenu {
     display: flex;
     padding: 5px;
@@ -164,6 +165,7 @@ body {
     transform: rotate(270deg);
 }
 
+/*Pour la fenetre d'entrée gauche*/
 .Entree {
     grid-area: Entree;
     display: grid;
@@ -226,7 +228,7 @@ body {
                 justify-self: end;
             }
 
-
+/*Pour la fenetre du graphe (milieu)*/
 .Graphe {
     grid-area: Graphe;
     display: grid;
@@ -252,6 +254,7 @@ body {
         border-radius: 30px;
     }
 
+/*Pour la fenetre des sorties (droite)*/
 .Sortie {
     grid-area: Sortie;
     display: grid;
@@ -308,8 +311,7 @@ body {
 }
 
 
-/* POUR LES INPUTS */
-
+/* POUR LES INPUTS à deux*/
 .pls-inputs-container {
     display: flex;
     flex-direction: column;
@@ -411,7 +413,7 @@ body {
     margin: auto;
   }
 
-/* Pour avoir des input deux à deux dans les entrees */
+/* Pour avoir des input à 4 dans les entrees */
 .form-container {
     display: flex;
     flex-wrap: wrap;
@@ -545,53 +547,8 @@ tbody td {
 }
 
 
-
-#wrapper {
-position: relative;
- width:750px;
-    height:750px;
-}
-
-
-
-#wrapper canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-
-.canvaslaclasse{
-  min-height:0;
-  min-width:0;
-  flex-shrink: 0;
-  overflow:hidden;
-  align-self: center;
-}
-
-
-#wrapper2 {
-    height: 400px;
-    width: 600px;
-    display: flex; /* Utilisation du modèle flexbox */
-    justify-content: center; /* Centrage horizontal des éléments enfants */
-    align-items: center; /* Centrage vertical des éléments enfants */
-    box-sizing: border-box; /* Assure que le padding et la bordure sont inclus dans les dimensions */
-    flex: 1; /* Pour que le wrapper2 prenne toute la hauteur disponible */
-    margin-left: 40px;
-  }
   
-  #grsvg_2 {
-    min-height: 0;
-    min-width: 0;
-    flex-shrink: 0; /* Empêche le rétrécissement de l'élément */
-    overflow: visible; /* Gestion du débordement selon les besoins */
-    /* align-self: center; */ /* Enlever cette ligne car align-items sur le conteneur parent s'en occupe */
-  }
-  
-  
-
-
+/*Pour le pilotage*/
 #cccccccc
 {
   display:flex;
@@ -606,7 +563,7 @@ position: relative;
   
   visibility:hidden;}
 
-
+/*Pour zoom et simu*/
 #panneau_mobile{
 
   display:flex;
@@ -644,7 +601,7 @@ position: relative;
   margin:auto;
 }
 
-
+/*Pour le petit bouton rond 'i' */
 .info-icon {
     width: 60px;
     height: 60px;
@@ -669,14 +626,15 @@ position: relative;
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.548); /* Ombre plus prononcée au survol */
   }
   
+/*Pour l'avertissement*/
   .avertissement_style {
-    background-color:  rgba(61, 131, 134, 0.925);
+    background-color:  rgba(69, 145, 148, 0.925);
     color: white;
     font-size: 17px;
-    border: none;
+    /*border: none;*/
+    border-color: black;
     border-radius: 5px;
     cursor: pointer;
-
     width: fit-content;
     height: fit-content;
     z-index: 3000;
@@ -696,16 +654,61 @@ margin-right: 20px;
 text-align: center; 
 }
 
+/*Pour le div du graphe de simulation*/   
+#wrapper {
+    position: relative;
+     width:750px;
+        height:750px;
+    }
+    
+    #wrapper canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    
+    
+    .canvaslaclasse{
+      min-height:0;
+      min-width:0;
+      flex-shrink: 0;
+      overflow:hidden;
+      align-self: center;
+    }
+    
+/*Pour le div du graphe de potentiel */   
+#wrapper2 {
+    height: 400px;
+    width: 600px;
+    display: flex; /* Utilisation du modèle flexbox */
+    justify-content: center; /* Centrage horizontal des éléments enfants */
+    align-items: center; /* Centrage vertical des éléments enfants */
+    box-sizing: border-box; /* Assure que le padding et la bordure sont inclus dans les dimensions */
+    flex: 1; /* Pour que le wrapper2 prenne toute la hauteur disponible */
+    margin-right: 60px;
+}
+/*Pour le graphe svg du potentiel*/   
+#grsvg_2 {
+    min-height: 0;
+    min-width: 0;
+    flex-shrink: 0; /* Empêche le rétrécissement de l'élément */
+    overflow: visible; /* Gestion du débordement selon les besoins */
+    /* align-self: center; */ /* Enlever cette ligne car align-items sur le conteneur parent s'en occupe */
+}
+/*Les axes du grphe de potentiel*/
+.axis path, .axis line {
+    fill: none;
+    stroke: black;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+  }
 
-
+/*Pour le div du graphe de simulation pour Kerr*/   
 .wrapper_kerr {
     position: relative;
  width:750px;
  height:750px;
 }
-
-
-
 .wrapper_kerr canvas {
 
     position: absolute;
@@ -713,6 +716,17 @@ text-align: center;
     left: 0;
 }
 
+/*Pour le div du graphe de potentiel pour Kerr*/   
+.wrapper2_kerr{
+    display: flex; /* Utilisation du modèle flexbox */
+    justify-content: center; /* Centrage horizontal des éléments enfants */
+    align-items: center; /* Centrage vertical des éléments enfants */
+    box-sizing: border-box; /* Assure que le padding et la bordure sont inclus dans les dimensions */
+    flex: 1; /* Pour que le wrapper2 prenne toute la hauteur disponible */
+    margin-right: 60px; /* Décalage vers la gauche */
+  }
+
+/*Pour les canva utilisées*/   
 #myCanvas{
   min-height:0;
   min-width:0;
@@ -735,20 +749,10 @@ text-align: center;
   align-self: center;
 }
 
-.wrapper2_kerr{
-    display: flex; /* Utilisation du modèle flexbox */
-    justify-content: center; /* Centrage horizontal des éléments enfants */
-    align-items: center; /* Centrage vertical des éléments enfants */
-    box-sizing: border-box; /* Assure que le padding et la bordure sont inclus dans les dimensions */
-    flex: 1; /* Pour que le wrapper2 prenne toute la hauteur disponible */
-    margin-right: 60px; /* Décalage vers la gauche */
-  }
 
+/*Pour le choix du potentiel*/
 
-
-  /*Pour le choix du potentiel*/
-
-  /* Conteneur pour le formulaire */
+/* Conteneur pour le formulaire */
   .container-choix {
     background-color: rgba(179, 221, 223, 0.85);
     padding: 20px;
@@ -799,3 +803,7 @@ background-color: #4FA7AD; /* Couleur bleue au survol */
 option[disabled]:first-child {
     color: #aaaaaa;
 }
+
+
+  
+ 
