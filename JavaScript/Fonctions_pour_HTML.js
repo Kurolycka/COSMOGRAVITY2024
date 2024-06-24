@@ -305,27 +305,36 @@ function updateUnivers() {
 
     let fonction_simplifiante;
     if (document.getElementById("Omégal0")) {
-        fonction_simplifiante = fonction_E
+        fonction_simplifiante = fonction_E;
+        equa_diff_2=equa_diff_2_LCDM;
     } else {
-        fonction_simplifiante = fonction_F
+        fonction_simplifiante = fonction_F;
+        equa_diff_2=equa_diff_2_DE;
     }
+    
+    if (debut_fin_univers(equa_diff_2, T0)[2] === 0 || !(document.getElementById('optionsMonofluide').value =="optionNull")){
+        document.getElementById('horizonEvenement').style.display="none";
+        document.getElementById('horizonParticule').style.display="none";
+    }else{
+        document.getElementById('horizonEvenement').style.display="block";
+        document.getElementById('horizonParticule').style.display="block";
+        let dm_horizon_particule_m = calcul_horizon_particule(fonction_simplifiante);
+        let dm_horizon_particule_pc = m_vers_pc(dm_horizon_particule_m);
+        let dm_horizon_particule_al = m_vers_AL(dm_horizon_particule_m);
+        document.getElementById("resultat_dm_particule_m").innerHTML = arrondie_affichage(dm_horizon_particule_m);
+        document.getElementById("resultat_dm_particule_pc").innerHTML = arrondie_affichage(dm_horizon_particule_pc);
+        document.getElementById("resultat_dm_particule_al").innerHTML = arrondie_affichage(dm_horizon_particule_al);
+        document.getElementById("hp_enregistrer").innerHTML = "d<sub>p<sub>0</sub></sub> = " + dm_horizon_particule_pc.toExponential(4) + " pc"
 
-    let dm_horizon_particule_m = calcul_horizon_particule(fonction_simplifiante);
-    let dm_horizon_particule_pc = m_vers_pc(dm_horizon_particule_m);
-    let dm_horizon_particule_al = m_vers_AL(dm_horizon_particule_m);
-    document.getElementById("resultat_dm_particule_m").innerHTML = arrondie_affichage(dm_horizon_particule_m);
-    document.getElementById("resultat_dm_particule_pc").innerHTML = arrondie_affichage(dm_horizon_particule_pc);
-    document.getElementById("resultat_dm_particule_al").innerHTML = arrondie_affichage(dm_horizon_particule_al);
-    document.getElementById("hp_enregistrer").innerHTML = "d<sub>p<sub>0</sub></sub> = " + dm_horizon_particule_pc.toExponential(4) + " pc"
 
-
-    let dm_horizon_evenement_m = calcul_horizon_evenements(fonction_simplifiante);
-    let dm_horizon_evenement_pc = m_vers_pc(dm_horizon_evenement_m);
-    let dm_horizon_evenement_al = m_vers_AL(dm_horizon_evenement_m);
-    document.getElementById("resultat_dm_evenement_m").innerHTML = arrondie_affichage(dm_horizon_evenement_m);
-    document.getElementById("resultat_dm_evenement_pc").innerHTML = arrondie_affichage(dm_horizon_evenement_pc);
-    document.getElementById("resultat_dm_evenement_al").innerHTML = arrondie_affichage(dm_horizon_evenement_al);
-    document.getElementById("he_enregistrer").innerHTML = "d<sub>e<sub>0</sub></sub> = " + dm_horizon_evenement_pc.toExponential(4) + " pc"
+        let dm_horizon_evenement_m = calcul_horizon_evenements(fonction_simplifiante);
+        let dm_horizon_evenement_pc = m_vers_pc(dm_horizon_evenement_m);
+        let dm_horizon_evenement_al = m_vers_AL(dm_horizon_evenement_m);
+        document.getElementById("resultat_dm_evenement_m").innerHTML = arrondie_affichage(dm_horizon_evenement_m);
+        document.getElementById("resultat_dm_evenement_pc").innerHTML = arrondie_affichage(dm_horizon_evenement_pc);
+        document.getElementById("resultat_dm_evenement_al").innerHTML = arrondie_affichage(dm_horizon_evenement_al);
+        document.getElementById("he_enregistrer").innerHTML = "d<sub>e<sub>0</sub></sub> = " + dm_horizon_evenement_pc.toExponential(4) + " pc"
+    }
 
     if (document.getElementById("Omégal0")) {
         update_graphe_interactif();
