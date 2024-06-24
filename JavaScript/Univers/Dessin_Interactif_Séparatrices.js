@@ -259,7 +259,8 @@ function update_graphe_interactif() {
     context.fillText(texte.grapheSéparatrices.pBB, 0, -30);
     context.restore();
 
-    // Tracé de la zone avec univers oscillants
+    // Tracé de la zone avec univers oscillants (enlever du commentaire et augmenter les bornes)
+    /*
     context.beginPath();
     context.moveTo(omegam0_to_px(omegaM0Min), omegal0_to_px(0));
     context.lineTo(omegam0_to_px(0), omegal0_to_px(0));
@@ -276,6 +277,7 @@ function update_graphe_interactif() {
     context.rotate(0);
     context.fillText(texte.grapheSéparatrices.oscillant, 0, 0);
     context.restore();
+    */
 }
 
 function update_point() {
