@@ -20,20 +20,15 @@ body {
 }
 
 .content {
-    position: absolute;
-    top: 50%; /* Positionne le contenu à 50% de la hauteur de son conteneur parent */
-    left: 50%; /* Positionne le contenu à 50% de la largeur de son conteneur parent */
-    transform: translate(-50%, -50%); /* Utilise la transformation pour centrer le contenu */
     padding: 20px; /* Ajoutez de l'espace autour du contenu si nécessaire */
     border-radius: 30px;
-    width: 750px;
+    width: fit-content;
    
 }
 
 .image {
-    max-height: 75%;
-    max-width: 75%;
-    margin-left: 60px;
+    max-height: 100%;
+    max-width: 100%;
 }
 
 .content2 {
@@ -119,23 +114,22 @@ body {
 
 
 .big-container {
-    display: flex;
-    flex-direction: row;
-    position: relative;
-    bottom: 10px; /* Ajustez la valeur pour déplacer le conteneur plus haut */
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     padding: 10px;
-    transform: translateX(26%);
 }
 
 .container {
-    flex-direction: column;
-    width: 20%; /* Ajustez la largeur du conteneur si nécessaire */
-    height: auto; /* Ajustez la hauteur du conteneur si nécessaire */
-    background-color: rgba(0, 0, 0, 0.575); /* Juste pour l'exemple, ajustez selon vos besoins */
     display: flex;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.575); /* Juste pour l'exemple, ajustez selon vos besoins */
     text-align: center;
     padding: 7px;
     border-radius: 20px;
+    margin-top: 32.5%;
+    width: 400px;
+    height: fit-content;
+    font-size: larger;
 }
 
 .centered-label {
@@ -145,7 +139,7 @@ body {
 }
 
 .animated-text-univers {
-    font-size: 1.5em; /* Taille du texte */
+    font-size: 2em; /* Taille du texte */
     color: transparent; /* Texte transparent */
     background-image: linear-gradient(to right, rgb(121, 20, 123), rgb(255, 0, 255)); /* Dégradé de fond initial */
     -webkit-background-clip: text; /* Applique le dégradé au texte */
@@ -166,7 +160,7 @@ body {
 }
 
 .animated-text-trajectoire {
-    font-size: 1.5em; /* Taille du texte */
+    font-size: 2em; /* Taille du texte */
     color: transparent; /* Texte transparent */
     background-image: linear-gradient(to right, rgba(39, 121, 124, 0.85), rgba(153, 194, 175, 0.85)); /* Dégradé de fond initial */
     -webkit-background-clip: text; /* Applique le dégradé au texte */
