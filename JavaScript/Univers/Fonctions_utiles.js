@@ -635,7 +635,6 @@ function DistanceMetrique(fonction,Zemission,Zreception, z_utilisé=false,precis
     return c/(H0_parSecondes(H0)*Math.pow(Math.abs(Omega_k(0)),0.5))*Sk(Math.pow(Math.abs(Omega_k(0)),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,precision_nb_pas),Omega_k(0))
 };
 
-//Remy 26/05/24
 /** 
  * Fonction qui renvoie la distance de l'horizon des particules cosmologiques (plus grande distance a laquelle on peut recevoir un signal emis à l'instant t)
  * @param {*} z_emission par defaut = 0 décalage spectral du moment où le signal est émis
