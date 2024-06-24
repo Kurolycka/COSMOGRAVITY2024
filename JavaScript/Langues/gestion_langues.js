@@ -177,6 +177,15 @@ function texte_navigation() {
     document.getElementById("txt-LUPM").insertAdjacentHTML("beforeend", texte.nav.LUPM)
 }
 
+function text_page_index()
+{
+    let texte = o_recupereJson();
+    document.getElementById( "page_acceuil_titre_univers").innerHTML = texte.nav.univers;
+    document.getElementById( "page_acceuil_label_univers").innerHTML = texte.index.acceuil_text_uinvers;
+    document.getElementById( "page_acceuil_titre_trajectoire").innerHTML = texte.nav.trajectoire;
+    document.getElementById( "page_acceuil_label_trajectoire").innerHTML = texte.index.acceuil_text_trajectoire;
+  
+}
 
 function texte_univers_LCDM() {
     let texte = o_recupereJson();
@@ -713,10 +722,10 @@ function texteTrajectoirePhoton(nbrderockets) {
 
     document.getElementById("Sortie_astre_label").innerHTML = texte.pages_trajectoire.sortie_astre;
     document.getElementById("Sortie_mobile_label").innerHTML = texte.pages_trajectoire.sortie_mobile;
-
+    
     document.getElementById("label-choix-potentiel").innerHTML = texte.pages_trajectoire.label_choix_potentiel;
     document.getElementById("label-choix-potentiel").title = texte.pages_trajectoire.label_choix_potentiel_infobulle;
-
+    
     for (count = 1; count <= nbrderockets; count += 1) {
         document.getElementById("temps_ecoule"+count.toString()+"").innerHTML = texte.pages_trajectoire.temps_ecoule;
         //document.getElementById("acceleration"+count.toString()+"").innerHTML ="Gradient &nbsp;<span id='DivClignotante"+count.toString()+"'></span>";
@@ -806,7 +815,7 @@ function texteTrajectoirePhotonNonBar(nbrderockets) {
 
     document.getElementById("Sortie_astre_label").innerHTML = texte.pages_trajectoire.sortie_astre;
     document.getElementById("Sortie_mobile_label").innerHTML = texte.pages_trajectoire.sortie_mobile;
-
+    
     document.getElementById("label-choix-potentiel").innerHTML = texte.pages_trajectoire.label_choix_potentiel;
     document.getElementById("label-choix-potentiel").title = texte.pages_trajectoire.label_choix_potentiel_infobulle;
 
@@ -866,7 +875,7 @@ function texteTrajectoireMassiveKerr() {
 
     document.getElementById("Sortie_astre_label").innerHTML = texte.pages_trajectoire.sortie_astre;
     document.getElementById("Sortie_mobile_label").innerHTML = texte.pages_trajectoire.sortie_mobile;
-
+    
 }
 
 

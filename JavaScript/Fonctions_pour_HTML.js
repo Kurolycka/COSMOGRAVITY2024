@@ -328,7 +328,7 @@ function updateUnivers() {
     document.getElementById("he_enregistrer").innerHTML = "d<sub>e<sub>0</sub></sub> = " + dm_horizon_evenement_pc.toExponential(4) + " pc"
 
     if (document.getElementById("Omégal0")) {
-        update_graphe_interactif()
+        update_graphe_interactif();
         update_point()
     }
 }

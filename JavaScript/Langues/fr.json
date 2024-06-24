@@ -7,7 +7,7 @@
 		"simulation": "Simulation",
 		"modeleLCDM": "Modèle &Lambda;CDM",
 		"modeleDE": "Modèle DE",
-		"trajectoire": "Trajectoire",
+		"trajectoire": "Trajectoires",
 		"SCH": "Métrique de Schwarzschild",
 		"K": "Métrique de Kerr",
 		"BBSCH": "Masse baryonique - Mobile baryonique",
@@ -21,6 +21,11 @@
 		"LUPM": "Retour LUPM"
 	},
 
+	"index":
+	{
+		"acceuil_text_uinvers": "Modèles d'univers de Friedmann-Lemaître et calculs annexes",
+		"acceuil_text_trajectoire": "Trajectoires d'une particule libre dans l'espace-temps de Schwarzschild & Kerr"
+	},
 	"univers": {
 		"constantes": "Constantes universelles",
 		"calculette": "Calculette cosmologique",
@@ -98,7 +103,7 @@
 		"diametre_apparent_titre":"Diamtrètre apparent",
 		"calcul_inverse_titre":"Calculs inverses",
 		"horizons_titre":"Horizons cosmologiques",
-		"calcul_z_titre":"Calcul en fonction des z",
+		"calcul_z_titre":"Calculs en fonction des z",
 		"parametre_z_titre":"Paramètres cosmologiques",
 		"geometrie_titre":"Géometrie",
 		"photometrie_titre":"Photometrie",
@@ -153,7 +158,7 @@
 		"infobulle_Ie":"Intensité photométrique de l'astre",
 		"infobulle_dz1":"Distance diamètre apparent de z1",
 		"infobulle_dz2":"Distance diamètre apparent de z2",
-		"infobulle_Le":"Luminosité de l'astre",
+		"infobulle_Le":"Luminance de l'astre",
 		"infobulle_dl1":"distance luminosité de z1",
 		"infobulle_dl2":"distance luminosité de z2",
 		"infobulle_da1":"distance-diamètre apparent de z1",
@@ -367,7 +372,6 @@
 		"potentiel_option":"Potentiel",
 		"label_choix_potentiel":"Choisissez une option :",
 		"label_choix_potentiel_infobulle":"Permet de choisir en temps réel le graphe de potentiel à afficher"
-
 	},
 
 	"page_trajectoire_massive":{

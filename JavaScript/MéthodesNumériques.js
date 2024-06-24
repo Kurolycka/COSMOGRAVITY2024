@@ -57,8 +57,7 @@ function simpson_composite(fonction, borne_inf, borne_sup, subdivisions=100) {
  * @param {*} precision précision recherchée 
  * @returns 
  */
-function Dichotomie(fonction, cible, borneDebut, borneFin, precision){
-    let iterations_max=100;
+function Dichotomie(fonction, cible, borneDebut, borneFin, precision,iterations_max=100){
     let iterations=0
 
     start_temps=Date.now();

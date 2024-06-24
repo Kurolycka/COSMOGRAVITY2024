@@ -17,17 +17,34 @@
 <body>
 <div id="positionNav"></div>
 <div class="conteneurPrincipal"></div>
-<h1 class="site-title">Cosmogravity</h1>
+<div class="div_titre"><h1 class="site-title">Cosmogravity</h1></div>
+
 <div class="content"><img class="image" src="./Images/CosmoGravity_logo.png" alt=""></div>
 <div class="content2">
     <img class="image2" src="./Images/Logos.png" alt="">
+
 </div>
+<div class="big-container"> 
+    <div class="container" style=" margin-right: 85px;">
+        <label id="page_acceuil_titre_univers" class="animated-text-univers" >Univers</label>
+        <label id="page_acceuil_label_univers" class="centered-label " ></label>
+    </div>
+    <div class="container"  style="  margin-right: 50px;" 120px;>
+        <label id="page_acceuil_titre_trajectoire" class="animated-text-trajectoire" >Trajectoires</label>
+        <label id="page_acceuil_label_trajectoire" class="centered-label " ></label>
+    </div>
+</div>
+
+
+<label class="watermark">© NASA, ESA, CSA, and STScI</label>
+
 <script src="./JavaScript/Langues/gestion_langues.js"></script>
 <script>
     /* Chargement de la barre de navigation */
     $(function() {
         $("#positionNav").load("./Navigation.html");
     });
+    text_page_index();
 </script>
 </body>
 </html>

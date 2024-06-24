@@ -1780,7 +1780,7 @@ function Vr_obs(r,E,L) {
  * @returns {Number} : le résultat de alpha(r). 
  */
 function alpha(r){
-	return 1/(1-(Math.pow(r, 2)*rs) / Math.pow(r_phy, 3));
+	return 1-(Math.pow(r, 2)*rs) / Math.pow(r_phy, 3);
 }
 
 // -------------------------------------{beta}--------------------------------------------

@@ -7,7 +7,7 @@
 		"simulation": "Simulation",
 		"modeleLCDM": "&Lambda;CDM Model",
 		"modeleDE": "DE Model",
-		"trajectoire": "Trajectory",
+		"trajectoire": "Trajectories",
 		"SCH": "Schwarzschild Metric",
 		"K": "Kerr Metric",
 		"BBSCH": "Baryonic Mass - Baryonic Mobile",
@@ -19,6 +19,12 @@
 		"langue": "Language",
 		"propos": "About",
 		"LUPM": "Back to LUPM"
+	},
+
+	"index":
+	{
+		"acceuil_text_uinvers":"Friedmann-Lemaître universes models and annex calculations",
+		"acceuil_text_trajectoire":"Trajectories of a free particule in the Schwarzschild & Kerr space-time"
 	},
 
 	"univers": {
@@ -94,7 +100,7 @@
 		"diametre_apparent_titre":"Apparent Diameter",
 		"calcul_inverse_titre":"Inverse Calculations",
 		"horizons_titre":"Cosmological Horizons",
-		"calcul_z_titre":"Calculation based on z",
+		"calcul_z_titre":"Calculations based on z",
 		"parametre_z_titre":"Cosmological Parameters",
 		"geometrie_titre":"Geometry",
 		"photometrie_titre":"Photometry",
@@ -129,52 +135,35 @@
 		"infobulle_omega":"generates a graph of cosmological density parameters as a function of time or redshift",
 		"infobulle_tempsdecalage":"generates a graph of time as a function of redshift and vice versa",
 
-		"infobulle_diametre_apparent":"Section to obtain the apparent diameter theta as a function of the actual diameter (and vice versa) for the corresponding z",
-		"infobulle_D_m":"value of the actual diameter in meters",
-		"infobulle_D_kpc":"value of the actual diameter in kiloparsecs",
-		"infobulle_D_pc":"value of the actual diameter in parsecs",
-		"infobulle_D_ua":"value of the actual diameter in astronomical units",
-		"infobulle_diametre_apparent_thetamin":"minimum value of theta (in degrees)",
-		"infobulle_diametre_apparent_thetamax":"maximum value of theta (in degrees)",
-		"infobulle_zmax_diametre":"maximum value of z",
-		"infobulle_diametre_apparent_pas":"number of points on the graph",
-		"infobulle_calcul_inverse_titre":"Inverse Calculation",
-		"infobulle_calcul_inverse":"obtain the distance in a transverse direction (for a given z) according to different distance measurements",
-		"infobulle_calcul_inverse_param_zmin":"minimum value of z",
-		"infobulle_calcul_inverse_param_zmax":"maximum value of z",
-		"infobulle_calcul_inverse_param_zpas":"number of points on the graph",
-		"infobulle_calcul_inverse_param_mpc":"transverse distance in Megaparsecs",
-		"infobulle_calcul_inverse_param_ua":"transverse distance in Astronomical Units",
-		"infobulle_calcul_inverse_param_ly":"transverse distance in Light Years",
-		"infobulle_calcul_inverse_param_pc":"transverse distance in Parsecs",
-		"infobulle_calcul_inverse_param_kpc":"transverse distance in Kiloparsecs",
+		"infobulle_diametre_apparent": "Part to obtain the apparent diameter theta as a function of the actual diameter (and vice versa) of the corresponding z",
+		"infobulle_D_m": "value of the actual diameter in meters",
+		"infobulle_D_kpc": "value of the actual diameter in kiloparsecs",
+		"infobulle_theta": "value of the apparent diameter in arcseconds",
 
-		"infobulle_horizons_titre":"Section for calculating the event horizon and particle horizon as a function of z",
-		"infobulle_horizons_param_zmin":"minimum value of z",
-		"infobulle_horizons_param_zmax":"maximum value of z",
-		"infobulle_horizons_param_pas":"number of points on the graph",
-		"infobulle_horizons_param_z":"specify the value of z (for which the graph will be generated)",
-		"infobulle_generateur_graphique_z":"specify the value of z (for which the graph will be generated)",
-
-		"infobulle_cosm_param_titre":"Cosmological Parameters",
-		"infobulle_cosm_param_text":"Section to specify the cosmological parameters for the calculations",
-		"infobulle_geometrie_titre":"Geometry",
-		"infobulle_geometrie_text":"Section for calculating the cosmological distances (transverse, light-travel, luminosity, and apparent diameter) as a function of redshift z",
-		"infobulle_photometrie_titre":"Photometry",
-		"infobulle_photometrie_text":"Section for calculating the magnitudes and fluxes of astronomical objects as a function of redshift z",
-
-		"infobulle_omega_de":"specify the value of &Omega;<sub>DE</sub> (dark energy density parameter)",
-		"infobulle_omega_k":"specify the value of &Omega;<sub>k</sub> (curvature density parameter)",
-		"infobulle_omega_m":"specify the value of &Omega;<sub>M</sub> (matter density parameter)",
-		"infobulle_omega_r":"specify the value of &Omega;<sub>R</sub> (radiation density parameter)",
-		"infobulle_h0":"specify the value of the Hubble constant H<sub>0</sub>",
-		"infobulle_c":"specify the value of the speed of light c",
-		"infobulle_g":"specify the value of the gravitational constant G",
-		"infobulle_sigmat":"specify the value of the Thomson scattering cross-section &sigma;<sub>T</sub>",
-		"infobulle_massesol":"specify the value of the solar mass (mass of the Sun)",
-		"infobulle_mp":"specify the value of the mass of the proton m<sub>p</sub>",
-		"infobulle_me":"specify the value of the mass of the electron m<sub>e</sub>",
-		"infobulle_rho0":"specify the value of the critical density ρ<sub>0</sub>"
+		"infobulle_Calcul_inverse": "Allows obtaining the values of z corresponding to a distance or time by dichotomy",
+		"infobulle_dm_inv": "value of the metric distance in meters",
+		"infobulle_tem_inv": "value of the time at the moment of photon emission in years",
+		"infobulle_trec_inv": "value of the time at the moment of photon reception in years",
+		"infobulle_z_neg": "to be checked if you want to obtain a negative z in the calculation with distance",
+		
+		"infobulle_horizon": "Calculates the distance with the event and particle horizon based on the current universe time",
+		"infobulle_t_horizon": "value of the time in years for which we want to obtain the cosmological horizons in seconds",
+		"infobulle_deven": "distance of the event horizon in billion light-years",
+		"infobulle_dpart": "distance of the particle horizon in billion light-years",
+		"infobulle_z1": "Value of the spectral redshift at the time of photon emission",
+		"infobulle_z2": "Value of the spectral redshift at the time of photon reception",
+		"infobulle_Ie": "Photometric intensity of the star",
+		"infobulle_dz1": "Apparent diameter distance of z1",
+		"infobulle_dz2": "Apparent diameter distance of z2",
+		"infobulle_Le": "Luminance of the star",
+		"infobulle_dl1": "Luminosity distance of z1",
+		"infobulle_dl2": "Luminosity distance of z2",
+		"infobulle_da1": "Apparent-diameter distance of z1",
+		"infobulle_da2": "Apparent-diameter distance of z2",
+		"infobulle_E1": "Brightness of z1",
+		"infobulle_E2": "Brightness of z2",
+		"infobulle_mu1": "Distance modulus of z1",
+		"infobulle_mu2": "Distance modulus of z2"
 	},
 
 	"constante": {
@@ -374,8 +363,6 @@
 		"potentiel_option":"Potential",
 		"label_choix_potentiel":"Choose an option:",
 		"label_choix_potentiel_infobulle":"Allows real-time selection of the potential graph to display"
-
-
 	},
 
 	"page_trajectoire_massive": {
