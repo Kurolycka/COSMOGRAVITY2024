@@ -7,7 +7,7 @@ Ce fichier javascript a pour but de rassembler toutes les fonctions qui sont uti
 // Variables globales, utilisées un peu partout
 const AU = 149597870700; // en mètres
 
-let T0 = Number(document.getElementById("T0").value)
+let T0 = Number(document.getElementById("T0").value);
 let H0 = Number(document.getElementById("H0").value);
 let c = Number(document.getElementById("c").value);
 let h = Number(document.getElementById("h").value);
@@ -96,6 +96,8 @@ function H0_parGAnnees(H0) {
  */
 function Omega_r(z) {
     let omega_r
+
+    let T0 = Number(document.getElementById("T0").value);
 
     // Si z = 0 on renvoie le calcul direct de omega_r0 sinon on le calcule en fonction de omega_r0
     let sigma = ( 2 * Math.pow(Math.PI, 5) * Math.pow(k, 4) ) / ( 15 * Math.pow(h, 3) * Math.pow(c, 2) );
