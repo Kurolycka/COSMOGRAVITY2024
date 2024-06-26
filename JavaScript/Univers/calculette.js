@@ -11,7 +11,7 @@ function linear_scale(zmin, zmax, nb_pts) {
 	for (let i=zmin; i<=zmax; i+=step) {
 		abscissa.push(i);
 	}
-	if(abscissa[abscissa.length - 1] !== zmax){ //Pour gérér le cas particulier ou zmax n'apparait pas dans la liste par la faute du pas
+	if(abscissa[abscissa.length - 1] != zmax){ //Pour gérér le cas particulier ou zmax n'apparait pas dans la liste par la faute du pas
 		abscissa.push(zmax)
 	}
 

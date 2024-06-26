@@ -312,7 +312,7 @@ function updateUnivers() {
         equa_diff_2=equa_diff_2_DE;
     }
     
-    if (debut_fin_univers(equa_diff_2)[2] === 0 || !(document.getElementById('optionsMonofluide').value ==="optionNull")){
+    if (debut_fin_univers(equa_diff_2, T0)[2] === 0 || !(document.getElementById('optionsMonofluide').value =="optionNull")){
         document.getElementById('horizonEvenement').style.display="none";
         document.getElementById('horizonParticule').style.display="none";
     }else{
