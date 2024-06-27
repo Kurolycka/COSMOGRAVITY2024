@@ -183,7 +183,7 @@ function text_page_index() {
     document.getElementById("Univers").innerHTML = texte.nav.univers;
     document.getElementById("txtUnivers").innerHTML = texte.index.txtUnivers;
     document.getElementById("Trajectoires").innerHTML = texte.nav.trajectoire;
-    document.getElementById("txtTrajectoires").innerHTML = texte.index.txtTrajectoire;
+    document.getElementById("txtTrajectoires").innerHTML = texte.index.txtTrajectoires;
 }
 
 function texte_univers_LCDM() {

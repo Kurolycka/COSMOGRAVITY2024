@@ -943,7 +943,7 @@ function enregistrer_trajectoires(){
 
 			//Dessin du logo :
 			var logo = new Image()
-			logo.src='../../Images/CosmoGravity_logo.png'; //Je récupère le chemin de l'image du logo.
+			logo.src='Images/CosmoGravity_logo.png'; //Je récupère le chemin de l'image du logo.
 			logo.onload = function() {
 				var largeurLogo = 100; //largeur de l'image du logo
 				var hauteurLogo = (logo.height / logo.width) * largeurLogo; //hauteur de l'image du logo

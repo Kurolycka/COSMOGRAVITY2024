@@ -63,8 +63,6 @@ body {
         -webkit-background-clip: text;
         background-clip: text;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Ombre pour le texte */
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Ombre pour le conteneur */
-
         animation: fallIn 2s ease-out forwards;
         animation-fill-mode: both;
     }
@@ -89,7 +87,6 @@ body {
         flex-direction: column;
         grid-area: txtUniv;
         margin: 100px;
-
         background-color: rgba(0, 0, 0, 0.3);
         border-radius: 50px;
         padding: 10px;
