@@ -863,7 +863,7 @@ function pausee()
 		document.getElementById("pause/resume").innerHTML =texte.pages_trajectoire.bouton_resume;//on change le texte du boutton pause en haut
 		document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_enpause;//on change le texte qui s'affiche "Calculs en pause"
 		document.getElementById("pau").title = texte.pages_trajectoire.bouton_lecture;//on change l'icone du boutton pause en bas
-		document.getElementById("pau").src = "../../Images/lecture.png";//infobulle du boutton pause en bas
+		document.getElementById("pau").src = "../Images/lecture.png";//infobulle du boutton pause en bas
 		clearInterval(myInterval); // on arrete l'appel de animte
 	} 
 	//si la simultion est en pause
@@ -876,7 +876,7 @@ function pausee()
 			document.getElementById("pause/resume").innerHTML = texte.pages_trajectoire.bouton_pause;//on change le texte du boutton pause en haut
 			document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_encours;//on change le texte qui s'affiche "Calculs en pause"
 			document.getElementById("pau").title = texte.pages_trajectoire.bouton_pause;//infobulle du boutton pause en bas
-			document.getElementById("pau").src = "../../Images/pause.png";//on change l'icone du boutton pause en bas
+			document.getElementById("pau").src = "../Images/pause.png";//on change l'icone du boutton pause en bas
 			myInterval = setInterval(animate, 10 / 6); //on appelle animate à chaque 10/6 ms avec setInterval et on stocke dans myInterval
 		}
 

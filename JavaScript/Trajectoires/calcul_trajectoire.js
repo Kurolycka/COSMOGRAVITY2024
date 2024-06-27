@@ -37,12 +37,12 @@ var expl5 =new Image();
 var expl6 =new Image();
 
 //Récupération des images : 
-expl1.src='../../Images/explose/expl1.png';
-expl2.src='../../Images/explose/expl2.png';
-expl3.src='../../Images/explose/expl3.png';
-expl4.src='../../Images/explose/expl4.png';
-expl5.src='../../Images/explose/expl5.png';
-expl6.src='../../Images/explose/expl6.png';
+expl1.src='../Images/explose/expl1.png';
+expl2.src='../Images/explose/expl2.png';
+expl3.src='../Images/explose/expl3.png';
+expl4.src='../Images/explose/expl4.png';
+expl5.src='../Images/explose/expl5.png';
+expl6.src='../Images/explose/expl6.png';
 
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< Variables pour le zoom ><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -1732,17 +1732,17 @@ function animate(compteur,mobile,mobilefactor)
 
 		if (Number(fm) <= 1) 
 		{
-			document.getElementById('DivClignotante'+compteur.toString()).innerHTML = " <img src='../../Images/diodever.gif' height='14px' />";
+			document.getElementById('DivClignotante'+compteur.toString()).innerHTML = " <img src='../Images/diodever.gif' height='14px' />";
 			document.getElementById('DivClignotante'+compteur.toString()).style.color = "green";
 		} 
 		else if (1 < Number(fm) && Number(fm) < 7) 
 		{
-			document.getElementById('DivClignotante'+compteur.toString()).innerHTML = " <img src='../../Images/diodejaune.gif' height='14px' />";
+			document.getElementById('DivClignotante'+compteur.toString()).innerHTML = " <img src='../Images/diodejaune.gif' height='14px' />";
 			document.getElementById('DivClignotante'+compteur.toString()).style.color = "yellow";
 		} 
 		else if (Number(fm) >= 7)
 		{
-			document.getElementById('DivClignotante'+compteur.toString()).innerHTML = " <img src='../../Images/dioderouge.gif' height='14px' />";
+			document.getElementById('DivClignotante'+compteur.toString()).innerHTML = " <img src='../Images/dioderouge.gif' height='14px' />";
 			document.getElementById('DivClignotante'+compteur.toString()).style.color = "red";
 		} 
 		
@@ -1753,17 +1753,17 @@ function animate(compteur,mobile,mobilefactor)
 		*/
 		if (Number(deltam_sur_m) <= 0.3) 
 		{
-			document.getElementById('DivClignotantePilot'+compteur.toString()).innerHTML = " <img src='../../Images/diodever.gif' height='14px' />";
+			document.getElementById('DivClignotantePilot'+compteur.toString()).innerHTML = " <img src='../Images/diodever.gif' height='14px' />";
 			document.getElementById('DivClignotantePilot'+compteur.toString()).style.color = "green";
 		} 
 		else if (0.3 < Number(deltam_sur_m) && Number(deltam_sur_m) < 0.5) 
 		{
-			document.getElementById('DivClignotantePilot'+compteur.toString()).innerHTML = " <img src='../../Images/diodejaune.gif' height='14px' />";
+			document.getElementById('DivClignotantePilot'+compteur.toString()).innerHTML = " <img src='../Images/diodejaune.gif' height='14px' />";
 			document.getElementById('DivClignotantePilot'+compteur.toString()).style.color = "yellow";
 		} 
 		else if (Number(deltam_sur_m) >= 0.5) 
 		{
-			document.getElementById('DivClignotantePilot'+compteur.toString()).innerHTML = " <img src='../../Images/dioderouge.gif' height='14px' />";
+			document.getElementById('DivClignotantePilot'+compteur.toString()).innerHTML = " <img src='../Images/dioderouge.gif' height='14px' />";
 			document.getElementById('DivClignotantePilot'+compteur.toString()).style.color = "red";
 		} 
 	
@@ -1774,17 +1774,17 @@ function animate(compteur,mobile,mobilefactor)
 		*/ 
 		if (nombre_de_g_calcul_memo <= 4) 
 		{
-			document.getElementById('DivClignotanteNbG'+compteur.toString()).innerHTML = " <img src='../../Images/diodever.gif' height='14px' />";
+			document.getElementById('DivClignotanteNbG'+compteur.toString()).innerHTML = " <img src='../Images/diodever.gif' height='14px' />";
 			document.getElementById('DivClignotanteNbG'+compteur.toString()).style.color = "green";
 		} 
 		else if (4 < nombre_de_g_calcul_memo && nombre_de_g_calcul_memo <= 9) 
 		{
-			document.getElementById('DivClignotanteNbG'+compteur.toString()).innerHTML = " <img src='../../Images/diodejaune.gif' height='14px' />";
+			document.getElementById('DivClignotanteNbG'+compteur.toString()).innerHTML = " <img src='../Images/diodejaune.gif' height='14px' />";
 			document.getElementById('DivClignotanteNbG'+compteur.toString()).style.color = "yellow";
 		} 
 		else if (nombre_de_g_calcul_memo > 9) 
 		{
-			document.getElementById('DivClignotanteNbG'+compteur.toString()).innerHTML = " <img src='../../Images/dioderouge.gif' height='14px' />";
+			document.getElementById('DivClignotanteNbG'+compteur.toString()).innerHTML = " <img src='../Images/dioderouge.gif' height='14px' />";
 			document.getElementById('DivClignotanteNbG'+compteur.toString()).style.color = "red";
 		} 
 	}
@@ -1943,7 +1943,7 @@ function pausee()
 		document.getElementById("pause/resume").innerHTML =texte.pages_trajectoire.bouton_resume; //on change le texte du boutton pause en haut
 		document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_enpause; //on change le texte qui s'affiche "Calculs en pause"
 		document.getElementById("pau").title = texte.pages_trajectoire.bouton_lecture; //infobulle du boutton pause en bas
-		document.getElementById("pau").src = "../../Images/lecture.png"; //on change l'icone du boutton pause en bas
+		document.getElementById("pau").src = "../Images/lecture.png"; //on change l'icone du boutton pause en bas
 		
 	} 
 	//si le Timer est en pause
@@ -1953,7 +1953,7 @@ function pausee()
 			document.getElementById("pause/resume").innerHTML = texte.pages_trajectoire.bouton_pause; //on change l'icone du boutton pause en bas
 			document.getElementById("indic_calculs").innerHTML = texte.pages_trajectoire.calcul_encours;//on change le texte qui s'affiche "Calculs en cours"
 			document.getElementById("pau").title = texte.pages_trajectoire.bouton_pause;//infobulle du boutton pause en bas
-			document.getElementById("pau").src = "../../Images/pause.png"; //on change l'icone du boutton pause en bas
+			document.getElementById("pau").src = "../Images/pause.png"; //on change l'icone du boutton pause en bas
 	}
 }
 
