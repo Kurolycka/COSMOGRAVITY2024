@@ -23,8 +23,8 @@
 	
 	"index":
 	{
-		"acceuil_text_uinvers": "Modèles d'univers de Friedmann-Lemaître et calculs annexes",
-		"acceuil_text_trajectoire": "Trajectoires d'une particule libre dans l'espace-temps de Schwarzschild & Kerr"
+		"txtUnivers": "Modèles d'univers de Friedmann-Lemaître et calculette cosmologique",
+		"txtTrajectoire": "Trajectoires d'une particule libre dans les métriques de Schwarzschild et de Kerr"
 	},
 
 	"univers": {
