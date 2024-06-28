@@ -42,7 +42,7 @@ function toggleEntreeSortie (IDpanel) {
 }
 
 /**
- * Fonction permettant d'ouvrir la fenêtre ou la gestion des constantes à lieu
+ * Fonction permettant d'ouvrir la fenêtre ou la gestion des constantes a lieu
  */
 function fenetreConstantes() {
     let url = "./constantes_universelles.html"
@@ -110,7 +110,7 @@ function fenetreFacteur() {
 
 
 /**
- * Fonction qui décide de quoi faire des instructions entrée en fonction du boutton utilisé
+ * Fonction qui décide de quoi faire des instructions entrées en fonction du boutton utilisé
  * @param nomBoutton {string} Le nom du boutton pressé
  */
 function envoisConstantes(nomBoutton) {

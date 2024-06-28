@@ -708,14 +708,17 @@ function graphique_facteur_echelle(solution, t_debut, t_fin, t_0) {
     let temps_fin = abscisse[abscisse.length - 1]
     let facteur_fin = ordonnee[ordonnee.length - 1]
 
+    let max = ordonnee.reduce((a, b) => Math.max(a, b), -Infinity);
+    let min = ordonnee.reduce((a, b) => Math.min(a, b), +Infinity);
 
-    // On corrige l'erreur numérique provoqué par la dérivée infinie en a
-    if (t_0 > 0) {
+    // On corrige l'erreur numérique provoquée par la dérivée infinie en a=0
+    console.log(abscisse)
+    if (t_0 > 0 && a_min === 0) {
         for (let index = 0; index < abscisse.length; index = index + 1) {
             abscisse[index] = abscisse[index] - temps_debut
         }
     }
-
+    console.log(abscisse)
 
     if ( t_debut && facteur_debut < Math.abs(a_max - a_min) * 1e-1 ) {
         abscisse[0] = 0
@@ -725,9 +728,7 @@ function graphique_facteur_echelle(solution, t_debut, t_fin, t_0) {
     if ( t_fin && facteur_fin < Math.abs(a_max - a_min) * 1e-1 ) {
         ordonnee[ordonnee.length - 1] = 0
     }
-
-    let max = ordonnee.reduce((a, b) => Math.max(a, b), -Infinity);
-    let min = ordonnee.reduce((a, b) => Math.min(a, b), +Infinity);
+    console.log(max, min)
 
     let donnee = [{
         x: abscisse,
@@ -738,7 +739,7 @@ function graphique_facteur_echelle(solution, t_debut, t_fin, t_0) {
         line: { color: 'purple' }
     }];
 
-    if (t_debut && facteur_debut > Math.abs(a_max - a_min) * 1e-1 && temps_debut < Math.abs(t_debut) * 1e-1 ) {
+    if (t_debut && facteur_debut > Math.abs(a_max - a_min) * 1e-2 && temps_debut < Math.abs(t_debut) * 1e-1 ) {
         donnee.push({
             type: 'line',
             x:[0, 0],
@@ -752,7 +753,7 @@ function graphique_facteur_echelle(solution, t_debut, t_fin, t_0) {
         });
     }
 
-    if (t_fin && facteur_fin > Math.abs(a_max - a_min) * 1e-1 && temps_fin > Math.abs(t_fin) * (1 + 10/100)) {
+    if (t_fin && facteur_fin > Math.abs(a_max - a_min) * 1e-2 && temps_fin > Math.abs(t_fin) * (1 + 10/100)) {
         let x_assymptote;
         if (t_fin && t_debut) {
             x_assymptote = Math.abs(Math.abs(t_fin) + Math.abs(t_debut))
