@@ -392,6 +392,7 @@ function texte_univers_calculette() {
     document.getElementById("label_mu1").title = texte.calculette.infobulle_mu1;
     document.getElementById("label_mu2").title = texte.calculette.infobulle_mu2;
 
+    document.getElementById('texte_avertissement_z_-1').innerHTML = texte.calculette.avertissement_z_grand;
 };
 
 function texte_constantes() {

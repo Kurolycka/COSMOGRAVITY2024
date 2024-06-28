@@ -37,16 +37,16 @@ function affichage_des_z(fonction_EouF){
     //! ____________________________________________________Partie géometrie___________________________________________________________
     //? ----------Calcul des Distances métriques-----------
     if (z1<0){//si z négatif alors on integre de z à 0
-        dm1=DistanceMetrique(fonction_EouF,z1,0,true,);
+        dm1=DistanceMetrique(fonction_EouF,z1,0,true);
     }else{//si z positif alors on integre de 0 à z
-        dm1=DistanceMetrique(fonction_EouF,0,z1,true);
+        dm1=DistanceMetrique(fonction_EouF,1/(1+z1),1);
     };
     if (z2<0){
-        dm2=DistanceMetrique(fonction_EouF,z2,0,true,);
+        dm2=DistanceMetrique(fonction_EouF,z2,0,true);
     }else{
-        dm2=DistanceMetrique(fonction_EouF,0,z2,true);
+        dm2=DistanceMetrique(fonction_EouF,1/(1+z2),1);
     };
-    let delta_dm=Math.abs(DistanceMetrique(fonction_EouF,z1,z2,true)); //distance entre les deux z
+    let delta_dm=Math.abs(DistanceMetrique(fonction_EouF,1/(1+z1),1/(1+z2))); //distance entre les deux z
 
     //on affiche toutes les valeurs de distances ainsi que leurs conversions
     document.getElementById('output_dm1').value=arrondie_affichage(dm1);
@@ -65,12 +65,12 @@ function affichage_des_z(fonction_EouF){
     let t1;
     let t2;
     if (z1<0){
-        t1=calcul_ages(fonction_EouF,H0_parSecondes(H0),z2,0,true); //calcul des temps en seconde grâce a la formule de théorie
+        t1=calcul_ages(fonction_EouF,H0_parSecondes(H0),z2,1e-30,true); //calcul des temps en seconde grâce a la formule de théorie
     }else{
         t1=calcul_ages(fonction_EouF,H0_parSecondes(H0),1e-30,1/(1+z1)); //calcul des temps en seconde grâce a la formule de théorie
     }
     if (z2<0){
-        t2=calcul_ages(fonction_EouF,H0_parSecondes(H0),z2,0,true); //calcul des temps en seconde grâce a la formule de théorie
+        t2=calcul_ages(fonction_EouF,H0_parSecondes(H0),z2,1e-30,true); //calcul des temps en seconde grâce a la formule de théorie
     }else{
         t2=calcul_ages(fonction_EouF,H0_parSecondes(H0),1e-30,1/(1+z2)); //calcul des temps en seconde grâce a la formule de théorie
     }
@@ -722,7 +722,12 @@ function calcul_horizons_annexe(fonction_EouF){
 		document.getElementById("resultat_dm_particule_t").value=NaN;
 		document.getElementById("resultat_dm_evenement_t").value=NaN;
 	}else{
-		z_pour_horizon=calcul_t_inverse(t_pour_horizon,fonction_EouF,H0_parAnnees(H0));
+		z_pour_horizon=calcul_t_inverse(t_pour_horizon,fonction_EouF,H0_parAnnees(H0),1e-10,500);
+        if (z_pour_horizon<-.99999){
+            document.getElementById('texte_avertissement_z_-1').classList.remove('cache');
+        }else{
+            document.getElementById('texte_avertissement_z_-1').classList.add('cache');
+        }
 		let dm_horizon_particule_m=calcul_horizon_particule(fonction_EouF,z_pour_horizon);
 		let dm_horizon_particule_pc=m_vers_pc(dm_horizon_particule_m);
 		let dm_horizon_particule_al=m_vers_AL(dm_horizon_particule_m);

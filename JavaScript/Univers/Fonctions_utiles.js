@@ -633,7 +633,11 @@ function DistanceMetrique(fonction,Zemission,Zreception, z_utilisé=false,precis
             return Math.pow(fonction(x),-0.5)/Math.pow(x,2);
         };
     };
-    return c/(H0_parSecondes(H0)*Math.pow(Math.abs(Omega_k(0)),0.5))*Sk(Math.pow(Math.abs(Omega_k(0)),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,precision_nb_pas),Omega_k(0))
+    if (Omega_k(0) ===0){
+        return c/(H0_parSecondes(H0))*simpson_composite(fonction_a_integrer,Zemission,Zreception,precision_nb_pas);
+    }else {
+        return c/(H0_parSecondes(H0)*Math.pow(Math.abs(Omega_k(0)),0.5))*Sk(Math.pow(Math.abs(Omega_k(0)),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,precision_nb_pas),Omega_k(0));
+    }
 };
 
 /** 
@@ -644,7 +648,7 @@ function DistanceMetrique(fonction,Zemission,Zreception, z_utilisé=false,precis
 function calcul_horizon_particule(fonction,z_emission=0){
     let a_emission=1/(z_emission+1);
     //formule 21 dans la théorie du 20/05/2024
-    return DistanceMetrique(fonction,1e-30,a_emission,false,1e3);
+    return DistanceMetrique(fonction,1e-50,a_emission,false,1e3);
 };
 
 /**
@@ -654,7 +658,7 @@ function calcul_horizon_particule(fonction,z_emission=0){
  */
 function calcul_horizon_evenements(fonction,z_reception=0){
     //formule 23 dans la théorie du 20/05/2024
-    return DistanceMetrique(fonction,-.99999999,z_reception,true,1e3);
+    return DistanceMetrique(fonction,-.999999999,z_reception,true,1e3);
 }
 
 
@@ -669,6 +673,7 @@ function calcul_t_inverse(temps,fonction,H0,precision=1e-30,iterationsmax=100){
 		return calcul_ages(fonction,H0,1e-20,x);
 	}
 	age_univers=a_dichotomer(1);
+    console.log(age_univers.toExponential(5));
     
 	if (age_univers>=temps){
 		a_t=Dichotomie(a_dichotomer,temps,1e-15,1,1e-30,iterationsmax);

@@ -210,8 +210,9 @@
                 <h4 id="horizons_titre" style="margin-bottom:10px; margin-top: 10px;margin-inline: auto;"></h4>
                 <div class="paramètre">
                     <label id="label_t_hori" class="infobullable" for="t_pour_calcul_horizon">t = </label>
-                    <input id="t_pour_calcul_horizon" type="number" value="0" step="0.1" min="0" max="1000">
-                    <span>(s)</span>
+                    <input id="t_pour_calcul_horizon" type="number" value="0" step="0.1">
+                    (<span class="unite_annee"></span>)
+                    <span id="texte_avertissement_z_-1" class="cache" style="color: red;">z&#x2248;-1 (erreur numérique possible)</span>
                 </div>
                 <div>
                     <label id="label_deven" class="infobullable" for="resultat_dm_evenement_t">d<sub>e0</sub> = </label>

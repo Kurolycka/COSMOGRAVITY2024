@@ -166,7 +166,9 @@
 		"infobulle_E1": "Brightness of z1",
 		"infobulle_E2": "Brightness of z2",
 		"infobulle_mu1": "Distance modulus of z1",
-		"infobulle_mu2": "Distance modulus of z2"
+		"infobulle_mu2": "Distance modulus of z2",
+
+		"avertissement_z_grand":"z&#x2248;-1 (possible numerical error)"
 	},
 
 	"constante": {

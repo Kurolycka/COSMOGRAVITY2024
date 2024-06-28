@@ -198,8 +198,9 @@
                 <h4 id="horizons_titre" style="margin-bottom:10px; margin-top: 10px;margin-inline: auto;"></h4>
                 <div class="paramètre">
                     <label id="label_t_hori" class="infobullable" for="t_pour_calcul_horizon">t = </label>
-                    <input id="t_pour_calcul_horizon" type="number" value="0" step="0.1" min="0" max="1000">
+                    <input id="t_pour_calcul_horizon" type="number" value="0" step="0.1">
                     (<span class="unite_annee"></span>)
+                    <span id="texte_avertissement_z_-1" class="cache" style="color: red;">z&#x2248;-1 (erreur numérique possible)</span>
                 </div>
                 <div>
                     <label id="label_deven" class="infobullable" for="resultat_dm_evenement_t">d<sub>e0</sub> = </label>
@@ -469,12 +470,12 @@
                 <div>
                     <label id="label_dz1" class="infobullable" for="output_dz1dt">d<sub>z<sub>1</sub></sub>/dt<sub>0</sub> = </label>
                     <output id="output_dz1dt">0</output>
-                    <span class="unite_annee"><sup>-1</sup></span>
+                    <span class="unite_annee"></span><span><sup>-1</span>
                 </div>
                 <div>
                     <label id="label_dz2" class="infobullable" for="output_dz2dt">d<sub>z<sub>2</sub></sub>/dt<sub>0</sub> = </label>
                     <output id="output_dz2dt">0</output>
-                    <span class="unite_annee"><sup>-1</span>
+                    <span class="unite_annee"></span><span><sup>-1</span>
                 </div>
             </div>
         </div>

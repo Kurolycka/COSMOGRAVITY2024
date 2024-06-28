@@ -170,8 +170,9 @@
 		"infobulle_E1":"Eclat de z1",
 		"infobulle_E2":"Eclat de z2",
 		"infobulle_mu1":"module de distance de z1",
-		"infobulle_mu2":"module de distance de z2"
+		"infobulle_mu2":"module de distance de z2",
 
+		"avertissement_z_grand":"z&#x2248;-1 (erreur numérique possible)"
 	},
 
 	"constante": {
