@@ -20,7 +20,7 @@ let k = Number(document.getElementById("k").value);
  * @return {number} Le nombre de jour par ans
  */
 function nbrJours() {
-    typeAnnee = document.getElementById("typeAnnee").value
+    let typeAnnee = document.getElementById("typeAnnee").value
     switch (typeAnnee) {
         case 'Sidérale':
             return 365.256363051;
@@ -150,7 +150,7 @@ function Omega_m(z) {
             omega_m = Omega_m(0) * Math.pow(1 + z, 3) / fonction_E(z,true);
         }else{
             omega_m = Omega_m(0) * Math.pow(1 + z, 3) / fonction_F(z,true);
-        };
+        }
     }
 
     let option = document.getElementById("optionsMonofluide").value
@@ -266,10 +266,10 @@ function Omega_k(z) {
  * Fonction facilitant l'écriture des expression dans le cas du modlèle LCDM. On a fait la substitution u = 1 / (1 + x)
  * afin que les bornes d'intégrations soient finies
  * @param u {number} Paramètre de la fonction
- * @param z_utilisé {Boolean} Pour choisir si le calcul se fait avec les a (false par defaut) ou z (true)
+ * @param z_utilise {Boolean} Pour choisir si le calcul se fait avec les a (false par defaut) ou z (true)
  * @return {number} Valeur de la fonction
  */
-function fonction_E(u, z_utilisé=false) {
+function fonction_E(u, z_utilise=false) {
     let Omegam0 = Omega_m(0);
     let Omegar0 = Omega_r(0);
     let Omegal0 = Omega_l(0);
@@ -278,7 +278,7 @@ function fonction_E(u, z_utilisé=false) {
     let terme_3;
 
     // On calcule les terme 1 à 1 par soucis de clareté
-    if (z_utilisé){
+    if (z_utilise){
         terme_1 = Omegar0 * Math.pow(1+u, 4);
         terme_2 = Omegam0 * Math.pow(1+u, 3);
         terme_3 = (1 - Omegam0 - Omegal0 - Omegar0) * Math.pow(1+u, 2);
@@ -286,7 +286,7 @@ function fonction_E(u, z_utilisé=false) {
         terme_1 = Omegar0 * Math.pow(u, -4);
         terme_2 = Omegam0 * Math.pow(u, -3);
         terme_3 = (1 - Omegam0 - Omegal0 - Omegar0) * Math.pow(u, -2);
-    };
+    }
     return terme_1 + terme_2 + terme_3 + Omegal0;
 }
 
@@ -311,8 +311,6 @@ function fonction_Y(x) {
  * Dérivée analytique de la fonction Y(x). On aurait pu utiliser une approximation numérique mais
  * ça aurait été moins précis
  * @param x {number} Paramètre de la fonction
- * @param w0 {number} Premier coefficient
- * @param w1 {number} Deuxième coefficient
  * @return {number} Valeur de la fonction
  */
 function derivee_fonction_Y(x) {
@@ -327,10 +325,10 @@ function derivee_fonction_Y(x) {
 /**
  * Deuxième fonction facilitant l'écriture des expression dans le cas du modlèle DE. On a fait la substitution u = 1 / (1 + x)
  * @param u {number} Paramètre de la fonction
- * @param z_utilisé {Boolean} Pour choisir si le calcul se fait avec les a (false par defaut) ou z (true)
+ * @param z_utilise {Boolean} Pour choisir si le calcul se fait avec les a (false par defaut) ou z (true)
  * @return {number} Valeur de la fonction
  */
-function fonction_F(u,z_utilisé) {
+function fonction_F(u,z_utilise) {
     let Omegak0 = Omega_k(0)
     let Omegam0 = Omega_m(0)
     let Omegar0 = Omega_r(0)
@@ -340,7 +338,7 @@ function fonction_F(u,z_utilisé) {
     let terme_3;
     let terme_4;
 
-    if (z_utilisé){
+    if (z_utilise){
         terme_1 = Omegak0 * Math.pow(1+u, 2)
         terme_2 = Omegam0 * Math.pow(1+u, 3)
         terme_3 = Omegar0 * Math.pow(1+u, 4)
@@ -350,7 +348,7 @@ function fonction_F(u,z_utilisé) {
         terme_2 = Omegam0 * Math.pow(u, -3)
         terme_3 = Omegar0 * Math.pow(u, -4)
         terme_4 = OmegaDE0 * fonction_Y(u)
-    };
+    }
     return terme_1 + terme_2 + terme_3 + terme_4
 }
 
@@ -370,9 +368,8 @@ function equa_diff_1_LCDM(t, a) {
     let terme_1 = (Omegar0 / a_carre)
     let terme_2 = (Omegam0 / a)
     let terme_3 = Omegal0 * a_carre
-    let terme_4 = Omegak0;
 
-    return Math.sqrt(terme_1 + terme_2 + terme_3 + terme_4);
+    return Math.sqrt(terme_1 + terme_2 + terme_3 + Omegak0);
 }
 
 /**
@@ -416,9 +413,8 @@ function equa_diff_1_DE(t, a) {
     let terme_1 = Omegar0 / a_carre
     let terme_2 = Omegam0 / a
     let terme_3 = OmegaDE0 * a_carre * fonction_Y(a)
-    let terme_4 = Omegak0
 
-    return Math.sqrt(terme_1 + terme_2 + terme_3 + terme_4)
+    return Math.sqrt(terme_1 + terme_2 + terme_3 + Omegak0)
 }
 
 /**
@@ -567,22 +563,21 @@ function tauEnTemps(listeTaus, t_debut) {
  * ne doit dépendre que d'une variable
  * @param H0 {number} taux d'expansion actuel
  * @param a1 {number}
- * @param a2 {number}
+ * @param a2 {number} borne sup
+ * @param z_utilise {boolean} permet de savoir si on intègre avec ou sans le changement de variable
  * @return {number} âge de l'univers.
  */
-function calcul_ages(fonction, H0, a1, a2,z_utilisé=false) {
-    if (z_utilisé){
-        function integrande(u) {
+function calcul_ages(fonction, H0, a1, a2,z_utilise=false) {
+    function integrande(u) {
+        if (z_utilise){
             let terme_1 = Math.pow((1+u), -1)
             let terme_2 = Math.pow(fonction(u,true),-0.5)
-    
+
             return terme_1 * terme_2 ;
-        }
-    }else{
-        function integrande(u) {
+        } else {
             let terme_1 = Math.pow(u, -1)
             let terme_2 = Math.sqrt(fonction(u))
-    
+
             return terme_1 * Math.pow(terme_2 , -1);
         }
     }
@@ -615,41 +610,43 @@ function Sk(x,OmegaK){
  * @param {*} fonction fonction_E ou fonction_F en fonction de si c'est lcdm ou de
  * @param {*} Zemission décalage spectral au moment ou le photon est émis
  * @param {*} Zreception décalage spectral au moment ou le photon est reçu
- * @param {*} z_utilisé
- * @returns 
+ * @param {*} z_utilise permet de savoir si on utilise ou non le changement de variable pour l'intégrale
+ * @param precision_nb_pas {number} détermine la précision de calcul
+ * @returns
  */
-function DistanceMetrique(fonction,Zemission,Zreception, z_utilisé=false,precision_nb_pas=1e3){
-    if (z_utilisé){
-        function fonction_a_integrer(x){
+function DistanceMetrique(fonction, Zemission, Zreception, z_utilise=false, precision_nb_pas=1e3){
+    function fonction_a_integrer(x) {
+        if (z_utilise){
             return Math.pow(fonction(x,true),-0.5);
-        };
-    }else{
-        function fonction_a_integrer(x){
+        } else {
             return Math.pow(fonction(x),-0.5)/Math.pow(x,2);
-        };
-    };
+        }
+    }
+
     if (Omega_k(0) ===0){
         return c/(H0_parSecondes(H0))*simpson_composite(fonction_a_integrer,Zemission,Zreception,precision_nb_pas);
     }else {
         return c/(H0_parSecondes(H0)*Math.pow(Math.abs(Omega_k(0)),0.5))*Sk(Math.pow(Math.abs(Omega_k(0)),0.5)*simpson_composite(fonction_a_integrer,Zemission,Zreception,precision_nb_pas),Omega_k(0));
     }
-};
+}
 
-/** 
+/**
  * Fonction qui renvoie la distance de l'horizon des particules cosmologiques (plus grande distance a laquelle on peut recevoir un signal emis à l'instant t)
- * @param {*} z_emission par defaut = 0 décalage spectral du moment où le signal est émis
- * @returns 
+ * @param fonction {function} fonction utilisée pour le calcul
+ * @param {number} z_emission par defaut = 0 décalage spectral du moment où le signal est émis
+ * @returns
  */
-function calcul_horizon_particule(fonction,z_emission=0){
+function calcul_horizon_particule(fonction, z_emission=0){
     let a_emission=1/(z_emission+1);
     //formule 21 dans la théorie du 20/05/2024
     return DistanceMetrique(fonction,1e-50,a_emission,false,1e3);
-};
+}
 
 /**
  * Fonction qui renvoie la distance de l'horizon des évenements cosmologiques (plus grande distance a laquelle on peut envoyer un signal emis à l'instant t)
+ * @param fonction {function} fonction utilisée pour le calcul
  * @param {*} z_reception par defaut = 0 décalage spectral du moment où le signal est reçu
- * @returns 
+ * @returns
  */
 function calcul_horizon_evenements(fonction,z_reception=0){
     //formule 23 dans la théorie du 20/05/2024
@@ -659,22 +656,26 @@ function calcul_horizon_evenements(fonction,z_reception=0){
 
 /**
  * Inverse du calcul de l'age en fonction d'un z grâce a la fonction dichotomie (marche seulement pour des fonction absolument croissante)
- * @param {*} temps valeur t
- * @param {*} fonction fonction a rechercher
+ * @param {number} temps valeur t
+ * @param {function} fonction fonction à rechercher
+ * @param H0 {number} taux d'expansion actuel de l'univers
+ * @param precision {number} présicion du calcul
+ * @param iterationsmax {number} nombre d'itération avant l'rrêt du calcul
  * @returns valeur de z
  */
 function calcul_t_inverse(temps,fonction,H0,precision=1e-30,iterationsmax=100){
 	function a_dichotomer(x){
 		return calcul_ages(fonction,H0,1e-20,x);
 	}
-	age_univers=a_dichotomer(1);
+	let age_univers = a_dichotomer(1);
     console.log(age_univers.toExponential(5));
-    
+
+    let a_t
 	if (age_univers>=temps){
 		a_t=Dichotomie(a_dichotomer,temps,1e-15,1,1e-30,iterationsmax);
 	}else{
 		a_t=Dichotomie(a_dichotomer,temps,1,1e10,1e-30,iterationsmax);
-	};
+	}
 	return (1-a_t)/a_t;
 }
 

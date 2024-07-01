@@ -1,24 +1,4 @@
 /**
- * fonction pour renvoyer une liste de point de zmin a zmax avec nb_pts
- * @param {*} zmin 
- * @param {*} zmax 
- * @param {*} nb_pts 
- * @returns points for the x-axis
- */
-function linear_scale(zmin, zmax, nb_pts) {
-	let step = (zmax - zmin) / nb_pts;
-	let abscissa = [];
-	for (let i=zmin; i<=zmax; i+=step) {
-		abscissa.push(i);
-	}
-	if(abscissa[abscissa.length - 1] != zmax){ //Pour gérér le cas particulier ou zmax n'apparait pas dans la liste par la faute du pas
-		abscissa.push(zmax)
-	}
-
-	return abscissa;
-};
-
-/**
  * fonction pour l'affichage de toutes les valeurs correspondant au z1,z2 et luminosité
  * @param {*} fonction_EouF Fonction_E pour univers LCDM Fonction_F pour univers DarkEnergy
  * @returns 
@@ -26,26 +6,27 @@ function linear_scale(zmin, zmax, nb_pts) {
 function affichage_des_z(fonction_EouF){
     let start_temps=Date.now(); //commencer le timer pour savoir combien de temps les calculs prennent
     let H0 = Number(document.getElementById("H0").value);
-    z1 = Number(document.getElementById("z1").value);
-    z2 = Number(document.getElementById("z2").value);
+    let z1 = Number(document.getElementById("z1").value);
+    let z2 = Number(document.getElementById("z2").value);
     if (z1<=-1) {//cas ou z1 et z2 sont en dessous de -1 impossible
         return messagebox(texte.page_univers_calculs.message_z1_incorrect,"z1 >-1");}
     if (z2<=-1) {
         return messagebox(texte.page_univers_calculs.message_z2_incorrect,"z2 >-1");
-    };
+    }
 
     //! ____________________________________________________Partie géometrie___________________________________________________________
     //? ----------Calcul des Distances métriques-----------
+    let dm1, dm2
     if (z1<0){//si z négatif alors on integre de z à 0
         dm1=DistanceMetrique(fonction_EouF,z1,0,true);
     }else{//si z positif alors on integre de 0 à z
         dm1=DistanceMetrique(fonction_EouF,1/(1+z1),1);
-    };
+    }
     if (z2<0){
         dm2=DistanceMetrique(fonction_EouF,z2,0,true);
     }else{
         dm2=DistanceMetrique(fonction_EouF,1/(1+z2),1);
-    };
+    }
     let delta_dm=Math.abs(DistanceMetrique(fonction_EouF,1/(1+z1),1/(1+z2))); //distance entre les deux z
 
     //on affiche toutes les valeurs de distances ainsi que leurs conversions
@@ -93,7 +74,7 @@ function affichage_des_z(fonction_EouF){
         Omega_l0 = Number(document.getElementById("Omégal0").value);
     }else if (fonction_EouF.name==="fonction_F"){//si univers DE alors omegaL0 devien omegaDE
         omegaDE0 = Number(document.getElementById("OmégaDE0").value);
-    };
+    }
 
     //temperature
     let Tz1 = T0 * (1 + z1); 
@@ -123,7 +104,7 @@ function affichage_des_z(fonction_EouF){
         Omega_DEz2=omegaDE0/fonction_F(z2,true);
         Omega_DENz1=omegaDE0*fonction_Y(1/(1+z1))/fonction_F(z1,true);
         Omega_DENz2=omegaDE0*fonction_Y(1/(1+z2))/fonction_F(z2,true);
-    };
+    }
     // dz1/t0 et dz2/t0
     let dz1= (1+z1)*H0_parSecondes(H0) - H0_parSecondes(Hz1);
     let dz2= (1+z2)*H0_parSecondes(H0) - H0_parSecondes(Hz2);
@@ -141,7 +122,7 @@ function affichage_des_z(fonction_EouF){
         document.getElementById("omegaDE_z1").value = arrondie_affichage(Omega_DEz1);
         document.getElementById("omegaDEN_z1").value = arrondie_affichage(Omega_DENz1);
         document.getElementById("omegaTotal_z1").value=arrondie_affichage(Omega_rz1+Omega_mz1+Omega_kz1+Omega_DENz1);
-    };
+    }
     document.getElementById("output_dz1dt").value = arrondie_affichage(dz1);
 
     document.getElementById("T_z2").value = arrondie_affichage(Tz2);
@@ -156,7 +137,7 @@ function affichage_des_z(fonction_EouF){
         document.getElementById("omegaDE_z2").value = arrondie_affichage(Omega_DEz2);
         document.getElementById("omegaDEN_z2").value = arrondie_affichage(Omega_DENz2);
         document.getElementById("omegaTotal_z2").value=arrondie_affichage(Omega_rz2+Omega_mz2+Omega_kz2+Omega_DENz2);
-    };
+    }
     document.getElementById("output_dz2dt").value = arrondie_affichage(dz2);
 
     
@@ -199,7 +180,7 @@ function affichage_des_z(fonction_EouF){
 
     duree_calcul=Date.now()-start_temps;
     document.getElementById('resul_tps').innerHTML = "Le calcul a duré : " + duree_calcul + " millisecondes !";
-};
+}
 
 
 function abscisse_t(fonction_EouF,zmin,zmax,pas){
@@ -212,7 +193,7 @@ function abscisse_t(fonction_EouF,zmin,zmax,pas){
         liste_z.push(z);
     })
     return [liste_z,liste_point_t]
-};
+}
 
 
 
@@ -238,19 +219,19 @@ function generer_graphique_distance(fonction_EouF){
         text_omegal0_graph ='   \Ω<sub>DE0</sub>:  '+Omega_DE0;
         w0w1="  w<sub>0</sub>: "+document.getElementById("w0").value+"  w<sub>1</sub>: "+document.getElementById("w1").value;
         equa_diff_2=equa_diff_2_DE;
-    };
+    }
 
     //Si il n'y a pas de big bang impossible a calculer
     if (isNaN(debut_fin_univers(equa_diff_2, T0)[2])){
         return;
-    };
+    }
     //paramètre pour le tracer
     let zmin = Number(document.getElementById("graphique_z_min").value);
 	let zmax = Number(document.getElementById("graphique_z_max").value);
 	let pas = Number(document.getElementById("graphique_pas").value);
     
     // valeur des abscisses
-    let abscisse
+    let plot_title, xaxis_title, graphdivid, starttest, abscisse_calcul, abscisse_display
 
     if (ordonnee_t){
         plot_title = "d<sub>i</sub>(t)";
@@ -271,7 +252,7 @@ function generer_graphique_distance(fonction_EouF){
         abscisse_display=abscisse_calcul;
         document.getElementById('check_distance_z').checked=true;
         document.getElementById('graphique_d_z').classList.remove('cache');
-    };
+    }
 
 
     // valeurs des ordonnées
@@ -282,6 +263,7 @@ function generer_graphique_distance(fonction_EouF){
 
     //calculs des longueurs
     abscisse_calcul.forEach(i => {
+        let dm
         if (i<0){
             dm=DistanceMetrique(fonction_EouF,i,0,true,1e2);
         }else{
@@ -311,12 +293,12 @@ function generer_graphique_distance(fonction_EouF){
         plot_type_abs="log"
     }else{
         plot_type_abs="scatter"
-    };
+    }
     if (log_ord){
         plot_type_ord="log"
     }else{
         plot_type_ord="scatter"
-    };
+    }
 
     //tracer des 4 courbes 
     let data = [
@@ -370,7 +352,7 @@ function generer_graphique_distance(fonction_EouF){
     Plotly.newPlot(graphdivid,data,layout,{displaylogo: false});
 
     document.getElementById("temps_calcul_graph").innerHTML = "Le calcul a duré : " + (Date.now()-start_temps) + " millisecondes !";
-};
+}
 
 function generer_graphique_Omega(fonction_EouF){
     let start_temps=Date.now();
@@ -403,14 +385,14 @@ function generer_graphique_Omega(fonction_EouF){
         abscisse_display=abscisse_calcul;
         document.getElementById('check_omega_z').checked=true;
         document.getElementById('graphique_omega_z').classList.remove('cache');
-    };
+    }
 
     if (fonction_EouF.name==="fonction_E"){
         //Si il n'y a pas de big bang impossible a calculer
         let T0 = Number(document.getElementById("T0").value);
         if (isNaN(debut_fin_univers(equa_diff_2_LCDM, T0)[2])){
             return;
-        };
+        }
         text_omegal0_graph ='   \Ω<sub>Λ0</sub>:  '+Omega_l(0); //texte et titre dans lequel omegalambda ou omegaDE apparait
         titre_omegal='<b>&#x3A9;<sub>&#x39B;</sub><b>';
         w0w1="";
@@ -437,7 +419,7 @@ function generer_graphique_Omega(fonction_EouF){
         let T0 = Number(document.getElementById("T0").value);
         if (isNaN(debut_fin_univers(equa_diff_2_DE, T0)[2])){
             return;
-        };
+        }
         text_omegal0_graph ='   \Ω<sub>DE0</sub>:  '+Omega_DE(0); //texte et titre dans lequel omegalambda ou omegaDE apparait
         titre_omegal='<b>&#x3A9;<sub>DE</sub><b>';
         w0w1="  w<sub>0</sub>: "+document.getElementById("w0").value+"  w<sub>1</sub>: "+document.getElementById("w1").value;
@@ -457,14 +439,14 @@ function generer_graphique_Omega(fonction_EouF){
                 Ol=Omega_DE(i)
             }else{
                 Ol= Omega_DE(0) / fonction_F(i,true);
-            };  
+            }
 
             OrArr.push(Or);
             OmArr.push(Om);
             OkArr.push(Ok);
             OlArr.push(Ol);
         });
-    };
+    }
 
     //affichage des omega0 sous le titre
     let annots = [{xref: 'paper',
@@ -482,12 +464,12 @@ function generer_graphique_Omega(fonction_EouF){
         plot_type_abs="log"
     }else{
         plot_type_abs="scatter"
-    };
+    }
     if (log_ord){
         plot_type_ord="log"
     }else{
         plot_type_ord="scatter"
-    };
+    }
 
     //tracer des 4 courbes 
     let data = [
@@ -541,7 +523,7 @@ function generer_graphique_Omega(fonction_EouF){
     Plotly.newPlot(graphdivid,data,layout,{displaylogo: false});
 
     document.getElementById("temps_calcul_graph").innerHTML = "Le calcul a duré : " + (Date.now()-start_temps) + " millisecondes !";
-};
+}
 
 function generer_graphique_TempsDecalage(fonction_EouF){
     let start_temps=Date.now();
@@ -557,14 +539,14 @@ function generer_graphique_TempsDecalage(fonction_EouF){
         text_omegal0_graph ='   \Ω<sub>DE0</sub>:  '+Omega_DE(0);
         w0w1="  w<sub>0</sub>: "+document.getElementById("w0").value+"  w<sub>1</sub>: "+document.getElementById("w1").value;
         equa_diff_2=equa_diff_2_DE;
-    };
+    }
 
 
     //Si il n'y a pas de big bang impossible a calculer
     let T0 = Number(document.getElementById("T0").value);
     if (isNaN(debut_fin_univers(equa_diff_2, T0)[2])){
         return;
-    };
+    }
     //paramètre pour le tracer
     let zmin = Number(document.getElementById("graphique_z_min").value);
 	let zmax = Number(document.getElementById("graphique_z_max").value);
@@ -615,18 +597,18 @@ function generer_graphique_TempsDecalage(fonction_EouF){
         graphdivid="graphique_t_z"
         document.getElementById('check_t_z').checked=true;
         document.getElementById('graphique_t_z').classList.remove('cache');
-    };
+    }
 
     if (log_abs){
         plot_type_abs="log"
     }else{
         plot_type_abs="scatter"
-    };
+    }
     if (log_ord){
         plot_type_ord="log"
     }else{
         plot_type_ord="scatter"
-    };
+    }
 
     //tracer des 4 courbes 
     let data = [
@@ -665,7 +647,7 @@ function generer_graphique_TempsDecalage(fonction_EouF){
     Plotly.newPlot(graphdivid,data,layout,{displaylogo: false});
 
     document.getElementById("temps_calcul_graph").innerHTML = "Le calcul a duré : " + (Date.now()-start_temps) + " millisecondes !";
-};
+}
 
 //-----------------Calcul diamètre---------
 /**
@@ -680,7 +662,7 @@ function afficher_seconde_valeur(identree){
         let diametre = pc_vers_m(document.getElementById("Diametre_kpc").value*1e3)
         document.getElementById("Diametre_m").value=arrondie_affichage(diametre);
     }
-};
+}
 
 /**
  * Calcul la valeur de theta grace au diametre en metre
@@ -691,11 +673,11 @@ function calcul_diamtre_vers_theta(){
         dda=document.getElementById("output_da1").value;
     }else{
         dda=document.getElementById("output_da2").value;
-    };
+    }
     let angle_diametre = (206265 * diametre_input/dda);
 
     document.getElementById('theta').value=arrondie_affichage(angle_diametre);
-};
+}
 
 /**
  * calcul inverse du précedent pour calculer le diametre en metre et indirectement en kpc grace a theta
@@ -706,11 +688,11 @@ function calcul_theta_vers_diametre(){
         dda=document.getElementById("output_da1").value;
     }else {
         dda=document.getElementById("output_da2").value;
-    };
+    }
     let diametre = theta_input*dda/206265;
     document.getElementById("Diametre_m").value = arrondie_affichage(diametre);
     document.getElementById("Diametre_kpc").value = arrondie_affichage(m_vers_pc(diametre)/1e3);
-};
+}
 
 /**
  * renvoie différente valeur des horizon cosmologique des evenementes et particule en fonction d'un temps
@@ -740,8 +722,8 @@ function calcul_horizons_annexe(fonction_EouF){
 		document.getElementById("resultat_dm_evenement_m").value=arrondie_affichage(dm_horizon_evenement_m);
 		document.getElementById("resultat_dm_evenement_pc").value=arrondie_affichage(dm_horizon_evenement_pc);
 		document.getElementById("resultat_dm_evenement_al").value=arrondie_affichage(dm_horizon_evenement_al);
-        };
-};
+        }
+}
 
 //--------------------Calcul inverse-------------------
 /**
@@ -760,14 +742,14 @@ function calcul_dm_inverse(fonction_EouF){
         function interieur_SK_distance(x){ //fonction representant l'interieur de de la fonctin SK() dans la théorie sur la distance metrique, permet de savoir si l'univers sphérique l'est assez pour avoir plusieurs z
             function fonction_integ_distance(x){
                 return Math.pow(fonction_EouF(x,true),-0.5);
-            };
+            }
             return Math.pow(Math.abs(Omega_k(0)),0.5)*simpson_composite( fonction_integ_distance, x,0,1e3);
-        };
+        }
 
         if (Omega_k(0)>=0 || interieur_SK_distance(-1)<Math.PI/2){//cas classique univers plat ou pas trop sphérique -> 1 un seul z
             function fonction_dm_dichotomie(x){ //equation de la distance metrique avec seulement z comme variable
                 return DistanceMetrique(fonction_EouF,x,0,true);
-            };
+            }
             z=Dichotomie(fonction_dm_dichotomie,dm_input,-1,0,1e-30);
             document.getElementById("output_z_dm").value=arrondie_affichage(z);
 
@@ -777,11 +759,11 @@ function calcul_dm_inverse(fonction_EouF){
             dmmax=c/(H0_parSecondes(H0)*Math.pow(Math.abs(Omega_k(0)),0.5));
             if (dm_input>dmmax){
                 return;
-            };
+            }
 
             function fonction_dm_dichotomie(x){ //equation de la distance metrique avec seulement z comme variable
                 return DistanceMetrique(fonction_EouF,x,0,true);
-            };
+            }
 
             let amax=Dichotomie(interieur_SK_distance,Math.PI/2,-1,0,1e-30);//on calcule le pique de la fonction sinus 
             let dmlimit=DistanceMetrique(fonction_EouF,-.999999999999,0,true);//correspond à la valeur vers laquelle tend dans le cas ou pi/2<interieur sk <pi
@@ -793,8 +775,8 @@ function calcul_dm_inverse(fonction_EouF){
             }else{
                 let z=Dichotomie(fonction_dm_dichotomie,dm_input,amax,1,1e-30);
                 document.getElementById("output_z_dm").value=arrondie_affichage(z); //résultat z
-            };
-        };
+            }
+        }
 
 
 
@@ -802,24 +784,24 @@ function calcul_dm_inverse(fonction_EouF){
         function interieur_SK_distance(x){//fonction representant l'interieur de de la fonctin SK() dans la théorie sur la distance metrique, permet de savoir si l'univers sphérique l'est assez pour avoir plusieurs z
             function fonction_integ_distance(x){
                 return Math.pow(fonction_EouF(x),-0.5)/Math.pow(x,2);
-            };
+            }
             return Math.pow(Math.abs(Omega_k(0)),0.5)*simpson_composite( fonction_integ_distance, x,1,1e3);
-        };
+        }
 
 
 
         if (Omega_k(0)>=0 || interieur_SK_distance(1e-15)<Math.PI/2){ //cas classique où l'univers n'est pas une hypersphère ou alors le rayon de courbure de cette sphère est trop petit  -> qu'une seule solution en positif et une négative
             function fonction_dm_dichotomie(x){
                 return DistanceMetrique(fonction_EouF,x,1,false);
-            };
+            }
             let a=Dichotomie(fonction_dm_dichotomie,dm_input,0,1,1e-30);
             z=(1-a)/a;
             if (z<1e-10){//cas très particulier où le z est tellement petit que le (a) correspondant devient imprécis numériquement à cause du nombre de flottant (0.999999999 est approximer à 1 ce qui fausse le calcul) on utilise donc le calcul avec z car vu que z très petit pas besoin de s'inquiéter que la bonne valeur ne soit pas comprise dans les bornes 
                 function fonction_dm_dichotomie(x){
                     return DistanceMetrique(fonction_EouF,0,x,true);
-                };
+                }
                 z=Dichotomie(fonction_dm_dichotomie,dm_input,0,1,1e-30);
-            };
+            }
             document.getElementById("output_z_dm").value=arrondie_affichage(z); //résultat z
 
 
@@ -827,7 +809,7 @@ function calcul_dm_inverse(fonction_EouF){
         }else{//cas plus particulier ou l'univers est hyperspherique et le paramètre de courbe est assez important pour dépasser le sin(pi/2) dans l'equation de la distance metrique, il y a donc 2 solution maxmimum (pas pour tout les dm si l'interieur du sin est en dessous de pi)
             function fonction_dm_dichotomie(x){
                 return DistanceMetrique(fonction_EouF,x,1);
-            };
+            }
             let amax=Dichotomie(interieur_SK_distance,Math.PI/2,1e-15,1,1e-30);//on calcule le pique de la fonction sinus 
             let dmlimit=calcul_horizon_particule(fonction_EouF);//correspond à la valeur vers laquelle tend dans le cas ou pi/2<interieur sk <pi
             if (interieur_SK_distance(1e-15)>=Math.PI || dm_input>dmlimit){//le premier cas est celui ou l'interieur de sk est superieur a pi donc forcement 2 solution, et le second cas est celui ou il existe une solution en dessous de l'asymptot et 2 au dessus
@@ -840,10 +822,10 @@ function calcul_dm_inverse(fonction_EouF){
                 let a=Dichotomie(fonction_dm_dichotomie,dm_input,amax,1,1e-30);
                 z=(1-a)/a;
                 document.getElementById("output_z_dm").value=arrondie_affichage(z); //résultat z
-            };
-        };
-    };
-};
+            }
+        }
+    }
+}
 
 /**
  * Renvoie la valeur d'un z correspondant a un temps, si le temps est supérieur a celui de l'age de l'univers alors le z est negatif
@@ -862,9 +844,9 @@ function affichage_t_inverse(fonction_EouF){
         z_rec=NaN;
     }else{
         z_rec=calcul_t_inverse(temps_rec_input,fonction_EouF,H0_parAnnees(H0));
-    };
+    }
     
 
     document.getElementById('output_z_tem').value=arrondie_affichage(z_em);
     document.getElementById('output_z_trec').value=arrondie_affichage(z_rec);
-};
+}

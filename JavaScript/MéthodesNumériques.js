@@ -49,22 +49,23 @@ function simpson_composite(fonction, borne_inf, borne_sup, subdivisions=100) {
 
 
 /**
- * Permet de trouver l'abscisser correspond a un ordonée d'une fonction monotone
- * @param {*} fonction fonction utilisée
- * @param {*} cible abscisse recherché
- * @param {*} borneDebut borne de départ 
- * @param {*} borneFin borne de fin
- * @param {*} precision précision recherchée 
- * @returns 
+ * Permet de trouver l'abscisser correspond à une ordonée d'une fonction monotone
+ * @param {function} fonction fonction utilisée
+ * @param {number} cible abscisse recherchée
+ * @param {number} borneDebut borne de départ
+ * @param {number} borneFin borne de fin
+ * @param {number} precision précision recherchée
+ * @param {number} iterations_max nombre maximal d'étape avant l'arrêt du code
+ * @returns ordonée recherchée
  */
 function Dichotomie(fonction, cible, borneDebut, borneFin, precision,iterations_max=100){
     let iterations=0
+    let milieu;
 
-    start_temps=Date.now();
     if (fonction(borneDebut)<fonction(borneFin)){
         while (Math.abs(borneFin - borneDebut) > precision && iterations<iterations_max){
             iterations = iterations+1;
-            var milieu = (borneDebut+borneFin)/2;
+            milieu = (borneDebut+borneFin)/2;
             let dm_milieu=fonction(milieu);
 
             if (cible>dm_milieu){
@@ -73,12 +74,13 @@ function Dichotomie(fonction, cible, borneDebut, borneFin, precision,iterations_
                 borneFin = milieu;
             }else{
                 return milieu
-            };
-        };
-    }else{//pour le cas où la fonction est décroissante
+            }
+        }
+
+    } else {//pour le cas où la fonction est décroissante.
         while (Math.abs(borneFin - borneDebut) > precision && iterations<iterations_max){
             iterations = iterations+1;
-            var milieu = (borneDebut+borneFin)/2;
+            milieu = (borneDebut+borneFin)/2;
             let dm_milieu=fonction(milieu);
             
             if (cible<dm_milieu){

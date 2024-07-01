@@ -22,7 +22,7 @@ function linear_scale(zmin, zmax, nb_pts) {
 	for (let i=zmin; i<=zmax; i+=pas) {
 		abscisse.push(i);
 	}
-	if(abscisse[abscisse.length - 1] != zmax){ //Pour gérér le cas particulier ou zmax n'apparait pas dans la liste par la faute du pas
+	if(abscisse[abscisse.length - 1] !== zmax){ //Pour gérér le cas particulier ou zmax n'apparait pas dans la liste par la faute du pas
 		abscisse.push(zmax)
 	}
 

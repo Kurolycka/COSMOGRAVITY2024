@@ -304,20 +304,21 @@ function updateUnivers() {
     document.getElementById("tfin_enregistrer").innerHTML = "t<sub>f</sub> = " + document.getElementById("fin").innerHTML
 
     let fonction_simplifiante;
+    let equa_diff_2;
     if (document.getElementById("Omégal0")) {
         fonction_simplifiante = fonction_E;
-        equa_diff_2=equa_diff_2_LCDM;
+        equa_diff_2 = equa_diff_2_LCDM;
     } else {
         fonction_simplifiante = fonction_F;
-        equa_diff_2=equa_diff_2_DE;
+        equa_diff_2 = equa_diff_2_DE;
     }
     
     //affichage des horizons seulement dans certains cas
-    if (!(document.getElementById('optionsMonofluide').value =="optionNull")){//aucun horizons si univers monofluide (existe bien mais implementation pour le futur car différente formule)
+    if (!(document.getElementById('optionsMonofluide').value === "optionNull")){//aucun horizons si univers monofluide (existe bien mais implementation pour le futur car différente formule)
         document.getElementById('horizonEvenement').style.display="none";
         document.getElementById('horizonParticule').style.display="none";
     }else {
-        if (debut_fin_univers(equa_diff_2, T0)[2] === 0){//detecter s'il n'y a pas de big bang alors pas d'horizon des particules
+        if (debut_fin_univers(equa_diff_2)[2] === 0){//detecter s'il n'y a pas de big bang alors pas d'horizon des particules
             document.getElementById('horizonParticule').style.display="none";
         }else{
             document.getElementById('horizonParticule').style.display="block";
@@ -341,7 +342,7 @@ function updateUnivers() {
             document.getElementById("resultat_dm_evenement_al").innerHTML = arrondie_affichage(dm_horizon_evenement_al);
             document.getElementById("he_enregistrer").innerHTML = "d<sub>e<sub>0</sub></sub> = " + dm_horizon_evenement_pc.toExponential(4) + " pc"
         }
-    };
+    }
 
     if (document.getElementById("Omégal0")) {
         update_graphe_interactif();
