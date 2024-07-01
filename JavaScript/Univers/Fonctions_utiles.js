@@ -454,7 +454,7 @@ function debut_fin_univers(equa_diff) {
     let texte = o_recupereJson()
     let H0 = Number(document.getElementById("H0").value);
 
-    // Déclaration des variables et des valeurs retournée
+    // Déclaration des variables et des valeurs retournés
     let set_solution = [0, 1 ,1]
     let save_set_solution;
     let pas = 1e-3 * H0 / Math.abs(H0)
@@ -483,7 +483,7 @@ function debut_fin_univers(equa_diff) {
     // On récupère le maximum entre la valeur du facteur d'échelle et la dérivée du facteur d'échelle
     let max = Math.max(Math.abs(set_solution[1]))
 
-    if ( option === "optionLDE" || ( max <= limite && set_solution[1] > 1 ) ) {
+    if ( option === "optionLDE" || ( max <= limite && set_solution[1] > 1 ) || nombre_point > 5/Math.abs(pas)) {
         naissance_univers = texte.univers.pasDebut
         age_debut = 0
     }
@@ -500,11 +500,6 @@ function debut_fin_univers(equa_diff) {
                 + gigaannee_vers_seconde(Math.abs(age_debut)).toExponential(4) + " s"
         }
     }
-
-
-
-
-
 
     // On réinitialise
     set_solution = [0, 1, 1];
@@ -525,7 +520,7 @@ function debut_fin_univers(equa_diff) {
     // On récupère le maximum entre la valeur du facteur d'échelle
     max = Math.max(Math.abs(set_solution[1]))
 
-    if ( option === "optionLDE" || ( max <= limite && set_solution[1] > 1 ) ) {
+    if ( option === "optionLDE" || ( max <= limite && set_solution[1] > 1 ) || nombre_point > 5/Math.abs(pas)) {
         mort_univers = texte.univers.pasMort
     }
     else {
@@ -686,11 +681,10 @@ function calcul_t_inverse(temps,fonction,H0,precision=1e-30,iterationsmax=100){
 /**
  * Fonction permettant de tracer le facteur d'échelle en fonction du temps.
  * @param solution {[number[], number[]]} Liste contenant la liste des temps et les valeurs du facteur d'échelle
- * @param t_debut {number} temps écoulé depuis le début de l'univers
- * @param t_fin {number} temps restant avant la fin de l'univers
+ * @param debutEtFin
  * @param t_0 {number} age actuel de l'univers
  */
-function graphique_facteur_echelle(solution, t_debut, t_fin, t_0) {
+function graphique_facteur_echelle(solution,debutEtFin , t_0) {
     let texte = o_recupereJson()
     let a_min = Number(document.getElementById("a_min").value)
     let a_max = Number(document.getElementById("a_max").value)
@@ -703,6 +697,11 @@ function graphique_facteur_echelle(solution, t_debut, t_fin, t_0) {
         ordonnee.reverse()
     }
 
+    let naissance = debutEtFin[0]
+    let mort = debutEtFin[1]
+    let t_debut = debutEtFin[2]
+    let t_fin = debutEtFin[3]
+
     let temps_debut = abscisse[0]
     let facteur_debut = ordonnee[0]
     let temps_fin = abscisse[abscisse.length - 1]
@@ -712,20 +711,18 @@ function graphique_facteur_echelle(solution, t_debut, t_fin, t_0) {
     let min = ordonnee.reduce((a, b) => Math.min(a, b), +Infinity);
 
     // On corrige l'erreur numérique provoquée par la dérivée infinie en a=0
-    console.log(abscisse)
     if (t_0 > 0 && a_min === 0) {
         for (let index = 0; index < abscisse.length; index = index + 1) {
             abscisse[index] = abscisse[index] - temps_debut
         }
     }
-    console.log(abscisse)
 
-    if ( t_debut && facteur_debut < Math.abs(a_max - a_min) * 1e-1 ) {
+    if ( t_debut && facteur_debut < Math.abs(max - min) * 1e-1 && a_min === 0) {
         abscisse[0] = 0
         ordonnee[0] = 0
     }
 
-    if ( t_fin && facteur_fin < Math.abs(a_max - a_min) * 1e-1 ) {
+    if ( t_fin && facteur_fin < Math.abs(max - min) * 1e-1 && a_min === 0) {
         ordonnee[ordonnee.length - 1] = 0
     }
     console.log(max, min)
@@ -739,7 +736,8 @@ function graphique_facteur_echelle(solution, t_debut, t_fin, t_0) {
         line: { color: 'purple' }
     }];
 
-    if (t_debut && facteur_debut > Math.abs(a_max - a_min) * 1e-2 && temps_debut < Math.abs(t_debut) * 1e-1 ) {
+    const BigFallRegEx = /BigFall/;
+    if (BigFallRegEx.test(naissance) && temps_debut < Math.abs(t_debut) * 1e-1 ) {
         donnee.push({
             type: 'line',
             x:[0, 0],
@@ -753,7 +751,8 @@ function graphique_facteur_echelle(solution, t_debut, t_fin, t_0) {
         });
     }
 
-    if (t_fin && facteur_fin > Math.abs(a_max - a_min) * 1e-2 && temps_fin > Math.abs(t_fin) * (1 + 10/100)) {
+    const BigRipRegEx = /BigRip/;
+    if (BigRipRegEx.test(mort) && temps_fin > Math.abs(t_fin) * (1 + 10/100)) {
         let x_assymptote;
         if (t_fin && t_debut) {
             x_assymptote = Math.abs(Math.abs(t_fin) + Math.abs(t_debut))

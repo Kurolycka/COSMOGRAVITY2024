@@ -20,6 +20,19 @@ function calcul_facteur_echelle_DE(equa_diff_1, equa_diff_2, fonction_simplifian
     let a_min = Number(document.getElementById("a_min").value);
     let a_max = Number(document.getElementById("a_max").value);
 
+    if (a_min === a_max) {
+        a_min = a_min - 1;
+        document.getElementById("a_min").value = a_min;
+    }
+
+    if (a_min > a_max) {
+        let temp = a_min
+        a_min = a_max
+        a_max = temp
+        document.getElementById("a_min").value = a_min;
+        document.getElementById("a_max").value = a_max;
+    }
+
     /**
      * Fonction qui permet de :
      *      - Redéfinir les conditions initiales
@@ -148,5 +161,5 @@ function affichage_site_DE() {
     document.getElementById("début").innerHTML = debutEtFin[0]
     document.getElementById("fin").innerHTML = debutEtFin[1]
 
-    graphique_facteur_echelle(donnee, debutEtFin[2], debutEtFin[3], age_univers)
+    graphique_facteur_echelle(donnee, debutEtFin, age_univers)
 }
