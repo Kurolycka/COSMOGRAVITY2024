@@ -650,9 +650,8 @@ function calcul_horizon_particule(fonction, z_emission=0){
  */
 function calcul_horizon_evenements(fonction,z_reception=0){
     //formule 23 dans la théorie du 20/05/2024
-    return DistanceMetrique(fonction,-.999999999,z_reception,true,1e3);
+    return DistanceMetrique(fonction,-.99999999999,z_reception,true,1e3);
 }
-
 
 /**
  * Inverse du calcul de l'age en fonction d'un z grâce a la fonction dichotomie (marche seulement pour des fonction absolument croissante)
@@ -668,7 +667,6 @@ function calcul_t_inverse(temps,fonction,H0,precision=1e-30,iterationsmax=100){
 		return calcul_ages(fonction,H0,1e-20,x);
 	}
 	let age_univers = a_dichotomer(1);
-    console.log(age_univers.toExponential(5));
 
     let a_t
 	if (age_univers>=temps){

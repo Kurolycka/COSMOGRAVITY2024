@@ -108,7 +108,7 @@
                 <label id="label_optionsOmégar0" for="optionsOmégar0">
                     <img id="infoOmégaR0" src="./Images/icone_info.png" alt="" width="20" height="20">
                 </label>
-                <select name="Détail Omégar0" id="optionsOmégar0">
+                <select name="Détail Omégar0" id="optionsOmégar0" onchange="updateCalculette()">
                     <option id="Omégar0_optionRFC_et_Neutrinos" value="optionRFC_et_Neutrinos"></option>
                     <option id="Omégar0_optionRFC" value="optionRFC"></option>
                     <option id="Omégar0_optionRien" value="optionRien"></option>
@@ -119,7 +119,7 @@
                 <label id="label_optionsOmégak0" for="OptionsOmégak0">
                     <img id="infoOmégaK0" src="./Images/icone_info.png" alt="" width="20" height="20">
                 </label>
-                <input id="OptionsOmégak0" type="checkbox">
+                <input id="OptionsOmégak0" type="checkbox" onchange="updateCalculette()">
             </div>
 
             <div id="conteneurCanvas">

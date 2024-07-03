@@ -29,6 +29,26 @@ function linear_scale(zmin, zmax, nb_pts) {
 	return abscisse;
 }
 
+/**
+ * Logarithmic Scale
+ * @param {*} zmin 
+ * @param {*} zmax 
+ * @param {*} nb_pts 
+ * @returns points for the x-axis
+ */
+function log_scale(zmin, zmax, nb_pts) {
+	let zmin_10 = Math.log10(zmin + 1);
+	let zmax_10 = Math.log10(zmax + 1);
+	let abscissa = linear_scale(zmin_10, zmax_10, nb_pts);
+	let abscissa_10 = [];
+	for (let i = 0; i < abscissa.length; i++) {
+		abscissa_10.push(10**abscissa[i] - 1);	
+	}
+
+	
+	return abscissa_10;
+}
+
 
 //!Converions
 function annee_vers_seconde(valeur){
