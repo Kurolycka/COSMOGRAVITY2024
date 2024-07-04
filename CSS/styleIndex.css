@@ -158,6 +158,8 @@ body {
     .Logos {
         grid-area: Logos;
         display: flex;
+        flex-direction: column;
+        gap: 15px;
         justify-content: center;
         align-items: center;
         width: 100%;
@@ -169,6 +171,13 @@ body {
             background-color: rgba(255, 255, 255, 0.8);
             border-radius: 50px;
             padding: 10px;
+        }
+
+        .Logos #version {
+            color: #ffffff;
+
+            text-align: center;
+            font-size: 1.5em;
         }
 
 #watermark {

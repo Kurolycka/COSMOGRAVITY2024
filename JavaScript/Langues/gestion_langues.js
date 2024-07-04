@@ -184,6 +184,7 @@ function text_page_index() {
     document.getElementById("txtUnivers").innerHTML = texte.index.txtUnivers;
     document.getElementById("Trajectoires").innerHTML = texte.nav.trajectoire;
     document.getElementById("txtTrajectoires").innerHTML = texte.index.txtTrajectoires;
+    document.getElementById("version").innerHTML = texte.index.version;
 }
 
 function texte_univers_LCDM() {
