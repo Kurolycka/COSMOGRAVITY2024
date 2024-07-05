@@ -24,7 +24,8 @@
 	"index":
 	{
 		"txtUnivers":"Friedmann-Lemaître universes models and cosmological calculator",
-		"txtTrajectoires":"Trajectories of a free particule in the metrics of Schwarzschild and of Kerr"
+		"txtTrajectoires":"Trajectories in the metrics of Schwarzschild and of Kerr",
+		"version": "Version beta 2.5 (04/07/2024)"
 	},
 
 	"univers": {

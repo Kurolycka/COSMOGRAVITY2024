@@ -24,7 +24,8 @@
 	"index":
 	{
 		"txtUnivers": "Modèles d'univers de Friedmann-Lemaître et calculette cosmologique",
-		"txtTrajectoires": "Trajectoires d'une particule libre dans les métriques de Schwarzschild et de Kerr"
+		"txtTrajectoires": "Trajectoires dans les métriques de Schwarzschild et de Kerr",
+		"version": "Version béta 2.5 (04/07/2024)"
 	},
 
 	"univers": {
