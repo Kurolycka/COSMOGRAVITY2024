@@ -447,6 +447,7 @@ function generer_graphique_Omega(fonction_EouF){
             Or = Omega_r(0)*Math.pow((1+i),4)/fonction_EouF(i,true);
             Om = Omega_m(0)*Math.pow((1+i),3)/fonction_EouF(i,true);
             Ol = Omega_l(0)/fonction_E(i,true); 
+            Ok = 1-Or-Om-Ol;    
 
             OrArr.push(Or);
             OmArr.push(Om);
