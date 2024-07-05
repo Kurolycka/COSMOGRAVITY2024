@@ -672,7 +672,7 @@ function calcul_t_inverse(temps,fonction,H0,precision=1e-30,iterationsmax=100){
 	if (age_univers>=temps){
 		a_t=Dichotomie(a_dichotomer,temps,1e-15,1,1e-30,iterationsmax);
 	}else{
-		a_t=Dichotomie(a_dichotomer,temps,1,1e10,1e-30,iterationsmax);
+		a_t=Dichotomie(a_dichotomer,temps,1,1e20,1e-30,iterationsmax);
 	}
 	return (1-a_t)/a_t;
 }

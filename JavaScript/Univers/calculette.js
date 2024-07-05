@@ -186,12 +186,17 @@ function affichage_des_z(fonction_EouF){
 
 
 function abscisse_t(fonction_EouF,zmin,zmax,pas){
+    age_univers=calcul_ages(fonction_EouF,H0_parAnnees(H0),1e-30,1);
     liste_z=[];
     let tmax=calcul_ages(fonction_EouF,H0_parAnnees(H0),1e-30,1/(1+zmin))
     let tmin=calcul_ages(fonction_EouF,H0_parAnnees(H0),1e-30,1/(1+zmax))
     liste_point_t=linear_scale(tmin,tmax,pas);
     liste_point_t.forEach(i => {
-        z=calcul_t_inverse(i,fonction_EouF,H0_parAnnees(H0),1e-30,30);
+        if (i>age_univers){
+            z=calcul_t_inverse(i,fonction_EouF,H0_parAnnees(H0),1e-30,100);
+        }else{
+            z=calcul_t_inverse(i,fonction_EouF,H0_parAnnees(H0),1e-30,30);
+        }
         liste_z.push(z);
     })
     return [liste_z,liste_point_t]
@@ -439,10 +444,9 @@ function generer_graphique_Omega(fonction_EouF){
 
         //calculs des omegas
         abscisse_calcul.forEach(i => {
-            Or = Omega_r(i);
-            Om = Omega_m(i);
-            Ok = Omega_k(i);
-            Ol = Omega_l(i);     
+            Or = Omega_r(0)*Math.pow((1+i),4)/fonction_EouF(i,true);
+            Om = Omega_m(0)*Math.pow((1+i),3)/fonction_EouF(i,true);
+            Ol = Omega_l(0)/fonction_E(i,true); 
 
             OrArr.push(Or);
             OmArr.push(Om);
@@ -469,14 +473,14 @@ function generer_graphique_Omega(fonction_EouF){
 
         //calculs des omegas
         abscisse_calcul.forEach(i => {
-            Or = Omega_r(i);
-            Om = Omega_m(i);
-            Ok = Omega_k(i);
+            Or = Omega_r(0)*Math.pow((1+i),4)/fonction_EouF(i,true);
+            Om = Omega_m(0)*Math.pow((1+i),3)/fonction_EouF(i,true);
             if (document.getElementById('omegaDE_normalise').checked){
-                Ol=Omega_DE(i)
+                Ol=Omega_DE(0)*fonction_Y(1/(1+i))/fonction_F(i,true)
             }else{
                 Ol= Omega_DE(0) / fonction_F(i,true);
             }
+            Ok = 1-Or-Om-Ol;    
 
             OrArr.push(Or);
             OmArr.push(Om);
