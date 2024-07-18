@@ -462,6 +462,10 @@ function debut_fin_univers(equa_diff) {
     let mort_univers;
     let age_debut;
     let age_fin;
+    let duree_univers;
+
+    let boolDebut;
+    let boolFin;
 
 
     // Recherche a = 0 ou da/dtau = Infinity dans le sens négatif
@@ -485,6 +489,7 @@ function debut_fin_univers(equa_diff) {
     }
     else {
         age_debut = set_solution[0] / H0_parGAnnees(H0)
+        boolDebut = true
 
         if (set_solution[1] <= 1) {
             naissance_univers = texte.univers.Debut + "BigBang " + Math.abs(age_debut).toExponential(4) + " Ga = "
@@ -521,6 +526,7 @@ function debut_fin_univers(equa_diff) {
     }
     else {
         age_fin = set_solution[0] / H0_parGAnnees(H0)
+        boolFin = true
 
         if (set_solution[1] <= 1) {
             mort_univers = texte.univers.Mort + "BigCrunch " + Math.abs(age_fin).toExponential(4) + " Ga = "
@@ -533,7 +539,16 @@ function debut_fin_univers(equa_diff) {
         }
     }
 
-    return [naissance_univers, mort_univers, age_debut, age_fin]
+    console.log(boolDebut, boolFin)
+    if (boolDebut && boolFin) {
+        let duree = Math.abs(age_fin) + Math.abs(age_debut)
+        duree_univers = texte.univers.Duree + duree.toExponential(4) + " Ga = "
+            + gigaannee_vers_seconde(duree).toExponential(4) + " s"
+    } else {
+        duree_univers = false
+    }
+
+    return [naissance_univers, mort_univers, age_debut, age_fin, duree_univers]
 }
 
 /**

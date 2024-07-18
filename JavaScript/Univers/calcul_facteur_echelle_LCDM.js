@@ -147,6 +147,7 @@ function calcul_facteur_echelle_LCDM(equa_diff_1, equa_diff_2, fonction_simplifi
 }
 
 function affichage_site_LCDM() {
+    let texte = o_recupereJson()
     let equa_diff_1 = equa_diff_1_LCDM
     let equa_diff_2 = equa_diff_2_LCDM
     let fonction = fonction_E
@@ -159,6 +160,10 @@ function affichage_site_LCDM() {
 
     document.getElementById("début").innerHTML = debutEtFin[0]
     document.getElementById("fin").innerHTML = debutEtFin[1]
+    document.getElementById("duree").innerHTML = ""
+    if (debutEtFin[4]) {
+        document.getElementById("duree").innerHTML = debutEtFin[4]
+    }
 
     graphique_facteur_echelle(donnee, debutEtFin, age_univers)
     update_point()

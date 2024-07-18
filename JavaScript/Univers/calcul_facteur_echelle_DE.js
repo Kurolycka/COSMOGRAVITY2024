@@ -159,7 +159,11 @@ function affichage_site_DE() {
     let debutEtFin = sorties[2]
 
     document.getElementById("début").innerHTML = debutEtFin[0]
-    document.getElementById("fin").innerHTML = debutEtFin[1]
+    document.getElementById("fin").innerHTML = debutEtFin[1
+    document.getElementById("duree").innerHTML = ""
+    if (debutEtFin[4]) {
+        document.getElementById("duree").innerHTML = debutEtFin[4]
+    }
 
     graphique_facteur_echelle(donnee, debutEtFin, age_univers)
 }
