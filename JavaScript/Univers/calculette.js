@@ -45,16 +45,9 @@ function affichage_des_z(fonction_EouF){
     //? -----------Calcul des temps----------------$
     let t1;
     let t2;
-    if (z1<0){
-        t1=calcul_ages(fonction_EouF,H0_parSecondes(H0),z2,1e-30,true); //calcul des temps en seconde grâce a la formule de théorie
-    }else{
-        t1=calcul_ages(fonction_EouF,H0_parSecondes(H0),1e-30,1/(1+z1)); //calcul des temps en seconde grâce a la formule de théorie
-    }
-    if (z2<0){
-        t2=calcul_ages(fonction_EouF,H0_parSecondes(H0),z2,1e-30,true); //calcul des temps en seconde grâce a la formule de théorie
-    }else{
-        t2=calcul_ages(fonction_EouF,H0_parSecondes(H0),1e-30,1/(1+z2)); //calcul des temps en seconde grâce a la formule de théorie
-    }
+    t1=calcul_ages(fonction_EouF,H0_parSecondes(H0),1e-30,1/(1+z1)); //calcul des temps en seconde grâce a la formule de théorie
+    t2=calcul_ages(fonction_EouF,H0_parSecondes(H0),1e-30,1/(1+z2)); //calcul des temps en seconde grâce a la formule de théorie
+
     let delta_t=calcul_ages(fonction_EouF,H0_parSecondes(H0),1/(1+z1),1/(1+z2));
     document.getElementById('output_t1').value=arrondie_affichage(t1);
     document.getElementById('output_t1_annee').value=arrondie_affichage(seconde_vers_annee(t1));
@@ -360,7 +353,7 @@ function generer_graphique_distance(fonction_EouF){
             rangemode: 'tozero',
             autorange: true,
             type : plot_type_ord,
-            title: yaxis_distance,
+            title: yaxis_omega,
             titlefont:{family:"Time New Roman, sans-serif",size:16,color:"#111111"},
             showline: true
         },
@@ -602,11 +595,7 @@ function generer_graphique_TempsDecalage(fonction_EouF){
     //calculs des longueurs
     abscisse.forEach(i => {
         let zdet
-        if (i<0){
-            zdet = calcul_ages(fonction_EouF,H0_parAnnees(H0),i,0,true);
-        }else{
-            zdet = calcul_ages(fonction_EouF,H0_parAnnees(H0),1e-15,1/(1+i));
-        }
+        zdet = calcul_ages(fonction_EouF,H0_parAnnees(H0),1e-15,1/(1+i));
 
         zArr.push(zdet);
     });
@@ -758,13 +747,17 @@ function calcul_horizons_annexe(fonction_EouF){
 		let dm_horizon_evenement_m=calcul_horizon_evenements(fonction_EouF,z_pour_horizon);
 		let dm_horizon_evenement_pc=m_vers_pc(dm_horizon_evenement_m);
 		let dm_horizon_evenement_al=m_vers_AL(dm_horizon_evenement_m);
-		document.getElementById("resultat_dm_particule_m").value=arrondie_affichage(dm_horizon_particule_m);
-		document.getElementById("resultat_dm_particule_pc").value=arrondie_affichage(dm_horizon_particule_pc);
-		document.getElementById("resultat_dm_particule_al").value=arrondie_affichage(dm_horizon_particule_al);
-		document.getElementById("resultat_dm_evenement_m").value=arrondie_affichage(dm_horizon_evenement_m);
-		document.getElementById("resultat_dm_evenement_pc").value=arrondie_affichage(dm_horizon_evenement_pc);
-		document.getElementById("resultat_dm_evenement_al").value=arrondie_affichage(dm_horizon_evenement_al);
+        if (dm_horizon_particule_m>=0){
+            document.getElementById("resultat_dm_particule_m").value=arrondie_affichage(dm_horizon_particule_m);
+            document.getElementById("resultat_dm_particule_pc").value=arrondie_affichage(dm_horizon_particule_pc);
+            document.getElementById("resultat_dm_particule_al").value=arrondie_affichage(dm_horizon_particule_al);
         }
+        if (dm_horizon_evenement_m>=0){
+            document.getElementById("resultat_dm_evenement_m").value=arrondie_affichage(dm_horizon_evenement_m);
+            document.getElementById("resultat_dm_evenement_pc").value=arrondie_affichage(dm_horizon_evenement_pc);
+            document.getElementById("resultat_dm_evenement_al").value=arrondie_affichage(dm_horizon_evenement_al);
+        }
+    }
 }
 
 //--------------------Calcul inverse-------------------

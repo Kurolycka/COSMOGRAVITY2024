@@ -378,6 +378,32 @@ function texte_univers_calculette() {
     document.getElementById("label_deven").title = texte.calculette.infobulle_deven;
     document.getElementById("label_dpart").title = texte.calculette.infobulle_dpart;
 
+
+    document.getElementById("label_Tz1").title = texte.calculette.infobulle_Tz1;
+    document.getElementById("label_Hz1").title = texte.calculette.infobulle_Hz1;
+    document.getElementById("label_omegaR_z1").title = texte.calculette.infobulle_orz1;
+    document.getElementById("label_omegaM_z1").title = texte.calculette.infobulle_omz1;
+    document.getElementById("label_omegaK_z1").title = texte.calculette.infobulle_okz1;
+    if (document.getElementById("label_omegaL_z1")){
+        document.getElementById("label_omegaL_z1").title = texte.calculette.infobulle_olz1;
+        document.getElementById("label_omegaL_z2").title = texte.calculette.infobulle_olz2;
+    }else{
+        document.getElementById("label_omegaDE_z1").title = texte.calculette.infobulle_odez1;
+        document.getElementById("label_omegaDE_z2").title = texte.calculette.infobulle_odez2;
+        document.getElementById("label_omegaDEN_z1").title = texte.calculette.infobulle_odenz1;
+        document.getElementById("label_omegaDEN_z2").title = texte.calculette.infobulle_odenz2;
+    }
+    document.getElementById("label_Tz2").title = texte.calculette.infobulle_Tz2;
+    document.getElementById("label_Hz2").title = texte.calculette.infobulle_Hz2;
+    document.getElementById("label_omegaR_z2").title = texte.calculette.infobulle_orz2;
+    document.getElementById("label_omegaM_z2").title = texte.calculette.infobulle_omz2;
+    document.getElementById("label_omegaK_z2").title = texte.calculette.infobulle_okz2;
+    document.getElementById("label_dm1").title = texte.calculette.infobulle_dm1;
+    document.getElementById("label_dm2").title = texte.calculette.infobulle_dm2;
+    document.getElementById("label_delta_dm").title = texte.calculette.infobulle_delta_dm;
+    document.getElementById("label_t1").title = texte.calculette.infobulle_t1;
+    document.getElementById("label_t2").title = texte.calculette.infobulle_t2;
+    document.getElementById("label_delta_t").title = texte.calculette.infobulle_delta_t;
     document.getElementById("label_z1").title = texte.calculette.infobulle_z1;
     document.getElementById("label_z2").title = texte.calculette.infobulle_z2;
     document.getElementById("label_ie").title = texte.calculette.infobulle_Ie;

@@ -316,13 +316,21 @@ function updateUnivers() {
     //affichage des horizons seulement dans certains cas
     if (!(document.getElementById('optionsMonofluide').value === "optionNull")){//aucun horizons si univers monofluide (existe bien mais implementation pour le futur car différente formule)
         document.getElementById('horizonEvenement').style.display="none";
+        document.getElementById('he_enregistrer').style.display="none"
         document.getElementById('horizonParticule').style.display="none";
+        document.getElementById('hp_enregistrer').style.display="none"
     }else {
         if (debut_fin_univers(equa_diff_2)[2] === 0){//detecter s'il n'y a pas de big bang alors pas d'horizon des particules
             document.getElementById('horizonParticule').style.display="none";
+            document.getElementById('hp_enregistrer').style.display="none"
         }else{
-            document.getElementById('horizonParticule').style.display="block";
             let dm_horizon_particule_m = calcul_horizon_particule(fonction_simplifiante);
+            if (isNaN(dm_horizon_particule_m)){
+                document.getElementById('horizonParticule').style.display="none";
+                document.getElementById('hp_enregistrer').style.display="none"
+            }else{
+                document.getElementById('horizonParticule').style.display="block";
+            }
             let dm_horizon_particule_pc = m_vers_pc(dm_horizon_particule_m);
             let dm_horizon_particule_al = m_vers_AL(dm_horizon_particule_m);
             document.getElementById("resultat_dm_particule_m").innerHTML = arrondie_affichage(dm_horizon_particule_m);
@@ -332,9 +340,16 @@ function updateUnivers() {
         }
         if(! isNaN(debut_fin_univers(equa_diff_2, T0)[3])){//detecter si il y a big crunch alors pas d'horizon des particules
             document.getElementById('horizonEvenement').style.display="none";
+            document.getElementById('he_enregistrer').style.display="none"
         }else{
             document.getElementById('horizonEvenement').style.display="block";
             let dm_horizon_evenement_m = calcul_horizon_evenements(fonction_simplifiante);
+            if (isNaN(dm_horizon_evenement_m)){
+                document.getElementById('horizonEvenement').style.display="none";
+                document.getElementById('he_enregistrer').style.display="none"
+            }else{
+                document.getElementById('horizonEvenement').style.display="block";
+            }
             let dm_horizon_evenement_pc = m_vers_pc(dm_horizon_evenement_m);
             let dm_horizon_evenement_al = m_vers_AL(dm_horizon_evenement_m);
             document.getElementById("resultat_dm_evenement_m").innerHTML = arrondie_affichage(dm_horizon_evenement_m);
