@@ -370,7 +370,6 @@ function texte_univers_calculette() {
     document.getElementById("calcul_inverse_titre").title = texte.calculette.infobulle_Calcul_inverse;
     document.getElementById("label_dminverse").title = texte.calculette.infobulle_dm_inv;
     document.getElementById("label_teminverse").title = texte.calculette.infobulle_tem_inv;
-    document.getElementById("label_trecinverse").title = texte.calculette.infobulle_trec_inv;
     document.getElementById("label_zneg").title = texte.calculette.infobulle_z_neg;
 
     document.getElementById("horizons_titre").title = texte.calculette.infobulle_horizon;

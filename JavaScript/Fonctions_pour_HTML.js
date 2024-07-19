@@ -320,7 +320,8 @@ function updateUnivers() {
         document.getElementById('horizonParticule').style.display="none";
         document.getElementById('hp_enregistrer').style.display="none"
     }else {
-        if (debut_fin_univers(equa_diff_2)[2] === 0){//detecter s'il n'y a pas de big bang alors pas d'horizon des particules
+        let val_debut_fin=debut_fin_univers(equa_diff_2);
+        if (val_debut_fin[2] === 0){//detecter s'il n'y a pas de big bang alors pas d'horizon des particules
             document.getElementById('horizonParticule').style.display="none";
             document.getElementById('hp_enregistrer').style.display="none"
         }else{
@@ -338,7 +339,7 @@ function updateUnivers() {
             document.getElementById("resultat_dm_particule_al").innerHTML = arrondie_affichage(dm_horizon_particule_al);
             document.getElementById("hp_enregistrer").innerHTML = "d<sub>p<sub>0</sub></sub> = " + dm_horizon_particule_pc.toExponential(4) + " pc"
         }
-        if(! isNaN(debut_fin_univers(equa_diff_2, T0)[3])){//detecter si il y a big crunch alors pas d'horizon des particules
+        if(! isNaN(val_debut_fin[3])){//detecter si il y a big crunch alors pas d'horizon des evenements
             document.getElementById('horizonEvenement').style.display="none";
             document.getElementById('he_enregistrer').style.display="none"
         }else{

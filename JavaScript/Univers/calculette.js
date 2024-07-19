@@ -353,7 +353,7 @@ function generer_graphique_distance(fonction_EouF){
             rangemode: 'tozero',
             autorange: true,
             type : plot_type_ord,
-            title: yaxis_omega,
+            title: yaxis_distance,
             titlefont:{family:"Time New Roman, sans-serif",size:16,color:"#111111"},
             showline: true
         },
@@ -545,7 +545,7 @@ function generer_graphique_Omega(fonction_EouF){
             rangemode: 'tozero',
             autorange: true,
             type : plot_type_ord,
-            title: yaxis_distance,
+            title: yaxis_omega,
             titlefont:{family:"Time New Roman, sans-serif",size:16,color:"#111111"},
             showline: true
         },
@@ -869,19 +869,11 @@ function calcul_dm_inverse(fonction_EouF){
  */
 function affichage_t_inverse(fonction_EouF){
     temps_em_input=document.getElementById("tem_inverse").value;
-    temps_rec_input=document.getElementById("trec_inverse").value;
     if (temps_em_input<0.01){
         z_em=NaN;
     }else{
         z_em=calcul_t_inverse(temps_em_input,fonction_EouF,H0_parAnnees(H0));
     }
-    if(temps_rec_input<0.01){
-        z_rec=NaN;
-    }else{
-        z_rec=calcul_t_inverse(temps_rec_input,fonction_EouF,H0_parAnnees(H0));
-    }
-    
 
     document.getElementById('output_z_tem').value=arrondie_affichage(z_em);
-    document.getElementById('output_z_trec').value=arrondie_affichage(z_rec);
 }
