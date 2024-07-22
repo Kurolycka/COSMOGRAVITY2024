@@ -539,7 +539,6 @@ function debut_fin_univers(equa_diff) {
         }
     }
 
-    console.log(boolDebut, boolFin)
     if (boolDebut && boolFin) {
         let duree = Math.abs(age_fin) + Math.abs(age_debut)
         duree_univers = texte.univers.Duree + duree.toExponential(4) + " Ga = "
@@ -739,7 +738,6 @@ function graphique_facteur_echelle(solution,debutEtFin , t_0) {
     if ( t_fin && facteur_fin < Math.abs(max - min) * 1e-1 && a_min === 0) {
         ordonnee[ordonnee.length - 1] = 0
     }
-    console.log(max, min)
 
     let donnee = [{
         x: abscisse,
