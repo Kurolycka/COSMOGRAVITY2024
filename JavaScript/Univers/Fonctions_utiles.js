@@ -95,6 +95,12 @@ function H0_parGAnnees(H0) {
  * @return {number} la valeur du oméga
  */
 function Omega_r(z) {
+    let H0 = Number(document.getElementById("H0").value);
+    let c = Number(document.getElementById("c").value);
+    let h = Number(document.getElementById("h").value);
+    let G = Number(document.getElementById("G").value);
+    let k = Number(document.getElementById("k").value);
+
     let omega_r
 
     let T0 = Number(document.getElementById("T0").value);
@@ -469,7 +475,7 @@ function debut_fin_univers(equa_diff) {
 
 
     // Recherche a = 0 ou da/dtau = Infinity dans le sens négatif
-    while (set_solution[1] >= 0 && (Math.abs(set_solution[1]) <= +Infinity || Math.abs(set_solution[2]) <= +Infinity) && nombre_point <= 5/Math.abs(pas)) {
+    while (set_solution[1] >= 0 && (Math.abs(set_solution[1]) < +Infinity || Math.abs(set_solution[2]) < +Infinity) && nombre_point <= 5/Math.abs(pas)) {
         save_set_solution = set_solution
         set_solution = RungeKuttaEDO2(-pas, set_solution[0], set_solution[1], set_solution[2], equa_diff)
         nombre_point = nombre_point + 1
@@ -483,7 +489,7 @@ function debut_fin_univers(equa_diff) {
     // On récupère le maximum entre la valeur du facteur d'échelle et la dérivée du facteur d'échelle
     let max = Math.max(Math.abs(set_solution[1]))
 
-    if ( option === "optionLDE" || ( max <= limite && set_solution[1] > 1 ) || nombre_point > 5/Math.abs(pas)) {
+    if ( option === "optionLDE" || ( max <= limite && set_solution[1] > 1 )) {
         naissance_univers = texte.univers.pasDebut
         age_debut = 0
     }
@@ -507,7 +513,7 @@ function debut_fin_univers(equa_diff) {
     nombre_point = 0;
 
     // Recherche a = 0 / da/dtau = Infinity dans le sens positif
-    while (set_solution[1] >= 0 && (Math.abs(set_solution[1]) <= +Infinity || Math.abs(set_solution[2]) <= +Infinity) && nombre_point <= 5/Math.abs(pas)) {
+    while (set_solution[1] >= 0 && (Math.abs(set_solution[1]) < +Infinity || Math.abs(set_solution[2]) < +Infinity) && nombre_point <= 5/Math.abs(pas)) {
         save_set_solution = set_solution
         set_solution = RungeKuttaEDO2(pas, set_solution[0], set_solution[1], set_solution[2], equa_diff)
         nombre_point = nombre_point + 1
@@ -521,7 +527,7 @@ function debut_fin_univers(equa_diff) {
     // On récupère le maximum entre la valeur du facteur d'échelle
     max = Math.max(Math.abs(set_solution[1]))
 
-    if ( option === "optionLDE" || ( max <= limite && set_solution[1] > 1 ) || nombre_point > 5/Math.abs(pas)) {
+    if ( option === "optionLDE" || ( max <= limite && set_solution[1] > 1 )) {
         mort_univers = texte.univers.pasMort
     }
     else {
@@ -629,6 +635,9 @@ function Sk(x,OmegaK){
  * @returns
  */
 function DistanceMetrique(fonction, Zemission, Zreception, z_utilise=false, precision_nb_pas=1e3){
+    let H0 = Number(document.getElementById("H0").value);
+    let c = Number(document.getElementById("c").value);
+
     function fonction_a_integrer(x) {
         if (z_utilise){
             return Math.pow(fonction(x,true),-0.5);
@@ -749,7 +758,7 @@ function graphique_facteur_echelle(solution,debutEtFin , t_0) {
     }];
 
     const BigFallRegEx = /BigFall/;
-    if (BigFallRegEx.test(naissance) && temps_debut < Math.abs(t_debut) * 1e-1 ) {
+    if (BigFallRegEx.test(naissance) && temps_debut < Math.abs(t_fin - t_debut) * 10/100 ) {
         donnee.push({
             type: 'line',
             x:[0, 0],
@@ -764,7 +773,7 @@ function graphique_facteur_echelle(solution,debutEtFin , t_0) {
     }
 
     const BigRipRegEx = /BigRip/;
-    if (BigRipRegEx.test(mort) && temps_fin > Math.abs(t_fin) * (1 + 10/100)) {
+    if (BigRipRegEx.test(mort) && temps_fin > Math.abs(t_fin - t_debut) * (1 - 10/100)) {
         let x_assymptote;
         if (t_fin && t_debut) {
             x_assymptote = Math.abs(Math.abs(t_fin) + Math.abs(t_debut))
