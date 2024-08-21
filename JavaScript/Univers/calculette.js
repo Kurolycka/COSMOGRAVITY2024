@@ -732,8 +732,12 @@ function calcul_theta_vers_diametre(){
 function calcul_horizons_annexe(fonction_EouF){
 	let t_pour_horizon= Number(document.getElementById("t_pour_calcul_horizon").value);
 	if (t_pour_horizon<=0){
-		document.getElementById("resultat_dm_particule_t").value=NaN;
-		document.getElementById("resultat_dm_evenement_t").value=NaN;
+        document.getElementById("resultat_dm_particule_m").value=NaN;
+        document.getElementById("resultat_dm_particule_pc").value=NaN;
+        document.getElementById("resultat_dm_particule_al").value=NaN;
+        document.getElementById("resultat_dm_evenement_m").value=NaN;
+        document.getElementById("resultat_dm_evenement_pc").value=NaN;
+        document.getElementById("resultat_dm_evenement_al").value=NaN;
 	}else{
 		z_pour_horizon=calcul_t_inverse(t_pour_horizon,fonction_EouF,H0_parAnnees(H0),1e-10,500);
         if (z_pour_horizon<-.99999){

@@ -283,8 +283,8 @@ function texte_univers_DE() {
     document.getElementById("infoOmégar0Sortie").title = texte.univers.infoOmégaR0Sortie
     document.getElementById("infoOmégak0Sortie").title = texte.univers.infoOmégaK0Sortie
     document.getElementById("Temps").innerHTML = texte.univers.Temps
-    document.getElementById("evenement").innerHTML = texte.univers.evenement
-    document.getElementById("particule").innerHTML = texte.univers.particules
+    // document.getElementById("evenement").innerHTML = texte.univers.evenement
+    // document.getElementById("particule").innerHTML = texte.univers.particules
 
     document.getElementById("Enregistrer").innerHTML = texte.univers.Enregistrer
     document.getElementById("infoNomFichier").title = texte.univers.infoNomFichier
@@ -317,7 +317,6 @@ function texte_univers_calculette() {
     document.querySelectorAll(".unite_al").forEach(function(i){i.innerHTML=texte.calculette.unitéanneelumiere});
 
     document.getElementById('bouton_calculer_inverse').innerHTML=texte.calculette.bouton_calculer;
-    document.getElementById('bouton_calculer_horizon').innerHTML=texte.calculette.bouton_calculer;
     document.getElementById('bouton_calculer_z').innerHTML=texte.calculette.bouton_calculer;
 
     document.getElementById("constantesUniverselles").innerHTML = texte.univers.constantes
@@ -325,7 +324,6 @@ function texte_univers_calculette() {
     document.getElementById("generateur_graphique").innerHTML = texte.calculette.generateur_graphique_titre;
     document.getElementById("diametre_apparent_titre").innerHTML = texte.calculette.diametre_apparent_titre;
     document.getElementById("calcul_inverse_titre").innerHTML = texte.calculette.calcul_inverse_titre;
-    document.getElementById("horizons_titre").innerHTML = texte.calculette.horizons_titre;
     document.getElementById("calcul_z_titre").innerHTML = texte.calculette.calcul_z_titre;
     document.getElementById("parametre_z_titre").innerHTML = texte.calculette.parametre_z_titre;
     document.getElementById("geometrie_titre").innerHTML = texte.calculette.geometrie_titre;
@@ -372,10 +370,6 @@ function texte_univers_calculette() {
     document.getElementById("label_teminverse").title = texte.calculette.infobulle_tem_inv;
     document.getElementById("label_zneg").title = texte.calculette.infobulle_z_neg;
 
-    document.getElementById("horizons_titre").title = texte.calculette.infobulle_horizon;
-    document.getElementById("label_t_hori").title = texte.calculette.infobulle_t_horizon;
-    document.getElementById("label_deven").title = texte.calculette.infobulle_deven;
-    document.getElementById("label_dpart").title = texte.calculette.infobulle_dpart;
 
 
     document.getElementById("label_Tz1").title = texte.calculette.infobulle_Tz1;
@@ -386,6 +380,15 @@ function texte_univers_calculette() {
     if (document.getElementById("label_omegaL_z1")){
         document.getElementById("label_omegaL_z1").title = texte.calculette.infobulle_olz1;
         document.getElementById("label_omegaL_z2").title = texte.calculette.infobulle_olz2;
+
+
+        document.getElementById('bouton_calculer_horizon').innerHTML=texte.calculette.bouton_calculer;
+        document.getElementById("horizons_titre").innerHTML = texte.calculette.horizons_titre;
+        document.getElementById("horizons_titre").title = texte.calculette.infobulle_horizon;
+        document.getElementById("label_t_hori").title = texte.calculette.infobulle_t_horizon;
+        document.getElementById("label_deven").title = texte.calculette.infobulle_deven;
+        document.getElementById("label_dpart").title = texte.calculette.infobulle_dpart;
+
     }else{
         document.getElementById("label_omegaDE_z1").title = texte.calculette.infobulle_odez1;
         document.getElementById("label_omegaDE_z2").title = texte.calculette.infobulle_odez2;
@@ -418,7 +421,7 @@ function texte_univers_calculette() {
     document.getElementById("label_mu1").title = texte.calculette.infobulle_mu1;
     document.getElementById("label_mu2").title = texte.calculette.infobulle_mu2;
 
-    document.getElementById('texte_avertissement_z_-1').innerHTML = texte.calculette.avertissement_z_grand;
+    // document.getElementById('texte_avertissement_z_-1').innerHTML = texte.calculette.avertissement_z_grand;
 };
 
 function texte_constantes() {
